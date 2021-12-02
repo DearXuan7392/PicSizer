@@ -332,7 +332,7 @@ namespace PicSizer
             "BMP",
             "TIFF",
             "原格式"});
-            this.comboBox5.Location = new System.Drawing.Point(67, 98);
+            this.comboBox5.Location = new System.Drawing.Point(66, 44);
             this.comboBox5.Name = "comboBox5";
             this.comboBox5.Size = new System.Drawing.Size(121, 20);
             this.comboBox5.TabIndex = 21;
@@ -340,7 +340,7 @@ namespace PicSizer
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(8, 101);
+            this.label12.Location = new System.Drawing.Point(8, 47);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(59, 12);
             this.label12.TabIndex = 20;
@@ -360,11 +360,11 @@ namespace PicSizer
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(59, 12);
             this.label11.TabIndex = 18;
-            this.label11.Text = "混合方式:";
+            this.label11.Text = "自定名称:";
             // 
             // numericUpDown5
             // 
-            this.numericUpDown5.Location = new System.Drawing.Point(66, 44);
+            this.numericUpDown5.Location = new System.Drawing.Point(66, 98);
             this.numericUpDown5.Maximum = new decimal(new int[] {
             1024,
             0,
@@ -387,7 +387,7 @@ namespace PicSizer
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(8, 46);
+            this.label10.Location = new System.Drawing.Point(6, 100);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(59, 12);
             this.label10.TabIndex = 2;

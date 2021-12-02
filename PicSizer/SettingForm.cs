@@ -60,6 +60,15 @@ namespace PicSizer
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if(comboBox4.SelectedIndex == 2)
+            {
+                if (!textBox1.Text.Contains("{0}"))
+                {
+                    MessageBox.Show("自定义命名中必须出现\"{0}\"以替换成数字", "PicSizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+
             Setting.resizeMode = (ResizeMode)comboBox1.SelectedIndex;
             Setting.compressionMode = (CompressionMode)comboBox2.SelectedIndex;
             Setting.renameMode = (RenameMode)comboBox4.SelectedIndex;
@@ -77,6 +86,8 @@ namespace PicSizer
             Setting.LimitSize = size;
 
             Setting.StartIndex = (int)numericUpDown5.Value;
+
+            Setting.CustomRenameStr = textBox1.Text;
 
             form.Hide();
         }

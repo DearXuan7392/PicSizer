@@ -203,7 +203,7 @@ namespace PicSizer
                 case RenameMode.Original://原名
                     return Path.Combine(dir, Path.GetFileNameWithoutExtension(ori) + extension);
                 case RenameMode.Custom://混合命名
-                    return Path.Combine(dir, num + extension);
+                    return Path.Combine(dir, string.Format(Setting.CustomRenameStr,num) + extension);
                 default:
                     return null;
             }

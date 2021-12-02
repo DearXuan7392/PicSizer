@@ -39,8 +39,13 @@ namespace PicSizer
             this.label3 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.button0 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -49,10 +54,12 @@ namespace PicSizer
             resources.ApplyResources(this.pictureBox1, "pictureBox1");
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.OnPicClick);
             // 
             // label1
             // 
             resources.ApplyResources(this.label1, "label1");
+            this.label1.CausesValidation = false;
             this.label1.Name = "label1";
             // 
             // textBox1
@@ -70,6 +77,7 @@ namespace PicSizer
             // label2
             // 
             resources.ApplyResources(this.label2, "label2");
+            this.label2.CausesValidation = false;
             this.label2.Name = "label2";
             // 
             // textBox3
@@ -81,6 +89,7 @@ namespace PicSizer
             // label3
             // 
             resources.ApplyResources(this.label3, "label3");
+            this.label3.CausesValidation = false;
             this.label3.Name = "label3";
             // 
             // button1
@@ -97,26 +106,64 @@ namespace PicSizer
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.OnOpenClick);
             // 
-            // button3
-            // 
-            resources.ApplyResources(this.button3, "button3");
-            this.button3.Name = "button3";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.OnOpenClick);
-            // 
             // button4
             // 
             resources.ApplyResources(this.button4, "button4");
             this.button4.Name = "button4";
             this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.OnCopyClick);
+            this.button4.Click += new System.EventHandler(this.OnOpenClick);
+            // 
+            // button3
+            // 
+            resources.ApplyResources(this.button3, "button3");
+            this.button3.Name = "button3";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.OnCopyClick);
+            // 
+            // button6
+            // 
+            resources.ApplyResources(this.button6, "button6");
+            this.button6.Name = "button6";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.OnOpenClick);
+            // 
+            // button5
+            // 
+            resources.ApplyResources(this.button5, "button5");
+            this.button5.Name = "button5";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.OnCopyClick);
+            // 
+            // textBox4
+            // 
+            resources.ApplyResources(this.textBox4, "textBox4");
+            this.textBox4.Name = "textBox4";
+            this.textBox4.ReadOnly = true;
+            // 
+            // label4
+            // 
+            resources.ApplyResources(this.label4, "label4");
+            this.label4.CausesValidation = false;
+            this.label4.Name = "label4";
+            // 
+            // button0
+            // 
+            resources.ApplyResources(this.button0, "button0");
+            this.button0.Name = "button0";
+            this.button0.UseVisualStyleBackColor = true;
+            this.button0.Click += new System.EventHandler(this.OnSendEmailClick);
             // 
             // DearXuan
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button0);
+            this.Controls.Add(this.button6);
+            this.Controls.Add(this.button5);
+            this.Controls.Add(this.textBox4);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.button4);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox3);
@@ -130,6 +177,7 @@ namespace PicSizer
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DearXuan";
+            this.Load += new System.EventHandler(this.DearXuan_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -147,7 +195,12 @@ namespace PicSizer
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button button0;
     }
 }
