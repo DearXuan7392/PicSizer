@@ -16,7 +16,8 @@ namespace PicSizer
     {
         None = 0,
         MinSize = 1,
-        MaxSize = 2
+        MaxSize = 2,
+        Custom
     }
 
     /// <summary>

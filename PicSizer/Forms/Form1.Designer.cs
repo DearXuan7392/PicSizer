@@ -38,6 +38,7 @@ namespace PicSizer
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // listBox1
@@ -50,13 +51,14 @@ namespace PicSizer
             this.listBox1.ItemHeight = 12;
             this.listBox1.Location = new System.Drawing.Point(12, 12);
             this.listBox1.Name = "listBox1";
+            this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.listBox1.Size = new System.Drawing.Size(479, 292);
             this.listBox1.TabIndex = 0;
             // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(497, 70);
+            this.button1.Location = new System.Drawing.Point(497, 99);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -71,9 +73,9 @@ namespace PicSizer
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 2;
-            this.button2.Text = "打开";
+            this.button2.Text = "添加";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.OnOpenClick);
+            this.button2.Click += new System.EventHandler(this.OnAddClick);
             // 
             // label1
             // 
@@ -108,7 +110,7 @@ namespace PicSizer
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Location = new System.Drawing.Point(497, 41);
+            this.button4.Location = new System.Drawing.Point(497, 70);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 6;
@@ -119,7 +121,7 @@ namespace PicSizer
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button5.Location = new System.Drawing.Point(497, 99);
+            this.button5.Location = new System.Drawing.Point(497, 128);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 7;
@@ -127,11 +129,23 @@ namespace PicSizer
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.OnAboutClick);
             // 
+            // button6
+            // 
+            this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button6.Location = new System.Drawing.Point(497, 41);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.TabIndex = 8;
+            this.button6.Text = "移除";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.OnRemoveClick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 361);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
@@ -161,6 +175,7 @@ namespace PicSizer
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button6;
     }
 }
 

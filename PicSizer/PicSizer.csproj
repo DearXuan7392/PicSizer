@@ -25,7 +25,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <AutorunEnabled>true</AutorunEnabled>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <ApplicationVersion>2.0.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -48,9 +48,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>PicSizer.ico</ApplicationIcon>
+    <ApplicationIcon>Res\PicSizer.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>PicSizer.Program</StartupObject>
@@ -82,44 +84,45 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bmp.cs" />
-    <Compile Include="DearXuan.cs">
+    <Compile Include="Forms\DearXuan.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DearXuan.Designer.cs">
+    <Compile Include="Forms\DearXuan.Designer.cs">
       <DependentUpon>DearXuan.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form1.cs">
+    <Compile Include="Dialog.cs" />
+    <Compile Include="Forms\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
+    <Compile Include="Forms\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="ProgressForm.cs">
+    <Compile Include="Forms\ProgressForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ProgressForm.Designer.cs">
+    <Compile Include="Forms\ProgressForm.Designer.cs">
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setting.cs" />
-    <Compile Include="SettingForm.cs">
+    <Compile Include="Forms\SettingForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingForm.Designer.cs">
+    <Compile Include="Forms\SettingForm.Designer.cs">
       <DependentUpon>SettingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Support.cs" />
-    <EmbeddedResource Include="DearXuan.byn.resx">
+    <EmbeddedResource Include="Forms\DearXuan.byn.resx">
       <DependentUpon>DearXuan.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DearXuan.resx">
+    <EmbeddedResource Include="Forms\DearXuan.resx">
       <DependentUpon>DearXuan.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
+    <EmbeddedResource Include="Forms\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ProgressForm.resx">
+    <EmbeddedResource Include="Forms\ProgressForm.resx">
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -131,7 +134,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="SettingForm.resx">
+    <EmbeddedResource Include="Forms\SettingForm.resx">
       <DependentUpon>SettingForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="PicSizer_TemporaryKey.pfx" />
@@ -149,7 +152,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="PicSizer.ico" />
+    <Content Include="Res\PicSizer.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

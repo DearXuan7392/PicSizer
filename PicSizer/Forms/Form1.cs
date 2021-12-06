@@ -19,14 +19,16 @@ namespace PicSizer
         public static ProgressForm progressForm = new ProgressForm();
         public static DearXuan dearXuan = new DearXuan();
 
-        public List<string> paths = new List<string>();
+        ListBox.ObjectCollection paths;
 
         public Form1()
         {
             InitializeComponent();
+            //为静态量赋值
             main = this;
             ProgressForm.form = progressForm;
             SettingForm.form = settingForm;
+            paths = listBox1.Items;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -34,23 +36,36 @@ namespace PicSizer
             
         }
 
-        private void OnOpenClick(object sender, EventArgs e)
+        /// <summary>
+        /// 打开图片按钮
+        /// </summary>
+        private void OnAddClick(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Title = "选择图片";
+            dialog.Title = "添加图片";
             dialog.Filter = "图片(JPG,PNG,BMP,TIFF)|*.jpg;*.png;*.bmp;*.tiff";
             dialog.Multiselect = true;
             if(dialog.ShowDialog() == DialogResult.OK)
             {
-                listBox1.Items.Clear();
+                int fileCount = dialog.FileNames.Length;
                 foreach (string path in dialog.FileNames)
                 {
-                    paths.Add(path);
-                    listBox1.Items.Add(path);
+                    if (!paths.Contains(path))
+                    {
+                        paths.Add(path);
+                        fileCount--;
+                    }
+                }
+                if(fileCount != 0)
+                {
+                    Dialog.ShowDialog(fileCount + " 张重复的图片已被忽略.");
                 }
             }
         }
 
+        /// <summary>
+        /// 选择文件夹按钮
+        /// </summary>
         private void OnChooseClick(object sender, EventArgs e)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
@@ -59,19 +74,22 @@ namespace PicSizer
             {
                 if (string.IsNullOrWhiteSpace(dialog.SelectedPath))
                 {
-                    MessageBox.Show("路径不能为空!", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Dialog.ShowDialog_Error("路径不能为空!");
                     return;
                 }
                 textBox1.Text = dialog.SelectedPath;
             }
         }
 
+        /// <summary>
+        /// 压缩按钮
+        /// </summary>
         private async void OnSizerClick(object sender, EventArgs e)
         {
             string folderPath = textBox1.Text;
             if (!Path.IsPathRooted(folderPath))
             {
-                MessageBox.Show("请输入正确的绝对路径!", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Dialog.ShowDialog_Error("请输入正确的绝对路径!");
                 return;
             }
             if (Directory.Exists(folderPath))
@@ -93,29 +111,53 @@ namespace PicSizer
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("发生了错误\n" + ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Dialog.ShowDialog_Exception(ex);
                     return;
                 }
             }
+            //创建处理图片的线程
             Thread thread = new Thread(() =>
             {
                 Bmp.StartResizer(paths, folderPath);
             });
-            thread.Priority = ThreadPriority.Highest;
+            thread.Priority = ThreadPriority.Highest;//设置线程优先级最高
             progressForm.init(paths.Count);
             thread.Start();
             progressForm.ShowDialog();
-            //MessageBox.Show("压缩完成", "PicSizer", MessageBoxButtons.OK);
         }
 
+        /// <summary>
+        /// 设置按钮
+        /// </summary>
         private void OnSetClick(object sender, EventArgs e)
         {
             settingForm.ShowDialog();
         }
 
+        /// <summary>
+        /// 关于按钮
+        /// </summary>
         private void OnAboutClick(object sender, EventArgs e)
         {
             dearXuan.ShowDialog();
+        }
+
+        private void OnRemoveClick(object sender, EventArgs e)
+        {
+            int count = listBox1.SelectedItems.Count;
+            int index;
+            if(count == 0)
+            {
+                Dialog.ShowDialog_Warning("没有选中图片!");
+                return;
+            }
+            if(Dialog.ShowDialog_OKDialog("移除所选的 " + count + " 张图片?"))
+            {
+                while((index = listBox1.SelectedIndex) != -1)
+                {
+                    listBox1.Items.RemoveAt(index);
+                }
+            }
         }
     }
 }

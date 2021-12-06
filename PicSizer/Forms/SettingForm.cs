@@ -12,7 +12,7 @@ namespace PicSizer
 {
     public partial class SettingForm : Form
     {
-        const char EMPTY = (char)0;
+        const char EMPTY = (char)0;//空字符
 
         public static SettingForm form;
 
@@ -24,6 +24,7 @@ namespace PicSizer
 
         private void SettingForm_Load(object sender, EventArgs e)
         {
+            //初始化各个控件的初始值
             comboBox1.SelectedIndex = Setting.resizeMode.ToInt();
             comboBox2.SelectedIndex = Setting.compressionMode.ToInt();
             comboBox4.SelectedIndex = Setting.renameMode.ToInt();
@@ -37,6 +38,7 @@ namespace PicSizer
 
         private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
+            //仅限输入数字
             if(e.KeyChar < '0' || e.KeyChar > '9')
             {
                 if(e.KeyChar != 8 && e.KeyChar != 127)
@@ -48,6 +50,7 @@ namespace PicSizer
 
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
+            //限制最大大小为 1GB
             if(comboBox3.SelectedIndex == 0)//KB
             {
                 numericUpDown4.Maximum = 1048576;
@@ -64,7 +67,7 @@ namespace PicSizer
             {
                 if (!textBox1.Text.Contains("{0}"))
                 {
-                    MessageBox.Show("自定义命名中必须出现\"{0}\"以替换成数字", "PicSizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Dialog.ShowDialog_Error("自定义命名中必须出现\"{0}\"以替换成数字");
                     return;
                 }
             }

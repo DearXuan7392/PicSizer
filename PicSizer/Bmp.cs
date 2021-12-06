@@ -18,6 +18,9 @@ namespace PicSizer
 
         static EncoderParameter[] parameterList = new EncoderParameter[101];
 
+        /// <summary>
+        /// 获取编码信息
+        /// </summary>
         public static EncoderParameter GetParameter(long value)
         {
             int v = (int)value;
@@ -40,7 +43,7 @@ namespace PicSizer
             float widthByMin = (float)width / Setting.LimitWidth;
             float heightByMin = (float)height / Setting.LimitHeight;
             //重新设定边长
-            if (Setting.resizeMode == ResizeMode.MinSize)
+            if (Setting.resizeMode == ResizeMode.MinSize)//不小于限定值
             {
                 float min = Math.Min(widthByMin, heightByMin);
                 if(min > 1)
@@ -49,7 +52,7 @@ namespace PicSizer
                     height = (int)(height / min);
                 }
             }
-            else
+            else if(Setting.resizeMode == ResizeMode.MaxSize)//不大于限定值
             {
                 float max = Math.Max(widthByMin, heightByMin);
                 if(max > 1)
@@ -58,24 +61,30 @@ namespace PicSizer
                     height = (int)(height / max);
                 }
             }
+            else//强制修正
+            {
+                width = Setting.LimitWidth;
+                height = Setting.LimitHeight;
+            }
+            //裁剪
             Bitmap newBitmap = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(newBitmap);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
             g.DrawImage(bitmap, new Rectangle(0, 0, width, height), new Rectangle(0, 0, bitmap.Width, bitmap.Height), GraphicsUnit.Pixel);
-            g.Dispose();
-            bitmap.Dispose();
+            g.Dispose();//摧毁
+            bitmap.Dispose();//摧毁
             return newBitmap;
         }
 
-        public static void StartResizer(List<string> files, string resDir)
+        public static void StartResizer(ListBox.ObjectCollection files, string resDir)
         {
             int num = Setting.StartIndex;
             int now = 1;
             string result;
-            ExtensionMode format = Setting.extensionMode;
-            if (Setting.compressionMode == CompressionMode.SizeFirst)
+            //遍历所有图片
+            foreach (string path in files)
             {
-                foreach (string path in files)
+                try
                 {
                     if (Setting.ThreadExitNow)
                     {
@@ -83,31 +92,22 @@ namespace PicSizer
                         return;
                     }
                     result = GetResultFileName(path, resDir, num);
-                    if(CompressionBySize(path, result))
+                    if (Setting.compressionMode == CompressionMode.SizeFirst)
                     {
-                        num++;
+                        if (CompressionBySize(path, result)) num++;
                     }
-                    Update(now);
-                    now++;
+                    else
+                    {
+                        if (CompressionByValue(path, result)) num++;
+                    }
                 }
-            }
-            else
-            {
-                foreach (string path in files)
+                catch(Exception ex)
                 {
-                    if (Setting.ThreadExitNow)
-                    {
-                        OnExit();
-                        return;
-                    }
-                    result = GetResultFileName(path, resDir, num);
-                    if(CompressionByValue(path, result))
-                    {
-                        num++;
-                    }
-                    Update(now);
-                    now++;
+                    Dialog.ShowDialog_Exception(ex);
                 }
+                //更新进度
+                Update(now);
+                now++;
             }
             
         }
@@ -125,6 +125,9 @@ namespace PicSizer
             return size >> 10;
         }
 
+        /// <summary>
+        /// 基于大小压缩
+        /// </summary>
         public static bool CompressionBySize(string file, string result)
         {
             try
@@ -160,11 +163,14 @@ namespace PicSizer
             }
             catch(Exception e)
             {
-                MessageBox.Show(e.ToString());
+                //MessageBox.Show(e.ToString());
                 return false;
             }
         }
 
+        /// <summary>
+        /// 基于画质压缩
+        /// </summary>
         public static bool CompressionByValue(string file, string result)
         {
             try
@@ -178,6 +184,7 @@ namespace PicSizer
             }
             catch(Exception e)
             {
+                //MessageBox.Show(e.ToString());
                 return false;
             }
         }

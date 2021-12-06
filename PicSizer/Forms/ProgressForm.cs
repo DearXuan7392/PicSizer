@@ -34,6 +34,7 @@ namespace PicSizer
             label4.Text = "0";
             label5.Text = total.ToString();
             label6.Text = "0%";
+            button1.Enabled = true;
             progressBar1.Value = 0;
             Setting.ThreadExitNow = false;
         }
@@ -70,6 +71,7 @@ namespace PicSizer
         private void button1_Click(object sender, EventArgs e)
         {
             Setting.ThreadExitNow = true;
+            button1.Enabled = false;
         }
 
         public static void _PrepareToHide()

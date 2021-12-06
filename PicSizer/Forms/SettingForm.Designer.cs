@@ -173,7 +173,8 @@ namespace PicSizer
             this.comboBox1.Items.AddRange(new object[] {
             "无修正",
             "不小于限定值",
-            "不大于限定值"});
+            "不大于限定值",
+            "强制修正"});
             this.comboBox1.Location = new System.Drawing.Point(65, 14);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 20);
