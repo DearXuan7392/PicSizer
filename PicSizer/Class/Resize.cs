@@ -114,6 +114,13 @@ namespace PicSizer
                         case DoWhenException.IgnoreAndJump:
                             num++;
                             break;
+                        case DoWhenException.ShowAndContinue:
+                            Dialog.ShowDialog_Exception(ex);
+                            break;
+                        case DoWhenException.ShowAndJump:
+                            Dialog.ShowDialog_Exception(ex);
+                            num++;
+                            break;
                         default:
                             Dialog.ShowDialog_Exception(ex);
                             OnExit();

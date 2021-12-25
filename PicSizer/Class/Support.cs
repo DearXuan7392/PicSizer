@@ -61,9 +61,17 @@ namespace PicSizer
         /// </summary>
         IgnoreAndJump = 1,
         /// <summary>
-        /// 立即退出
+        /// 弹出错误但继续编号
         /// </summary>
-        Exit = 2
+        ShowAndContinue = 2,
+        /// <summary>
+        /// 弹出错误并跳过当前编号
+        /// </summary>
+        ShowAndJump = 3,
+        /// <summary>
+        /// 弹出错误并立即退出
+        /// </summary>
+        ShowAndExit = 4
     }
 
     public static class ImageInfo

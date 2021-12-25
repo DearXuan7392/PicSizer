@@ -102,7 +102,7 @@ namespace PicSizer
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(241, 146);
+            this.groupBox1.Size = new System.Drawing.Size(262, 146);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "尺寸";
@@ -316,7 +316,7 @@ namespace PicSizer
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(420, 570);
+            this.button1.Location = new System.Drawing.Point(441, 570);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 10;
@@ -442,7 +442,7 @@ namespace PicSizer
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.Location = new System.Drawing.Point(0, 0);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(241, 146);
+            this.groupBox4.Size = new System.Drawing.Size(262, 146);
             this.groupBox4.TabIndex = 13;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "操作";
@@ -454,10 +454,12 @@ namespace PicSizer
             this.comboBox6.Items.AddRange(new object[] {
             "忽略并继续编号",
             "忽略并跳过编号",
-            "停止压缩"});
+            "显示错误并继续编号",
+            "显示错误并跳过编号",
+            "显示错误并立即结束"});
             this.comboBox6.Location = new System.Drawing.Point(81, 18);
             this.comboBox6.Name = "comboBox6";
-            this.comboBox6.Size = new System.Drawing.Size(121, 20);
+            this.comboBox6.Size = new System.Drawing.Size(175, 20);
             this.comboBox6.TabIndex = 1;
             // 
             // label13
@@ -483,7 +485,7 @@ namespace PicSizer
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBox4);
-            this.splitContainer1.Size = new System.Drawing.Size(483, 146);
+            this.splitContainer1.Size = new System.Drawing.Size(504, 146);
             this.splitContainer1.SplitterDistance = 238;
             this.splitContainer1.TabIndex = 14;
             // 
@@ -501,19 +503,21 @@ namespace PicSizer
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
-            this.splitContainer2.Size = new System.Drawing.Size(483, 146);
+            this.splitContainer2.Size = new System.Drawing.Size(504, 146);
             this.splitContainer2.SplitterDistance = 238;
             this.splitContainer2.TabIndex = 15;
             // 
             // groupBox5
             // 
+            this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox5.Controls.Add(this.checkBox1);
             this.groupBox5.Controls.Add(this.numericUpDown6);
             this.groupBox5.Controls.Add(this.trackBar1);
             this.groupBox5.Controls.Add(this.label14);
             this.groupBox5.Location = new System.Drawing.Point(12, 316);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(483, 144);
+            this.groupBox5.Size = new System.Drawing.Size(504, 144);
             this.groupBox5.TabIndex = 16;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "图像处理";
@@ -557,18 +561,18 @@ namespace PicSizer
             // 
             this.checkBox1.AutoSize = true;
             this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(387, 122);
+            this.checkBox1.Location = new System.Drawing.Point(405, 122);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(90, 16);
+            this.checkBox1.Size = new System.Drawing.Size(72, 16);
             this.checkBox1.TabIndex = 3;
-            this.checkBox1.Text = "使用GPU加速";
+            this.checkBox1.Text = "硬件加速";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // SettingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(507, 605);
+            this.ClientSize = new System.Drawing.Size(528, 605);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.splitContainer2);
             this.Controls.Add(this.splitContainer1);
