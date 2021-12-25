@@ -29,6 +29,7 @@ namespace PicSizer
             ProgressForm.form = progressForm;
             SettingForm.form = settingForm;
             paths = listBox1.Items;
+            DllExtern.DoInFirst();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -127,7 +128,7 @@ namespace PicSizer
             //创建处理图片的线程
             Thread thread = new Thread(() =>
             {
-                Bmp.StartResizer(paths, folderPath);
+                PicSizer.Resize.StartResizer(paths, folderPath);
             });
             thread.Priority = ThreadPriority.Highest;//设置线程优先级最高
             progressForm.init(paths.Count);

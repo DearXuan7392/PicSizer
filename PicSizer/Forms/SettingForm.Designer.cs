@@ -66,6 +66,7 @@ namespace PicSizer
             this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.label14 = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -506,6 +507,7 @@ namespace PicSizer
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.checkBox1);
             this.groupBox5.Controls.Add(this.numericUpDown6);
             this.groupBox5.Controls.Add(this.trackBar1);
             this.groupBox5.Controls.Add(this.label14);
@@ -550,6 +552,17 @@ namespace PicSizer
             this.label14.Size = new System.Drawing.Size(35, 12);
             this.label14.TabIndex = 0;
             this.label14.Text = "亮度:";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Enabled = false;
+            this.checkBox1.Location = new System.Drawing.Point(387, 122);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(90, 16);
+            this.checkBox1.TabIndex = 3;
+            this.checkBox1.Text = "使用GPU加速";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // SettingForm
             // 
@@ -636,5 +649,6 @@ namespace PicSizer
         private System.Windows.Forms.NumericUpDown numericUpDown6;
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }

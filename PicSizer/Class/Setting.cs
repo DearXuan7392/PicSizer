@@ -44,5 +44,8 @@ namespace PicSizer
 
         //亮度
         public static byte brightness = 100; // 0表示完全黑暗，100表示不变暗
+
+        //是否启动GPU加速
+        public static bool useGPU = false;
     }
 }

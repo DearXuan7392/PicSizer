@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PicSizer.Class
+namespace PicSizer
 {
     public static class Info
     {
@@ -13,9 +13,5 @@ namespace PicSizer.Class
         /// </summary>
         public static bool isGPUSupport = false;
 
-        public static void DoInFirst()
-        {
-            isGPUSupport = DllExtern.IsGPUSupport();
-        }
     }
 }

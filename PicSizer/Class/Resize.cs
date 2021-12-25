@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace PicSizer
 {
-    public static class Bmp
+    public static class Resize
     {
         static ImageCodecInfo imageCodecInfo = ImageInfo.Info_JPEG;
         static System.Drawing.Imaging.Encoder encoder = System.Drawing.Imaging.Encoder.Quality;
@@ -34,7 +34,7 @@ namespace PicSizer
         /// <summary>
         /// 调整图片像素
         /// </summary>
-        public static Bitmap Resize(Bitmap bitmap)
+        public static Bitmap ResizeBitmap(Bitmap bitmap)
         {
             if (Setting.resizeMode == ResizeMode.None) return bitmap;
             int width = bitmap.Width;
@@ -76,25 +76,7 @@ namespace PicSizer
             return newBitmap;
         }
 
-        /// <summary>
-        /// 调整图片亮度
-        /// </summary>
-        public static void SetBrightness(Bitmap bitmap)
-        {
-            if (Setting.brightness == 100) return;
-            int width = bitmap.Width, height = bitmap.Height;
-            BitmapData bitmapData = bitmap.LockBits(
-                new Rectangle(0, 0, width, height),
-                ImageLockMode.ReadWrite,
-                PixelFormat.Format24bppRgb);
-            int length = width * height;
-            IntPtr ptr = bitmapData.Scan0;
-            if (!DllExtern.SetBrightness(ptr, length, Setting.brightness))
-            {
-                throw new Exception("在GPU上遇到了未知错误");
-            }
-            bitmap.UnlockBits(bitmapData);
-        }
+        
 
         public static void StartResizer(ListBox.ObjectCollection files, string resDir)
         {
@@ -159,9 +141,9 @@ namespace PicSizer
         /// </summary>
         public static bool CompressionBySize(string file, string result)
         {
-            using (Bitmap bitmap = Resize(new Bitmap(file)))
+            using (Bitmap bitmap = ResizeBitmap(new Bitmap(file)))
             {
-                SetBrightness(bitmap);
+                BmpProc.SetBrightness(bitmap);
                 long left = 0L;
                 long right = 100L;
                 long mid = 0L;
@@ -195,9 +177,9 @@ namespace PicSizer
         /// </summary>
         public static bool CompressionByValue(string file, string result)
         {
-            using(Bitmap bitmap = Resize(new Bitmap(file)))
+            using(Bitmap bitmap = ResizeBitmap(new Bitmap(file)))
             {
-                SetBrightness(bitmap);
+                BmpProc.SetBrightness(bitmap);
                 encoderParameters.Param[0] = GetParameter(Setting.CompressionValue);
                 bitmap.Save(result, imageCodecInfo, encoderParameters);
                 return true;
