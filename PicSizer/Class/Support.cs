@@ -47,6 +47,25 @@ namespace PicSizer
         Original = 4
     }
 
+    /// <summary>
+    /// 遇到异常时的操作
+    /// </summary>
+    public enum DoWhenException
+    {
+        /// <summary>
+        /// 忽略错误并继续编号
+        /// </summary>
+        IgnoreAndContinue = 0,
+        /// <summary>
+        /// 忽略错误并跳过当前编号
+        /// </summary>
+        IgnoreAndJump = 1,
+        /// <summary>
+        /// 立即退出
+        /// </summary>
+        Exit = 2
+    }
+
     public static class ImageInfo
     {
         public static ImageCodecInfo Info_JPEG = GetEncoderInfo("image/jpeg");

@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 namespace PicSizer
 {
-    
-
     public static class Setting
     {
         //线程信号灯
@@ -40,5 +38,11 @@ namespace PicSizer
 
         //混合方式命名
         public static string CustomRenameStr;
+
+        //错误处理
+        public static DoWhenException doWhenException = DoWhenException.IgnoreAndContinue;
+
+        //亮度
+        public static byte brightness = 100; // 0表示完全黑暗，100表示不变暗
     }
 }

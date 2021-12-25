@@ -12,7 +12,7 @@ PicSizer是一款图片批量压缩软件，解决了传统压缩软件只能指
 
 ## 下载与使用
 
-[PicSizer v1.0](https://gitee.com/dearxuan/pic-sizer/releases)
+[PicSizer发行版](https://gitee.com/dearxuan/pic-sizer/releases)
 
 ## 适用场合
 

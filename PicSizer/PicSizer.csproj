@@ -69,6 +69,26 @@
   <PropertyGroup>
     <SignManifests>true</SignManifests>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -83,14 +103,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bmp.cs" />
+    <Compile Include="Class\Bmp.cs" />
+    <Compile Include="Class\DllExtern.cs" />
+    <Compile Include="Class\Info.cs" />
     <Compile Include="Forms\DearXuan.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\DearXuan.Designer.cs">
       <DependentUpon>DearXuan.cs</DependentUpon>
     </Compile>
-    <Compile Include="Dialog.cs" />
+    <Compile Include="Class\Dialog.cs" />
     <Compile Include="Forms\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -105,14 +127,14 @@
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Setting.cs" />
+    <Compile Include="Class\Setting.cs" />
     <Compile Include="Forms\SettingForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\SettingForm.Designer.cs">
       <DependentUpon>SettingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Support.cs" />
+    <Compile Include="Class\Support.cs" />
     <EmbeddedResource Include="Forms\DearXuan.byn.resx">
       <DependentUpon>DearXuan.cs</DependentUpon>
     </EmbeddedResource>

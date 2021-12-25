@@ -36,6 +36,19 @@ namespace PicSizer
             
         }
 
+        private bool AddPicture(string path)
+        {
+            if (paths.Contains(path))
+            {
+                return false;
+            }
+            else
+            {
+                paths.Add(path);
+                return true;
+            }
+        }
+
         /// <summary>
         /// 打开图片按钮
         /// </summary>
@@ -50,11 +63,7 @@ namespace PicSizer
                 int fileCount = dialog.FileNames.Length;
                 foreach (string path in dialog.FileNames)
                 {
-                    if (!paths.Contains(path))
-                    {
-                        paths.Add(path);
-                        fileCount--;
-                    }
+                    if (AddPicture(path)) fileCount--;
                 }
                 if(fileCount != 0)
                 {
@@ -157,6 +166,37 @@ namespace PicSizer
                 {
                     listBox1.Items.RemoveAt(index);
                 }
+            }
+        }
+
+        private void listBox1_DragDrop(object sender, DragEventArgs e)
+        {
+            try
+            {
+                string[] files = e.Data.GetData(DataFormats.FileDrop, false) as string[];
+                foreach(string path in files)
+                {
+                    if (!paths.Contains(path))
+                    {
+                        paths.Add(path);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+        }
+
+        private void listBox1_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
             }
         }
     }

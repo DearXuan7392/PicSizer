@@ -76,10 +76,29 @@ namespace PicSizer
             return newBitmap;
         }
 
+        /// <summary>
+        /// 调整图片亮度
+        /// </summary>
+        public static void SetBrightness(Bitmap bitmap)
+        {
+            if (Setting.brightness == 100) return;
+            int width = bitmap.Width, height = bitmap.Height;
+            BitmapData bitmapData = bitmap.LockBits(
+                new Rectangle(0, 0, width, height),
+                ImageLockMode.ReadWrite,
+                PixelFormat.Format24bppRgb);
+            int length = width * height;
+            IntPtr ptr = bitmapData.Scan0;
+            if (!DllExtern.SetBrightness(ptr, length, Setting.brightness))
+            {
+                throw new Exception("在GPU上遇到了未知错误");
+            }
+            bitmap.UnlockBits(bitmapData);
+        }
+
         public static void StartResizer(ListBox.ObjectCollection files, string resDir)
         {
             int num = Setting.StartIndex;
-            int now = 1;
             string result;
             //遍历所有图片
             foreach (string path in files)
@@ -94,22 +113,32 @@ namespace PicSizer
                     result = GetResultFileName(path, resDir, num);
                     if (Setting.compressionMode == CompressionMode.SizeFirst)
                     {
-                        if (CompressionBySize(path, result)) num++;
+                        if (!CompressionBySize(path, result)) throw new Exception("图片:" + path + "压缩失败");
                     }
                     else
                     {
-                        if (CompressionByValue(path, result)) num++;
+                        if (!CompressionByValue(path, result)) throw new Exception("图片:" + path + "压缩失败");
                     }
+                    num++;
+                    Update(true); // 压缩成功，进度条加一
                 }
                 catch(Exception ex)
                 {
-                    Dialog.ShowDialog_Exception(ex);
+                    Update(false); // 压缩失败，错误加一
+                    switch (Setting.doWhenException)
+                    {
+                        case DoWhenException.IgnoreAndContinue:
+                            break;
+                        case DoWhenException.IgnoreAndJump:
+                            num++;
+                            break;
+                        default:
+                            Dialog.ShowDialog_Exception(ex);
+                            OnExit();
+                            return;
+                    }
                 }
-                //更新进度
-                Update(now);
-                now++;
             }
-            
         }
 
         /// <summary>
@@ -130,40 +159,33 @@ namespace PicSizer
         /// </summary>
         public static bool CompressionBySize(string file, string result)
         {
-            try
+            using (Bitmap bitmap = Resize(new Bitmap(file)))
             {
-                using (Bitmap bitmap = Resize(new Bitmap(file)))
+                SetBrightness(bitmap);
+                long left = 0L;
+                long right = 100L;
+                long mid = 0L;
+                long size = 0L;
+                while(left < right - 1)
                 {
-                    long left = 0L;
-                    long right = 100L;
-                    long mid = 0L;
-                    long size = 0L;
-                    while(left < right - 1)
-                    {
-                        mid = (left + right) / 2;
-                        size = GetBitmapSize(bitmap, mid);
-                        if(size <= Setting.LimitSize)
-                        {
-                            left = mid;
-                        }
-                        else
-                        {
-                            right = mid;
-                        }
-                    }
-                    size = GetBitmapSize(bitmap, left);
+                    mid = (left + right) / 2;
+                    size = GetBitmapSize(bitmap, mid);
                     if(size <= Setting.LimitSize)
                     {
-                        encoderParameters.Param[0] = GetParameter(left);
-                        bitmap.Save(result, imageCodecInfo, encoderParameters);
-                        return true;
+                        left = mid;
                     }
-                    return false;
+                    else
+                    {
+                        right = mid;
+                    }
                 }
-            }
-            catch(Exception e)
-            {
-                //MessageBox.Show(e.ToString());
+                size = GetBitmapSize(bitmap, left);
+                if(size <= Setting.LimitSize)
+                {
+                    encoderParameters.Param[0] = GetParameter(left);
+                    bitmap.Save(result, imageCodecInfo, encoderParameters);
+                    return true;
+                }
                 return false;
             }
         }
@@ -173,19 +195,12 @@ namespace PicSizer
         /// </summary>
         public static bool CompressionByValue(string file, string result)
         {
-            try
+            using(Bitmap bitmap = Resize(new Bitmap(file)))
             {
-                using(Bitmap bitmap = Resize(new Bitmap(file)))
-                {
-                    encoderParameters.Param[0] = GetParameter(Setting.CompressionValue);
-                    bitmap.Save(result, imageCodecInfo, encoderParameters);
-                    return true;
-                }
-            }
-            catch(Exception e)
-            {
-                //MessageBox.Show(e.ToString());
-                return false;
+                SetBrightness(bitmap);
+                encoderParameters.Param[0] = GetParameter(Setting.CompressionValue);
+                bitmap.Save(result, imageCodecInfo, encoderParameters);
+                return true;
             }
         }
 
@@ -227,9 +242,9 @@ namespace PicSizer
         /// <summary>
         /// 更新进度条
         /// </summary>
-        public static void Update(int now)
+        public static void Update(bool flag)
         {
-            Form1.progressForm.SetNow(now);
+            Form1.progressForm.AddOne(flag);
         }
     }
 }

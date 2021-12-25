@@ -12,15 +12,16 @@ namespace PicSizer
 {
     public partial class ProgressForm : Form
     {
-        int finish = 0;
-        int total = 0;
+        static int success = 0; // 压缩成功
+        static int error = 0; // 压缩失败
+        static int total = 0; // 总数
 
         public static ProgressForm form;
 
-        public delegate void UpdateProgressDelegate(int now);
+        public delegate void UpdateProgressDelegate(bool flag);
         public delegate void PrepareToHideDelegate();
 
-        UpdateProgressDelegate __UpdateProgress = new UpdateProgressDelegate(_SetNow);
+        UpdateProgressDelegate __UpdateProgress = new UpdateProgressDelegate(_AddOne);
         PrepareToHideDelegate __PrepareToHide = new PrepareToHideDelegate(_PrepareToHide);
 
         public ProgressForm()
@@ -30,28 +31,40 @@ namespace PicSizer
 
         public void init(int total)
         {
-            this.total = total;
-            label4.Text = "0";
-            label5.Text = total.ToString();
-            label6.Text = "0%";
+            success = 0;
+            error = 0;
+            ProgressForm.total = total;
+            label5.Text = "0";
+            label6.Text = "0";
+            label7.Text = total.ToString();
+            label8.Text = "0%";
             button1.Enabled = true;
             progressBar1.Value = 0;
             Setting.ThreadExitNow = false;
         }
 
-        public void SetNow(int now)
+        public void AddOne(bool flag)
         {
-            this.Invoke(__UpdateProgress,now);
+            this.Invoke(__UpdateProgress,flag);
         }
 
-        private static void _SetNow(int now)
+        private static void _AddOne(bool flag)
         {
-            form.finish = now;
-            int percent = now * 100 / form.total;
-            form.label4.Text = now.ToString();
-            form.label6.Text = percent + "%";
+            if (flag)
+            {
+                success++;
+            }
+            else
+            {
+                error++;
+            }
+            int sum = success + error;
+            int percent = sum * 100 / total;
+            form.label5.Text = success.ToString();
+            form.label6.Text = error.ToString();
+            form.label8.Text = percent + "%";
             form.progressBar1.Value = percent;
-            if (now == form.total) form.PrepareToHide();
+            if (sum == total) form.PrepareToHide();
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
@@ -77,7 +90,7 @@ namespace PicSizer
         public static void _PrepareToHide()
         {
             form.Hide();
-            string s = "总共: " + form.total + " 张\n压缩完成: " + form.finish + "张\n未完成: " + (form.total - form.finish) + "张";
+            string s = "总共: " + total + " 张\n压缩完成: " + success + "张\n未完成: " + error + "张";
             MessageBox.Show(s, "压缩已结束", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
