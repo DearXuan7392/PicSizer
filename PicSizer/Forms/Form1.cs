@@ -57,7 +57,14 @@ namespace PicSizer
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Title = "添加图片";
-            dialog.Filter = "图片(JPG,PNG,BMP,TIFF)|*.jpg;*.png;*.bmp;*.tiff";
+            if (Setting.AllowAnyExtension)
+            {
+                dialog.Filter = "图片(JPG,PNG,BMP,TIFF)|*.jpg;*.png;*.bmp;*.tiff|所有|*.*";
+            }
+            else
+            {
+                dialog.Filter = "图片(JPG,PNG,BMP,TIFF)|*.jpg;*.png;*.bmp;*.tiff";
+            }
             dialog.Multiselect = true;
             if(dialog.ShowDialog() == DialogResult.OK)
             {
@@ -175,15 +182,24 @@ namespace PicSizer
             try
             {
                 string[] files = e.Data.GetData(DataFormats.FileDrop, false) as string[];
+                int count = files.Length;
                 foreach(string path in files)
                 {
-                    if(path.EndsWith(".jpg") || path.EndsWith(".png") || path.EndsWith(".bmp") || path.EndsWith(".tiff"))
+                    if (Setting.AllowAnyExtension)
                     {
-                        if (!paths.Contains(path))
+                        if (AddPicture(path)) count--;
+                    }
+                    else
+                    {
+                        if(path.EndsWith(".jpg") || path.EndsWith(".png") || path.EndsWith(".bmp") || path.EndsWith(".tiff"))
                         {
-                            paths.Add(path);
+                            if (AddPicture(path)) count--;
                         }
                     }
+                }
+                if (count != 0)
+                {
+                    Dialog.ShowDialog(count + " 个重复或不符合格式的路径已被忽略.");
                 }
             }
             catch(Exception ex)

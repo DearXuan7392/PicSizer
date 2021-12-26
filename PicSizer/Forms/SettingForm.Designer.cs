@@ -31,50 +31,51 @@ namespace PicSizer
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown_LimitHeight = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown_LimitWidth = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboBox_ResizeMode = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
-            this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
+            this.comboBox_KB_or_MB = new System.Windows.Forms.ComboBox();
+            this.numericUpDown_Size = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
-            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown_Value = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.comboBox_CompressionMode = new System.Windows.Forms.ComboBox();
+            this.button_Save = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.comboBox5 = new System.Windows.Forms.ComboBox();
+            this.comboBox_ExtensionMode = new System.Windows.Forms.ComboBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox_CustomRenameStr = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown_StartIndex = new System.Windows.Forms.NumericUpDown();
             this.label10 = new System.Windows.Forms.Label();
-            this.comboBox4 = new System.Windows.Forms.ComboBox();
+            this.comboBox_RenameMode = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.comboBox6 = new System.Windows.Forms.ComboBox();
+            this.comboBox_DoWhenException = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.checkBox_UseGPU = new System.Windows.Forms.CheckBox();
+            this.numericUpDown_Brightness = new System.Windows.Forms.NumericUpDown();
+            this.trackBar_Brightness = new System.Windows.Forms.TrackBar();
             this.label14 = new System.Windows.Forms.Label();
+            this.checkBox_AllowAnyExtension = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitWidth)).BeginInit();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Size)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Value)).BeginInit();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_StartIndex)).BeginInit();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -85,67 +86,67 @@ namespace PicSizer
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Brightness)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_Brightness)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.numericUpDown2);
-            this.groupBox1.Controls.Add(this.numericUpDown1);
+            this.groupBox1.Controls.Add(this.numericUpDown_LimitHeight);
+            this.groupBox1.Controls.Add(this.numericUpDown_LimitWidth);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.comboBox1);
+            this.groupBox1.Controls.Add(this.comboBox_ResizeMode);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(262, 146);
+            this.groupBox1.Size = new System.Drawing.Size(228, 146);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "尺寸";
             // 
-            // numericUpDown2
+            // numericUpDown_LimitHeight
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(65, 77);
-            this.numericUpDown2.Maximum = new decimal(new int[] {
+            this.numericUpDown_LimitHeight.Location = new System.Drawing.Point(65, 77);
+            this.numericUpDown_LimitHeight.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
-            this.numericUpDown2.Minimum = new decimal(new int[] {
+            this.numericUpDown_LimitHeight.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(120, 21);
-            this.numericUpDown2.TabIndex = 16;
-            this.numericUpDown2.Value = new decimal(new int[] {
+            this.numericUpDown_LimitHeight.Name = "numericUpDown_LimitHeight";
+            this.numericUpDown_LimitHeight.Size = new System.Drawing.Size(120, 21);
+            this.numericUpDown_LimitHeight.TabIndex = 16;
+            this.numericUpDown_LimitHeight.Value = new decimal(new int[] {
             1080,
             0,
             0,
             0});
             // 
-            // numericUpDown1
+            // numericUpDown_LimitWidth
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(65, 50);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
+            this.numericUpDown_LimitWidth.Location = new System.Drawing.Point(65, 50);
+            this.numericUpDown_LimitWidth.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
-            this.numericUpDown1.Minimum = new decimal(new int[] {
+            this.numericUpDown_LimitWidth.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(120, 21);
-            this.numericUpDown1.TabIndex = 13;
-            this.numericUpDown1.Value = new decimal(new int[] {
+            this.numericUpDown_LimitWidth.Name = "numericUpDown_LimitWidth";
+            this.numericUpDown_LimitWidth.Size = new System.Drawing.Size(120, 21);
+            this.numericUpDown_LimitWidth.TabIndex = 13;
+            this.numericUpDown_LimitWidth.Value = new decimal(new int[] {
             1920,
             0,
             0,
@@ -187,19 +188,19 @@ namespace PicSizer
             this.label2.TabIndex = 10;
             this.label2.Text = "Width:";
             // 
-            // comboBox1
+            // comboBox_ResizeMode
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
+            this.comboBox_ResizeMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_ResizeMode.FormattingEnabled = true;
+            this.comboBox_ResizeMode.Items.AddRange(new object[] {
             "无修正",
             "不小于限定值",
             "不大于限定值",
             "强制修正"});
-            this.comboBox1.Location = new System.Drawing.Point(65, 14);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 20);
-            this.comboBox1.TabIndex = 9;
+            this.comboBox_ResizeMode.Location = new System.Drawing.Point(65, 14);
+            this.comboBox_ResizeMode.Name = "comboBox_ResizeMode";
+            this.comboBox_ResizeMode.Size = new System.Drawing.Size(121, 20);
+            this.comboBox_ResizeMode.TabIndex = 9;
             // 
             // label1
             // 
@@ -212,51 +213,51 @@ namespace PicSizer
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.comboBox3);
-            this.groupBox2.Controls.Add(this.numericUpDown4);
+            this.groupBox2.Controls.Add(this.comboBox_KB_or_MB);
+            this.groupBox2.Controls.Add(this.numericUpDown_Size);
             this.groupBox2.Controls.Add(this.label8);
-            this.groupBox2.Controls.Add(this.numericUpDown3);
+            this.groupBox2.Controls.Add(this.numericUpDown_Value);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.comboBox2);
+            this.groupBox2.Controls.Add(this.comboBox_CompressionMode);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(0, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(238, 146);
+            this.groupBox2.Size = new System.Drawing.Size(206, 146);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "压缩";
             // 
-            // comboBox3
+            // comboBox_KB_or_MB
             // 
-            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Items.AddRange(new object[] {
+            this.comboBox_KB_or_MB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_KB_or_MB.FormattingEnabled = true;
+            this.comboBox_KB_or_MB.Items.AddRange(new object[] {
             "KB",
             "MB"});
-            this.comboBox3.Location = new System.Drawing.Point(192, 73);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(40, 20);
-            this.comboBox3.TabIndex = 17;
-            this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
+            this.comboBox_KB_or_MB.Location = new System.Drawing.Point(148, 73);
+            this.comboBox_KB_or_MB.Name = "comboBox_KB_or_MB";
+            this.comboBox_KB_or_MB.Size = new System.Drawing.Size(40, 20);
+            this.comboBox_KB_or_MB.TabIndex = 17;
+            this.comboBox_KB_or_MB.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
             // 
-            // numericUpDown4
+            // numericUpDown_Size
             // 
-            this.numericUpDown4.Location = new System.Drawing.Point(66, 73);
-            this.numericUpDown4.Maximum = new decimal(new int[] {
+            this.numericUpDown_Size.Location = new System.Drawing.Point(66, 73);
+            this.numericUpDown_Size.Maximum = new decimal(new int[] {
             1048576,
             0,
             0,
             0});
-            this.numericUpDown4.Minimum = new decimal(new int[] {
+            this.numericUpDown_Size.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericUpDown4.Name = "numericUpDown4";
-            this.numericUpDown4.Size = new System.Drawing.Size(120, 21);
-            this.numericUpDown4.TabIndex = 16;
-            this.numericUpDown4.Value = new decimal(new int[] {
+            this.numericUpDown_Size.Name = "numericUpDown_Size";
+            this.numericUpDown_Size.Size = new System.Drawing.Size(76, 21);
+            this.numericUpDown_Size.TabIndex = 16;
+            this.numericUpDown_Size.Value = new decimal(new int[] {
             200,
             0,
             0,
@@ -271,13 +272,13 @@ namespace PicSizer
             this.label8.TabIndex = 15;
             this.label8.Text = "指定大小:";
             // 
-            // numericUpDown3
+            // numericUpDown_Value
             // 
-            this.numericUpDown3.Location = new System.Drawing.Point(66, 46);
-            this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(120, 21);
-            this.numericUpDown3.TabIndex = 14;
-            this.numericUpDown3.Value = new decimal(new int[] {
+            this.numericUpDown_Value.Location = new System.Drawing.Point(66, 46);
+            this.numericUpDown_Value.Name = "numericUpDown_Value";
+            this.numericUpDown_Value.Size = new System.Drawing.Size(120, 21);
+            this.numericUpDown_Value.TabIndex = 14;
+            this.numericUpDown_Value.Value = new decimal(new int[] {
             80,
             0,
             0,
@@ -301,61 +302,61 @@ namespace PicSizer
             this.label6.TabIndex = 11;
             this.label6.Text = "压缩模式:";
             // 
-            // comboBox2
+            // comboBox_CompressionMode
             // 
-            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {
+            this.comboBox_CompressionMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_CompressionMode.FormattingEnabled = true;
+            this.comboBox_CompressionMode.Items.AddRange(new object[] {
             "指定大小",
             "指定画质"});
-            this.comboBox2.Location = new System.Drawing.Point(66, 20);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(121, 20);
-            this.comboBox2.TabIndex = 10;
+            this.comboBox_CompressionMode.Location = new System.Drawing.Point(66, 20);
+            this.comboBox_CompressionMode.Name = "comboBox_CompressionMode";
+            this.comboBox_CompressionMode.Size = new System.Drawing.Size(121, 20);
+            this.comboBox_CompressionMode.TabIndex = 10;
             // 
-            // button1
+            // button_Save
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(441, 458);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "确定";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button_Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_Save.Location = new System.Drawing.Point(349, 467);
+            this.button_Save.Name = "button_Save";
+            this.button_Save.Size = new System.Drawing.Size(101, 50);
+            this.button_Save.TabIndex = 10;
+            this.button_Save.Text = "保存";
+            this.button_Save.UseVisualStyleBackColor = true;
+            this.button_Save.Click += new System.EventHandler(this.button1_Click);
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.comboBox5);
+            this.groupBox3.Controls.Add(this.comboBox_ExtensionMode);
             this.groupBox3.Controls.Add(this.label12);
-            this.groupBox3.Controls.Add(this.textBox1);
+            this.groupBox3.Controls.Add(this.textBox_CustomRenameStr);
             this.groupBox3.Controls.Add(this.label11);
-            this.groupBox3.Controls.Add(this.numericUpDown5);
+            this.groupBox3.Controls.Add(this.numericUpDown_StartIndex);
             this.groupBox3.Controls.Add(this.label10);
-            this.groupBox3.Controls.Add(this.comboBox4);
+            this.groupBox3.Controls.Add(this.comboBox_RenameMode);
             this.groupBox3.Controls.Add(this.label9);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(0, 0);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(238, 146);
+            this.groupBox3.Size = new System.Drawing.Size(206, 146);
             this.groupBox3.TabIndex = 11;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "命名";
             // 
-            // comboBox5
+            // comboBox_ExtensionMode
             // 
-            this.comboBox5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Items.AddRange(new object[] {
+            this.comboBox_ExtensionMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_ExtensionMode.FormattingEnabled = true;
+            this.comboBox_ExtensionMode.Items.AddRange(new object[] {
             "JPG/JPEG",
             "PNG",
             "BMP",
             "TIFF",
             "原格式"});
-            this.comboBox5.Location = new System.Drawing.Point(66, 44);
-            this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(121, 20);
-            this.comboBox5.TabIndex = 21;
+            this.comboBox_ExtensionMode.Location = new System.Drawing.Point(66, 44);
+            this.comboBox_ExtensionMode.Name = "comboBox_ExtensionMode";
+            this.comboBox_ExtensionMode.Size = new System.Drawing.Size(121, 20);
+            this.comboBox_ExtensionMode.TabIndex = 21;
             // 
             // label12
             // 
@@ -364,14 +365,14 @@ namespace PicSizer
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(59, 12);
             this.label12.TabIndex = 20;
-            this.label12.Text = "指定格式:";
+            this.label12.Text = "指定后缀:";
             // 
-            // textBox1
+            // textBox_CustomRenameStr
             // 
-            this.textBox1.Location = new System.Drawing.Point(66, 71);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(121, 21);
-            this.textBox1.TabIndex = 19;
+            this.textBox_CustomRenameStr.Location = new System.Drawing.Point(66, 71);
+            this.textBox_CustomRenameStr.Name = "textBox_CustomRenameStr";
+            this.textBox_CustomRenameStr.Size = new System.Drawing.Size(121, 21);
+            this.textBox_CustomRenameStr.TabIndex = 19;
             // 
             // label11
             // 
@@ -382,23 +383,23 @@ namespace PicSizer
             this.label11.TabIndex = 18;
             this.label11.Text = "自定名称:";
             // 
-            // numericUpDown5
+            // numericUpDown_StartIndex
             // 
-            this.numericUpDown5.Location = new System.Drawing.Point(66, 98);
-            this.numericUpDown5.Maximum = new decimal(new int[] {
+            this.numericUpDown_StartIndex.Location = new System.Drawing.Point(66, 98);
+            this.numericUpDown_StartIndex.Maximum = new decimal(new int[] {
             1024,
             0,
             0,
             0});
-            this.numericUpDown5.Minimum = new decimal(new int[] {
+            this.numericUpDown_StartIndex.Minimum = new decimal(new int[] {
             1024,
             0,
             0,
             -2147483648});
-            this.numericUpDown5.Name = "numericUpDown5";
-            this.numericUpDown5.Size = new System.Drawing.Size(122, 21);
-            this.numericUpDown5.TabIndex = 17;
-            this.numericUpDown5.Value = new decimal(new int[] {
+            this.numericUpDown_StartIndex.Name = "numericUpDown_StartIndex";
+            this.numericUpDown_StartIndex.Size = new System.Drawing.Size(122, 21);
+            this.numericUpDown_StartIndex.TabIndex = 17;
+            this.numericUpDown_StartIndex.Value = new decimal(new int[] {
             1,
             0,
             0,
@@ -413,18 +414,18 @@ namespace PicSizer
             this.label10.TabIndex = 2;
             this.label10.Text = "起始下标:";
             // 
-            // comboBox4
+            // comboBox_RenameMode
             // 
-            this.comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Items.AddRange(new object[] {
+            this.comboBox_RenameMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_RenameMode.FormattingEnabled = true;
+            this.comboBox_RenameMode.Items.AddRange(new object[] {
             "数字",
             "原名",
             "混合方式"});
-            this.comboBox4.Location = new System.Drawing.Point(66, 18);
-            this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(121, 20);
-            this.comboBox4.TabIndex = 1;
+            this.comboBox_RenameMode.Location = new System.Drawing.Point(66, 18);
+            this.comboBox_RenameMode.Name = "comboBox_RenameMode";
+            this.comboBox_RenameMode.Size = new System.Drawing.Size(121, 20);
+            this.comboBox_RenameMode.TabIndex = 1;
             // 
             // label9
             // 
@@ -437,30 +438,31 @@ namespace PicSizer
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.comboBox6);
+            this.groupBox4.Controls.Add(this.checkBox_AllowAnyExtension);
+            this.groupBox4.Controls.Add(this.comboBox_DoWhenException);
             this.groupBox4.Controls.Add(this.label13);
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.Location = new System.Drawing.Point(0, 0);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(262, 146);
+            this.groupBox4.Size = new System.Drawing.Size(228, 146);
             this.groupBox4.TabIndex = 13;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "操作";
             // 
-            // comboBox6
+            // comboBox_DoWhenException
             // 
-            this.comboBox6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox6.FormattingEnabled = true;
-            this.comboBox6.Items.AddRange(new object[] {
+            this.comboBox_DoWhenException.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_DoWhenException.FormattingEnabled = true;
+            this.comboBox_DoWhenException.Items.AddRange(new object[] {
             "忽略并继续编号",
             "忽略并跳过编号",
-            "显示错误并继续编号",
-            "显示错误并跳过编号",
-            "显示错误并立即结束"});
-            this.comboBox6.Location = new System.Drawing.Point(81, 18);
-            this.comboBox6.Name = "comboBox6";
-            this.comboBox6.Size = new System.Drawing.Size(175, 20);
-            this.comboBox6.TabIndex = 1;
+            "显示并继续编号",
+            "显示并跳过编号",
+            "显示并立即结束"});
+            this.comboBox_DoWhenException.Location = new System.Drawing.Point(83, 18);
+            this.comboBox_DoWhenException.Name = "comboBox_DoWhenException";
+            this.comboBox_DoWhenException.Size = new System.Drawing.Size(120, 20);
+            this.comboBox_DoWhenException.TabIndex = 1;
             // 
             // label13
             // 
@@ -485,8 +487,8 @@ namespace PicSizer
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBox4);
-            this.splitContainer1.Size = new System.Drawing.Size(504, 146);
-            this.splitContainer1.SplitterDistance = 238;
+            this.splitContainer1.Size = new System.Drawing.Size(438, 146);
+            this.splitContainer1.SplitterDistance = 206;
             this.splitContainer1.TabIndex = 14;
             // 
             // splitContainer2
@@ -503,62 +505,64 @@ namespace PicSizer
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
-            this.splitContainer2.Size = new System.Drawing.Size(504, 146);
-            this.splitContainer2.SplitterDistance = 238;
+            this.splitContainer2.Size = new System.Drawing.Size(438, 146);
+            this.splitContainer2.SplitterDistance = 206;
             this.splitContainer2.TabIndex = 15;
             // 
             // groupBox5
             // 
             this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox5.Controls.Add(this.checkBox1);
-            this.groupBox5.Controls.Add(this.numericUpDown6);
-            this.groupBox5.Controls.Add(this.trackBar1);
+            this.groupBox5.Controls.Add(this.checkBox_UseGPU);
+            this.groupBox5.Controls.Add(this.numericUpDown_Brightness);
+            this.groupBox5.Controls.Add(this.trackBar_Brightness);
             this.groupBox5.Controls.Add(this.label14);
             this.groupBox5.Location = new System.Drawing.Point(12, 316);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(504, 83);
+            this.groupBox5.Size = new System.Drawing.Size(438, 83);
             this.groupBox5.TabIndex = 16;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "图像处理";
             // 
-            // checkBox1
+            // checkBox_UseGPU
             // 
-            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(426, 61);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(72, 16);
-            this.checkBox1.TabIndex = 3;
-            this.checkBox1.Text = "硬件加速";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox_UseGPU.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox_UseGPU.AutoSize = true;
+            this.checkBox_UseGPU.Enabled = false;
+            this.checkBox_UseGPU.Location = new System.Drawing.Point(360, 61);
+            this.checkBox_UseGPU.Name = "checkBox_UseGPU";
+            this.checkBox_UseGPU.Size = new System.Drawing.Size(72, 16);
+            this.checkBox_UseGPU.TabIndex = 3;
+            this.checkBox_UseGPU.Text = "硬件加速";
+            this.checkBox_UseGPU.UseVisualStyleBackColor = true;
             // 
-            // numericUpDown6
+            // numericUpDown_Brightness
             // 
-            this.numericUpDown6.Location = new System.Drawing.Point(47, 20);
-            this.numericUpDown6.Name = "numericUpDown6";
-            this.numericUpDown6.Size = new System.Drawing.Size(42, 21);
-            this.numericUpDown6.TabIndex = 2;
-            this.numericUpDown6.Value = new decimal(new int[] {
+            this.numericUpDown_Brightness.Location = new System.Drawing.Point(47, 20);
+            this.numericUpDown_Brightness.Name = "numericUpDown_Brightness";
+            this.numericUpDown_Brightness.Size = new System.Drawing.Size(42, 21);
+            this.numericUpDown_Brightness.TabIndex = 2;
+            this.numericUpDown_Brightness.Value = new decimal(new int[] {
             100,
             0,
             0,
             0});
-            this.numericUpDown6.ValueChanged += new System.EventHandler(this.numericUpDown6_ValueChanged);
+            this.numericUpDown_Brightness.ValueChanged += new System.EventHandler(this.numericUpDown6_ValueChanged);
             // 
-            // trackBar1
+            // trackBar_Brightness
             // 
-            this.trackBar1.LargeChange = 10;
-            this.trackBar1.Location = new System.Drawing.Point(95, 20);
-            this.trackBar1.Maximum = 100;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(382, 45);
-            this.trackBar1.SmallChange = 5;
-            this.trackBar1.TabIndex = 1;
-            this.trackBar1.TickFrequency = 10;
-            this.trackBar1.Value = 100;
-            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            this.trackBar_Brightness.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBar_Brightness.LargeChange = 10;
+            this.trackBar_Brightness.Location = new System.Drawing.Point(95, 20);
+            this.trackBar_Brightness.Maximum = 100;
+            this.trackBar_Brightness.Name = "trackBar_Brightness";
+            this.trackBar_Brightness.Size = new System.Drawing.Size(336, 45);
+            this.trackBar_Brightness.SmallChange = 5;
+            this.trackBar_Brightness.TabIndex = 1;
+            this.trackBar_Brightness.TickFrequency = 10;
+            this.trackBar_Brightness.Value = 100;
+            this.trackBar_Brightness.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
             // label14
             // 
@@ -569,15 +573,25 @@ namespace PicSizer
             this.label14.TabIndex = 0;
             this.label14.Text = "亮度:";
             // 
+            // checkBox_AllowAnyExtension
+            // 
+            this.checkBox_AllowAnyExtension.AutoSize = true;
+            this.checkBox_AllowAnyExtension.Location = new System.Drawing.Point(8, 46);
+            this.checkBox_AllowAnyExtension.Name = "checkBox_AllowAnyExtension";
+            this.checkBox_AllowAnyExtension.Size = new System.Drawing.Size(96, 16);
+            this.checkBox_AllowAnyExtension.TabIndex = 2;
+            this.checkBox_AllowAnyExtension.Text = "允许任意后缀";
+            this.checkBox_AllowAnyExtension.UseVisualStyleBackColor = true;
+            // 
             // SettingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(528, 493);
+            this.ClientSize = new System.Drawing.Size(462, 529);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.splitContainer2);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.button_Save);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -589,15 +603,15 @@ namespace PicSizer
             this.Load += new System.EventHandler(this.SettingForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitWidth)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Size)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Value)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_StartIndex)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -610,8 +624,8 @@ namespace PicSizer
             this.splitContainer2.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Brightness)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_Brightness)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -623,37 +637,38 @@ namespace PicSizer
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBox_ResizeMode;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.ComboBox comboBox2;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.NumericUpDown numericUpDown3;
+        private System.Windows.Forms.ComboBox comboBox_CompressionMode;
+        private System.Windows.Forms.NumericUpDown numericUpDown_LimitHeight;
+        private System.Windows.Forms.NumericUpDown numericUpDown_LimitWidth;
+        private System.Windows.Forms.NumericUpDown numericUpDown_Value;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ComboBox comboBox3;
-        private System.Windows.Forms.NumericUpDown numericUpDown4;
+        private System.Windows.Forms.ComboBox comboBox_KB_or_MB;
+        private System.Windows.Forms.NumericUpDown numericUpDown_Size;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button_Save;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.ComboBox comboBox4;
+        private System.Windows.Forms.ComboBox comboBox_RenameMode;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.ComboBox comboBox5;
+        private System.Windows.Forms.ComboBox comboBox_ExtensionMode;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox_CustomRenameStr;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.NumericUpDown numericUpDown5;
+        private System.Windows.Forms.NumericUpDown numericUpDown_StartIndex;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.ComboBox comboBox6;
+        private System.Windows.Forms.ComboBox comboBox_DoWhenException;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.NumericUpDown numericUpDown6;
-        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.NumericUpDown numericUpDown_Brightness;
+        private System.Windows.Forms.TrackBar trackBar_Brightness;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBox_AllowAnyExtension;
+        public System.Windows.Forms.CheckBox checkBox_UseGPU;
     }
 }

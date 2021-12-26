@@ -18,15 +18,10 @@ namespace PicSizer
 
         public static ProgressForm form;
 
-        public delegate void UpdateProgressDelegate(bool flag);
-        public delegate void PrepareToHideDelegate();
-
-        UpdateProgressDelegate __UpdateProgress = new UpdateProgressDelegate(_AddOne);
-        PrepareToHideDelegate __PrepareToHide = new PrepareToHideDelegate(_PrepareToHide);
-
         public ProgressForm()
         {
             InitializeComponent();
+            CheckForIllegalCrossThreadCalls = false;
         }
 
         public void init(int total)
@@ -43,12 +38,7 @@ namespace PicSizer
             Setting.ThreadExitNow = false;
         }
 
-        public void AddOne(bool flag)
-        {
-            this.Invoke(__UpdateProgress,flag);
-        }
-
-        private static void _AddOne(bool flag)
+        public static void AddOne(bool flag)
         {
             if (flag)
             {
@@ -64,7 +54,7 @@ namespace PicSizer
             form.label6.Text = error.ToString();
             form.label8.Text = percent + "%";
             form.progressBar1.Value = percent;
-            if (sum == total) form.PrepareToHide();
+            if (sum == total) PrepareToHide();
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
@@ -87,16 +77,11 @@ namespace PicSizer
             button1.Enabled = false;
         }
 
-        public static void _PrepareToHide()
+        public static void PrepareToHide()
         {
             form.Hide();
             string s = "总共: " + total + " 张\n压缩完成: " + success + "张\n未完成: " + error + "张";
             MessageBox.Show(s, "压缩已结束", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        public void PrepareToHide()
-        {
-            this.Invoke(__PrepareToHide);
         }
     }
 }

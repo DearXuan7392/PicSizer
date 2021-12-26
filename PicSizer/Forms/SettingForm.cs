@@ -20,26 +20,45 @@ namespace PicSizer
         public SettingForm()
         {
             InitializeComponent();
-            comboBox3.SelectedIndex = 0;
+            CheckForIllegalCrossThreadCalls = false;
         }
 
         private void SettingForm_Load(object sender, EventArgs e)
         {
-            //初始化各个控件的初始值
-            comboBox1.SelectedIndex = Setting.resizeMode.ToInt();
-            comboBox2.SelectedIndex = Setting.compressionMode.ToInt();
-            comboBox4.SelectedIndex = Setting.renameMode.ToInt();
-            comboBox5.SelectedIndex = Setting.extensionMode.ToInt();
-            comboBox6.SelectedIndex = Setting.doWhenException.ToInt();
+            //压缩
+            comboBox_CompressionMode.SelectedIndex = Setting.compressionMode.ToInt();//压缩模式
+            numericUpDown_Value.Value = Setting.CompressionValue;//指定画质
 
-            numericUpDown1.Value = Setting.LimitWidth;
-            numericUpDown2.Value = Setting.LimitHeight;
-            numericUpDown3.Value = Setting.CompressionValue;
-            numericUpDown4.Value = Setting.LimitSize;
-            numericUpDown5.Value = Setting.StartIndex;
+            long size = Setting.LimitSize;
+            if(size > 1024)
+            {
+                size /= 1024;
+                comboBox_KB_or_MB.SelectedIndex = 0;//KB
+            }
+            else
+            {
+                comboBox_KB_or_MB.SelectedIndex = 1;//MB
+            }
+            numericUpDown_Size.Value = size;//指定大小
 
-            checkBox1.Enabled = Info.isGPUSupport;
-            checkBox1.Checked = Setting.useGPU;
+            //尺寸
+            comboBox_ResizeMode.SelectedIndex = Setting.resizeMode.ToInt();//尺寸修正
+            numericUpDown_LimitWidth.Value = Setting.LimitWidth;
+            numericUpDown_LimitHeight.Value = Setting.LimitHeight;
+
+            //命名
+            comboBox_RenameMode.SelectedIndex = Setting.renameMode.ToInt();//命名方式
+            comboBox_ExtensionMode.SelectedIndex = Setting.extensionMode.ToInt();//指定后缀
+            numericUpDown_StartIndex.Value = Setting.StartIndex;//起始下表
+            textBox_CustomRenameStr.Text = Setting.CustomRenameStr;//自定名称
+
+            //操作
+            comboBox_DoWhenException.SelectedIndex = Setting.doWhenException.ToInt();//异常处理
+            checkBox_AllowAnyExtension.Checked = Setting.AllowAnyExtension;//允许任意后缀
+
+            //图像处理
+            trackBar_Brightness.Value = Setting.brightness;//亮度
+            checkBox_UseGPU.Checked = Setting.useGPU;//硬件加速
         }
 
         private void OnKeyPress(object sender, KeyPressEventArgs e)
@@ -57,47 +76,52 @@ namespace PicSizer
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
             //限制最大大小为 1GB
-            if(comboBox3.SelectedIndex == 0)//KB
+            if(comboBox_KB_or_MB.SelectedIndex == 0)//KB
             {
-                numericUpDown4.Maximum = 1048576;
+                numericUpDown_Size.Maximum = 1048576;
             }
             else//MB
             {
-                numericUpDown4.Maximum = 1024;
+                numericUpDown_Size.Maximum = 1024;
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if(comboBox4.SelectedIndex == 2)
+            if(comboBox_RenameMode.SelectedIndex == 2 && !textBox_CustomRenameStr.Text.Contains("{0}"))
             {
-                if (!textBox1.Text.Contains("{0}"))
-                {
-                    Dialog.ShowDialog_Error("自定义命名中必须出现\"{0}\"以替换成数字");
-                    return;
-                }
+                Dialog.ShowDialog_Error("自定义命名中必须出现\"{0}\"以替换成数字");
+                return;
             }
 
-            Setting.resizeMode = (ResizeMode)comboBox1.SelectedIndex;
-            Setting.compressionMode = (CompressionMode)comboBox2.SelectedIndex;
-            Setting.renameMode = (RenameMode)comboBox4.SelectedIndex;
-            Setting.extensionMode = (ExtensionMode)comboBox5.SelectedIndex;
-            Setting.doWhenException = (DoWhenException)comboBox6.SelectedIndex;
-
-            Setting.LimitWidth = (int)numericUpDown1.Value;
-            Setting.LimitHeight = (int)numericUpDown2.Value;
-            Setting.CompressionValue = (long)numericUpDown3.Value;
-
-            long size = (long)numericUpDown4.Value;
-            if(comboBox3.SelectedIndex == 1)
+            //压缩
+            Setting.compressionMode = (CompressionMode)comboBox_CompressionMode.SelectedIndex;//压缩模式
+            Setting.CompressionValue = (long)numericUpDown_Value.Value;//指定画质
+            long size = (long)numericUpDown_Size.Value;
+            if(comboBox_KB_or_MB.SelectedIndex == 1)
             {
                 size *= 1024;
             }
-            Setting.LimitSize = size;
-            Setting.StartIndex = (int)numericUpDown5.Value;
-            Setting.CustomRenameStr = textBox1.Text;
-            Setting.brightness = (byte)trackBar1.Value;
-            Setting.useGPU = checkBox1.Enabled && checkBox1.Checked;
+            Setting.LimitSize = size;//指定大小
+
+            //尺寸
+            Setting.resizeMode = (ResizeMode)comboBox_ResizeMode.SelectedIndex;//尺寸修正
+            Setting.LimitWidth = (int)numericUpDown_LimitWidth.Value;
+            Setting.LimitHeight = (int)numericUpDown_LimitHeight.Value;
+
+            //命名
+            Setting.renameMode = (RenameMode)comboBox_RenameMode.SelectedIndex;//命名方式
+            Setting.extensionMode = (ExtensionMode)comboBox_ExtensionMode.SelectedIndex;//指定后缀
+            Setting.StartIndex = (int)numericUpDown_StartIndex.Value;//起始下表
+            Setting.CustomRenameStr = textBox_CustomRenameStr.Text;//自定名称
+
+            //操作
+            Setting.doWhenException = (DoWhenException)comboBox_DoWhenException.SelectedIndex;//异常处理
+            Setting.AllowAnyExtension = checkBox_AllowAnyExtension.Checked;//允许任意后缀
+
+            //图像处理
+            Setting.brightness = (byte)trackBar_Brightness.Value;//亮度
+            Setting.useGPU = checkBox_UseGPU.Enabled && checkBox_UseGPU.Checked;//硬件加速
 
             form.Hide();
         }
@@ -107,7 +131,7 @@ namespace PicSizer
             if (isBrightnessChange)
             {
                 isBrightnessChange = false;
-                numericUpDown6.Value = trackBar1.Value;
+                numericUpDown_Brightness.Value = trackBar_Brightness.Value;
                 isBrightnessChange = true;
             }
         }
@@ -117,7 +141,7 @@ namespace PicSizer
             if (isBrightnessChange)
             {
                 isBrightnessChange = false;
-                trackBar1.Value = (int)numericUpDown6.Value;
+                trackBar_Brightness.Value = (int)numericUpDown_Brightness.Value;
                 isBrightnessChange = true;
             }
         }

@@ -22,12 +22,14 @@ namespace PicSizer
         {
             Thread thread = new Thread(() =>
             {
+                Thread.Sleep(2000);
                 try
                 {
                     Info.isGPUSupport = IsGPUSupport();
                     if (Info.isGPUSupport)
                     {
                         Setting.useGPU = true;
+                        SettingForm.form.checkBox_UseGPU.Enabled = true;
                     }
                 }
                 catch (Exception e)

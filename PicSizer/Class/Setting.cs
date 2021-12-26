@@ -42,6 +42,9 @@ namespace PicSizer
         //错误处理
         public static DoWhenException doWhenException = DoWhenException.IgnoreAndContinue;
 
+        //允许任意后缀
+        public static bool AllowAnyExtension = false;
+
         //亮度
         public static byte brightness = 100; // 0表示完全黑暗，100表示不变暗
 
