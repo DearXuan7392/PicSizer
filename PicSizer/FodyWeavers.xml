@@ -3,9 +3,9 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="FodyWeavers.xsd">
   
-  <Costura DisableCompression='true'>
+  <Costura>
     <Unmanaged64Assemblies>
-      cuda
+      PicSizer_CUDA
     </Unmanaged64Assemblies>
   </Costura>
 </Weavers>

@@ -31,11 +31,15 @@ namespace PicSizer
             comboBox4.SelectedIndex = Setting.renameMode.ToInt();
             comboBox5.SelectedIndex = Setting.extensionMode.ToInt();
             comboBox6.SelectedIndex = Setting.doWhenException.ToInt();
+
             numericUpDown1.Value = Setting.LimitWidth;
             numericUpDown2.Value = Setting.LimitHeight;
             numericUpDown3.Value = Setting.CompressionValue;
             numericUpDown4.Value = Setting.LimitSize;
             numericUpDown5.Value = Setting.StartIndex;
+
+            checkBox1.Enabled = Info.isGPUSupport;
+            checkBox1.Checked = Setting.useGPU;
         }
 
         private void OnKeyPress(object sender, KeyPressEventArgs e)
@@ -90,12 +94,10 @@ namespace PicSizer
                 size *= 1024;
             }
             Setting.LimitSize = size;
-
             Setting.StartIndex = (int)numericUpDown5.Value;
-
             Setting.CustomRenameStr = textBox1.Text;
-
             Setting.brightness = (byte)trackBar1.Value;
+            Setting.useGPU = checkBox1.Enabled && checkBox1.Checked;
 
             form.Hide();
         }

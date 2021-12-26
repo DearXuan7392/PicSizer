@@ -177,15 +177,18 @@ namespace PicSizer
                 string[] files = e.Data.GetData(DataFormats.FileDrop, false) as string[];
                 foreach(string path in files)
                 {
-                    if (!paths.Contains(path))
+                    if(path.EndsWith(".jpg") || path.EndsWith(".png") || path.EndsWith(".bmp") || path.EndsWith(".tiff"))
                     {
-                        paths.Add(path);
+                        if (!paths.Contains(path))
+                        {
+                            paths.Add(path);
+                        }
                     }
                 }
             }
             catch(Exception ex)
             {
-
+                Dialog.ShowDialog_Exception(ex);
             }
         }
 
