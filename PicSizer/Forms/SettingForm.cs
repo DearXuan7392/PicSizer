@@ -50,9 +50,10 @@ namespace PicSizer
             numericUpDown_StartIndex.Value = Setting.StartIndex;//起始下表
             textBox_CustomRenameStr.Text = Setting.CustomRenameStr;//自定名称
 
-            //操作
+            //其它
             comboBox_DoWhenException.SelectedIndex = Setting.doWhenException.ToInt();//异常处理
             checkBox_AllowAnyExtension.Checked = Setting.AllowAnyExtension;//允许任意后缀
+            checkBox_TopMost.Checked = Info.mainForm.TopMost;//置顶
 
             //图像处理
             trackBar_Brightness.Value = Setting.brightness;//亮度
