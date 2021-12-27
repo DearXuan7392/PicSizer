@@ -68,6 +68,7 @@ namespace PicSizer
             this.numericUpDown_Brightness = new System.Windows.Forms.NumericUpDown();
             this.trackBar_Brightness = new System.Windows.Forms.TrackBar();
             this.label14 = new System.Windows.Forms.Label();
+            this.checkBox_TopMost = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitWidth)).BeginInit();
@@ -441,6 +442,7 @@ namespace PicSizer
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.checkBox_TopMost);
             this.groupBox4.Controls.Add(this.checkBox_AllowAnyExtension);
             this.groupBox4.Controls.Add(this.comboBox_DoWhenException);
             this.groupBox4.Controls.Add(this.label13);
@@ -450,7 +452,7 @@ namespace PicSizer
             this.groupBox4.Size = new System.Drawing.Size(228, 146);
             this.groupBox4.TabIndex = 13;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "操作";
+            this.groupBox4.Text = "其它";
             // 
             // checkBox_AllowAnyExtension
             // 
@@ -586,6 +588,16 @@ namespace PicSizer
             this.label14.TabIndex = 0;
             this.label14.Text = "亮度:";
             // 
+            // checkBox_TopMost
+            // 
+            this.checkBox_TopMost.AutoSize = true;
+            this.checkBox_TopMost.Location = new System.Drawing.Point(8, 68);
+            this.checkBox_TopMost.Name = "checkBox_TopMost";
+            this.checkBox_TopMost.Size = new System.Drawing.Size(96, 16);
+            this.checkBox_TopMost.TabIndex = 3;
+            this.checkBox_TopMost.Text = "置顶PicSizer";
+            this.checkBox_TopMost.UseVisualStyleBackColor = true;
+            // 
             // SettingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -673,5 +685,6 @@ namespace PicSizer
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.CheckBox checkBox_AllowAnyExtension;
         public System.Windows.Forms.CheckBox checkBox_UseGPU;
+        private System.Windows.Forms.CheckBox checkBox_TopMost;
     }
 }

@@ -14,21 +14,17 @@ namespace PicSizer
 {
     public partial class Form1 : Form
     {
-        public static Form1 main;
-        public static SettingForm settingForm = new SettingForm();
-        public static ProgressForm progressForm = new ProgressForm();
-        public static DearXuan dearXuan = new DearXuan();
-
         ListBox.ObjectCollection paths;
 
         public Form1()
         {
             InitializeComponent();
             //为静态量赋值
-            main = this;
+            Info.mainForm = this;
+            Info.progressForm = new ProgressForm();
+            Info.settingForm = new SettingForm();
+            Info.dearXuan = new DearXuan();
             Text = Info.ProjectName + " " + Info.ProjectVersion;
-            ProgressForm.form = progressForm;
-            SettingForm.form = settingForm;
             paths = listBox1.Items;
             DllExtern.DoInFirst();
         }
@@ -139,9 +135,9 @@ namespace PicSizer
                 PicSizer.Resize.StartResizer(paths, folderPath);
             });
             thread.Priority = ThreadPriority.Highest;//设置线程优先级最高
-            progressForm.init(paths.Count);
+            Info.progressForm.init(paths.Count);
             thread.Start();
-            progressForm.ShowDialog();
+            Info.progressForm.ShowDialog();
         }
 
         /// <summary>
@@ -149,7 +145,7 @@ namespace PicSizer
         /// </summary>
         private void OnSetClick(object sender, EventArgs e)
         {
-            settingForm.ShowDialog();
+            Info.settingForm.ShowDialog();
         }
 
         /// <summary>
@@ -157,7 +153,7 @@ namespace PicSizer
         /// </summary>
         private void OnAboutClick(object sender, EventArgs e)
         {
-            dearXuan.ShowDialog();
+            Info.dearXuan.ShowDialog();
         }
 
         private void OnRemoveClick(object sender, EventArgs e)

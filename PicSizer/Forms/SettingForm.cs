@@ -15,8 +15,6 @@ namespace PicSizer
         const char EMPTY = (char)0;//空字符
         private bool isBrightnessChange = true;
 
-        public static SettingForm form;
-
         public SettingForm()
         {
             InitializeComponent();
@@ -115,15 +113,20 @@ namespace PicSizer
             Setting.StartIndex = (int)numericUpDown_StartIndex.Value;//起始下表
             Setting.CustomRenameStr = textBox_CustomRenameStr.Text;//自定名称
 
-            //操作
+            //其它
             Setting.doWhenException = (DoWhenException)comboBox_DoWhenException.SelectedIndex;//异常处理
             Setting.AllowAnyExtension = checkBox_AllowAnyExtension.Checked;//允许任意后缀
+            Info.mainForm.TopMost
+                = Info.settingForm.TopMost
+                = Info.progressForm.TopMost
+                = Info.dearXuan.TopMost
+                = checkBox_TopMost.Checked;//置顶
 
             //图像处理
             Setting.brightness = (byte)trackBar_Brightness.Value;//亮度
             Setting.useGPU = checkBox_UseGPU.Enabled && checkBox_UseGPU.Checked;//硬件加速
 
-            form.Hide();
+            this.Hide();
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)

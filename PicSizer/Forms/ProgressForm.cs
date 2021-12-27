@@ -16,8 +16,6 @@ namespace PicSizer
         static int error = 0; // 压缩失败
         static int total = 0; // 总数
 
-        public static ProgressForm form;
-
         public ProgressForm()
         {
             InitializeComponent();
@@ -38,7 +36,7 @@ namespace PicSizer
             Setting.ThreadExitNow = false;
         }
 
-        public static void AddOne(bool flag)
+        public void AddOne(bool flag)
         {
             if (flag)
             {
@@ -50,10 +48,10 @@ namespace PicSizer
             }
             int sum = success + error;
             int percent = sum * 100 / total;
-            form.label5.Text = success.ToString();
-            form.label6.Text = error.ToString();
-            form.label8.Text = percent + "%";
-            form.progressBar1.Value = percent;
+            label5.Text = success.ToString();
+            label6.Text = error.ToString();
+            label8.Text = percent + "%";
+            progressBar1.Value = percent;
             if (sum == total) PrepareToHide();
         }
 
@@ -77,9 +75,9 @@ namespace PicSizer
             button1.Enabled = false;
         }
 
-        public static void PrepareToHide()
+        public void PrepareToHide()
         {
-            form.Hide();
+            this.Hide();
             string s = "总共: " + total + " 张\n压缩完成: " + success + "张\n未完成: " + error + "张";
             MessageBox.Show(s, "压缩已结束", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }

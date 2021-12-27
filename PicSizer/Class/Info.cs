@@ -23,5 +23,10 @@ namespace PicSizer
         /// </summary>
         public const string ProjectName = "PicSizer";
 
+        public static Form1 mainForm;
+        public static SettingForm settingForm;
+        public static ProgressForm progressForm;
+        public static DearXuan dearXuan;
+
     }
 }

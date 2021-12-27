@@ -225,7 +225,7 @@ namespace PicSizer
         /// </summary>
         public static void OnExit()
         {
-            ProgressForm.PrepareToHide();
+            Info.progressForm.PrepareToHide();
         }
 
         /// <summary>
@@ -233,7 +233,7 @@ namespace PicSizer
         /// </summary>
         public static void Update(bool flag)
         {
-            ProgressForm.AddOne(flag);
+            Info.progressForm.AddOne(flag);
         }
     }
 }
