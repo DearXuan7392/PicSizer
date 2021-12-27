@@ -31,11 +31,11 @@ namespace PicSizer
             if(size > 1024)
             {
                 size /= 1024;
-                comboBox_KB_or_MB.SelectedIndex = 0;//KB
+                comboBox_KB_or_MB.SelectedIndex = 1;//MB
             }
             else
             {
-                comboBox_KB_or_MB.SelectedIndex = 1;//MB
+                comboBox_KB_or_MB.SelectedIndex = 0;//KB
             }
             numericUpDown_Size.Value = size;//指定大小
 
