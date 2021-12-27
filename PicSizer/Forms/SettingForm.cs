@@ -145,5 +145,22 @@ namespace PicSizer
                 isBrightnessChange = true;
             }
         }
+
+        private void comboBox_CompressionMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            numericUpDown_Size.Enabled = comboBox_KB_or_MB.Enabled = comboBox_CompressionMode.SelectedIndex == 0;
+            numericUpDown_Value.Enabled = comboBox_CompressionMode.SelectedIndex == 1;
+        }
+
+        private void comboBox_ResizeMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            numericUpDown_LimitWidth.Enabled = numericUpDown_LimitHeight.Enabled = comboBox_ResizeMode.SelectedIndex != 0;
+        }
+
+        private void comboBox_RenameMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            textBox_CustomRenameStr.Enabled = comboBox_RenameMode.SelectedIndex == 2;
+            numericUpDown_StartIndex.Enabled = comboBox_RenameMode.SelectedIndex != 1;
+        }
     }
 }

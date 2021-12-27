@@ -58,6 +58,7 @@ namespace PicSizer
             this.comboBox_RenameMode = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.checkBox_AllowAnyExtension = new System.Windows.Forms.CheckBox();
             this.comboBox_DoWhenException = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -67,7 +68,6 @@ namespace PicSizer
             this.numericUpDown_Brightness = new System.Windows.Forms.NumericUpDown();
             this.trackBar_Brightness = new System.Windows.Forms.TrackBar();
             this.label14 = new System.Windows.Forms.Label();
-            this.checkBox_AllowAnyExtension = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitWidth)).BeginInit();
@@ -201,6 +201,7 @@ namespace PicSizer
             this.comboBox_ResizeMode.Name = "comboBox_ResizeMode";
             this.comboBox_ResizeMode.Size = new System.Drawing.Size(121, 20);
             this.comboBox_ResizeMode.TabIndex = 9;
+            this.comboBox_ResizeMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_ResizeMode_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -235,7 +236,7 @@ namespace PicSizer
             this.comboBox_KB_or_MB.Items.AddRange(new object[] {
             "KB",
             "MB"});
-            this.comboBox_KB_or_MB.Location = new System.Drawing.Point(148, 73);
+            this.comboBox_KB_or_MB.Location = new System.Drawing.Point(148, 46);
             this.comboBox_KB_or_MB.Name = "comboBox_KB_or_MB";
             this.comboBox_KB_or_MB.Size = new System.Drawing.Size(40, 20);
             this.comboBox_KB_or_MB.TabIndex = 17;
@@ -243,7 +244,7 @@ namespace PicSizer
             // 
             // numericUpDown_Size
             // 
-            this.numericUpDown_Size.Location = new System.Drawing.Point(66, 73);
+            this.numericUpDown_Size.Location = new System.Drawing.Point(66, 46);
             this.numericUpDown_Size.Maximum = new decimal(new int[] {
             1048576,
             0,
@@ -266,7 +267,7 @@ namespace PicSizer
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 75);
+            this.label8.Location = new System.Drawing.Point(6, 48);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(59, 12);
             this.label8.TabIndex = 15;
@@ -274,7 +275,7 @@ namespace PicSizer
             // 
             // numericUpDown_Value
             // 
-            this.numericUpDown_Value.Location = new System.Drawing.Point(66, 46);
+            this.numericUpDown_Value.Location = new System.Drawing.Point(66, 73);
             this.numericUpDown_Value.Name = "numericUpDown_Value";
             this.numericUpDown_Value.Size = new System.Drawing.Size(120, 21);
             this.numericUpDown_Value.TabIndex = 14;
@@ -287,7 +288,7 @@ namespace PicSizer
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 48);
+            this.label7.Location = new System.Drawing.Point(6, 75);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(59, 12);
             this.label7.TabIndex = 12;
@@ -313,6 +314,7 @@ namespace PicSizer
             this.comboBox_CompressionMode.Name = "comboBox_CompressionMode";
             this.comboBox_CompressionMode.Size = new System.Drawing.Size(121, 20);
             this.comboBox_CompressionMode.TabIndex = 10;
+            this.comboBox_CompressionMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_CompressionMode_SelectedIndexChanged);
             // 
             // button_Save
             // 
@@ -426,6 +428,7 @@ namespace PicSizer
             this.comboBox_RenameMode.Name = "comboBox_RenameMode";
             this.comboBox_RenameMode.Size = new System.Drawing.Size(121, 20);
             this.comboBox_RenameMode.TabIndex = 1;
+            this.comboBox_RenameMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_RenameMode_SelectedIndexChanged);
             // 
             // label9
             // 
@@ -448,6 +451,16 @@ namespace PicSizer
             this.groupBox4.TabIndex = 13;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "操作";
+            // 
+            // checkBox_AllowAnyExtension
+            // 
+            this.checkBox_AllowAnyExtension.AutoSize = true;
+            this.checkBox_AllowAnyExtension.Location = new System.Drawing.Point(8, 46);
+            this.checkBox_AllowAnyExtension.Name = "checkBox_AllowAnyExtension";
+            this.checkBox_AllowAnyExtension.Size = new System.Drawing.Size(96, 16);
+            this.checkBox_AllowAnyExtension.TabIndex = 2;
+            this.checkBox_AllowAnyExtension.Text = "允许任意后缀";
+            this.checkBox_AllowAnyExtension.UseVisualStyleBackColor = true;
             // 
             // comboBox_DoWhenException
             // 
@@ -572,16 +585,6 @@ namespace PicSizer
             this.label14.Size = new System.Drawing.Size(35, 12);
             this.label14.TabIndex = 0;
             this.label14.Text = "亮度:";
-            // 
-            // checkBox_AllowAnyExtension
-            // 
-            this.checkBox_AllowAnyExtension.AutoSize = true;
-            this.checkBox_AllowAnyExtension.Location = new System.Drawing.Point(8, 46);
-            this.checkBox_AllowAnyExtension.Name = "checkBox_AllowAnyExtension";
-            this.checkBox_AllowAnyExtension.Size = new System.Drawing.Size(96, 16);
-            this.checkBox_AllowAnyExtension.TabIndex = 2;
-            this.checkBox_AllowAnyExtension.Text = "允许任意后缀";
-            this.checkBox_AllowAnyExtension.UseVisualStyleBackColor = true;
             // 
             // SettingForm
             // 

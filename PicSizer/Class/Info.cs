@@ -13,5 +13,15 @@ namespace PicSizer
         /// </summary>
         public static bool isGPUSupport = false;
 
+        /// <summary>
+        /// 版本
+        /// </summary>
+        public const string ProjectVersion = "v3.2";
+
+        /// <summary>
+        /// 项目名称
+        /// </summary>
+        public const string ProjectName = "PicSizer";
+
     }
 }

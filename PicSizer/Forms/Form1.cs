@@ -26,6 +26,7 @@ namespace PicSizer
             InitializeComponent();
             //为静态量赋值
             main = this;
+            Text = Info.ProjectName + " " + Info.ProjectVersion;
             ProgressForm.form = progressForm;
             SettingForm.form = settingForm;
             paths = listBox1.Items;
@@ -208,7 +209,7 @@ namespace PicSizer
             }
         }
 
-        private void listBox1_DragEnter(object sender, DragEventArgs e)
+        private void DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -217,6 +218,25 @@ namespace PicSizer
             else
             {
                 e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void textBox1_DragDrop(object sender, DragEventArgs e)
+        {
+            try
+            {
+                string[] files = e.Data.GetData(DataFormats.FileDrop, false) as string[];
+                if(files.Length == 1 && Directory.Exists(files[0])){
+                    textBox1.Text = files[0];
+                }
+                else
+                {
+                    Dialog.ShowDialog_Warning("请拖入一个文件夹!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Dialog.ShowDialog_Exception(ex);
             }
         }
     }
