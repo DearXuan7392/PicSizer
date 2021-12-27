@@ -22,7 +22,6 @@ namespace PicSizer
         {
             Thread thread = new Thread(() =>
             {
-                Thread.Sleep(2000);
                 try
                 {
                     Info.isGPUSupport = IsGPUSupport();
