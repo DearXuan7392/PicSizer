@@ -9,7 +9,7 @@ namespace PicSizer
 {
     public static class Encoder
     {
-        public static ImageCodecInfo imageCodecInfo = ImageInfo.Info_JPEG;
+        public static ImageCodecInfo imageCodecInfo = Partial.ImageInfo.Info_JPEG;
         public static System.Drawing.Imaging.Encoder encoder = System.Drawing.Imaging.Encoder.Quality;
         public static EncoderParameters encoderParameters = new EncoderParameters(1);
         public static EncoderParameter[] parameterList = new EncoderParameter[101];

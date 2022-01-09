@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PicSizer.Partial;
 
 namespace PicSizer
 {
@@ -54,7 +55,7 @@ namespace PicSizer
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Title = "添加图片";
-            if (Info.setting.AllowAnyExtension)
+            if (SharedVariable.setting.AllowAnyExtension)
             {
                 dialog.Filter = "图片(JPG,PNG,BMP,TIFF)|*.jpg;*.png;*.bmp;*.tiff|所有|*.*";
             }
@@ -182,7 +183,7 @@ namespace PicSizer
                 int count = files.Length;
                 foreach(string path in files)
                 {
-                    if (Info.setting.AllowAnyExtension)
+                    if (SharedVariable.setting.AllowAnyExtension)
                     {
                         if (AddPicture(path)) count--;
                     }
@@ -205,7 +206,7 @@ namespace PicSizer
             }
         }
 
-        private void DragEnter(object sender, DragEventArgs e)
+        private new void DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {

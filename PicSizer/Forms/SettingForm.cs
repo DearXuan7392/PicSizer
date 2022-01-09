@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PicSizer.Partial;
 
 namespace PicSizer
 {
@@ -24,12 +25,17 @@ namespace PicSizer
 
         private void SettingForm_Load(object sender, EventArgs e)
         {
-            //压缩
-            comboBox_CompressionMode.SelectedIndex = Info.setting.compressionMode.ToInt();//压缩模式
-            numericUpDown_Value.Value = Info.setting.CompressionValue;//指定画质
+            LoadSetting(SharedVariable.setting);
+        }
 
-            long size = Info.setting.LimitSize;
-            if(size > 1024)
+        private void LoadSetting(Setting setting)
+        {
+            //压缩
+            comboBox_CompressionMode.SelectedIndex = setting.compressionMode.ToInt();//压缩模式
+            numericUpDown_Value.Value = setting.CompressionValue;//指定画质
+
+            long size = setting.LimitSize;
+            if (size > 1024)
             {
                 size /= 1024;
                 comboBox_KB_or_MB.SelectedIndex = 1;//MB
@@ -41,25 +47,25 @@ namespace PicSizer
             numericUpDown_Size.Value = size;//指定大小
 
             //尺寸
-            comboBox_ResizeMode.SelectedIndex = Info.setting.resizeMode.ToInt();//尺寸修正
-            numericUpDown_LimitWidth.Value = Info.setting.LimitWidth;
-            numericUpDown_LimitHeight.Value = Info.setting.LimitHeight;
+            comboBox_ResizeMode.SelectedIndex = setting.resizeMode.ToInt();//尺寸修正
+            numericUpDown_LimitWidth.Value = setting.LimitWidth;
+            numericUpDown_LimitHeight.Value = setting.LimitHeight;
 
             //命名
-            comboBox_RenameMode.SelectedIndex = Info.setting.renameMode.ToInt();//命名方式
-            comboBox_ExtensionMode.SelectedIndex = Info.setting.extensionMode.ToInt();//指定后缀
-            numericUpDown_StartIndex.Value = Info.setting.StartIndex;//起始下表
-            textBox_CustomRenameStr.Text = Info.setting.CustomRenameStr;//自定名称
+            comboBox_RenameMode.SelectedIndex = setting.renameMode.ToInt();//命名方式
+            comboBox_ExtensionMode.SelectedIndex = setting.extensionMode.ToInt();//指定后缀
+            numericUpDown_StartIndex.Value = setting.StartIndex;//起始下表
+            textBox_CustomRenameStr.Text = setting.CustomRenameStr;//自定名称
 
             //其它
-            comboBox_DoWhenException.SelectedIndex = Info.setting.doWhenException.ToInt();//异常处理
-            checkBox_AllowAnyExtension.Checked = Info.setting.AllowAnyExtension;//允许任意后缀
-            checkBox_TopMost.Checked = SharedVariable.mainForm.TopMost;//置顶
-            numericUpDown_Threads.Value = Info.setting.maxThreads;//最大线程数
+            comboBox_DoWhenException.SelectedIndex = setting.doWhenException.ToInt();//异常处理
+            checkBox_AllowAnyExtension.Checked = setting.AllowAnyExtension;//允许任意后缀
+            checkBox_TopMost.Checked = setting.topMost;//置顶
+            numericUpDown_Threads.Value = setting.maxThreads;//最大线程数
 
             //图像处理
-            trackBar_Brightness.Value = Info.setting.brightness;//亮度
-            checkBox_UseGPU.Checked = Info.setting.useGPU;//硬件加速
+            trackBar_Brightness.Value = setting.brightness;//亮度
+            checkBox_UseGPU.Checked = setting.useGPU;//硬件加速
         }
 
         private void OnKeyPress(object sender, KeyPressEventArgs e)
@@ -87,50 +93,49 @@ namespace PicSizer
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button_Save_Click(object sender, EventArgs e)
         {
             if(comboBox_RenameMode.SelectedIndex == 2 && !textBox_CustomRenameStr.Text.Contains("{0}"))
             {
                 Dialog.ShowDialog_Error("自定义命名中必须出现\"{0}\"以替换成数字");
                 return;
             }
-
-            //压缩
-            Info.setting.compressionMode = (CompressionMode)comboBox_CompressionMode.SelectedIndex;//压缩模式
-            Info.setting.CompressionValue = (long)numericUpDown_Value.Value;//指定画质
-            long size = (long)numericUpDown_Size.Value;
-            if(comboBox_KB_or_MB.SelectedIndex == 1)
-            {
-                size *= 1024;
-            }
-            Info.setting.LimitSize = size;//指定大小
-
-            //尺寸
-            Info.setting.resizeMode = (ResizeMode)comboBox_ResizeMode.SelectedIndex;//尺寸修正
-            Info.setting.LimitWidth = (int)numericUpDown_LimitWidth.Value;
-            Info.setting.LimitHeight = (int)numericUpDown_LimitHeight.Value;
-
-            //命名
-            Info.setting.renameMode = (RenameMode)comboBox_RenameMode.SelectedIndex;//命名方式
-            Info.setting.extensionMode = (ExtensionMode)comboBox_ExtensionMode.SelectedIndex;//指定后缀
-            Info.setting.StartIndex = (int)numericUpDown_StartIndex.Value;//起始下表
-            Info.setting.CustomRenameStr = textBox_CustomRenameStr.Text;//自定名称
-
-            //其它
-            Info.setting.doWhenException = (DoWhenException)comboBox_DoWhenException.SelectedIndex;//异常处理
-            Info.setting.AllowAnyExtension = checkBox_AllowAnyExtension.Checked;//允许任意后缀
-            SharedVariable.mainForm.TopMost
-                = SharedVariable.settingForm.TopMost
-                = SharedVariable.progressForm.TopMost
-                = SharedVariable.dearXuan.TopMost
-                = checkBox_TopMost.Checked;//置顶
-            Info.setting.maxThreads = (int)numericUpDown_Threads.Value;
-
-            //图像处理
-            Info.setting.brightness = (byte)trackBar_Brightness.Value;//亮度
-            Info.setting.useGPU = checkBox_UseGPU.Enabled && checkBox_UseGPU.Checked;//硬件加速
+            SharedVariable.setting = SaveSetting();
 
             this.Hide();
+        }
+
+        private Setting SaveSetting()
+        {
+            Setting setting = new Setting()
+            {
+                //压缩
+                compressionMode = (CompressionMode)comboBox_CompressionMode.SelectedIndex,//压缩模式
+                CompressionValue = (long)numericUpDown_Value.Value,//指定画质
+                LimitSize = comboBox_KB_or_MB.SelectedIndex == 0 ? (long)numericUpDown_Size.Value : (long)numericUpDown_Size.Value * 1024,//指定大小
+
+                //尺寸
+                resizeMode = (ResizeMode)comboBox_ResizeMode.SelectedIndex,//尺寸修正
+                LimitWidth = (int)numericUpDown_LimitWidth.Value,
+                LimitHeight = (int)numericUpDown_LimitHeight.Value,
+
+                //命名
+                renameMode = (RenameMode)comboBox_RenameMode.SelectedIndex,//命名方式
+                extensionMode = (ExtensionMode)comboBox_ExtensionMode.SelectedIndex,//指定后缀
+                StartIndex = (int)numericUpDown_StartIndex.Value,//起始下表
+                CustomRenameStr = textBox_CustomRenameStr.Text,//自定名称
+
+                //其它
+                doWhenException = (DoWhenException)comboBox_DoWhenException.SelectedIndex,//异常处理
+                AllowAnyExtension = checkBox_AllowAnyExtension.Checked,//允许任意后缀
+                topMost = checkBox_TopMost.Checked,//置顶
+                maxThreads = (int)numericUpDown_Threads.Value,
+
+                //图像处理
+                brightness = (byte)trackBar_Brightness.Value,//亮度
+                useGPU = checkBox_UseGPU.Enabled && checkBox_UseGPU.Checked//硬件加速
+            };
+            return setting;
         }
 
         private void trackBar_Brightness_Scroll(object sender, EventArgs e)
@@ -187,6 +192,88 @@ namespace PicSizer
                 isMaxThreadsChange = false;
                 numericUpDown_Threads.Value = trackBar_Threads.Value;
                 isMaxThreadsChange = true;
+            }
+        }
+
+        private void button_Export_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog()
+            {
+                Title = "导出配置",
+                Filter = "配置文件(PICS)|*.pics|所有|*.*",
+                FileName = "set.pics",
+            };
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                SettingIO.WriteSettingToFile(SaveSetting(), dialog.FileName);
+            }
+        }
+
+        private void button_ReadSetting_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog()
+            {
+                Title = "读取配置",
+                Filter = "配置文件(PICS)|*.pics|所有|*.*",
+            };
+            if(dialog.ShowDialog() == DialogResult.OK)
+            {
+                Setting setting = SettingIO.ReadSettingFromFile(dialog.FileName);
+                if (setting != null)
+                {
+                    LoadSetting(setting);
+                    Dialog.ShowDialog("导入成功.");
+                }
+            }
+        }
+
+        private void checkBox_TopMost_CheckedChanged(object sender, EventArgs e)
+        {
+            SetTopMost(checkBox_TopMost.Checked);
+        }
+
+        private void SetTopMost(bool flag)
+        {
+            if(SharedVariable.settingForm.TopMost != flag)
+            {
+                SharedVariable.settingForm.TopMost
+                    = SharedVariable.dearXuan.TopMost
+                    = SharedVariable.progressForm.TopMost
+                    = SharedVariable.mainForm.TopMost
+                    = flag;
+            }
+        }
+
+        private void SettingForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SetTopMost(SharedVariable.setting.topMost);
+        }
+
+        private void SettingForm_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void SettingForm_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] paths = e.Data.GetData(DataFormats.FileDrop, false) as string[];
+            if(paths?.Length != 1)
+            {
+                Dialog.ShowDialog_Error("请拖入配置文件,它的后缀名通常为\"" + Info.SettingFileExtension + "\"");
+                return;
+            }
+            Setting setting = SettingIO.ReadSettingFromFile(paths[0]);
+            if (setting != null)
+            {
+                LoadSetting(setting);
+                Dialog.ShowDialog("导入成功.");
             }
         }
     }

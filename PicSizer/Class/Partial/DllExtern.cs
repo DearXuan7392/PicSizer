@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PicSizer
+namespace PicSizer.Partial
 {
     public static class DllExtern
     {
@@ -27,7 +27,7 @@ namespace PicSizer
                     Info.isGPUSupport = IsGPUSupport();
                     if (Info.isGPUSupport)
                     {
-                        Info.setting.useGPU = true;
+                        SharedVariable.setting.useGPU = true;
                         SharedVariable.settingForm.checkBox_UseGPU.Enabled = true;
                     }
                 }

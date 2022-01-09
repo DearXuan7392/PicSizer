@@ -18,5 +18,10 @@ namespace PicSizer
         public static SettingForm settingForm;
         public static ProgressForm progressForm;
         public static DearXuan dearXuan;
+
+        /// <summary>
+        /// 程序设置
+        /// </summary>
+        public static Partial.Setting setting = new Partial.Setting();
     }
 }

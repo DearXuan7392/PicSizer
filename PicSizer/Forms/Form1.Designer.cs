@@ -131,7 +131,7 @@ namespace PicSizer
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 7;
-            this.button5.Text = "关于";
+            this.button5.Text = "作者";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.OnAboutClick);
             // 

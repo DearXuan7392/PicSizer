@@ -36,9 +36,9 @@ namespace PicSizer.PictureProc
         public static void StartThreadsPool()
         {
             waitHandles.Clear();
-            PicIndex = Info.setting.StartIndex - 1;
+            PicIndex = SharedVariable.setting.StartIndex - 1;
             CollectionIndex = -1;
-            for(int i = 0; i < Info.setting.maxThreads; i++)
+            for(int i = 0; i < SharedVariable.setting.maxThreads; i++)
             {
                 ManualResetEvent manual = new ManualResetEvent(false);
                 waitHandles.Add(manual);

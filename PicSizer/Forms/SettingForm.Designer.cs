@@ -72,6 +72,8 @@ namespace PicSizer
             this.numericUpDown_Brightness = new System.Windows.Forms.NumericUpDown();
             this.trackBar_Brightness = new System.Windows.Forms.TrackBar();
             this.label14 = new System.Windows.Forms.Label();
+            this.button_Export = new System.Windows.Forms.Button();
+            this.button_ReadSetting = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitWidth)).BeginInit();
@@ -325,13 +327,13 @@ namespace PicSizer
             // button_Save
             // 
             this.button_Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_Save.Location = new System.Drawing.Point(349, 467);
+            this.button_Save.Location = new System.Drawing.Point(371, 475);
             this.button_Save.Name = "button_Save";
-            this.button_Save.Size = new System.Drawing.Size(101, 50);
+            this.button_Save.Size = new System.Drawing.Size(79, 42);
             this.button_Save.TabIndex = 10;
             this.button_Save.Text = "保存";
             this.button_Save.UseVisualStyleBackColor = true;
-            this.button_Save.Click += new System.EventHandler(this.button1_Click);
+            this.button_Save.Click += new System.EventHandler(this.button_Save_Click);
             // 
             // groupBox3
             // 
@@ -515,6 +517,7 @@ namespace PicSizer
             this.checkBox_TopMost.TabIndex = 3;
             this.checkBox_TopMost.Text = "置顶PicSizer";
             this.checkBox_TopMost.UseVisualStyleBackColor = true;
+            this.checkBox_TopMost.CheckedChanged += new System.EventHandler(this.checkBox_TopMost_CheckedChanged);
             // 
             // checkBox_AllowAnyExtension
             // 
@@ -554,6 +557,7 @@ namespace PicSizer
             // 
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(12, 164);
             this.splitContainer1.Name = "splitContainer1";
             // 
@@ -572,6 +576,7 @@ namespace PicSizer
             // 
             this.splitContainer2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer2.IsSplitterFixed = true;
             this.splitContainer2.Location = new System.Drawing.Point(12, 12);
             this.splitContainer2.Name = "splitContainer2";
             // 
@@ -650,11 +655,36 @@ namespace PicSizer
             this.label14.TabIndex = 0;
             this.label14.Text = "亮度:";
             // 
+            // button_Export
+            // 
+            this.button_Export.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_Export.Location = new System.Drawing.Point(286, 475);
+            this.button_Export.Name = "button_Export";
+            this.button_Export.Size = new System.Drawing.Size(79, 42);
+            this.button_Export.TabIndex = 17;
+            this.button_Export.Text = "导出配置";
+            this.button_Export.UseVisualStyleBackColor = true;
+            this.button_Export.Click += new System.EventHandler(this.button_Export_Click);
+            // 
+            // button_ReadSetting
+            // 
+            this.button_ReadSetting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_ReadSetting.Location = new System.Drawing.Point(201, 475);
+            this.button_ReadSetting.Name = "button_ReadSetting";
+            this.button_ReadSetting.Size = new System.Drawing.Size(79, 42);
+            this.button_ReadSetting.TabIndex = 18;
+            this.button_ReadSetting.Text = "读取配置";
+            this.button_ReadSetting.UseVisualStyleBackColor = true;
+            this.button_ReadSetting.Click += new System.EventHandler(this.button_ReadSetting_Click);
+            // 
             // SettingForm
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(462, 529);
+            this.Controls.Add(this.button_ReadSetting);
+            this.Controls.Add(this.button_Export);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.splitContainer2);
             this.Controls.Add(this.splitContainer1);
@@ -667,7 +697,10 @@ namespace PicSizer
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "设置";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SettingForm_FormClosing);
             this.Load += new System.EventHandler(this.SettingForm_Load);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.SettingForm_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.SettingForm_DragEnter);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitHeight)).EndInit();
@@ -743,5 +776,7 @@ namespace PicSizer
         private System.Windows.Forms.NumericUpDown numericUpDown_Threads;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TrackBar trackBar_Threads;
+        private System.Windows.Forms.Button button_Export;
+        private System.Windows.Forms.Button button_ReadSetting;
     }
 }

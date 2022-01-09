@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PicSizer.Partial;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -20,14 +21,14 @@ namespace PicSizer.PictureProc
         /// </summary>
         public static Bitmap ResizeBitmap(Bitmap bitmap)
         {
-            if (Info.setting.resizeMode == ResizeMode.None) return bitmap;
+            if (SharedVariable.setting.resizeMode == ResizeMode.None) return bitmap;
             int width = bitmap.Width;
             int height = bitmap.Height;
             //求出比值
-            float widthByMin = (float)width / Info.setting.LimitWidth;
-            float heightByMin = (float)height / Info.setting.LimitHeight;
+            float widthByMin = (float)width / SharedVariable.setting.LimitWidth;
+            float heightByMin = (float)height / SharedVariable.setting.LimitHeight;
             //重新设定边长
-            if (Info.setting.resizeMode == ResizeMode.MinSize)//不小于限定值
+            if (SharedVariable.setting.resizeMode == ResizeMode.MinSize)//不小于限定值
             {
                 float min = Math.Min(widthByMin, heightByMin);
                 if(min > 1)
@@ -36,7 +37,7 @@ namespace PicSizer.PictureProc
                     height = (int)(height / min);
                 }
             }
-            else if(Info.setting.resizeMode == ResizeMode.MaxSize)//不大于限定值
+            else if(SharedVariable.setting.resizeMode == ResizeMode.MaxSize)//不大于限定值
             {
                 float max = Math.Max(widthByMin, heightByMin);
                 if(max > 1)
@@ -47,8 +48,8 @@ namespace PicSizer.PictureProc
             }
             else//强制修正
             {
-                width = Info.setting.LimitWidth;
-                height = Info.setting.LimitHeight;
+                width = SharedVariable.setting.LimitWidth;
+                height = SharedVariable.setting.LimitHeight;
             }
             //裁剪
             Bitmap newBitmap = new Bitmap(width, height);
@@ -75,7 +76,7 @@ namespace PicSizer.PictureProc
         {
             try
             {
-                if (Info.setting.compressionMode == CompressionMode.SizeFirst)
+                if (SharedVariable.setting.compressionMode == CompressionMode.SizeFirst)
                 {
                     if (!CompressionBySize(path)) throw new Exception("图片:" + path + "压缩失败");
                 }
@@ -88,7 +89,7 @@ namespace PicSizer.PictureProc
             catch(Exception e)
             {
                 Update(false); // 压缩失败，错误加一
-                switch (Info.setting.doWhenException)
+                switch (SharedVariable.setting.doWhenException)
                 {
                     case DoWhenException.IgnoreAndContinue:
                         break;
@@ -139,7 +140,7 @@ namespace PicSizer.PictureProc
                 {
                     mid = (left + right) / 2;
                     size = GetBitmapSize(bitmap, mid);
-                    if(size <= Info.setting.LimitSize)
+                    if(size <= SharedVariable.setting.LimitSize)
                     {
                         left = mid;
                     }
@@ -149,7 +150,7 @@ namespace PicSizer.PictureProc
                     }
                 }
                 size = GetBitmapSize(bitmap, left);
-                if(size <= Info.setting.LimitSize)
+                if(size <= SharedVariable.setting.LimitSize)
                 {
                     Encoder.encoderParameters.Param[0] = Encoder.GetParameter(left);
                     string result = GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
@@ -168,7 +169,7 @@ namespace PicSizer.PictureProc
             using(Bitmap bitmap = ResizeBitmap(new Bitmap(file)))
             {
                 BmpProc.SetBrightness(bitmap);
-                Encoder.encoderParameters.Param[0] = Encoder.GetParameter(Info.setting.CompressionValue);
+                Encoder.encoderParameters.Param[0] = Encoder.GetParameter(SharedVariable.setting.CompressionValue);
                 string result = GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
                 bitmap.Save(result, Encoder.imageCodecInfo, Encoder.encoderParameters);
                 return true;
@@ -181,22 +182,22 @@ namespace PicSizer.PictureProc
         public static string GetResultFileName(string ori, string dir, int num)
         {
             string extension;
-            if (Info.setting.extensionMode == ExtensionMode.Original)
+            if (SharedVariable.setting.extensionMode == ExtensionMode.Original)
             {
                 extension = Path.GetExtension(ori);
             }
             else
             {
-                extension = Info.setting.extensionMode.ToFormat();
+                extension = SharedVariable.setting.extensionMode.ToFormat();
             }
-            switch (Info.setting.renameMode)
+            switch (SharedVariable.setting.renameMode)
             {
                 case RenameMode.Number://纯数字
                     return Path.Combine(dir, num + extension);
                 case RenameMode.Original://原名
                     return Path.Combine(dir, Path.GetFileNameWithoutExtension(ori) + extension);
                 case RenameMode.Custom://混合命名
-                    return Path.Combine(dir, string.Format(Info.setting.CustomRenameStr,num) + extension);
+                    return Path.Combine(dir, string.Format(SharedVariable.setting.CustomRenameStr,num) + extension);
                 default:
                     return null;
             }

@@ -16,7 +16,13 @@ namespace PicSizer
         /// <summary>
         /// 版本
         /// </summary>
-        public const string ProjectVersion = "v3.2";
+        public static readonly Partial.Version ProjectVersion = new Partial.Version()
+        {
+            mainVersion = 3,
+            secondVersion = 3,
+            thirdVersion = 2,
+            alpha = true
+        };
 
         /// <summary>
         /// 项目名称
@@ -24,9 +30,19 @@ namespace PicSizer
         public const string ProjectName = "PicSizer";
 
         /// <summary>
-        /// 程序设置
+        /// 设置文件的扩展名
         /// </summary>
-        public static Setting setting = new Setting();
+        public const string SettingFileExtension = "pics";
 
+        /// <summary>
+        /// 配置文件的版本，防止跨版本导入
+        /// </summary>
+        public static readonly Partial.Version SettingVersion = new Partial.Version()
+        {
+            mainVersion = 1,
+            secondVersion = 0,
+            thirdVersion = 0,
+            alpha = false
+        };
     }
 }

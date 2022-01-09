@@ -77,8 +77,7 @@ namespace PicSizer
         public void PrepareToHide()
         {
             this.Hide();
-            string s = "总共: " + total + " 张\n压缩完成: " + success + "张\n未完成: " + (total - success) + "张";
-            MessageBox.Show(s, "压缩已结束", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            PicSizer.Partial.Dialog.ShowDialog_ResizeFinish(total, success);
         }
     }
 }
