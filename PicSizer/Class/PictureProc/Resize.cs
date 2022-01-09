@@ -4,46 +4,30 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PicSizer
+namespace PicSizer.PictureProc
 {
     public static class Resize
     {
-        static ImageCodecInfo imageCodecInfo = ImageInfo.Info_JPEG;
-        static System.Drawing.Imaging.Encoder encoder = System.Drawing.Imaging.Encoder.Quality;
-        static EncoderParameters encoderParameters = new EncoderParameters(1);
-
-        static EncoderParameter[] parameterList = new EncoderParameter[101];
-
-        /// <summary>
-        /// 获取编码信息
-        /// </summary>
-        public static EncoderParameter GetParameter(long value)
-        {
-            int v = (int)value;
-            if(parameterList[v] == null)
-            {
-                parameterList[v] = new EncoderParameter(encoder, value);
-            }
-            return parameterList[v];
-        }
 
         /// <summary>
         /// 调整图片像素
         /// </summary>
         public static Bitmap ResizeBitmap(Bitmap bitmap)
         {
-            if (Setting.resizeMode == ResizeMode.None) return bitmap;
+            if (Info.setting.resizeMode == ResizeMode.None) return bitmap;
             int width = bitmap.Width;
             int height = bitmap.Height;
             //求出比值
-            float widthByMin = (float)width / Setting.LimitWidth;
-            float heightByMin = (float)height / Setting.LimitHeight;
+            float widthByMin = (float)width / Info.setting.LimitWidth;
+            float heightByMin = (float)height / Info.setting.LimitHeight;
             //重新设定边长
-            if (Setting.resizeMode == ResizeMode.MinSize)//不小于限定值
+            if (Info.setting.resizeMode == ResizeMode.MinSize)//不小于限定值
             {
                 float min = Math.Min(widthByMin, heightByMin);
                 if(min > 1)
@@ -52,7 +36,7 @@ namespace PicSizer
                     height = (int)(height / min);
                 }
             }
-            else if(Setting.resizeMode == ResizeMode.MaxSize)//不大于限定值
+            else if(Info.setting.resizeMode == ResizeMode.MaxSize)//不大于限定值
             {
                 float max = Math.Max(widthByMin, heightByMin);
                 if(max > 1)
@@ -63,8 +47,8 @@ namespace PicSizer
             }
             else//强制修正
             {
-                width = Setting.LimitWidth;
-                height = Setting.LimitHeight;
+                width = Info.setting.LimitWidth;
+                height = Info.setting.LimitHeight;
             }
             //裁剪
             Bitmap newBitmap = new Bitmap(width, height);
@@ -76,56 +60,52 @@ namespace PicSizer
             return newBitmap;
         }
 
-        
-
-        public static void StartResizer(ListBox.ObjectCollection files, string resDir)
+        /// <summary>
+        /// 开始压缩
+        /// </summary>
+        public static void StartResizer(ListBox.ObjectCollection collection, string resDir)
         {
-            int num = Setting.StartIndex;
-            string result;
-            //遍历所有图片
-            foreach (string path in files)
+            ThreadsPool.OutputDir = resDir;
+            ThreadsPool.FileCollection = collection;
+
+            ThreadsPool.StartThreadsPool();
+        }
+
+        public static void ResizeOnePicture(string path)
+        {
+            try
             {
-                try
+                if (Info.setting.compressionMode == CompressionMode.SizeFirst)
                 {
-                    if (Setting.ThreadExitNow)
-                    {
-                        OnExit();
-                        return;
-                    }
-                    result = GetResultFileName(path, resDir, num);
-                    if (Setting.compressionMode == CompressionMode.SizeFirst)
-                    {
-                        if (!CompressionBySize(path, result)) throw new Exception("图片:" + path + "压缩失败");
-                    }
-                    else
-                    {
-                        if (!CompressionByValue(path, result)) throw new Exception("图片:" + path + "压缩失败");
-                    }
-                    num++;
-                    Update(true); // 压缩成功，进度条加一
+                    if (!CompressionBySize(path)) throw new Exception("图片:" + path + "压缩失败");
                 }
-                catch(Exception ex)
+                else
                 {
-                    Update(false); // 压缩失败，错误加一
-                    switch (Setting.doWhenException)
-                    {
-                        case DoWhenException.IgnoreAndContinue:
-                            break;
-                        case DoWhenException.IgnoreAndJump:
-                            num++;
-                            break;
-                        case DoWhenException.ShowAndContinue:
-                            Dialog.ShowDialog_Exception(ex);
-                            break;
-                        case DoWhenException.ShowAndJump:
-                            Dialog.ShowDialog_Exception(ex);
-                            num++;
-                            break;
-                        default:
-                            Dialog.ShowDialog_Exception(ex);
-                            OnExit();
-                            return;
-                    }
+                    if (!CompressionByValue(path)) throw new Exception("图片:" + path + "压缩失败");
+                }
+                Update(true); // 压缩成功，进度条加一
+            }
+            catch(Exception e)
+            {
+                Update(false); // 压缩失败，错误加一
+                switch (Info.setting.doWhenException)
+                {
+                    case DoWhenException.IgnoreAndContinue:
+                        break;
+                    case DoWhenException.IgnoreAndJump:
+                        ThreadsPool.GetPicNum();
+                        break;
+                    case DoWhenException.ShowAndContinue:
+                        Dialog.ShowDialog_Exception(e);
+                        break;
+                    case DoWhenException.ShowAndJump:
+                        Dialog.ShowDialog_Exception(e);
+                        ThreadsPool.GetPicNum();
+                        break;
+                    default:
+                        Dialog.ShowDialog_Exception(e);
+                        SharedVariable.ThreadExitNow = true;
+                        return;
                 }
             }
         }
@@ -135,9 +115,9 @@ namespace PicSizer
         /// </summary>
         public static long GetBitmapSize(Bitmap bitmap, long value)
         {
-            encoderParameters.Param[0] = GetParameter(value);
+            Encoder.encoderParameters.Param[0] = Encoder.GetParameter(value);
             MemoryStream memoryStream = new MemoryStream();
-            bitmap.Save(memoryStream, imageCodecInfo, encoderParameters);
+            bitmap.Save(memoryStream, Encoder.imageCodecInfo, Encoder.encoderParameters);
             long size = memoryStream.Length;
             memoryStream.Dispose();//立即摧毁MemoryStream防止内存占用过多
             return size >> 10;
@@ -146,7 +126,7 @@ namespace PicSizer
         /// <summary>
         /// 基于大小压缩
         /// </summary>
-        public static bool CompressionBySize(string file, string result)
+        public static bool CompressionBySize(string file)
         {
             using (Bitmap bitmap = ResizeBitmap(new Bitmap(file)))
             {
@@ -159,7 +139,7 @@ namespace PicSizer
                 {
                     mid = (left + right) / 2;
                     size = GetBitmapSize(bitmap, mid);
-                    if(size <= Setting.LimitSize)
+                    if(size <= Info.setting.LimitSize)
                     {
                         left = mid;
                     }
@@ -169,10 +149,11 @@ namespace PicSizer
                     }
                 }
                 size = GetBitmapSize(bitmap, left);
-                if(size <= Setting.LimitSize)
+                if(size <= Info.setting.LimitSize)
                 {
-                    encoderParameters.Param[0] = GetParameter(left);
-                    bitmap.Save(result, imageCodecInfo, encoderParameters);
+                    Encoder.encoderParameters.Param[0] = Encoder.GetParameter(left);
+                    string result = GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
+                    bitmap.Save(result, Encoder.imageCodecInfo, Encoder.encoderParameters);
                     return true;
                 }
                 return false;
@@ -182,13 +163,14 @@ namespace PicSizer
         /// <summary>
         /// 基于画质压缩
         /// </summary>
-        public static bool CompressionByValue(string file, string result)
+        public static bool CompressionByValue(string file)
         {
             using(Bitmap bitmap = ResizeBitmap(new Bitmap(file)))
             {
                 BmpProc.SetBrightness(bitmap);
-                encoderParameters.Param[0] = GetParameter(Setting.CompressionValue);
-                bitmap.Save(result, imageCodecInfo, encoderParameters);
+                Encoder.encoderParameters.Param[0] = Encoder.GetParameter(Info.setting.CompressionValue);
+                string result = GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
+                bitmap.Save(result, Encoder.imageCodecInfo, Encoder.encoderParameters);
                 return true;
             }
         }
@@ -199,22 +181,22 @@ namespace PicSizer
         public static string GetResultFileName(string ori, string dir, int num)
         {
             string extension;
-            if (Setting.extensionMode == ExtensionMode.Original)
+            if (Info.setting.extensionMode == ExtensionMode.Original)
             {
                 extension = Path.GetExtension(ori);
             }
             else
             {
-                extension = Setting.extensionMode.ToFormat();
+                extension = Info.setting.extensionMode.ToFormat();
             }
-            switch (Setting.renameMode)
+            switch (Info.setting.renameMode)
             {
                 case RenameMode.Number://纯数字
                     return Path.Combine(dir, num + extension);
                 case RenameMode.Original://原名
                     return Path.Combine(dir, Path.GetFileNameWithoutExtension(ori) + extension);
                 case RenameMode.Custom://混合命名
-                    return Path.Combine(dir, string.Format(Setting.CustomRenameStr,num) + extension);
+                    return Path.Combine(dir, string.Format(Info.setting.CustomRenameStr,num) + extension);
                 default:
                     return null;
             }
@@ -225,15 +207,16 @@ namespace PicSizer
         /// </summary>
         public static void OnExit()
         {
-            Info.progressForm.PrepareToHide();
+            SharedVariable.progressForm.PrepareToHide();
         }
 
         /// <summary>
         /// 更新进度条
         /// </summary>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Update(bool flag)
         {
-            Info.progressForm.AddOne(flag);
+            SharedVariable.progressForm.AddOne(flag);
         }
     }
 }

@@ -215,19 +215,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class\Resize.cs" />
-    <Compile Include="Class\BmpProc.cs" />
-    <Compile Include="Class\DllExtern.cs">
+    <Compile Include="Class\PictureProc\Resize.cs" />
+    <Compile Include="Class\PictureProc\BmpProc.cs" />
+    <Compile Include="Class\Partial\DllExtern.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="Class\Info.cs" />
+    <Compile Include="Class\PictureProc\Encoder.cs" />
+    <Compile Include="Class\PictureProc\ThreadsPool.cs" />
+    <Compile Include="Class\Static\Info.cs" />
     <Compile Include="Forms\DearXuan.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\DearXuan.Designer.cs">
       <DependentUpon>DearXuan.cs</DependentUpon>
     </Compile>
-    <Compile Include="Class\Dialog.cs" />
+    <Compile Include="Class\Partial\Dialog.cs" />
     <Compile Include="Forms\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -242,14 +244,15 @@
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Class\Setting.cs" />
+    <Compile Include="Class\Partial\Setting.cs" />
     <Compile Include="Forms\SettingForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\SettingForm.Designer.cs">
       <DependentUpon>SettingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Class\Support.cs" />
+    <Compile Include="Class\Partial\Support.cs" />
+    <Compile Include="Class\Static\SharedVariable.cs" />
     <EmbeddedResource Include="Forms\DearXuan.byn.resx">
       <DependentUpon>DearXuan.cs</DependentUpon>
     </EmbeddedResource>

@@ -20,10 +20,10 @@ namespace PicSizer
         {
             InitializeComponent();
             //为静态量赋值
-            Info.mainForm = this;
-            Info.progressForm = new ProgressForm();
-            Info.settingForm = new SettingForm();
-            Info.dearXuan = new DearXuan();
+            SharedVariable.mainForm = this;
+            SharedVariable.progressForm = new ProgressForm();
+            SharedVariable.settingForm = new SettingForm();
+            SharedVariable.dearXuan = new DearXuan();
             Text = Info.ProjectName + " " + Info.ProjectVersion;
             paths = listBox1.Items;
             DllExtern.DoInFirst();
@@ -54,7 +54,7 @@ namespace PicSizer
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Title = "添加图片";
-            if (Setting.AllowAnyExtension)
+            if (Info.setting.AllowAnyExtension)
             {
                 dialog.Filter = "图片(JPG,PNG,BMP,TIFF)|*.jpg;*.png;*.bmp;*.tiff|所有|*.*";
             }
@@ -132,12 +132,12 @@ namespace PicSizer
             //创建处理图片的线程
             Thread thread = new Thread(() =>
             {
-                PicSizer.Resize.StartResizer(paths, folderPath);
+                PictureProc.Resize.StartResizer(paths, folderPath);
             });
             thread.Priority = ThreadPriority.Highest;//设置线程优先级最高
-            Info.progressForm.init(paths.Count);
+            SharedVariable.progressForm.init(paths.Count);
             thread.Start();
-            Info.progressForm.ShowDialog();
+            SharedVariable.progressForm.ShowDialog();
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace PicSizer
         /// </summary>
         private void OnSetClick(object sender, EventArgs e)
         {
-            Info.settingForm.ShowDialog();
+            SharedVariable.settingForm.ShowDialog();
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace PicSizer
         /// </summary>
         private void OnAboutClick(object sender, EventArgs e)
         {
-            Info.dearXuan.ShowDialog();
+            SharedVariable.dearXuan.ShowDialog();
         }
 
         private void OnRemoveClick(object sender, EventArgs e)
@@ -182,7 +182,7 @@ namespace PicSizer
                 int count = files.Length;
                 foreach(string path in files)
                 {
-                    if (Setting.AllowAnyExtension)
+                    if (Info.setting.AllowAnyExtension)
                     {
                         if (AddPicture(path)) count--;
                     }

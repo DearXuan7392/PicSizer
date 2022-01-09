@@ -58,6 +58,10 @@ namespace PicSizer
             this.comboBox_RenameMode = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.trackBar_Threads = new System.Windows.Forms.TrackBar();
+            this.numericUpDown_Threads = new System.Windows.Forms.NumericUpDown();
+            this.label15 = new System.Windows.Forms.Label();
+            this.checkBox_TopMost = new System.Windows.Forms.CheckBox();
             this.checkBox_AllowAnyExtension = new System.Windows.Forms.CheckBox();
             this.comboBox_DoWhenException = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
@@ -68,7 +72,6 @@ namespace PicSizer
             this.numericUpDown_Brightness = new System.Windows.Forms.NumericUpDown();
             this.trackBar_Brightness = new System.Windows.Forms.TrackBar();
             this.label14 = new System.Windows.Forms.Label();
-            this.checkBox_TopMost = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitWidth)).BeginInit();
@@ -78,6 +81,8 @@ namespace PicSizer
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_StartIndex)).BeginInit();
             this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_Threads)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Threads)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -341,7 +346,7 @@ namespace PicSizer
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(0, 0);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(206, 146);
+            this.groupBox3.Size = new System.Drawing.Size(206, 165);
             this.groupBox3.TabIndex = 11;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "命名";
@@ -442,6 +447,9 @@ namespace PicSizer
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.trackBar_Threads);
+            this.groupBox4.Controls.Add(this.numericUpDown_Threads);
+            this.groupBox4.Controls.Add(this.label15);
             this.groupBox4.Controls.Add(this.checkBox_TopMost);
             this.groupBox4.Controls.Add(this.checkBox_AllowAnyExtension);
             this.groupBox4.Controls.Add(this.comboBox_DoWhenException);
@@ -449,10 +457,64 @@ namespace PicSizer
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.Location = new System.Drawing.Point(0, 0);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(228, 146);
+            this.groupBox4.Size = new System.Drawing.Size(228, 165);
             this.groupBox4.TabIndex = 13;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "其它";
+            // 
+            // trackBar_Threads
+            // 
+            this.trackBar_Threads.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBar_Threads.Location = new System.Drawing.Point(8, 112);
+            this.trackBar_Threads.Minimum = 1;
+            this.trackBar_Threads.Name = "trackBar_Threads";
+            this.trackBar_Threads.Size = new System.Drawing.Size(213, 45);
+            this.trackBar_Threads.TabIndex = 6;
+            this.trackBar_Threads.Value = 1;
+            this.trackBar_Threads.Scroll += new System.EventHandler(this.trackBar_Threads_Scroll);
+            // 
+            // numericUpDown_Threads
+            // 
+            this.numericUpDown_Threads.Location = new System.Drawing.Point(83, 85);
+            this.numericUpDown_Threads.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDown_Threads.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown_Threads.Name = "numericUpDown_Threads";
+            this.numericUpDown_Threads.Size = new System.Drawing.Size(120, 21);
+            this.numericUpDown_Threads.TabIndex = 5;
+            this.numericUpDown_Threads.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown_Threads.ValueChanged += new System.EventHandler(this.numericUpDown_Threads_ValueChanged);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(6, 87);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(71, 12);
+            this.label15.TabIndex = 4;
+            this.label15.Text = "最大线程数:";
+            // 
+            // checkBox_TopMost
+            // 
+            this.checkBox_TopMost.AutoSize = true;
+            this.checkBox_TopMost.Location = new System.Drawing.Point(8, 68);
+            this.checkBox_TopMost.Name = "checkBox_TopMost";
+            this.checkBox_TopMost.Size = new System.Drawing.Size(96, 16);
+            this.checkBox_TopMost.TabIndex = 3;
+            this.checkBox_TopMost.Text = "置顶PicSizer";
+            this.checkBox_TopMost.UseVisualStyleBackColor = true;
             // 
             // checkBox_AllowAnyExtension
             // 
@@ -502,7 +564,7 @@ namespace PicSizer
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBox4);
-            this.splitContainer1.Size = new System.Drawing.Size(438, 146);
+            this.splitContainer1.Size = new System.Drawing.Size(438, 165);
             this.splitContainer1.SplitterDistance = 206;
             this.splitContainer1.TabIndex = 14;
             // 
@@ -532,7 +594,7 @@ namespace PicSizer
             this.groupBox5.Controls.Add(this.numericUpDown_Brightness);
             this.groupBox5.Controls.Add(this.trackBar_Brightness);
             this.groupBox5.Controls.Add(this.label14);
-            this.groupBox5.Location = new System.Drawing.Point(12, 316);
+            this.groupBox5.Location = new System.Drawing.Point(12, 335);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(438, 83);
             this.groupBox5.TabIndex = 16;
@@ -562,7 +624,7 @@ namespace PicSizer
             0,
             0,
             0});
-            this.numericUpDown_Brightness.ValueChanged += new System.EventHandler(this.numericUpDown6_ValueChanged);
+            this.numericUpDown_Brightness.ValueChanged += new System.EventHandler(this.numericUpDown_Brightness_ValueChanged);
             // 
             // trackBar_Brightness
             // 
@@ -577,7 +639,7 @@ namespace PicSizer
             this.trackBar_Brightness.TabIndex = 1;
             this.trackBar_Brightness.TickFrequency = 10;
             this.trackBar_Brightness.Value = 100;
-            this.trackBar_Brightness.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            this.trackBar_Brightness.Scroll += new System.EventHandler(this.trackBar_Brightness_Scroll);
             // 
             // label14
             // 
@@ -587,16 +649,6 @@ namespace PicSizer
             this.label14.Size = new System.Drawing.Size(35, 12);
             this.label14.TabIndex = 0;
             this.label14.Text = "亮度:";
-            // 
-            // checkBox_TopMost
-            // 
-            this.checkBox_TopMost.AutoSize = true;
-            this.checkBox_TopMost.Location = new System.Drawing.Point(8, 68);
-            this.checkBox_TopMost.Name = "checkBox_TopMost";
-            this.checkBox_TopMost.Size = new System.Drawing.Size(96, 16);
-            this.checkBox_TopMost.TabIndex = 3;
-            this.checkBox_TopMost.Text = "置顶PicSizer";
-            this.checkBox_TopMost.UseVisualStyleBackColor = true;
             // 
             // SettingForm
             // 
@@ -629,6 +681,8 @@ namespace PicSizer
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_StartIndex)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_Threads)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Threads)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -686,5 +740,8 @@ namespace PicSizer
         private System.Windows.Forms.CheckBox checkBox_AllowAnyExtension;
         public System.Windows.Forms.CheckBox checkBox_UseGPU;
         private System.Windows.Forms.CheckBox checkBox_TopMost;
+        private System.Windows.Forms.NumericUpDown numericUpDown_Threads;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TrackBar trackBar_Threads;
     }
 }

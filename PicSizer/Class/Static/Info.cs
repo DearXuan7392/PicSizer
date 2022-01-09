@@ -23,10 +23,10 @@ namespace PicSizer
         /// </summary>
         public const string ProjectName = "PicSizer";
 
-        public static Form1 mainForm;
-        public static SettingForm settingForm;
-        public static ProgressForm progressForm;
-        public static DearXuan dearXuan;
+        /// <summary>
+        /// 程序设置
+        /// </summary>
+        public static Setting setting = new Setting();
 
     }
 }

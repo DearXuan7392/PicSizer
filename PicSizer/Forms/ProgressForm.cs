@@ -33,7 +33,7 @@ namespace PicSizer
             label8.Text = "0%";
             button1.Enabled = true;
             progressBar1.Value = 0;
-            Setting.ThreadExitNow = false;
+            SharedVariable.ThreadExitNow = false;
         }
 
         public void AddOne(bool flag)
@@ -52,7 +52,6 @@ namespace PicSizer
             label6.Text = error.ToString();
             label8.Text = percent + "%";
             progressBar1.Value = percent;
-            if (sum == total) PrepareToHide();
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
@@ -71,14 +70,14 @@ namespace PicSizer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Setting.ThreadExitNow = true;
+            SharedVariable.ThreadExitNow = true;
             button1.Enabled = false;
         }
 
         public void PrepareToHide()
         {
             this.Hide();
-            string s = "总共: " + total + " 张\n压缩完成: " + success + "张\n未完成: " + error + "张";
+            string s = "总共: " + total + " 张\n压缩完成: " + success + "张\n未完成: " + (total - success) + "张";
             MessageBox.Show(s, "压缩已结束", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }

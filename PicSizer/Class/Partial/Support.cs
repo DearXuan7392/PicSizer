@@ -74,6 +74,32 @@ namespace PicSizer
         ShowAndExit = 4
     }
 
+    /// <summary>
+    /// 待压缩的文件
+    /// </summary>
+    public class PicFile
+    {
+        public PicFile(string fullPath)
+        {
+
+        }
+
+        /// <summary>
+        /// 完整路径
+        /// </summary>
+        public string fullPath { get; }
+
+        /// <summary>
+        /// 文件名
+        /// </summary>
+        public string fileName { get; }
+
+        /// <summary>
+        /// 是否已经完成压缩
+        /// </summary>
+        public bool hasResize { get; set; } = false;
+    }
+
     public static class ImageInfo
     {
         public static ImageCodecInfo Info_JPEG = GetEncoderInfo("image/jpeg");
