@@ -150,6 +150,7 @@ namespace PicSizer.PictureProc
                     }
                 }
                 size = GetBitmapSize(bitmap, left);
+                //如果文件大小符合要求就输出
                 if(size <= SharedVariable.setting.LimitSize)
                 {
                     Encoder.encoderParameters.Param[0] = Encoder.GetParameter(left);
@@ -197,7 +198,9 @@ namespace PicSizer.PictureProc
                 case RenameMode.Original://原名
                     return Path.Combine(dir, Path.GetFileNameWithoutExtension(ori) + extension);
                 case RenameMode.Custom://混合命名
-                    return Path.Combine(dir, string.Format(SharedVariable.setting.CustomRenameStr,num) + extension);
+                    string oriStr = Path.GetFileNameWithoutExtension(ori);//文件原名
+                    string numStr = num.ToString();//序号
+                    return Path.Combine(dir, SharedVariable.setting.CustomRenameStr.Replace("{ori}",oriStr).Replace("{num}",numStr) + extension);
                 default:
                     return null;
             }

@@ -140,7 +140,7 @@ namespace PicSizer.Partial
             string s = mainVersion + "." + secondVersion + "." + thirdVersion;
             if (alpha)
             {
-                s += " alpha";
+                s += "-alpha";
             }
             return s;
         }

@@ -95,9 +95,10 @@ namespace PicSizer
 
         private void button_Save_Click(object sender, EventArgs e)
         {
-            if(comboBox_RenameMode.SelectedIndex == 2 && !textBox_CustomRenameStr.Text.Contains("{0}"))
+            string fileNameError = CheckCustomName();
+            if(fileNameError != null)
             {
-                Dialog.ShowDialog_Error("自定义命名中必须出现\"{0}\"以替换成数字");
+                Dialog.ShowDialog_Error(fileNameError);
                 return;
             }
             SharedVariable.setting = SaveSetting();
@@ -275,6 +276,27 @@ namespace PicSizer
                 LoadSetting(setting);
                 Dialog.ShowDialog("导入成功.");
             }
+        }
+
+        private void checkBox_UseGPU_CheckedChanged(object sender, EventArgs e)
+        {
+            //如果GPU不支持
+            if(!Info.isGPUSupport && checkBox_UseGPU.Checked)
+            {
+                checkBox_UseGPU.Checked = false;
+            }
+        }
+
+        /// <summary>
+        /// 检车自定义的文件名是否合法
+        /// </summary>
+        private string CheckCustomName()
+        {
+            if(comboBox_RenameMode.SelectedIndex == 2 && !textBox_CustomRenameStr.Text.Contains("{ori}") && !textBox_CustomRenameStr.Text.Contains("{num}"))//自定义文件名
+            {
+                return "自定义命名中必须出现\"{ori}\"或\"{num}\"";
+            }
+            return null;
         }
     }
 }

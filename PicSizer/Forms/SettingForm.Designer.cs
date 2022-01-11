@@ -111,7 +111,7 @@ namespace PicSizer
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(228, 146);
+            this.groupBox1.Size = new System.Drawing.Size(217, 146);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "尺寸";
@@ -232,7 +232,7 @@ namespace PicSizer
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(0, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(206, 146);
+            this.groupBox2.Size = new System.Drawing.Size(217, 146);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "压缩";
@@ -348,7 +348,7 @@ namespace PicSizer
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(0, 0);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(206, 165);
+            this.groupBox3.Size = new System.Drawing.Size(217, 165);
             this.groupBox3.TabIndex = 11;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "命名";
@@ -459,7 +459,7 @@ namespace PicSizer
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.Location = new System.Drawing.Point(0, 0);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(228, 165);
+            this.groupBox4.Size = new System.Drawing.Size(217, 165);
             this.groupBox4.TabIndex = 13;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "其它";
@@ -471,9 +471,9 @@ namespace PicSizer
             this.trackBar_Threads.Location = new System.Drawing.Point(8, 112);
             this.trackBar_Threads.Minimum = 1;
             this.trackBar_Threads.Name = "trackBar_Threads";
-            this.trackBar_Threads.Size = new System.Drawing.Size(213, 45);
+            this.trackBar_Threads.Size = new System.Drawing.Size(202, 45);
             this.trackBar_Threads.TabIndex = 6;
-            this.trackBar_Threads.Value = 1;
+            this.trackBar_Threads.Value = 3;
             this.trackBar_Threads.Scroll += new System.EventHandler(this.trackBar_Threads_Scroll);
             // 
             // numericUpDown_Threads
@@ -493,7 +493,7 @@ namespace PicSizer
             this.numericUpDown_Threads.Size = new System.Drawing.Size(120, 21);
             this.numericUpDown_Threads.TabIndex = 5;
             this.numericUpDown_Threads.Value = new decimal(new int[] {
-            1,
+            3,
             0,
             0,
             0});
@@ -569,7 +569,7 @@ namespace PicSizer
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBox4);
             this.splitContainer1.Size = new System.Drawing.Size(438, 165);
-            this.splitContainer1.SplitterDistance = 206;
+            this.splitContainer1.SplitterDistance = 217;
             this.splitContainer1.TabIndex = 14;
             // 
             // splitContainer2
@@ -588,7 +588,7 @@ namespace PicSizer
             // 
             this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer2.Size = new System.Drawing.Size(438, 146);
-            this.splitContainer2.SplitterDistance = 206;
+            this.splitContainer2.SplitterDistance = 217;
             this.splitContainer2.TabIndex = 15;
             // 
             // groupBox5
@@ -617,6 +617,7 @@ namespace PicSizer
             this.checkBox_UseGPU.TabIndex = 3;
             this.checkBox_UseGPU.Text = "硬件加速";
             this.checkBox_UseGPU.UseVisualStyleBackColor = true;
+            this.checkBox_UseGPU.CheckedChanged += new System.EventHandler(this.checkBox_UseGPU_CheckedChanged);
             // 
             // numericUpDown_Brightness
             // 
