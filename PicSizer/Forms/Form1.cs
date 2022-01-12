@@ -71,7 +71,8 @@ namespace PicSizer
                 {
                     if (AddPicture(path)) fileCount--;
                 }
-                if(fileCount != 0)
+                UpdateLowerLeftLabel();
+                if (fileCount != 0)
                 {
                     Dialog.ShowDialog(fileCount + " 张重复的图片已被忽略.");
                 }
@@ -99,7 +100,7 @@ namespace PicSizer
         /// <summary>
         /// 压缩按钮
         /// </summary>
-        private async void OnSizerClick(object sender, EventArgs e)
+        private async void OnResizeClick(object sender, EventArgs e)
         {
             string folderPath = textBox1.Text;
             if (!Path.IsPathRooted(folderPath))
@@ -150,9 +151,9 @@ namespace PicSizer
         }
 
         /// <summary>
-        /// 关于按钮
+        /// 作者按钮
         /// </summary>
-        private void OnAboutClick(object sender, EventArgs e)
+        private void OnAuthorClick(object sender, EventArgs e)
         {
             SharedVariable.dearXuan.ShowDialog();
         }
@@ -173,6 +174,7 @@ namespace PicSizer
                     listBox1.Items.RemoveAt(index);
                 }
             }
+            UpdateLowerLeftLabel();
         }
 
         private void listBox1_DragDrop(object sender, DragEventArgs e)
@@ -195,6 +197,7 @@ namespace PicSizer
                         }
                     }
                 }
+                UpdateLowerLeftLabel();
                 if (count != 0)
                 {
                     Dialog.ShowDialog(count + " 个重复或不符合格式的路径已被忽略.");
@@ -235,6 +238,39 @@ namespace PicSizer
             {
                 Dialog.ShowDialog_Exception(ex);
             }
+        }
+
+        private void OnSelectAllClick(object sender, EventArgs e)
+        {
+            int count = listBox1.Items.Count;
+            for(int i = 0; i < count; i++)
+            {
+                listBox1.SetSelected(i, true);
+            }
+            UpdateLowerLeftLabel();
+        }
+
+        private void OnSelectReverseClick(object sender, EventArgs e)
+        {
+            int count = listBox1.Items.Count;
+            for(int i = 0; i < count; i++)
+            {
+                listBox1.SetSelected(i, !listBox1.GetSelected(i));
+            }
+            UpdateLowerLeftLabel();
+        }
+
+        /// <summary>
+        /// 更新左下角的Label，显示为"选中的项数/总项数"
+        /// </summary>
+        private void UpdateLowerLeftLabel()
+        {
+            label2.Text = listBox1.SelectedItems.Count + "/" + listBox1.Items.Count;
+        }
+
+        private void listBox1_SelectedValueChanged(object sender, EventArgs e)
+        {
+            UpdateLowerLeftLabel();
         }
     }
 }

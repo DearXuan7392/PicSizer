@@ -31,14 +31,17 @@ namespace PicSizer
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.listBox1 = new System.Windows.Forms.ListBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.button_StartResize = new System.Windows.Forms.Button();
+            this.button_Add = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
+            this.button_Choose = new System.Windows.Forms.Button();
+            this.button_Set = new System.Windows.Forms.Button();
+            this.button_Author = new System.Windows.Forms.Button();
+            this.button_Remove = new System.Windows.Forms.Button();
+            this.button_SelectAll = new System.Windows.Forms.Button();
+            this.button_SelectReverse = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // listBox1
@@ -53,32 +56,33 @@ namespace PicSizer
             this.listBox1.Location = new System.Drawing.Point(12, 12);
             this.listBox1.Name = "listBox1";
             this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBox1.Size = new System.Drawing.Size(479, 304);
+            this.listBox1.Size = new System.Drawing.Size(479, 280);
             this.listBox1.TabIndex = 0;
+            this.listBox1.SelectedValueChanged += new System.EventHandler(this.listBox1_SelectedValueChanged);
             this.listBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.listBox1_DragDrop);
             this.listBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this.DragEnter);
             // 
-            // button1
+            // button_StartResize
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(497, 70);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "压缩";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.OnSizerClick);
+            this.button_StartResize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_StartResize.Location = new System.Drawing.Point(497, 99);
+            this.button_StartResize.Name = "button_StartResize";
+            this.button_StartResize.Size = new System.Drawing.Size(75, 23);
+            this.button_StartResize.TabIndex = 1;
+            this.button_StartResize.Text = "开始压缩";
+            this.button_StartResize.UseVisualStyleBackColor = true;
+            this.button_StartResize.Click += new System.EventHandler(this.OnResizeClick);
             // 
-            // button2
+            // button_Add
             // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(497, 12);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "添加";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.OnAddClick);
+            this.button_Add.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_Add.Location = new System.Drawing.Point(497, 12);
+            this.button_Add.Name = "button_Add";
+            this.button_Add.Size = new System.Drawing.Size(75, 23);
+            this.button_Add.TabIndex = 2;
+            this.button_Add.Text = "添加";
+            this.button_Add.UseVisualStyleBackColor = true;
+            this.button_Add.Click += new System.EventHandler(this.OnAddClick);
             // 
             // label1
             // 
@@ -102,63 +106,98 @@ namespace PicSizer
             this.textBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox1_DragDrop);
             this.textBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this.DragEnter);
             // 
-            // button3
+            // button_Choose
             // 
-            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(497, 326);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 5;
-            this.button3.Text = "选择";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.OnChooseClick);
+            this.button_Choose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_Choose.Location = new System.Drawing.Point(497, 326);
+            this.button_Choose.Name = "button_Choose";
+            this.button_Choose.Size = new System.Drawing.Size(75, 23);
+            this.button_Choose.TabIndex = 5;
+            this.button_Choose.Text = "选择";
+            this.button_Choose.UseVisualStyleBackColor = true;
+            this.button_Choose.Click += new System.EventHandler(this.OnChooseClick);
             // 
-            // button4
+            // button_Set
             // 
-            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Location = new System.Drawing.Point(497, 264);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 6;
-            this.button4.Text = "设置";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.OnSetClick);
+            this.button_Set.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_Set.Location = new System.Drawing.Point(497, 41);
+            this.button_Set.Name = "button_Set";
+            this.button_Set.Size = new System.Drawing.Size(75, 23);
+            this.button_Set.TabIndex = 6;
+            this.button_Set.Text = "设置";
+            this.button_Set.UseVisualStyleBackColor = true;
+            this.button_Set.Click += new System.EventHandler(this.OnSetClick);
             // 
-            // button5
+            // button_Author
             // 
-            this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button5.Location = new System.Drawing.Point(497, 293);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 7;
-            this.button5.Text = "作者";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.OnAboutClick);
+            this.button_Author.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_Author.Location = new System.Drawing.Point(497, 70);
+            this.button_Author.Name = "button_Author";
+            this.button_Author.Size = new System.Drawing.Size(75, 23);
+            this.button_Author.TabIndex = 7;
+            this.button_Author.Text = "作者";
+            this.button_Author.UseVisualStyleBackColor = true;
+            this.button_Author.Click += new System.EventHandler(this.OnAuthorClick);
             // 
-            // button6
+            // button_Remove
             // 
-            this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button6.Location = new System.Drawing.Point(497, 41);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 23);
-            this.button6.TabIndex = 8;
-            this.button6.Text = "移除";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.OnRemoveClick);
+            this.button_Remove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_Remove.Location = new System.Drawing.Point(416, 298);
+            this.button_Remove.Name = "button_Remove";
+            this.button_Remove.Size = new System.Drawing.Size(75, 23);
+            this.button_Remove.TabIndex = 8;
+            this.button_Remove.Text = "移除";
+            this.button_Remove.UseVisualStyleBackColor = true;
+            this.button_Remove.Click += new System.EventHandler(this.OnRemoveClick);
+            // 
+            // button_SelectAll
+            // 
+            this.button_SelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_SelectAll.Location = new System.Drawing.Point(254, 298);
+            this.button_SelectAll.Name = "button_SelectAll";
+            this.button_SelectAll.Size = new System.Drawing.Size(75, 23);
+            this.button_SelectAll.TabIndex = 9;
+            this.button_SelectAll.Text = "全选";
+            this.button_SelectAll.UseVisualStyleBackColor = true;
+            this.button_SelectAll.Click += new System.EventHandler(this.OnSelectAllClick);
+            // 
+            // button_SelectReverse
+            // 
+            this.button_SelectReverse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_SelectReverse.Location = new System.Drawing.Point(335, 298);
+            this.button_SelectReverse.Name = "button_SelectReverse";
+            this.button_SelectReverse.Size = new System.Drawing.Size(75, 23);
+            this.button_SelectReverse.TabIndex = 10;
+            this.button_SelectReverse.Text = "反选";
+            this.button_SelectReverse.UseVisualStyleBackColor = true;
+            this.button_SelectReverse.Click += new System.EventHandler(this.OnSelectReverseClick);
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 303);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(23, 12);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "0/0";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 361);
-            this.Controls.Add(this.button6);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.button_SelectReverse);
+            this.Controls.Add(this.button_SelectAll);
+            this.Controls.Add(this.button_Remove);
+            this.Controls.Add(this.button_Author);
+            this.Controls.Add(this.button_Set);
+            this.Controls.Add(this.button_Choose);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.button_Add);
+            this.Controls.Add(this.button_StartResize);
             this.Controls.Add(this.listBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(450, 300);
@@ -174,14 +213,17 @@ namespace PicSizer
         #endregion
 
         private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button_StartResize;
+        private System.Windows.Forms.Button button_Add;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button_Choose;
+        private System.Windows.Forms.Button button_Set;
+        private System.Windows.Forms.Button button_Author;
+        private System.Windows.Forms.Button button_Remove;
+        private System.Windows.Forms.Button button_SelectAll;
+        private System.Windows.Forms.Button button_SelectReverse;
+        private System.Windows.Forms.Label label2;
     }
 }
 

@@ -473,7 +473,7 @@ namespace PicSizer
             this.trackBar_Threads.Name = "trackBar_Threads";
             this.trackBar_Threads.Size = new System.Drawing.Size(202, 45);
             this.trackBar_Threads.TabIndex = 6;
-            this.trackBar_Threads.Value = 3;
+            this.trackBar_Threads.Value = 2;
             this.trackBar_Threads.Scroll += new System.EventHandler(this.trackBar_Threads_Scroll);
             // 
             // numericUpDown_Threads
@@ -493,7 +493,7 @@ namespace PicSizer
             this.numericUpDown_Threads.Size = new System.Drawing.Size(120, 21);
             this.numericUpDown_Threads.TabIndex = 5;
             this.numericUpDown_Threads.Value = new decimal(new int[] {
-            3,
+            2,
             0,
             0,
             0});
@@ -506,7 +506,7 @@ namespace PicSizer
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(71, 12);
             this.label15.TabIndex = 4;
-            this.label15.Text = "最大线程数:";
+            this.label15.Text = "并发线程数:";
             // 
             // checkBox_TopMost
             // 

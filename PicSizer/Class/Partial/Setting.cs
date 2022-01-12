@@ -80,7 +80,7 @@ namespace PicSizer.Partial
         /// <summary>
         /// 最大线程数
         /// </summary>
-        public int maxThreads { get; set; } = 3;
+        public int maxThreads { get; set; } = 2;
 
         /// <summary>
         /// 永远置顶

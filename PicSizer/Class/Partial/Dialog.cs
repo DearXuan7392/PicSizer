@@ -18,12 +18,14 @@ namespace PicSizer.Partial
         public static void ShowDialog(string msg)
         {
             MessageBox.Show(msg, _Title);
+            SetFocus();
         }
 
         public static void ShowDialog_ResizeFinish(int total, int success)
         {
             string s = "总共: " + total + " 张\n压缩完成: " + success + "张\n未完成: " + (total - success) + "张";
             MessageBox.Show(s, "压缩已结束", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            SetFocus();
         }
 
         /// <summary>
@@ -83,6 +85,14 @@ namespace PicSizer.Partial
         public static void ShowDialog_OpenSettingFailed()
         {
             ShowDialog_Error("无法打开这个文件,请确保文件有效且版本正确.");
+        }
+
+        /// <summary>
+        /// 获取焦点
+        /// </summary>
+        private static void SetFocus()
+        {
+            SharedVariable.mainForm.Focus();
         }
     }
 }
