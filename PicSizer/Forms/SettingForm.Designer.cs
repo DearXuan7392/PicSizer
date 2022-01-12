@@ -130,7 +130,7 @@ namespace PicSizer
             0,
             0});
             this.numericUpDown_LimitHeight.Name = "numericUpDown_LimitHeight";
-            this.numericUpDown_LimitHeight.Size = new System.Drawing.Size(120, 21);
+            this.numericUpDown_LimitHeight.Size = new System.Drawing.Size(103, 21);
             this.numericUpDown_LimitHeight.TabIndex = 16;
             this.numericUpDown_LimitHeight.Value = new decimal(new int[] {
             1080,
@@ -152,7 +152,7 @@ namespace PicSizer
             0,
             0});
             this.numericUpDown_LimitWidth.Name = "numericUpDown_LimitWidth";
-            this.numericUpDown_LimitWidth.Size = new System.Drawing.Size(120, 21);
+            this.numericUpDown_LimitWidth.Size = new System.Drawing.Size(103, 21);
             this.numericUpDown_LimitWidth.TabIndex = 13;
             this.numericUpDown_LimitWidth.Value = new decimal(new int[] {
             1920,
@@ -163,7 +163,7 @@ namespace PicSizer
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(192, 79);
+            this.label5.Location = new System.Drawing.Point(174, 79);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(29, 12);
             this.label5.TabIndex = 15;
@@ -172,7 +172,7 @@ namespace PicSizer
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(192, 52);
+            this.label4.Location = new System.Drawing.Point(174, 52);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(29, 12);
             this.label4.TabIndex = 14;
@@ -207,7 +207,7 @@ namespace PicSizer
             "强制修正"});
             this.comboBox_ResizeMode.Location = new System.Drawing.Point(65, 14);
             this.comboBox_ResizeMode.Name = "comboBox_ResizeMode";
-            this.comboBox_ResizeMode.Size = new System.Drawing.Size(121, 20);
+            this.comboBox_ResizeMode.Size = new System.Drawing.Size(103, 20);
             this.comboBox_ResizeMode.TabIndex = 9;
             this.comboBox_ResizeMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_ResizeMode_SelectedIndexChanged);
             // 
@@ -320,7 +320,7 @@ namespace PicSizer
             "指定画质"});
             this.comboBox_CompressionMode.Location = new System.Drawing.Point(66, 20);
             this.comboBox_CompressionMode.Name = "comboBox_CompressionMode";
-            this.comboBox_CompressionMode.Size = new System.Drawing.Size(121, 20);
+            this.comboBox_CompressionMode.Size = new System.Drawing.Size(122, 20);
             this.comboBox_CompressionMode.TabIndex = 10;
             this.comboBox_CompressionMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_CompressionMode_SelectedIndexChanged);
             // 
