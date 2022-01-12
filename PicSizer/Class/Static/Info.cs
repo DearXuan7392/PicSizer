@@ -18,11 +18,11 @@ namespace PicSizer
         /// </summary>
         public static readonly Partial.Version ProjectVersion = new Partial.Version()
         {
-            //当前版本(3.4.0-alpha)提交时间:2022-1-12
+            //当前版本(3.4.1)提交时间:2022-1-12
             mainVersion = 3,
             secondVersion = 4,
             thirdVersion = 0,
-            alpha = true
+            alpha = false
         };
 
         /// <summary>
