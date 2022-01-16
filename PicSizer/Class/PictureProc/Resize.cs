@@ -64,7 +64,7 @@ namespace PicSizer.PictureProc
         /// <summary>
         /// 开始压缩
         /// </summary>
-        public static void StartResizer(ListBox.ObjectCollection collection, string resDir)
+        public static void StartResizer(ListView.ListViewItemCollection collection, string resDir)
         {
             ThreadsPool.OutputDir = resDir;
             ThreadsPool.FileCollection = collection;

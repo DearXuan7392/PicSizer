@@ -30,37 +30,22 @@ namespace PicSizer
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.listBox1 = new System.Windows.Forms.ListBox();
             this.button_StartResize = new System.Windows.Forms.Button();
             this.button_Add = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button_Choose = new System.Windows.Forms.Button();
             this.button_Set = new System.Windows.Forms.Button();
-            this.button_Author = new System.Windows.Forms.Button();
+            this.button_About = new System.Windows.Forms.Button();
             this.button_Remove = new System.Windows.Forms.Button();
             this.button_SelectAll = new System.Windows.Forms.Button();
             this.button_SelectReverse = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.fileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.fullPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.size = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
-            // 
-            // listBox1
-            // 
-            this.listBox1.AllowDrop = true;
-            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.HorizontalScrollbar = true;
-            this.listBox1.ItemHeight = 12;
-            this.listBox1.Location = new System.Drawing.Point(12, 12);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBox1.Size = new System.Drawing.Size(479, 280);
-            this.listBox1.TabIndex = 0;
-            this.listBox1.SelectedValueChanged += new System.EventHandler(this.listBox1_SelectedValueChanged);
-            this.listBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.listBox1_DragDrop);
-            this.listBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this.DragEnter);
             // 
             // button_StartResize
             // 
@@ -128,16 +113,16 @@ namespace PicSizer
             this.button_Set.UseVisualStyleBackColor = true;
             this.button_Set.Click += new System.EventHandler(this.OnSetClick);
             // 
-            // button_Author
+            // button_About
             // 
-            this.button_Author.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_Author.Location = new System.Drawing.Point(497, 70);
-            this.button_Author.Name = "button_Author";
-            this.button_Author.Size = new System.Drawing.Size(75, 23);
-            this.button_Author.TabIndex = 7;
-            this.button_Author.Text = "作者";
-            this.button_Author.UseVisualStyleBackColor = true;
-            this.button_Author.Click += new System.EventHandler(this.OnAuthorClick);
+            this.button_About.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_About.Location = new System.Drawing.Point(497, 70);
+            this.button_About.Name = "button_About";
+            this.button_About.Size = new System.Drawing.Size(75, 23);
+            this.button_About.TabIndex = 7;
+            this.button_About.Text = "关于";
+            this.button_About.UseVisualStyleBackColor = true;
+            this.button_About.Click += new System.EventHandler(this.OnAboutClick);
             // 
             // button_Remove
             // 
@@ -182,23 +167,61 @@ namespace PicSizer
             this.label2.TabIndex = 11;
             this.label2.Text = "0/0";
             // 
+            // listView1
+            // 
+            this.listView1.AllowDrop = true;
+            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.fileName,
+            this.fullPath,
+            this.size});
+            this.listView1.FullRowSelect = true;
+            this.listView1.HideSelection = false;
+            this.listView1.Location = new System.Drawing.Point(13, 12);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(478, 280);
+            this.listView1.TabIndex = 12;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
+            this.listView1.DragDrop += new System.Windows.Forms.DragEventHandler(this.listView1_DragDrop);
+            this.listView1.DragEnter += new System.Windows.Forms.DragEventHandler(this.DragEnter);
+            // 
+            // fileName
+            // 
+            this.fileName.Text = "文件名";
+            this.fileName.Width = 99;
+            // 
+            // fullPath
+            // 
+            this.fullPath.Text = "路径";
+            this.fullPath.Width = 294;
+            // 
+            // size
+            // 
+            this.size.Text = "文件大小";
+            this.size.Width = 71;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 361);
+            this.Controls.Add(this.listView1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button_SelectReverse);
             this.Controls.Add(this.button_SelectAll);
             this.Controls.Add(this.button_Remove);
-            this.Controls.Add(this.button_Author);
+            this.Controls.Add(this.button_About);
             this.Controls.Add(this.button_Set);
             this.Controls.Add(this.button_Choose);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button_Add);
             this.Controls.Add(this.button_StartResize);
-            this.Controls.Add(this.listBox1);
+            this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(450, 300);
             this.Name = "Form1";
@@ -211,19 +234,21 @@ namespace PicSizer
         }
 
         #endregion
-
-        private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Button button_StartResize;
         private System.Windows.Forms.Button button_Add;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button button_Choose;
         private System.Windows.Forms.Button button_Set;
-        private System.Windows.Forms.Button button_Author;
+        private System.Windows.Forms.Button button_About;
         private System.Windows.Forms.Button button_Remove;
         private System.Windows.Forms.Button button_SelectAll;
         private System.Windows.Forms.Button button_SelectReverse;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ColumnHeader fileName;
+        private System.Windows.Forms.ColumnHeader fullPath;
+        private System.Windows.Forms.ColumnHeader size;
     }
 }
 

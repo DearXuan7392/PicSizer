@@ -15,9 +15,10 @@ namespace PicSizer
 
         //窗体
         public static Form1 mainForm;
-        public static SettingForm settingForm;
-        public static ProgressForm progressForm;
-        public static DearXuan dearXuan;
+        public static SettingForm settingForm = new SettingForm();
+        public static ProgressForm progressForm = new ProgressForm();
+        public static DearXuan dearXuan = new DearXuan();
+        public static About about = new About();
 
         /// <summary>
         /// 程序设置

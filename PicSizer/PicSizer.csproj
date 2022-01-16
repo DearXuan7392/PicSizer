@@ -43,7 +43,8 @@
     <ManifestCertificateThumbprint>3A4EEA0876F99F400AA738342342C4F02772D4DD</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>PicSizer_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -223,6 +224,12 @@
     <Compile Include="Class\PictureProc\Encoder.cs" />
     <Compile Include="Class\PictureProc\ThreadsPool.cs" />
     <Compile Include="Class\Static\Info.cs" />
+    <Compile Include="Forms\About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\DearXuan.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -253,6 +260,9 @@
     </Compile>
     <Compile Include="Class\Partial\Support.cs" />
     <Compile Include="Class\Static\SharedVariable.cs" />
+    <EmbeddedResource Include="Forms\About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\DearXuan.byn.resx">
       <DependentUpon>DearXuan.cs</DependentUpon>
     </EmbeddedResource>
@@ -295,6 +305,7 @@
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
     <Content Include="Res\PicSizer.ico" />
+    <Content Include="Res\PicSizer.png" />
     <EmbeddedResource Include="Costura64\PicSizer_CUDA.dll" />
   </ItemGroup>
   <ItemGroup>

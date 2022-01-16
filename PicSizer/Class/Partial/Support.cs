@@ -81,7 +81,13 @@ namespace PicSizer.Partial
     {
         public PicFile(string fullPath)
         {
-
+            FileInfo fileInfo = new FileInfo(fullPath);
+            this.fullPath = fullPath;
+            this.fileName = fileInfo.Name;
+            this.size = fileInfo.Length >> 10;
+            this.item = new ListViewItem(this.fileName);
+            item.SubItems.Add(this.fullPath);
+            item.SubItems.Add(GetFileSize());
         }
 
         /// <summary>
@@ -98,6 +104,45 @@ namespace PicSizer.Partial
         /// 是否已经完成压缩
         /// </summary>
         public bool hasResize { get; set; } = false;
+
+        /// <summary>
+        /// 文件原始大小，单位KB
+        /// </summary>
+        public long size { get; set; }
+
+        /// <summary>
+        /// ListView项
+        /// </summary>
+        public ListViewItem item { get; }
+
+        private string GetFileSize()
+        {
+            if(size < 1024)
+            {
+                return size.ToString() + " KB";
+            }
+            else
+            {
+                return (size / 1024.0).ToString("#0.00") + " MB";
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            try
+            {
+                return fullPath == obj.ToString();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public override string ToString()
+        {
+            return fullPath;
+        }
     }
 
     [Serializable]

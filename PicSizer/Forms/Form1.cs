@@ -15,18 +15,23 @@ namespace PicSizer
 {
     public partial class Form1 : Form
     {
-        ListBox.ObjectCollection paths;
+        /// <summary>
+        /// ListView集合
+        /// </summary>
+        private ListView.ListViewItemCollection collection;
+
+        /// <summary>
+        /// 用于检查文件是否重复
+        /// </summary>
+        private HashSet<string> picFiles = new HashSet<string>();
 
         public Form1()
         {
             InitializeComponent();
             //为静态量赋值
             SharedVariable.mainForm = this;
-            SharedVariable.progressForm = new ProgressForm();
-            SharedVariable.settingForm = new SettingForm();
-            SharedVariable.dearXuan = new DearXuan();
             Text = Info.ProjectName + " " + Info.ProjectVersion;
-            paths = listBox1.Items;
+            collection = listView1.Items;
             DllExtern.DoInFirst();
         }
 
@@ -37,15 +42,26 @@ namespace PicSizer
 
         private bool AddPicture(string path)
         {
-            if (paths.Contains(path))
+            //判断文件是否已经在列表中
+            if (picFiles.Contains(path))
             {
                 return false;
             }
             else
             {
-                paths.Add(path);
+                //添加文件
+                PicFile picFile = new PicFile(path);
+                picFiles.Add(path);
+                collection.Add(picFile.item);
                 return true;
             }
+        }
+
+        private void RemovePicture(ListViewItem item)
+        {
+            //移除文件
+            picFiles.Remove(item.SubItems[1].Text);
+            collection.Remove(item);
         }
 
         /// <summary>
@@ -134,10 +150,10 @@ namespace PicSizer
             //创建处理图片的线程
             Thread thread = new Thread(() =>
             {
-                PictureProc.Resize.StartResizer(paths, folderPath);
+                PictureProc.Resize.StartResizer(collection, folderPath);
             });
             thread.Priority = ThreadPriority.Highest;//设置线程优先级最高
-            SharedVariable.progressForm.init(paths.Count);
+            SharedVariable.progressForm.init(collection.Count);
             thread.Start();
             SharedVariable.progressForm.ShowDialog();
         }
@@ -151,17 +167,16 @@ namespace PicSizer
         }
 
         /// <summary>
-        /// 作者按钮
+        /// 关于按钮
         /// </summary>
-        private void OnAuthorClick(object sender, EventArgs e)
+        private void OnAboutClick(object sender, EventArgs e)
         {
-            SharedVariable.dearXuan.ShowDialog();
+            SharedVariable.about.ShowDialog();
         }
 
         private void OnRemoveClick(object sender, EventArgs e)
         {
-            int count = listBox1.SelectedItems.Count;
-            int index;
+            int count = listView1.SelectedItems.Count;
             if(count == 0)
             {
                 Dialog.ShowDialog_Warning("没有选中图片!");
@@ -169,15 +184,16 @@ namespace PicSizer
             }
             if(Dialog.ShowDialog_OKDialog("移除所选的 " + count + " 张图片?"))
             {
-                while((index = listBox1.SelectedIndex) != -1)
+                foreach(ListViewItem item in listView1.SelectedItems)
                 {
-                    listBox1.Items.RemoveAt(index);
+                    RemovePicture(item);
                 }
             }
             UpdateLowerLeftLabel();
+            listView1.Focus();
         }
 
-        private void listBox1_DragDrop(object sender, DragEventArgs e)
+        private void listView1_DragDrop(object sender, DragEventArgs e)
         {
             try
             {
@@ -242,22 +258,26 @@ namespace PicSizer
 
         private void OnSelectAllClick(object sender, EventArgs e)
         {
-            int count = listBox1.Items.Count;
-            for(int i = 0; i < count; i++)
+            listView1.BeginUpdate();
+            foreach(ListViewItem item in collection)
             {
-                listBox1.SetSelected(i, true);
+                item.Selected = true;
             }
             UpdateLowerLeftLabel();
+            listView1.Focus();
+            listView1.EndUpdate();
         }
 
         private void OnSelectReverseClick(object sender, EventArgs e)
         {
-            int count = listBox1.Items.Count;
-            for(int i = 0; i < count; i++)
+            listView1.BeginUpdate();
+            foreach (ListViewItem item in collection)
             {
-                listBox1.SetSelected(i, !listBox1.GetSelected(i));
+                item.Selected = !item.Selected;
             }
             UpdateLowerLeftLabel();
+            listView1.Focus();
+            listView1.EndUpdate();
         }
 
         /// <summary>
@@ -265,10 +285,10 @@ namespace PicSizer
         /// </summary>
         private void UpdateLowerLeftLabel()
         {
-            label2.Text = listBox1.SelectedItems.Count + "/" + listBox1.Items.Count;
+            label2.Text = listView1.SelectedItems.Count + "/" + collection.Count;
         }
 
-        private void listBox1_SelectedValueChanged(object sender, EventArgs e)
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateLowerLeftLabel();
         }
