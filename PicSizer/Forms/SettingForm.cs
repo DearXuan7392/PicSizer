@@ -20,6 +20,7 @@ namespace PicSizer
         public SettingForm()
         {
             InitializeComponent();
+            this.Icon = Info.icon;
             CheckForIllegalCrossThreadCalls = false;
         }
 

@@ -34,7 +34,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Res\PicSizer.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\PicSizer.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>PicSizer.Program</StartupObject>
@@ -260,6 +260,11 @@
     </Compile>
     <Compile Include="Class\Partial\Support.cs" />
     <Compile Include="Class\Static\SharedVariable.cs" />
+    <Compile Include="Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Forms\About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
@@ -287,6 +292,10 @@
     <EmbeddedResource Include="Forms\SettingForm.resx">
       <DependentUpon>SettingForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="PicSizer_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
@@ -304,8 +313,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
-    <Content Include="Res\PicSizer.ico" />
-    <Content Include="Res\PicSizer.png" />
+    <None Include="Resources\yoimiya.ico" />
+    <None Include="Resources\yoimiya.jpg" />
+    <None Include="Resources\PicSizer.ico" />
+    <None Include="Resources\PicSizer.png" />
     <EmbeddedResource Include="Costura64\PicSizer_CUDA.dll" />
   </ItemGroup>
   <ItemGroup>

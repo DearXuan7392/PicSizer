@@ -15,6 +15,7 @@ namespace PicSizer
         public About()
         {
             InitializeComponent();
+            this.Icon = Info.icon;
             richTextBox1.Text = Info.ProjectName + "\n"
                 + "程序版本: " + Info.ProjectVersion + "\n\n"
                 + Info.Description;
@@ -23,6 +24,11 @@ namespace PicSizer
         private void About_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void button_author_Click(object sender, EventArgs e)
+        {
+            SharedVariable.dearXuan.ShowDialog();
         }
     }
 }

@@ -14,6 +14,7 @@ namespace PicSizer
     {
         public DearXuan()
         {
+            this.Icon = Resource.yoimiya_ico;
             InitializeComponent();
         }
 

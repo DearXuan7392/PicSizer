@@ -19,6 +19,7 @@ namespace PicSizer
         public ProgressForm()
         {
             InitializeComponent();
+            this.Icon = Info.icon;
             CheckForIllegalCrossThreadCalls = false;
         }
 

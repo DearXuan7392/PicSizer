@@ -28,6 +28,7 @@ namespace PicSizer
         public Form1()
         {
             InitializeComponent();
+            this.Icon = Info.icon;
             //为静态量赋值
             SharedVariable.mainForm = this;
             Text = Info.ProjectName + " " + Info.ProjectVersion;

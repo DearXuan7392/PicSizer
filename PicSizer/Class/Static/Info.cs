@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace PicSizer
 {
     public static class Info
     {
+        public static Icon icon = Icon.FromHandle(Resource.PicSizer_png.GetHicon());
+
         /// <summary>
         /// 是否支持硬件加速
         /// </summary>
@@ -38,7 +41,7 @@ namespace PicSizer
             //当前版本(4.0.0)，开发时间:2022-1-13，上一版本提交时间:2022-1-12
             mainVersion = 4,
             secondVersion = 0,
-            thirdVersion = 0,
+            thirdVersion = 1,
             alpha = true
         };
 

@@ -29,7 +29,6 @@ namespace PicSizer
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.button_StartResize = new System.Windows.Forms.Button();
             this.button_Add = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -222,7 +221,6 @@ namespace PicSizer
             this.Controls.Add(this.button_Add);
             this.Controls.Add(this.button_StartResize);
             this.DoubleBuffered = true;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(450, 300);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

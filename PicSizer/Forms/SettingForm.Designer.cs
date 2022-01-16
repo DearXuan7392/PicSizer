@@ -29,7 +29,6 @@ namespace PicSizer
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.numericUpDown_LimitHeight = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown_LimitWidth = new System.Windows.Forms.NumericUpDown();
@@ -692,7 +691,6 @@ namespace PicSizer
             this.Controls.Add(this.button_Save);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SettingForm";
