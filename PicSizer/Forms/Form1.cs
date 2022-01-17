@@ -51,9 +51,8 @@ namespace PicSizer
             else
             {
                 //添加文件
-                PicFile picFile = new PicFile(path);
                 picFiles.Add(path);
-                collection.Add(picFile.item);
+                collection.Add(Support.GetListViewItemByPath(path));
                 return true;
             }
         }
@@ -63,37 +62,6 @@ namespace PicSizer
             //移除文件
             picFiles.Remove(item.SubItems[1].Text);
             collection.Remove(item);
-        }
-
-        /// <summary>
-        /// 打开图片按钮
-        /// </summary>
-        private void OnAddClick(object sender, EventArgs e)
-        {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Title = "添加图片";
-            if (SharedVariable.setting.AllowAnyExtension)
-            {
-                dialog.Filter = "图片(JPG,PNG,BMP,TIFF)|*.jpg;*.png;*.bmp;*.tiff|所有|*.*";
-            }
-            else
-            {
-                dialog.Filter = "图片(JPG,PNG,BMP,TIFF)|*.jpg;*.png;*.bmp;*.tiff";
-            }
-            dialog.Multiselect = true;
-            if(dialog.ShowDialog() == DialogResult.OK)
-            {
-                int fileCount = dialog.FileNames.Length;
-                foreach (string path in dialog.FileNames)
-                {
-                    if (AddPicture(path)) fileCount--;
-                }
-                UpdateLowerLeftLabel();
-                if (fileCount != 0)
-                {
-                    Dialog.ShowDialog(fileCount + " 张重复的图片已被忽略.");
-                }
-            }
         }
 
         /// <summary>
@@ -110,42 +78,46 @@ namespace PicSizer
                     Dialog.ShowDialog_Error("路径不能为空!");
                     return;
                 }
-                textBox1.Text = dialog.SelectedPath;
+                textBox_OutputDirText.Text = dialog.SelectedPath;
             }
         }
 
         /// <summary>
         /// 压缩按钮
         /// </summary>
-        private async void OnResizeClick(object sender, EventArgs e)
+        private void OnResizeClick(object sender, EventArgs e)
         {
-            string folderPath = textBox1.Text;
-            if (!Path.IsPathRooted(folderPath))
+            string folderPath = textBox_OutputDirText.Text;
+            //如果选择指定目录，则判断目录是否合法
+            if (!SharedVariable.CoverOriginalFile)
             {
-                Dialog.ShowDialog_Error("请输入正确的绝对路径!");
-                return;
-            }
-            if (Directory.Exists(folderPath))
-            {
-                if(Directory.GetFiles(folderPath).Length > 0)
+                if (!Path.IsPathRooted(folderPath))
                 {
-                    if(MessageBox.Show("文件夹内的文件将被覆盖!","警告",MessageBoxButtons.OKCancel,MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.OK)
+                    Dialog.ShowDialog_Error("请输入正确的绝对路径!");
+                    return;
+                }
+                if (Directory.Exists(folderPath))
+                {
+                    if(Directory.GetFiles(folderPath).Length > 0)
                     {
-                        return;
+                        if(MessageBox.Show("文件夹内的文件将被覆盖!","警告",MessageBoxButtons.OKCancel,MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.OK)
+                        {
+                            return;
+                        }
                     }
                 }
-            }
-            else
-            {
-                try
+                else
                 {
-                    DirectoryInfo dirInfo = new DirectoryInfo(folderPath);
-                    dirInfo.Create();
-                }
-                catch (Exception ex)
-                {
-                    Dialog.ShowDialog_Exception(ex);
-                    return;
+                    try
+                    {
+                        DirectoryInfo dirInfo = new DirectoryInfo(folderPath);
+                        dirInfo.Create();
+                    }
+                    catch (Exception ex)
+                    {
+                        Dialog.ShowDialog_Exception(ex);
+                        return;
+                    }
                 }
             }
             //创建处理图片的线程
@@ -165,14 +137,6 @@ namespace PicSizer
         private void OnSetClick(object sender, EventArgs e)
         {
             SharedVariable.settingForm.ShowDialog();
-        }
-
-        /// <summary>
-        /// 关于按钮
-        /// </summary>
-        private void OnAboutClick(object sender, EventArgs e)
-        {
-            SharedVariable.about.ShowDialog();
         }
 
         private void OnRemoveClick(object sender, EventArgs e)
@@ -244,7 +208,7 @@ namespace PicSizer
             {
                 string[] files = e.Data.GetData(DataFormats.FileDrop, false) as string[];
                 if(files.Length == 1 && Directory.Exists(files[0])){
-                    textBox1.Text = files[0];
+                    textBox_OutputDirText.Text = files[0];
                 }
                 else
                 {
@@ -292,6 +256,61 @@ namespace PicSizer
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateLowerLeftLabel();
+        }
+
+        private void 添加文件ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Title = "添加图片";
+            if (SharedVariable.setting.AllowAnyExtension)
+            {
+                dialog.Filter = "图片(JPG,PNG,BMP,TIFF)|*.jpg;*.png;*.bmp;*.tiff|所有|*.*";
+            }
+            else
+            {
+                dialog.Filter = "图片(JPG,PNG,BMP,TIFF)|*.jpg;*.png;*.bmp;*.tiff";
+            }
+            dialog.Multiselect = true;
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                int fileCount = dialog.FileNames.Length;
+                foreach (string path in dialog.FileNames)
+                {
+                    if (AddPicture(path)) fileCount--;
+                }
+                UpdateLowerLeftLabel();
+                if (fileCount != 0)
+                {
+                    Dialog.ShowDialog(fileCount + " 张重复的图片已被忽略.");
+                }
+            }
+        }
+
+        private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void OnHelpMenuClick(object sender, EventArgs e)
+        {
+            if(sender == 作者ToolStripMenuItem)
+            {
+                SharedVariable.dearXuan.ShowDialog();
+            }
+            else if(sender == 关于ToolStripMenuItem)
+            {
+                SharedVariable.about.ShowDialog();
+            }
+            else if(sender == 文档ToolStripMenuItem)
+            {
+                Dialog.OpenLink("https://gitee.com/dearxuan/pic-sizer#%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D");
+            }
+        }
+
+        private void CoverOriginalFile(object sender, EventArgs e)
+        {
+            SharedVariable.CoverOriginalFile = radioButton_Cover.Checked;
+            textBox_OutputDirText.Enabled = button_Choose.Enabled = !SharedVariable.CoverOriginalFile;
         }
     }
 }

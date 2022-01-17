@@ -216,6 +216,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class\Override\NoFlashListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Class\PictureProc\Resize.cs" />
     <Compile Include="Class\PictureProc\BmpProc.cs" />
     <Compile Include="Class\Partial\DllExtern.cs">

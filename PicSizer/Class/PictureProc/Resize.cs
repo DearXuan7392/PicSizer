@@ -72,7 +72,7 @@ namespace PicSizer.PictureProc
             ThreadsPool.StartThreadsPool();
         }
 
-        public static void ResizeOnePicture(string path)
+        public static bool ResizeOnePicture(string path)
         {
             try
             {
@@ -85,6 +85,7 @@ namespace PicSizer.PictureProc
                     if (!CompressionByValue(path)) throw new Exception("图片:" + path + "压缩失败");
                 }
                 Update(true); // 压缩成功，进度条加一
+                return true;
             }
             catch(Exception e)
             {
@@ -106,8 +107,9 @@ namespace PicSizer.PictureProc
                     default:
                         Dialog.ShowDialog_Exception(e);
                         SharedVariable.ThreadExitNow = true;
-                        return;
+                        break;
                 }
+                return false;
             }
         }
 
@@ -182,13 +184,21 @@ namespace PicSizer.PictureProc
         /// </summary>
         public static string GetResultFileName(string ori, string dir, int num)
         {
+            //如果选择“覆盖源文件”，则直接返回源文件路径
+            if (SharedVariable.CoverOriginalFile)
+            {
+                return ori;
+            }
+            //求出后缀名
             string extension;
             if (SharedVariable.setting.extensionMode == ExtensionMode.Original)
             {
+                //原格式
                 extension = Path.GetExtension(ori);
             }
             else
             {
+                //自定义格式
                 extension = SharedVariable.setting.extensionMode.ToFormat();
             }
             switch (SharedVariable.setting.renameMode)
@@ -200,7 +210,7 @@ namespace PicSizer.PictureProc
                 case RenameMode.Custom://混合命名
                     string oriStr = Path.GetFileNameWithoutExtension(ori);//文件原名
                     string numStr = num.ToString();//序号
-                    return Path.Combine(dir, SharedVariable.setting.CustomRenameStr.Replace("{ori}",oriStr).Replace("{num}",numStr) + extension);
+                    return Path.Combine(dir, SharedVariable.setting.CustomRenameStr.Replace("{ori}", oriStr).Replace("{num}", numStr) + extension);
                 default:
                     return null;
             }

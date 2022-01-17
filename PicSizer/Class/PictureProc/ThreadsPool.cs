@@ -60,10 +60,21 @@ namespace PicSizer.PictureProc
         {
             int index;
             string filename;
+            ListViewItem item;
             while(!SharedVariable.ThreadExitNow && (index = GetNextFileIndex()) != -1)
             {
-                filename = FileCollection[index].SubItems[1].Text;
-                Resize.ResizeOnePicture(filename);
+                item = FileCollection[index];
+                filename = item.SubItems[1].Text;
+                if (Resize.ResizeOnePicture(filename))
+                {
+                    item.SubItems[3].Text = "成功";
+                    item.SubItems[3].ForeColor = System.Drawing.Color.Green;
+                }
+                else
+                {
+                    item.SubItems[3].Text = "错误";
+                    item.SubItems[3].ForeColor = System.Drawing.Color.Red;
+                }
             }
             manualResetEvent.Set();
             return;

@@ -94,5 +94,17 @@ namespace PicSizer.Partial
         {
             SharedVariable.mainForm.Focus();
         }
+
+        public static void OpenLink(string link)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(link);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("打开浏览器失败，请将链接\"" + link + "\"复制到浏览器打开.", "PicSizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

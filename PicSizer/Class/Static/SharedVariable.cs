@@ -13,6 +13,11 @@ namespace PicSizer
         /// </summary>
         public static bool ThreadExitNow = false;
 
+        /// <summary>
+        /// 覆盖源文件
+        /// </summary>
+        public static bool CoverOriginalFile = false;
+
         //窗体
         public static Form1 mainForm;
         public static SettingForm settingForm = new SettingForm();

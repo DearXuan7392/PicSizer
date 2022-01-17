@@ -51,27 +51,20 @@ namespace PicSizer
 
         private void OnOpenClick(object sender, EventArgs e)
         {
-            try
+            string link = null;
+            if(sender == button2)
             {
-                string link = null;
-                if(sender == button2)
-                {
-                    link = textBox2.Text;
-                }
-                else if(sender == button4)
-                {
-                    link = textBox3.Text;
-                }
-                else if(sender == button6)
-                {
-                    link = textBox4.Text;
-                }
-                if(link != null) System.Diagnostics.Process.Start(link);
+                link = textBox2.Text;
             }
-            catch(Exception ex)
+            else if(sender == button4)
             {
-                MessageBox.Show("打开浏览器失败，请将链接复制到浏览器打开.", "PicSizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                link = textBox3.Text;
             }
+            else if(sender == button6)
+            {
+                link = textBox4.Text;
+            }
+            if (link != null) Partial.Dialog.OpenLink(link);
         }
 
         private void OnSendEmailClick(object sender, EventArgs e)
