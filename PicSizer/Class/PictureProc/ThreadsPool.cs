@@ -67,14 +67,15 @@ namespace PicSizer.PictureProc
                 filename = item.SubItems[1].Text;
                 if (Resize.ResizeOnePicture(filename))
                 {
-                    item.SubItems[3].Text = "成功";
+                    item.SubItems[3].Text = PicState.Success;//已完成
                     item.SubItems[3].ForeColor = System.Drawing.Color.Green;
                 }
                 else
                 {
-                    item.SubItems[3].Text = "错误";
+                    item.SubItems[3].Text = PicState.Error;//错误
                     item.SubItems[3].ForeColor = System.Drawing.Color.Red;
                 }
+                SharedVariable.mainForm.listView1.EnsureVisible(index);
             }
             manualResetEvent.Set();
             return;

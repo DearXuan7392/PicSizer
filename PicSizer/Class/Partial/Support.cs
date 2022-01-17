@@ -74,6 +74,13 @@ namespace PicSizer.Partial
         ShowAndExit = 4
     }
 
+    public class PicState
+    {
+        public readonly static string Waiting = "待压缩";
+        public readonly static string Success = "已完成";
+        public readonly static string Error = "错误";
+    }
+
     [Serializable]
     public class Version
     {

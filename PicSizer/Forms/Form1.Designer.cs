@@ -34,7 +34,7 @@ namespace PicSizer
             this.button_Choose = new System.Windows.Forms.Button();
             this.button_Set = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.listView1 = new PicSizer_ControlLibrary.NoFlashListView();
             this.fileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.fullPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.size = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -54,6 +54,10 @@ namespace PicSizer
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radioButton_CustomDir = new System.Windows.Forms.RadioButton();
             this.radioButton_Cover = new System.Windows.Forms.RadioButton();
+            this.选中项ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.已完成ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.错误项ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.全部项ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -205,23 +209,27 @@ namespace PicSizer
             // 全选ToolStripMenuItem
             // 
             this.全选ToolStripMenuItem.Name = "全选ToolStripMenuItem";
-            this.全选ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.全选ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.全选ToolStripMenuItem.Text = "全选";
             this.全选ToolStripMenuItem.Click += new System.EventHandler(this.OnSelectAllClick);
             // 
             // 反选ToolStripMenuItem
             // 
             this.反选ToolStripMenuItem.Name = "反选ToolStripMenuItem";
-            this.反选ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.反选ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.反选ToolStripMenuItem.Text = "反选";
             this.反选ToolStripMenuItem.Click += new System.EventHandler(this.OnSelectReverseClick);
             // 
             // 移除ToolStripMenuItem
             // 
+            this.移除ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.选中项ToolStripMenuItem,
+            this.已完成ToolStripMenuItem,
+            this.错误项ToolStripMenuItem,
+            this.全部项ToolStripMenuItem});
             this.移除ToolStripMenuItem.Name = "移除ToolStripMenuItem";
-            this.移除ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.移除ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.移除ToolStripMenuItem.Text = "移除";
-            this.移除ToolStripMenuItem.Click += new System.EventHandler(this.OnRemoveClick);
             // 
             // 帮助ToolStripMenuItem
             // 
@@ -293,6 +301,34 @@ namespace PicSizer
             this.radioButton_Cover.UseVisualStyleBackColor = true;
             this.radioButton_Cover.CheckedChanged += new System.EventHandler(this.CoverOriginalFile);
             // 
+            // 选中项ToolStripMenuItem
+            // 
+            this.选中项ToolStripMenuItem.Name = "选中项ToolStripMenuItem";
+            this.选中项ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.选中项ToolStripMenuItem.Text = "选中项";
+            this.选中项ToolStripMenuItem.Click += new System.EventHandler(this.OnRemoveItemClick);
+            // 
+            // 已完成ToolStripMenuItem
+            // 
+            this.已完成ToolStripMenuItem.Name = "已完成ToolStripMenuItem";
+            this.已完成ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.已完成ToolStripMenuItem.Text = "已完成";
+            this.已完成ToolStripMenuItem.Click += new System.EventHandler(this.OnRemoveItemClick);
+            // 
+            // 错误项ToolStripMenuItem
+            // 
+            this.错误项ToolStripMenuItem.Name = "错误项ToolStripMenuItem";
+            this.错误项ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.错误项ToolStripMenuItem.Text = "错误项";
+            this.错误项ToolStripMenuItem.Click += new System.EventHandler(this.OnRemoveItemClick);
+            // 
+            // 全部项ToolStripMenuItem
+            // 
+            this.全部项ToolStripMenuItem.Name = "全部项ToolStripMenuItem";
+            this.全部项ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.全部项ToolStripMenuItem.Text = "全部项";
+            this.全部项ToolStripMenuItem.Click += new System.EventHandler(this.OnRemoveItemClick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -326,7 +362,6 @@ namespace PicSizer
         private System.Windows.Forms.Button button_Choose;
         private System.Windows.Forms.Button button_Set;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ColumnHeader fileName;
         private System.Windows.Forms.ColumnHeader fullPath;
         private System.Windows.Forms.ColumnHeader size;
@@ -346,6 +381,11 @@ namespace PicSizer
         private System.Windows.Forms.RadioButton radioButton_CustomDir;
         private System.Windows.Forms.RadioButton radioButton_Cover;
         private System.Windows.Forms.ColumnHeader state;
+        public PicSizer_ControlLibrary.NoFlashListView listView1;
+        private System.Windows.Forms.ToolStripMenuItem 选中项ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 已完成ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 错误项ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 全部项ToolStripMenuItem;
     }
 }
 

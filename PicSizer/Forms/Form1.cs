@@ -141,21 +141,7 @@ namespace PicSizer
 
         private void OnRemoveClick(object sender, EventArgs e)
         {
-            int count = listView1.SelectedItems.Count;
-            if(count == 0)
-            {
-                Dialog.ShowDialog_Warning("没有选中图片!");
-                return;
-            }
-            if(Dialog.ShowDialog_OKDialog("移除所选的 " + count + " 张图片?"))
-            {
-                foreach(ListViewItem item in listView1.SelectedItems)
-                {
-                    RemovePicture(item);
-                }
-            }
-            UpdateLowerLeftLabel();
-            listView1.Focus();
+            
         }
 
         private void listView1_DragDrop(object sender, DragEventArgs e)
@@ -311,6 +297,56 @@ namespace PicSizer
         {
             SharedVariable.CoverOriginalFile = radioButton_Cover.Checked;
             textBox_OutputDirText.Enabled = button_Choose.Enabled = !SharedVariable.CoverOriginalFile;
+        }
+
+        private void OnRemoveItemClick(object sender, EventArgs e)
+        {
+            if(sender == 选中项ToolStripMenuItem)
+            {
+                int count = listView1.SelectedItems.Count;
+                if (count == 0)
+                {
+                    Dialog.ShowDialog_Warning("没有选中图片!");
+                    return;
+                }
+                if (Dialog.ShowDialog_OKDialog("移除所选的 " + count + " 张图片?"))
+                {
+                    foreach (ListViewItem item in listView1.SelectedItems)
+                    {
+                        RemovePicture(item);
+                    }
+                }
+                UpdateLowerLeftLabel();
+                listView1.Focus();
+            }
+            else if(sender == 已完成ToolStripMenuItem)
+            {
+                for(int i = 0; i < collection.Count; i++)
+                {
+                    if (collection[i].SubItems[3].Equals(PicState.Success))
+                    {
+                        collection.RemoveAt(i);
+                    }
+                }
+            }
+            else if(sender == 错误项ToolStripMenuItem)
+            {
+                for (int i = 0; i < collection.Count; i++)
+                {
+                    if (collection[i].SubItems[3].Equals(PicState.Error))
+                    {
+                        collection.RemoveAt(i);
+                    }
+                }
+            }
+            else if(sender == 全部项ToolStripMenuItem)
+            {
+                if (Dialog.ShowDialog_OKDialog("是否清空列表,包括未完成的项目?"))
+                {
+                    collection.Clear();
+                    picFiles.Clear();
+                }
+            }
         }
     }
 }
