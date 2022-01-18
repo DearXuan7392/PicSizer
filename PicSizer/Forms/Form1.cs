@@ -38,9 +38,12 @@ namespace PicSizer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
         }
 
+        /// <summary>
+        /// 添加一张图片
+        /// </summary>
         private bool AddPicture(string path)
         {
             //判断文件是否已经在列表中
@@ -57,6 +60,41 @@ namespace PicSizer
             }
         }
 
+        /// <summary>
+        /// 获取文件夹里的所有图片，包括子文件夹
+        /// </summary>
+        private List<string> GetPictureFromDir(string dirPath)
+        {
+            DirectoryInfo dir = new DirectoryInfo(dirPath);
+            List<string> fileList = new List<string>();
+            FileInfo[] files = dir.GetFiles();//文件夹里的所有图片
+            DirectoryInfo[] dirs = dir.GetDirectories();//文件夹里的所有子文件夹
+            //遍历所有子文件
+            foreach (FileInfo info in files)
+            {
+                switch (info.Extension.ToLower())
+                {
+                    case ".jpg":
+                    case ".png":
+                    case ".bmp":
+                    case ".tiff":
+                        fileList.Add(info.FullName);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            //遍历所有子文件夹
+            foreach (DirectoryInfo info in dirs)
+            {
+                fileList.AddRange(GetPictureFromDir(info.FullName));
+            }
+            return fileList;
+        }
+
+        /// <summary>
+        /// 移除一张图片
+        /// </summary>
         private void RemovePicture(ListViewItem item)
         {
             //移除文件
@@ -71,7 +109,7 @@ namespace PicSizer
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.Description = "选择文件夹";
-            if(dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
                 if (string.IsNullOrWhiteSpace(dialog.SelectedPath))
                 {
@@ -98,9 +136,9 @@ namespace PicSizer
                 }
                 if (Directory.Exists(folderPath))
                 {
-                    if(Directory.GetFiles(folderPath).Length > 0)
+                    if (Directory.GetFiles(folderPath).Length > 0)
                     {
-                        if(MessageBox.Show("文件夹内的文件将被覆盖!","警告",MessageBoxButtons.OKCancel,MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.OK)
+                        if (MessageBox.Show("文件夹内的文件将被覆盖!", "警告", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.OK)
                         {
                             return;
                         }
@@ -145,7 +183,7 @@ namespace PicSizer
             {
                 string[] files = e.Data.GetData(DataFormats.FileDrop, false) as string[];
                 int count = files.Length;
-                foreach(string path in files)
+                foreach (string path in files)
                 {
                     if (SharedVariable.setting.AllowAnyExtension)
                     {
@@ -153,7 +191,7 @@ namespace PicSizer
                     }
                     else
                     {
-                        if(path.EndsWith(".jpg") || path.EndsWith(".png") || path.EndsWith(".bmp") || path.EndsWith(".tiff"))
+                        if (path.EndsWith(".jpg") || path.EndsWith(".png") || path.EndsWith(".bmp") || path.EndsWith(".tiff"))
                         {
                             if (AddPicture(path)) count--;
                         }
@@ -165,7 +203,7 @@ namespace PicSizer
                     Dialog.ShowDialog(count + " 个重复或不符合格式的路径已被忽略.");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Dialog.ShowDialog_Exception(ex);
             }
@@ -188,7 +226,8 @@ namespace PicSizer
             try
             {
                 string[] files = e.Data.GetData(DataFormats.FileDrop, false) as string[];
-                if(files.Length == 1 && Directory.Exists(files[0])){
+                if (files.Length == 1 && Directory.Exists(files[0]))
+                {
                     textBox_OutputDirText.Text = files[0];
                 }
                 else
@@ -205,7 +244,7 @@ namespace PicSizer
         private void OnSelectAllClick(object sender, EventArgs e)
         {
             listView1.BeginUpdate();
-            foreach(ListViewItem item in collection)
+            foreach (ListViewItem item in collection)
             {
                 item.Selected = true;
             }
@@ -274,15 +313,15 @@ namespace PicSizer
 
         private void OnHelpMenuClick(object sender, EventArgs e)
         {
-            if(sender == 作者ToolStripMenuItem)
+            if (sender == 作者ToolStripMenuItem)
             {
                 SharedVariable.dearXuan.ShowDialog();
             }
-            else if(sender == 关于ToolStripMenuItem)
+            else if (sender == 关于ToolStripMenuItem)
             {
                 SharedVariable.about.ShowDialog();
             }
-            else if(sender == 文档ToolStripMenuItem)
+            else if (sender == 文档ToolStripMenuItem)
             {
                 Dialog.OpenLink("https://gitee.com/dearxuan/pic-sizer#%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D");
             }
@@ -296,7 +335,7 @@ namespace PicSizer
 
         private void OnRemoveItemClick(object sender, EventArgs e)
         {
-            if(sender == 选中项ToolStripMenuItem)
+            if (sender == 选中项ToolStripMenuItem)
             {
                 int count = listView1.SelectedItems.Count;
                 if (count == 0)
@@ -314,9 +353,9 @@ namespace PicSizer
                 UpdateLowerLeftLabel();
                 listView1.Focus();
             }
-            else if(sender == 已完成ToolStripMenuItem)
+            else if (sender == 已完成ToolStripMenuItem)
             {
-                for(int i = 0; i < collection.Count; i++)
+                for (int i = 0; i < collection.Count; i++)
                 {
                     if (collection[i].SubItems[3].Text.Equals(PicState.Success))
                     {
@@ -325,7 +364,7 @@ namespace PicSizer
                     }
                 }
             }
-            else if(sender == 错误项ToolStripMenuItem)
+            else if (sender == 错误项ToolStripMenuItem)
             {
                 for (int i = 0; i < collection.Count; i++)
                 {
@@ -336,7 +375,7 @@ namespace PicSizer
                     }
                 }
             }
-            else if(sender == 全部项ToolStripMenuItem)
+            else if (sender == 全部项ToolStripMenuItem)
             {
                 if (Dialog.ShowDialog_OKDialog("是否清空列表,包括未完成的项目?"))
                 {
@@ -348,21 +387,43 @@ namespace PicSizer
 
         private void OnListViewKetDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == Keys.A && e.Control)//Ctrl + A
+            if (e.KeyCode == Keys.A && e.Control)//Ctrl + A
             {
                 //模拟按下全选键
                 OnSelectAllClick(null, null);
             }
-            else if(e.KeyCode == Keys.R && e.Control)
+            else if (e.KeyCode == Keys.R && e.Control)
             {
                 //模拟按下反选
                 OnSelectReverseClick(null, null);
             }
-            else if(e.KeyCode == Keys.Delete || e.KeyCode == Keys.Back)
+            else if (e.KeyCode == Keys.Delete || e.KeyCode == Keys.Back)
             {
                 //模拟按下“删除选中项”
                 OnRemoveItemClick(选中项ToolStripMenuItem, null);
             }
+        }
+
+        private void 打开文件夹ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            dialog.Description = "选择文件夹";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                if (string.IsNullOrWhiteSpace(dialog.SelectedPath))
+                {
+                    Dialog.ShowDialog_Warning("文件夹路径不能为空!");
+                    return;
+                }
+                List<string> fileList = GetPictureFromDir(dialog.SelectedPath);
+                listView1.BeginUpdate();
+                foreach (string item in fileList)
+                {
+                    AddPicture(item);
+                }
+                listView1.EndUpdate();
+            }
+            return;
         }
     }
 }

@@ -42,6 +42,7 @@ namespace PicSizer
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.添加文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.打开文件夹ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.选择ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.全选ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,7 +66,7 @@ namespace PicSizer
             // button_StartResize
             // 
             this.button_StartResize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_StartResize.Location = new System.Drawing.Point(494, 419);
+            this.button_StartResize.Location = new System.Drawing.Point(494, 372);
             this.button_StartResize.Name = "button_StartResize";
             this.button_StartResize.Size = new System.Drawing.Size(75, 33);
             this.button_StartResize.TabIndex = 1;
@@ -99,7 +100,7 @@ namespace PicSizer
             // button_Set
             // 
             this.button_Set.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_Set.Location = new System.Drawing.Point(494, 381);
+            this.button_Set.Location = new System.Drawing.Point(494, 334);
             this.button_Set.Name = "button_Set";
             this.button_Set.Size = new System.Drawing.Size(75, 23);
             this.button_Set.TabIndex = 6;
@@ -134,7 +135,7 @@ namespace PicSizer
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(12, 40);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(557, 335);
+            this.listView1.Size = new System.Drawing.Size(557, 288);
             this.listView1.TabIndex = 12;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -178,6 +179,7 @@ namespace PicSizer
             // 
             this.文件ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.添加文件ToolStripMenuItem,
+            this.打开文件夹ToolStripMenuItem,
             this.退出ToolStripMenuItem});
             this.文件ToolStripMenuItem.Name = "文件ToolStripMenuItem";
             this.文件ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
@@ -186,14 +188,21 @@ namespace PicSizer
             // 添加文件ToolStripMenuItem
             // 
             this.添加文件ToolStripMenuItem.Name = "添加文件ToolStripMenuItem";
-            this.添加文件ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.添加文件ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.添加文件ToolStripMenuItem.Text = "添加文件";
             this.添加文件ToolStripMenuItem.Click += new System.EventHandler(this.添加文件ToolStripMenuItem_Click);
+            // 
+            // 打开文件夹ToolStripMenuItem
+            // 
+            this.打开文件夹ToolStripMenuItem.Name = "打开文件夹ToolStripMenuItem";
+            this.打开文件夹ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.打开文件夹ToolStripMenuItem.Text = "打开文件夹";
+            this.打开文件夹ToolStripMenuItem.Click += new System.EventHandler(this.打开文件夹ToolStripMenuItem_Click);
             // 
             // 退出ToolStripMenuItem
             // 
             this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
-            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.退出ToolStripMenuItem.Text = "退出";
             this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
@@ -299,7 +308,7 @@ namespace PicSizer
             this.groupBox1.Controls.Add(this.radioButton_Cover);
             this.groupBox1.Controls.Add(this.textBox_OutputDirText);
             this.groupBox1.Controls.Add(this.button_Choose);
-            this.groupBox1.Location = new System.Drawing.Point(12, 407);
+            this.groupBox1.Location = new System.Drawing.Point(12, 360);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(476, 50);
             this.groupBox1.TabIndex = 14;
@@ -334,7 +343,7 @@ namespace PicSizer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(581, 469);
+            this.ClientSize = new System.Drawing.Size(581, 422);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.label2);
@@ -387,6 +396,7 @@ namespace PicSizer
         private System.Windows.Forms.ToolStripMenuItem 已完成ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 错误项ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 全部项ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 打开文件夹ToolStripMenuItem;
     }
 }
 
