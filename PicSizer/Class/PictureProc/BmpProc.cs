@@ -15,6 +15,8 @@ namespace PicSizer
         {
             //当亮度为100时跳过该函数
             if (SharedVariable.setting.brightness == 100) return;
+            _SetBrightnessByCSharp(bitmap);
+            
             //根据GPU是否支持来决定使用GPU加速还是CPU计算
             if (SharedVariable.setting.useGPU && Info.isGPUSupport)
             {
@@ -25,7 +27,7 @@ namespace PicSizer
                 _SetBrightnessByCSharp(bitmap);
             }
         }
-
+        
         /// <summary>
         /// 使用GPU加速调整亮度
         /// </summary>
@@ -44,7 +46,7 @@ namespace PicSizer
             }
             bitmap.UnlockBits(bitmapData);
         }
-
+        
         /// <summary>
         /// 使用CPU调整亮度
         /// </summary>

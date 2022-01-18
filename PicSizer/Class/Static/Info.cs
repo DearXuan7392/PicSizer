@@ -41,7 +41,7 @@ namespace PicSizer
             mainVersion = 4,
             secondVersion = 2,
             thirdVersion = 1,
-            alpha = true
+            alpha = false
         };
 
         /// <summary>
