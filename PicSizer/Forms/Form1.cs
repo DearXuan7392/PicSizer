@@ -139,11 +139,6 @@ namespace PicSizer
             SharedVariable.settingForm.ShowDialog();
         }
 
-        private void OnRemoveClick(object sender, EventArgs e)
-        {
-            
-        }
-
         private void listView1_DragDrop(object sender, DragEventArgs e)
         {
             try
@@ -323,9 +318,10 @@ namespace PicSizer
             {
                 for(int i = 0; i < collection.Count; i++)
                 {
-                    if (collection[i].SubItems[3].Equals(PicState.Success))
+                    if (collection[i].SubItems[3].Text.Equals(PicState.Success))
                     {
                         collection.RemoveAt(i);
+                        i--;
                     }
                 }
             }
@@ -333,9 +329,10 @@ namespace PicSizer
             {
                 for (int i = 0; i < collection.Count; i++)
                 {
-                    if (collection[i].SubItems[3].Equals(PicState.Error))
+                    if (collection[i].SubItems[3].Text.Equals(PicState.Error))
                     {
                         collection.RemoveAt(i);
+                        i--;
                     }
                 }
             }
@@ -346,6 +343,25 @@ namespace PicSizer
                     collection.Clear();
                     picFiles.Clear();
                 }
+            }
+        }
+
+        private void OnListViewKetDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.A && e.Control)//Ctrl + A
+            {
+                //模拟按下全选键
+                OnSelectAllClick(null, null);
+            }
+            else if(e.KeyCode == Keys.R && e.Control)
+            {
+                //模拟按下反选
+                OnSelectReverseClick(null, null);
+            }
+            else if(e.KeyCode == Keys.Delete || e.KeyCode == Keys.Back)
+            {
+                //模拟按下“删除选中项”
+                OnRemoveItemClick(选中项ToolStripMenuItem, null);
             }
         }
     }
