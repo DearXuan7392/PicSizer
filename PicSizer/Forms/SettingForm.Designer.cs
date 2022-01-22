@@ -74,6 +74,7 @@ namespace PicSizer
             this.label14 = new System.Windows.Forms.Label();
             this.button_Export = new System.Windows.Forms.Button();
             this.button_ReadSetting = new System.Windows.Forms.Button();
+            this.label_Warn = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -105,17 +106,14 @@ namespace PicSizer
             // 
             // splitContainer1.Panel1
             // 
-            resources.ApplyResources(this.splitContainer1.Panel1, "splitContainer1.Panel1");
             this.splitContainer1.Panel1.Controls.Add(this.groupBox3);
             // 
             // splitContainer1.Panel2
             // 
-            resources.ApplyResources(this.splitContainer1.Panel2, "splitContainer1.Panel2");
             this.splitContainer1.Panel2.Controls.Add(this.groupBox4);
             // 
             // groupBox3
             // 
-            resources.ApplyResources(this.groupBox3, "groupBox3");
             this.groupBox3.Controls.Add(this.comboBox_ExtensionMode);
             this.groupBox3.Controls.Add(this.label12);
             this.groupBox3.Controls.Add(this.textBox_CustomRenameStr);
@@ -124,12 +122,12 @@ namespace PicSizer
             this.groupBox3.Controls.Add(this.label10);
             this.groupBox3.Controls.Add(this.comboBox_RenameMode);
             this.groupBox3.Controls.Add(this.label9);
+            resources.ApplyResources(this.groupBox3, "groupBox3");
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.TabStop = false;
             // 
             // comboBox_ExtensionMode
             // 
-            resources.ApplyResources(this.comboBox_ExtensionMode, "comboBox_ExtensionMode");
             this.comboBox_ExtensionMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_ExtensionMode.FormattingEnabled = true;
             this.comboBox_ExtensionMode.Items.AddRange(new object[] {
@@ -138,7 +136,9 @@ namespace PicSizer
             resources.GetString("comboBox_ExtensionMode.Items2"),
             resources.GetString("comboBox_ExtensionMode.Items3"),
             resources.GetString("comboBox_ExtensionMode.Items4")});
+            resources.ApplyResources(this.comboBox_ExtensionMode, "comboBox_ExtensionMode");
             this.comboBox_ExtensionMode.Name = "comboBox_ExtensionMode";
+            this.comboBox_ExtensionMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_ExtensionMode_SelectedIndexChanged);
             // 
             // label12
             // 
@@ -182,13 +182,13 @@ namespace PicSizer
             // 
             // comboBox_RenameMode
             // 
-            resources.ApplyResources(this.comboBox_RenameMode, "comboBox_RenameMode");
             this.comboBox_RenameMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_RenameMode.FormattingEnabled = true;
             this.comboBox_RenameMode.Items.AddRange(new object[] {
             resources.GetString("comboBox_RenameMode.Items"),
             resources.GetString("comboBox_RenameMode.Items1"),
             resources.GetString("comboBox_RenameMode.Items2")});
+            resources.ApplyResources(this.comboBox_RenameMode, "comboBox_RenameMode");
             this.comboBox_RenameMode.Name = "comboBox_RenameMode";
             this.comboBox_RenameMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_RenameMode_SelectedIndexChanged);
             // 
@@ -199,7 +199,6 @@ namespace PicSizer
             // 
             // groupBox4
             // 
-            resources.ApplyResources(this.groupBox4, "groupBox4");
             this.groupBox4.Controls.Add(this.trackBar_Threads);
             this.groupBox4.Controls.Add(this.numericUpDown_Threads);
             this.groupBox4.Controls.Add(this.label15);
@@ -207,6 +206,7 @@ namespace PicSizer
             this.groupBox4.Controls.Add(this.checkBox_AllowAnyExtension);
             this.groupBox4.Controls.Add(this.comboBox_DoWhenException);
             this.groupBox4.Controls.Add(this.label13);
+            resources.ApplyResources(this.groupBox4, "groupBox4");
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.TabStop = false;
             // 
@@ -259,7 +259,6 @@ namespace PicSizer
             // 
             // comboBox_DoWhenException
             // 
-            resources.ApplyResources(this.comboBox_DoWhenException, "comboBox_DoWhenException");
             this.comboBox_DoWhenException.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_DoWhenException.FormattingEnabled = true;
             this.comboBox_DoWhenException.Items.AddRange(new object[] {
@@ -268,6 +267,7 @@ namespace PicSizer
             resources.GetString("comboBox_DoWhenException.Items2"),
             resources.GetString("comboBox_DoWhenException.Items3"),
             resources.GetString("comboBox_DoWhenException.Items4")});
+            resources.ApplyResources(this.comboBox_DoWhenException, "comboBox_DoWhenException");
             this.comboBox_DoWhenException.Name = "comboBox_DoWhenException";
             // 
             // label13
@@ -282,17 +282,14 @@ namespace PicSizer
             // 
             // splitContainer2.Panel1
             // 
-            resources.ApplyResources(this.splitContainer2.Panel1, "splitContainer2.Panel1");
             this.splitContainer2.Panel1.Controls.Add(this.groupBox2);
             // 
             // splitContainer2.Panel2
             // 
-            resources.ApplyResources(this.splitContainer2.Panel2, "splitContainer2.Panel2");
             this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
             // 
             // groupBox2
             // 
-            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Controls.Add(this.comboBox_KB_or_MB);
             this.groupBox2.Controls.Add(this.numericUpDown_Size);
             this.groupBox2.Controls.Add(this.label8);
@@ -300,17 +297,18 @@ namespace PicSizer
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.comboBox_CompressionMode);
+            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
             // 
             // comboBox_KB_or_MB
             // 
-            resources.ApplyResources(this.comboBox_KB_or_MB, "comboBox_KB_or_MB");
             this.comboBox_KB_or_MB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_KB_or_MB.FormattingEnabled = true;
             this.comboBox_KB_or_MB.Items.AddRange(new object[] {
             resources.GetString("comboBox_KB_or_MB.Items"),
             resources.GetString("comboBox_KB_or_MB.Items1")});
+            resources.ApplyResources(this.comboBox_KB_or_MB, "comboBox_KB_or_MB");
             this.comboBox_KB_or_MB.Name = "comboBox_KB_or_MB";
             this.comboBox_KB_or_MB.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
             // 
@@ -361,18 +359,17 @@ namespace PicSizer
             // 
             // comboBox_CompressionMode
             // 
-            resources.ApplyResources(this.comboBox_CompressionMode, "comboBox_CompressionMode");
             this.comboBox_CompressionMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_CompressionMode.FormattingEnabled = true;
             this.comboBox_CompressionMode.Items.AddRange(new object[] {
             resources.GetString("comboBox_CompressionMode.Items"),
             resources.GetString("comboBox_CompressionMode.Items1")});
+            resources.ApplyResources(this.comboBox_CompressionMode, "comboBox_CompressionMode");
             this.comboBox_CompressionMode.Name = "comboBox_CompressionMode";
             this.comboBox_CompressionMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_CompressionMode_SelectedIndexChanged);
             // 
             // groupBox1
             // 
-            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Controls.Add(this.numericUpDown_LimitHeight);
             this.groupBox1.Controls.Add(this.numericUpDown_LimitWidth);
             this.groupBox1.Controls.Add(this.label5);
@@ -381,6 +378,7 @@ namespace PicSizer
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.comboBox_ResizeMode);
             this.groupBox1.Controls.Add(this.label1);
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
             // 
@@ -446,7 +444,6 @@ namespace PicSizer
             // 
             // comboBox_ResizeMode
             // 
-            resources.ApplyResources(this.comboBox_ResizeMode, "comboBox_ResizeMode");
             this.comboBox_ResizeMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_ResizeMode.FormattingEnabled = true;
             this.comboBox_ResizeMode.Items.AddRange(new object[] {
@@ -454,6 +451,7 @@ namespace PicSizer
             resources.GetString("comboBox_ResizeMode.Items1"),
             resources.GetString("comboBox_ResizeMode.Items2"),
             resources.GetString("comboBox_ResizeMode.Items3")});
+            resources.ApplyResources(this.comboBox_ResizeMode, "comboBox_ResizeMode");
             this.comboBox_ResizeMode.Name = "comboBox_ResizeMode";
             this.comboBox_ResizeMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_ResizeMode_SelectedIndexChanged);
             // 
@@ -527,11 +525,18 @@ namespace PicSizer
             this.button_ReadSetting.UseVisualStyleBackColor = true;
             this.button_ReadSetting.Click += new System.EventHandler(this.button_ReadSetting_Click);
             // 
+            // label_Warn
+            // 
+            this.label_Warn.ForeColor = System.Drawing.Color.Red;
+            resources.ApplyResources(this.label_Warn, "label_Warn");
+            this.label_Warn.Name = "label_Warn";
+            // 
             // SettingForm
             // 
-            resources.ApplyResources(this, "$this");
             this.AllowDrop = true;
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label_Warn);
             this.Controls.Add(this.button_ReadSetting);
             this.Controls.Add(this.button_Export);
             this.Controls.Add(this.groupBox5);
@@ -625,5 +630,6 @@ namespace PicSizer
         private System.Windows.Forms.TrackBar trackBar_Threads;
         private System.Windows.Forms.Button button_Export;
         private System.Windows.Forms.Button button_ReadSetting;
+        private System.Windows.Forms.Label label_Warn;
     }
 }

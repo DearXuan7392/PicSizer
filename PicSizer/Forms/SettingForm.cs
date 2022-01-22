@@ -300,5 +300,17 @@ namespace PicSizer
             }
             return null;
         }
+
+        private void comboBox_ExtensionMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(comboBox_ExtensionMode.SelectedIndex != ExtensionMode.JPEG.ToInt())
+            {
+                label_Warn.Visible = true;
+            }
+            else
+            {
+                label_Warn.Visible = false;
+            }
+        }
     }
 }

@@ -128,9 +128,6 @@
   <data name="button_Choose.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Right</value>
   </data>
-  <data name="&gt;&gt;groupBox1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="选中项ToolStripMenuItem.Text" xml:space="preserve">
     <value>选中项</value>
   </data>
@@ -177,9 +174,6 @@
   <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
     <value>581, 25</value>
   </data>
-  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 25</value>
-  </data>
   <data name="&gt;&gt;button_Choose.Name" xml:space="preserve">
     <value>button_Choose</value>
   </data>
@@ -195,9 +189,6 @@
   <data name="fileName.Text" xml:space="preserve">
     <value>文件名</value>
   </data>
-  <data name="移除ToolStripMenuItem.Text" xml:space="preserve">
-    <value>移除</value>
-  </data>
   <data name="&gt;&gt;语言ToolStripMenuItem.Name" xml:space="preserve">
     <value>语言ToolStripMenuItem</value>
   </data>
@@ -209,9 +200,6 @@
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>PicSizer</value>
-  </data>
-  <data name="&gt;&gt;错误项ToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="button_Choose.Location" type="System.Drawing.Point, System.Drawing">
     <value>395, 19</value>
@@ -225,9 +213,6 @@
   <data name="&gt;&gt;添加文件ToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;文件ToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="button_StartResize.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
@@ -239,6 +224,9 @@
   </data>
   <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
     <value>$this</value>
+  </data>
+  <data name="&gt;&gt;已完成ToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="选择ToolStripMenuItem.Text" xml:space="preserve">
     <value>选择</value>
@@ -270,6 +258,9 @@
   <data name="&gt;&gt;size.Name" xml:space="preserve">
     <value>size</value>
   </data>
+  <data name="反选ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 22</value>
+  </data>
   <data name="选择ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 21</value>
   </data>
@@ -278,9 +269,6 @@
   </data>
   <data name="&gt;&gt;错误项ToolStripMenuItem.Name" xml:space="preserve">
     <value>错误项ToolStripMenuItem</value>
-  </data>
-  <data name="button_StartResize.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Bottom, Right</value>
   </data>
   <data name="&gt;&gt;fullPath.Type" xml:space="preserve">
     <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -303,14 +291,14 @@
   <data name="打开文件夹ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>136, 22</value>
   </data>
+  <data name="&gt;&gt;radioButton_Cover.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="反选ToolStripMenuItem.Text" xml:space="preserve">
     <value>反选</value>
   </data>
   <data name="state.Text" xml:space="preserve">
     <value>状态</value>
-  </data>
-  <data name="全选ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 22</value>
   </data>
   <data name="groupBox1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Left, Right</value>
@@ -323,9 +311,6 @@
   </data>
   <data name="&gt;&gt;listView1.Type" xml:space="preserve">
     <value>PicSizer_ControlLibrary.NoFlashListView, PicSizer_ControlLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;英语ToolStripMenuItem.Name" xml:space="preserve">
-    <value>英语ToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;button_StartResize.ZOrder" xml:space="preserve">
     <value>4</value>
@@ -347,6 +332,9 @@
   </data>
   <data name="textBox_OutputDirText.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Left, Right</value>
+  </data>
+  <data name="radioButton_Cover.Size" type="System.Drawing.Size, System.Drawing">
+    <value>83, 16</value>
   </data>
   <data name="&gt;&gt;groupBox1.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -372,8 +360,11 @@
   <data name="&gt;&gt;英语ToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
-    <value>CenterScreen</value>
+  <data name="&gt;&gt;选择ToolStripMenuItem.Name" xml:space="preserve">
+    <value>选择ToolStripMenuItem</value>
+  </data>
+  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 25</value>
   </data>
   <data name="label2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleRight</value>
@@ -386,6 +377,9 @@
   </data>
   <data name="英语ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>180, 22</value>
+  </data>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>CenterScreen</value>
   </data>
   <data name="&gt;&gt;button_Choose.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -423,11 +417,14 @@
   <data name="语言ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 21</value>
   </data>
+  <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>500, 400</value>
+  </data>
   <data name="groupBox1.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 360</value>
   </data>
-  <data name="radioButton_CustomDir.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="&gt;&gt;作者ToolStripMenuItem.Name" xml:space="preserve">
+    <value>作者ToolStripMenuItem</value>
   </data>
   <data name="移除ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 22</value>
@@ -459,6 +456,9 @@
   <data name="&gt;&gt;帮助ToolStripMenuItem.Name" xml:space="preserve">
     <value>帮助ToolStripMenuItem</value>
   </data>
+  <data name="radioButton_CustomDir.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
   <data name="&gt;&gt;radioButton_CustomDir.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
@@ -467,6 +467,9 @@
   </data>
   <data name="&gt;&gt;size.Type" xml:space="preserve">
     <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="打开文件夹ToolStripMenuItem.Text" xml:space="preserve">
+    <value>打开文件夹</value>
   </data>
   <data name="label2.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -477,8 +480,8 @@
   <data name="button_Set.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Right</value>
   </data>
-  <data name="&gt;&gt;已完成ToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;英语ToolStripMenuItem.Name" xml:space="preserve">
+    <value>英语ToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;移除ToolStripMenuItem.Name" xml:space="preserve">
     <value>移除ToolStripMenuItem</value>
@@ -489,14 +492,11 @@
   <data name="&gt;&gt;button_StartResize.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;作者ToolStripMenuItem.Name" xml:space="preserve">
-    <value>作者ToolStripMenuItem</value>
+  <data name="size.Text" xml:space="preserve">
+    <value>文件大小</value>
   </data>
   <data name="&gt;&gt;button_Choose.Parent" xml:space="preserve">
     <value>groupBox1</value>
-  </data>
-  <data name="&gt;&gt;退出ToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;全部项ToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -504,8 +504,8 @@
   <data name="&gt;&gt;textBox_OutputDirText.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="文件ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 21</value>
+  <data name="&gt;&gt;文件ToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;listView1.Parent" xml:space="preserve">
     <value>$this</value>
@@ -531,11 +531,11 @@
   <data name="已完成ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>112, 22</value>
   </data>
-  <data name="button_StartResize.Text" xml:space="preserve">
-    <value>开始压缩</value>
-  </data>
   <data name="&gt;&gt;全选ToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>476, 50</value>
   </data>
   <data name="radioButton_CustomDir.Location" type="System.Drawing.Point, System.Drawing">
     <value>88, 20</value>
@@ -561,8 +561,8 @@
   <data name="listView1.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 40</value>
   </data>
-  <data name="打开文件夹ToolStripMenuItem.Text" xml:space="preserve">
-    <value>打开文件夹</value>
+  <data name="移除ToolStripMenuItem.Text" xml:space="preserve">
+    <value>移除</value>
   </data>
   <data name="全部项ToolStripMenuItem.Text" xml:space="preserve">
     <value>全部项</value>
@@ -570,8 +570,8 @@
   <data name="menuStrip1.Text" xml:space="preserve">
     <value>menuStrip1</value>
   </data>
-  <data name="size.Text" xml:space="preserve">
-    <value>文件大小</value>
+  <data name="&gt;&gt;错误项ToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="radioButton_CustomDir.Size" type="System.Drawing.Size, System.Drawing">
     <value>71, 16</value>
@@ -600,14 +600,14 @@
   <data name="全选ToolStripMenuItem.Text" xml:space="preserve">
     <value>全选</value>
   </data>
-  <data name="&gt;&gt;选择ToolStripMenuItem.Name" xml:space="preserve">
-    <value>选择ToolStripMenuItem</value>
+  <data name="button_StartResize.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Right</value>
   </data>
   <data name="选中项ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>112, 22</value>
   </data>
-  <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>476, 50</value>
+  <data name="文件ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 21</value>
   </data>
   <data name="文件ToolStripMenuItem.Text" xml:space="preserve">
     <value>文件</value>
@@ -627,8 +627,8 @@
   <data name="帮助ToolStripMenuItem.Text" xml:space="preserve">
     <value>帮助</value>
   </data>
-  <data name="&gt;&gt;已完成ToolStripMenuItem.Name" xml:space="preserve">
-    <value>已完成ToolStripMenuItem</value>
+  <data name="全选ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 22</value>
   </data>
   <data name="语言ToolStripMenuItem.Text" xml:space="preserve">
     <value>语言</value>
@@ -639,8 +639,8 @@
   <data name="已完成ToolStripMenuItem.Text" xml:space="preserve">
     <value>已完成</value>
   </data>
-  <data name="&gt;&gt;radioButton_Cover.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="button_StartResize.Text" xml:space="preserve">
+    <value>开始压缩</value>
   </data>
   <data name="&gt;&gt;选择ToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -660,8 +660,8 @@
   <data name="&gt;&gt;menuStrip1.Name" xml:space="preserve">
     <value>menuStrip1</value>
   </data>
-  <data name="反选ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 22</value>
+  <data name="&gt;&gt;已完成ToolStripMenuItem.Name" xml:space="preserve">
+    <value>已完成ToolStripMenuItem</value>
   </data>
   <data name="帮助ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 21</value>
@@ -675,17 +675,14 @@
   <data name="&gt;&gt;fullPath.Name" xml:space="preserve">
     <value>fullPath</value>
   </data>
-  <data name="radioButton_Cover.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 16</value>
+  <data name="&gt;&gt;groupBox1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
-    <value>500, 400</value>
+  <data name="&gt;&gt;退出ToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
-  </metadata>
-  <metadata name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>en-US</value>
   </metadata>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
