@@ -9,7 +9,16 @@ namespace PicSizer
 {
     public static class Encoder
     {
-        public static ImageCodecInfo imageCodecInfo = Partial.ImageInfo.Info_JPEG;
+        public static ImageCodecInfo Info_JPEG = GetEncoderInfo("image/jpeg");
+        public static ImageCodecInfo Info_PNG = GetEncoderInfo("image/png");
+        public static ImageCodecInfo Info_BMP = GetEncoderInfo("image/bmp");
+        public static ImageCodecInfo Info_TIFF = GetEncoderInfo("image/tiff");
+
+        /// <summary>
+        /// 默认格式
+        /// </summary>
+        public static ImageCodecInfo Info_Default = Info_JPEG;
+
         public static System.Drawing.Imaging.Encoder encoder = System.Drawing.Imaging.Encoder.Quality;
         public static EncoderParameters encoderParameters = new EncoderParameters(1);
         public static EncoderParameter[] parameterList = new EncoderParameter[101];
@@ -25,6 +34,24 @@ namespace PicSizer
                 parameterList[v] = new EncoderParameter(encoder, value);
             }
             return parameterList[v];
+        }
+
+        /// <summary>
+        /// 获取编码信息
+        /// </summary>
+        private static ImageCodecInfo GetEncoderInfo(string type)
+        {
+            int j;
+            ImageCodecInfo[] encoders;
+            encoders = ImageCodecInfo.GetImageEncoders();
+            for (j = 0; j < encoders.Length; ++j)
+            {
+                if (encoders[j].MimeType == type)
+                {
+                    return encoders[j];
+                }
+            }
+            return null;
         }
     }
 }

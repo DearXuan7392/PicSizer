@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,16 +16,17 @@ namespace PicSizer.Partial
         /// <summary>
         /// 显示弹窗
         /// </summary>
+        /// [MethodImpl(MethodImplOptions.Synchronized)]
         public static void ShowDialog(string msg)
         {
-            MessageBox.Show(msg, _Title);
+            MessageBox.Show(SharedVariable.mainForm, msg, _Title);
             SetFocus();
         }
 
         public static void ShowDialog_ResizeFinish(int total, int success)
         {
             string s = "总共: " + total + " 张\n压缩完成: " + success + "张\n未完成: " + (total - success) + "张";
-            MessageBox.Show(s, "压缩已结束", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(SharedVariable.mainForm, s, "压缩已结束", MessageBoxButtons.OK, MessageBoxIcon.Information);
             SetFocus();
         }
 
@@ -33,7 +35,7 @@ namespace PicSizer.Partial
         /// </summary>
         public static void ShowDialog_Error(string msg)
         {
-            MessageBox.Show(msg, _Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(SharedVariable.mainForm, msg, _Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         /// <summary>
@@ -41,12 +43,13 @@ namespace PicSizer.Partial
         /// </summary>
         public static void ShowDialog_Warning(string msg)
         {
-            MessageBox.Show(msg, _Error, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(SharedVariable.mainForm, msg, _Error, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         /// <summary>
         /// 弹出错误框
         /// </summary>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void ShowDialog_Exception(Exception e)
         {
             ShowDialog_Error(e.ToString());
@@ -57,7 +60,7 @@ namespace PicSizer.Partial
         /// </summary>
         public static bool ShowDialog_OKDialog(string msg)
         {
-            return MessageBox.Show(msg, _Title, MessageBoxButtons.OKCancel) == DialogResult.OK;
+            return MessageBox.Show(SharedVariable.mainForm, msg, _Title, MessageBoxButtons.OKCancel) == DialogResult.OK;
         }
 
         /// <summary>
@@ -103,7 +106,7 @@ namespace PicSizer.Partial
             }
             catch (Exception)
             {
-                MessageBox.Show("打开浏览器失败，请将链接\"" + link + "\"复制到浏览器打开.", "PicSizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(SharedVariable.mainForm, "打开浏览器失败，请将链接\"" + link + "\"复制到浏览器打开.", "PicSizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

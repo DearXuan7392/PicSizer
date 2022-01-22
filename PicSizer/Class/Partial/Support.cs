@@ -127,32 +127,6 @@ namespace PicSizer.Partial
         }
     }
 
-    public static class ImageInfo
-    {
-        public static ImageCodecInfo Info_JPEG = GetEncoderInfo("image/jpeg");
-        public static ImageCodecInfo Info_PNG = GetEncoderInfo("image/png");
-        public static ImageCodecInfo Info_BMP = GetEncoderInfo("image/bmp");
-        public static ImageCodecInfo Info_TIFF = GetEncoderInfo("image/tiff");
-
-        /// <summary>
-        /// 获取编码信息
-        /// </summary>
-        private static ImageCodecInfo GetEncoderInfo(string type)
-        {
-            int j;
-            ImageCodecInfo[] encoders;
-            encoders = ImageCodecInfo.GetImageEncoders();
-            for (j = 0; j < encoders.Length; ++j)
-            {
-                if (encoders[j].MimeType == type)
-                {
-                    return encoders[j];
-                }
-            }
-            return null;
-        }
-    }
-
     /// <summary>
     /// 支持
     /// </summary>

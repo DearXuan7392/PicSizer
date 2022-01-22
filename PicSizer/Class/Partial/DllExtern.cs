@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace PicSizer.Partial
 {
     public static class DllExtern
     {
         const string dll_path = "PicSizer_CUDA.dll";
-        
+
         [DllImport(dll_path, EntryPoint = "SetBrightness", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool SetBrightness(IntPtr ori, int length, byte dark);
         
@@ -39,6 +36,5 @@ namespace PicSizer.Partial
             thread.Priority = ThreadPriority.Highest;
             thread.Start();
         }
-        
     }
 }

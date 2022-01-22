@@ -103,6 +103,7 @@ namespace PicSizer
                 return;
             }
             SharedVariable.setting = SaveSetting();
+            FileCheck.SetImageCodeInfo(SharedVariable.setting.extensionMode);
 
             this.Hide();
         }

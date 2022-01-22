@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using PicSizer.Partial;
 
@@ -53,10 +47,18 @@ namespace PicSizer
             }
             else
             {
-                //添加文件
-                picFiles.Add(path);
-                collection.Add(Support.GetListViewItemByPath(path));
-                return true;
+                //判断文件后缀是否合法
+                if (FileCheck.isExtensionCorrect(path))
+                {
+                    //添加文件
+                    picFiles.Add(path);
+                    collection.Add(Support.GetListViewItemByPath(path));
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
 
@@ -72,16 +74,9 @@ namespace PicSizer
             //遍历所有子文件
             foreach (FileInfo info in files)
             {
-                switch (info.Extension.ToLower())
+                if (FileCheck.isExtensionCorrect(info.FullName))
                 {
-                    case ".jpg":
-                    case ".png":
-                    case ".bmp":
-                    case ".tiff":
-                        fileList.Add(info.FullName);
-                        break;
-                    default:
-                        break;
+                    fileList.Add(info.FullName);
                 }
             }
             //遍历所有子文件夹
@@ -182,25 +177,33 @@ namespace PicSizer
             try
             {
                 string[] files = e.Data.GetData(DataFormats.FileDrop, false) as string[];
-                int count = files.Length;
+                int total = files.Length;
+                int success = 0;
                 foreach (string path in files)
                 {
-                    if (SharedVariable.setting.AllowAnyExtension)
+                    //该路径是文件
+                    if (File.Exists(path))
                     {
-                        if (AddPicture(path)) count--;
+                        if (AddPicture(path)) success++;
                     }
+                    //不是文件就是文件夹
                     else
                     {
-                        if (path.EndsWith(".jpg") || path.EndsWith(".png") || path.EndsWith(".bmp") || path.EndsWith(".tiff"))
+                        List<string> fList = GetPictureFromDir(path);
+                        total += fList.Count - 1;//图片总数加上文件夹内的图片总数，并减去文件夹自己
+                        //加载文件夹里的图片
+                        foreach (string f in fList)
                         {
-                            if (AddPicture(path)) count--;
+                            if (AddPicture(f)) success++;
                         }
                     }
+                    
                 }
-                UpdateLowerLeftLabel();
-                if (count != 0)
+                UpdateSelectTotalNumLabel();
+                if (total != success)
                 {
-                    Dialog.ShowDialog(count + " 个重复或不符合格式的路径已被忽略.");
+                    string s = string.Format("共发现{0}个文件,其中{1}个因重复或格式不符而加载失败.", total, (total - success));
+                    Dialog.ShowDialog(s);
                 }
             }
             catch (Exception ex)
@@ -248,7 +251,7 @@ namespace PicSizer
             {
                 item.Selected = true;
             }
-            UpdateLowerLeftLabel();
+            UpdateSelectTotalNumLabel();
             listView1.Focus();
             listView1.EndUpdate();
         }
@@ -260,7 +263,7 @@ namespace PicSizer
             {
                 item.Selected = !item.Selected;
             }
-            UpdateLowerLeftLabel();
+            UpdateSelectTotalNumLabel();
             listView1.Focus();
             listView1.EndUpdate();
         }
@@ -268,14 +271,15 @@ namespace PicSizer
         /// <summary>
         /// 更新左下角的Label，显示为"选中的项数/总项数"
         /// </summary>
-        private void UpdateLowerLeftLabel()
+        private void UpdateSelectTotalNumLabel()
         {
             label2.Text = listView1.SelectedItems.Count + "/" + collection.Count;
         }
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateLowerLeftLabel();
+            //更新选择的项数
+            UpdateSelectTotalNumLabel();
         }
 
         private void 添加文件ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -298,7 +302,7 @@ namespace PicSizer
                 {
                     if (AddPicture(path)) fileCount--;
                 }
-                UpdateLowerLeftLabel();
+                UpdateSelectTotalNumLabel();
                 if (fileCount != 0)
                 {
                     Dialog.ShowDialog(fileCount + " 张重复的图片已被忽略.");
@@ -350,7 +354,7 @@ namespace PicSizer
                         RemovePicture(item);
                     }
                 }
-                UpdateLowerLeftLabel();
+                UpdateSelectTotalNumLabel();
                 listView1.Focus();
             }
             else if (sender == 已完成ToolStripMenuItem)

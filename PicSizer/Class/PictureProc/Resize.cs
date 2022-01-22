@@ -68,7 +68,6 @@ namespace PicSizer.PictureProc
         {
             ThreadsPool.OutputDir = resDir;
             ThreadsPool.FileCollection = collection;
-
             ThreadsPool.StartThreadsPool();
         }
 
@@ -116,11 +115,11 @@ namespace PicSizer.PictureProc
         /// <summary>
         /// 计算Bitmap输出到流后的大小
         /// </summary>
-        public static long GetBitmapSize(Bitmap bitmap, long value)
+        public static long GetBitmapSize(Bitmap bitmap, ImageCodecInfo info, long value)
         {
             Encoder.encoderParameters.Param[0] = Encoder.GetParameter(value);
             MemoryStream memoryStream = new MemoryStream();
-            bitmap.Save(memoryStream, Encoder.imageCodecInfo, Encoder.encoderParameters);
+            bitmap.Save(memoryStream, info, Encoder.encoderParameters);
             long size = memoryStream.Length;
             memoryStream.Dispose();//立即摧毁MemoryStream防止内存占用过多
             return size >> 10;
@@ -134,6 +133,7 @@ namespace PicSizer.PictureProc
             using (Bitmap bitmap = ResizeBitmap(new Bitmap(file)))
             {
                 BmpProc.SetBrightness(bitmap);
+                ImageCodecInfo image_type = FileCheck.GetImageInfoByFilename(file);
                 long left = 0L;
                 long right = 100L;
                 long mid = 0L;
@@ -141,7 +141,7 @@ namespace PicSizer.PictureProc
                 while(left < right - 1)
                 {
                     mid = (left + right) / 2;
-                    size = GetBitmapSize(bitmap, mid);
+                    size = GetBitmapSize(bitmap, image_type, mid);
                     if(size <= SharedVariable.setting.LimitSize)
                     {
                         left = mid;
@@ -151,13 +151,13 @@ namespace PicSizer.PictureProc
                         right = mid;
                     }
                 }
-                size = GetBitmapSize(bitmap, left);
+                size = GetBitmapSize(bitmap, image_type, left);
                 //如果文件大小符合要求就输出
                 if(size <= SharedVariable.setting.LimitSize)
                 {
                     Encoder.encoderParameters.Param[0] = Encoder.GetParameter(left);
                     string result = GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
-                    bitmap.Save(result, Encoder.imageCodecInfo, Encoder.encoderParameters);
+                    bitmap.Save(result, image_type, Encoder.encoderParameters);
                     return true;
                 }
                 return false;
@@ -174,7 +174,7 @@ namespace PicSizer.PictureProc
                 BmpProc.SetBrightness(bitmap);
                 Encoder.encoderParameters.Param[0] = Encoder.GetParameter(SharedVariable.setting.CompressionValue);
                 string result = GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
-                bitmap.Save(result, Encoder.imageCodecInfo, Encoder.encoderParameters);
+                bitmap.Save(result, FileCheck.GetImageInfoByFilename(file), Encoder.encoderParameters);
                 return true;
             }
         }

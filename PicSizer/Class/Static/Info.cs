@@ -39,8 +39,8 @@ namespace PicSizer
         public static readonly Partial.Version ProjectVersion = new Partial.Version()
         {
             mainVersion = 4,
-            secondVersion = 2,
-            thirdVersion = 1,
+            secondVersion = 3,
+            thirdVersion = 0,
             alpha = false
         };
 
