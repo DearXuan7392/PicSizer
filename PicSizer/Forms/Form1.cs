@@ -342,6 +342,7 @@ namespace PicSizer
                 if (count == 0)
                 {
                     Dialog.ShowDialog_Warning("没有选中图片!");
+                    listView1.EndUpdate();
                     return;
                 }
                 if (Dialog.ShowDialog_OKDialog("移除所选的 " + count + " 张图片?"))
