@@ -14,11 +14,11 @@ namespace PicSizer
         public static void SetBrightness(Bitmap bitmap)
         {
             //当亮度为100时跳过该函数
-            if (SharedVariable.setting.brightness == 100) return;
+            if (Value.setting.brightness == 100) return;
             _SetBrightnessByCSharp(bitmap);
             
             //根据GPU是否支持来决定使用GPU加速还是CPU计算
-            if (SharedVariable.setting.useGPU && Info.isGPUSupport)
+            if (Value.setting.useGPU && Info.isGPUSupport)
             {
                 _SetBrightnessByCUDA(bitmap);
             }
@@ -40,7 +40,7 @@ namespace PicSizer
                 PixelFormat.Format24bppRgb);
             int length = width * height;
             IntPtr ptr = bitmapData.Scan0;
-            if (!Partial.DllExtern.SetBrightness(ptr, length, SharedVariable.setting.brightness))
+            if (!Partial.DllExtern.SetBrightness(ptr, length, Value.setting.brightness))
             {
                 throw new Exception("使用GPU加速时遇到了未知错误");
             }
@@ -63,7 +63,7 @@ namespace PicSizer
             Marshal.Copy(ptr, pic, 0, size);
             for(int i = 0; i < size; i++)
             {
-                pic[i] = (byte)(pic[i] * SharedVariable.setting.brightness / 100);
+                pic[i] = (byte)(pic[i] * Value.setting.brightness / 100);
             }
             Marshal.Copy(pic, 0, ptr, size);
             bitmap.UnlockBits(bitmapData);

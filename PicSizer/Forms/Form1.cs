@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using PicSizer.Partial;
+using PicSizer.Custom;
 
 namespace PicSizer
 {
@@ -24,15 +25,17 @@ namespace PicSizer
             InitializeComponent();
             this.Icon = Info.icon;
             //为静态量赋值
-            SharedVariable.mainForm = this;
+            Value.mainForm = this;
             Text = Info.ProjectName + " " + Info.ProjectVersion;
             collection = listView1.Items;
+            listView1.GridLines = true;//增加分割线
+            
             DllExtern.DoInFirst();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
         }
 
         /// <summary>
@@ -52,7 +55,8 @@ namespace PicSizer
                 {
                     //添加文件
                     picFiles.Add(path);
-                    collection.Add(Support.GetListViewItemByPath(path));
+                    //collection.Add(Support.GetListViewItemByPath(path));
+                    collection.Add(new PicListViewItem(path));
                     return true;
                 }
                 else
@@ -102,8 +106,7 @@ namespace PicSizer
         /// </summary>
         private void OnChooseClick(object sender, EventArgs e)
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
-            dialog.Description = "选择文件夹";
+            FolderBrowserDialog dialog = Dialog.GetFolderBrowserDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 if (string.IsNullOrWhiteSpace(dialog.SelectedPath))
@@ -122,7 +125,7 @@ namespace PicSizer
         {
             string folderPath = textBox_OutputDirText.Text;
             //如果选择指定目录，则判断目录是否合法
-            if (!SharedVariable.CoverOriginalFile)
+            if (!Value.CoverOriginalFile)
             {
                 if (!Path.IsPathRooted(folderPath))
                 {
@@ -159,9 +162,9 @@ namespace PicSizer
                 PictureProc.Resize.StartResizer(collection, folderPath);
             });
             thread.Priority = ThreadPriority.Highest;//设置线程优先级最高
-            SharedVariable.progressForm.init(collection.Count);
+            Value.progressForm.init(collection.Count);
             thread.Start();
-            SharedVariable.progressForm.ShowDialog();
+            Value.progressForm.ShowDialog();
         }
 
         /// <summary>
@@ -169,7 +172,7 @@ namespace PicSizer
         /// </summary>
         private void OnSetClick(object sender, EventArgs e)
         {
-            SharedVariable.settingForm.ShowDialog();
+            Value.settingForm.ShowDialog();
         }
 
         private void listView1_DragDrop(object sender, DragEventArgs e)
@@ -284,17 +287,7 @@ namespace PicSizer
 
         private void 添加文件ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Title = "添加图片";
-            if (SharedVariable.setting.AllowAnyExtension)
-            {
-                dialog.Filter = "图片(JPG,PNG,BMP,TIFF)|*.jpg;*.png;*.bmp;*.tiff|所有|*.*";
-            }
-            else
-            {
-                dialog.Filter = "图片(JPG,PNG,BMP,TIFF)|*.jpg;*.png;*.bmp;*.tiff";
-            }
-            dialog.Multiselect = true;
+            OpenFileDialog dialog = Dialog.GetOpenFileDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 int fileCount = dialog.FileNames.Length;
@@ -319,11 +312,11 @@ namespace PicSizer
         {
             if (sender == 作者ToolStripMenuItem)
             {
-                SharedVariable.dearXuan.ShowDialog();
+                (new DearXuan()).ShowDialog();
             }
             else if (sender == 关于ToolStripMenuItem)
             {
-                SharedVariable.about.ShowDialog();
+                (new About()).ShowDialog();
             }
             else if (sender == 文档ToolStripMenuItem)
             {
@@ -333,12 +326,16 @@ namespace PicSizer
 
         private void CoverOriginalFile(object sender, EventArgs e)
         {
-            SharedVariable.CoverOriginalFile = radioButton_Cover.Checked;
-            textBox_OutputDirText.Enabled = button_Choose.Enabled = !SharedVariable.CoverOriginalFile;
+            Value.CoverOriginalFile = radioButton_Cover.Checked;
+            textBox_OutputDirText.Enabled = button_Choose.Enabled = !Value.CoverOriginalFile;
         }
 
+        /// <summary>
+        /// 按下移除按钮
+        /// </summary>
         private void OnRemoveItemClick(object sender, EventArgs e)
         {
+            listView1.BeginUpdate();
             if (sender == 选中项ToolStripMenuItem)
             {
                 int count = listView1.SelectedItems.Count;
@@ -361,7 +358,7 @@ namespace PicSizer
             {
                 for (int i = 0; i < collection.Count; i++)
                 {
-                    if (collection[i].SubItems[3].Text.Equals(PicState.Success))
+                    if (((PicListViewItem)collection[i]).State == PicState.Success)
                     {
                         collection.RemoveAt(i);
                         i--;
@@ -372,7 +369,7 @@ namespace PicSizer
             {
                 for (int i = 0; i < collection.Count; i++)
                 {
-                    if (collection[i].SubItems[3].Text.Equals(PicState.Error))
+                    if (((PicListViewItem)collection[i]).State == PicState.Error)
                     {
                         collection.RemoveAt(i);
                         i--;
@@ -387,6 +384,7 @@ namespace PicSizer
                     picFiles.Clear();
                 }
             }
+            listView1.EndUpdate();
         }
 
         private void OnListViewKetDown(object sender, KeyEventArgs e)

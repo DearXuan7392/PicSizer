@@ -73,8 +73,8 @@ namespace PicSizer
             // 
             // textBox_OutputDirText
             // 
-            resources.ApplyResources(this.textBox_OutputDirText, "textBox_OutputDirText");
             this.textBox_OutputDirText.AllowDrop = true;
+            resources.ApplyResources(this.textBox_OutputDirText, "textBox_OutputDirText");
             this.textBox_OutputDirText.Name = "textBox_OutputDirText";
             this.textBox_OutputDirText.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox1_DragDrop);
             this.textBox_OutputDirText.DragEnter += new System.Windows.Forms.DragEventHandler(this.DragEnter);
@@ -102,8 +102,8 @@ namespace PicSizer
             // 
             // listView1
             // 
-            resources.ApplyResources(this.listView1, "listView1");
             this.listView1.AllowDrop = true;
+            resources.ApplyResources(this.listView1, "listView1");
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.fileName,
             this.fullPath,
@@ -137,120 +137,120 @@ namespace PicSizer
             // 
             // menuStrip1
             // 
-            resources.ApplyResources(this.menuStrip1, "menuStrip1");
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.文件ToolStripMenuItem,
             this.选择ToolStripMenuItem,
             this.帮助ToolStripMenuItem});
+            resources.ApplyResources(this.menuStrip1, "menuStrip1");
             this.menuStrip1.Name = "menuStrip1";
             // 
             // 文件ToolStripMenuItem
             // 
-            resources.ApplyResources(this.文件ToolStripMenuItem, "文件ToolStripMenuItem");
             this.文件ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.添加文件ToolStripMenuItem,
             this.打开文件夹ToolStripMenuItem,
             this.退出ToolStripMenuItem});
             this.文件ToolStripMenuItem.Name = "文件ToolStripMenuItem";
+            resources.ApplyResources(this.文件ToolStripMenuItem, "文件ToolStripMenuItem");
             // 
             // 添加文件ToolStripMenuItem
             // 
-            resources.ApplyResources(this.添加文件ToolStripMenuItem, "添加文件ToolStripMenuItem");
             this.添加文件ToolStripMenuItem.Name = "添加文件ToolStripMenuItem";
+            resources.ApplyResources(this.添加文件ToolStripMenuItem, "添加文件ToolStripMenuItem");
             this.添加文件ToolStripMenuItem.Click += new System.EventHandler(this.添加文件ToolStripMenuItem_Click);
             // 
             // 打开文件夹ToolStripMenuItem
             // 
-            resources.ApplyResources(this.打开文件夹ToolStripMenuItem, "打开文件夹ToolStripMenuItem");
             this.打开文件夹ToolStripMenuItem.Name = "打开文件夹ToolStripMenuItem";
+            resources.ApplyResources(this.打开文件夹ToolStripMenuItem, "打开文件夹ToolStripMenuItem");
             this.打开文件夹ToolStripMenuItem.Click += new System.EventHandler(this.打开文件夹ToolStripMenuItem_Click);
             // 
             // 退出ToolStripMenuItem
             // 
-            resources.ApplyResources(this.退出ToolStripMenuItem, "退出ToolStripMenuItem");
             this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
+            resources.ApplyResources(this.退出ToolStripMenuItem, "退出ToolStripMenuItem");
             this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
             // 选择ToolStripMenuItem
             // 
-            resources.ApplyResources(this.选择ToolStripMenuItem, "选择ToolStripMenuItem");
             this.选择ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.全选ToolStripMenuItem,
             this.反选ToolStripMenuItem,
             this.移除ToolStripMenuItem});
             this.选择ToolStripMenuItem.Name = "选择ToolStripMenuItem";
+            resources.ApplyResources(this.选择ToolStripMenuItem, "选择ToolStripMenuItem");
             // 
             // 全选ToolStripMenuItem
             // 
-            resources.ApplyResources(this.全选ToolStripMenuItem, "全选ToolStripMenuItem");
             this.全选ToolStripMenuItem.Name = "全选ToolStripMenuItem";
+            resources.ApplyResources(this.全选ToolStripMenuItem, "全选ToolStripMenuItem");
             this.全选ToolStripMenuItem.Click += new System.EventHandler(this.OnSelectAllClick);
             // 
             // 反选ToolStripMenuItem
             // 
-            resources.ApplyResources(this.反选ToolStripMenuItem, "反选ToolStripMenuItem");
             this.反选ToolStripMenuItem.Name = "反选ToolStripMenuItem";
+            resources.ApplyResources(this.反选ToolStripMenuItem, "反选ToolStripMenuItem");
             this.反选ToolStripMenuItem.Click += new System.EventHandler(this.OnSelectReverseClick);
             // 
             // 移除ToolStripMenuItem
             // 
-            resources.ApplyResources(this.移除ToolStripMenuItem, "移除ToolStripMenuItem");
             this.移除ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.选中项ToolStripMenuItem,
             this.已完成ToolStripMenuItem,
             this.错误项ToolStripMenuItem,
             this.全部项ToolStripMenuItem});
             this.移除ToolStripMenuItem.Name = "移除ToolStripMenuItem";
+            resources.ApplyResources(this.移除ToolStripMenuItem, "移除ToolStripMenuItem");
             // 
             // 选中项ToolStripMenuItem
             // 
-            resources.ApplyResources(this.选中项ToolStripMenuItem, "选中项ToolStripMenuItem");
             this.选中项ToolStripMenuItem.Name = "选中项ToolStripMenuItem";
+            resources.ApplyResources(this.选中项ToolStripMenuItem, "选中项ToolStripMenuItem");
             this.选中项ToolStripMenuItem.Click += new System.EventHandler(this.OnRemoveItemClick);
             // 
             // 已完成ToolStripMenuItem
             // 
-            resources.ApplyResources(this.已完成ToolStripMenuItem, "已完成ToolStripMenuItem");
             this.已完成ToolStripMenuItem.Name = "已完成ToolStripMenuItem";
+            resources.ApplyResources(this.已完成ToolStripMenuItem, "已完成ToolStripMenuItem");
             this.已完成ToolStripMenuItem.Click += new System.EventHandler(this.OnRemoveItemClick);
             // 
             // 错误项ToolStripMenuItem
             // 
-            resources.ApplyResources(this.错误项ToolStripMenuItem, "错误项ToolStripMenuItem");
             this.错误项ToolStripMenuItem.Name = "错误项ToolStripMenuItem";
+            resources.ApplyResources(this.错误项ToolStripMenuItem, "错误项ToolStripMenuItem");
             this.错误项ToolStripMenuItem.Click += new System.EventHandler(this.OnRemoveItemClick);
             // 
             // 全部项ToolStripMenuItem
             // 
-            resources.ApplyResources(this.全部项ToolStripMenuItem, "全部项ToolStripMenuItem");
             this.全部项ToolStripMenuItem.Name = "全部项ToolStripMenuItem";
+            resources.ApplyResources(this.全部项ToolStripMenuItem, "全部项ToolStripMenuItem");
             this.全部项ToolStripMenuItem.Click += new System.EventHandler(this.OnRemoveItemClick);
             // 
             // 帮助ToolStripMenuItem
             // 
-            resources.ApplyResources(this.帮助ToolStripMenuItem, "帮助ToolStripMenuItem");
             this.帮助ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.作者ToolStripMenuItem,
             this.文档ToolStripMenuItem,
             this.关于ToolStripMenuItem});
             this.帮助ToolStripMenuItem.Name = "帮助ToolStripMenuItem";
+            resources.ApplyResources(this.帮助ToolStripMenuItem, "帮助ToolStripMenuItem");
             // 
             // 作者ToolStripMenuItem
             // 
-            resources.ApplyResources(this.作者ToolStripMenuItem, "作者ToolStripMenuItem");
             this.作者ToolStripMenuItem.Name = "作者ToolStripMenuItem";
+            resources.ApplyResources(this.作者ToolStripMenuItem, "作者ToolStripMenuItem");
             this.作者ToolStripMenuItem.Click += new System.EventHandler(this.OnHelpMenuClick);
             // 
             // 文档ToolStripMenuItem
             // 
-            resources.ApplyResources(this.文档ToolStripMenuItem, "文档ToolStripMenuItem");
             this.文档ToolStripMenuItem.Name = "文档ToolStripMenuItem";
+            resources.ApplyResources(this.文档ToolStripMenuItem, "文档ToolStripMenuItem");
             this.文档ToolStripMenuItem.Click += new System.EventHandler(this.OnHelpMenuClick);
             // 
             // 关于ToolStripMenuItem
             // 
-            resources.ApplyResources(this.关于ToolStripMenuItem, "关于ToolStripMenuItem");
             this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
+            resources.ApplyResources(this.关于ToolStripMenuItem, "关于ToolStripMenuItem");
             this.关于ToolStripMenuItem.Click += new System.EventHandler(this.OnHelpMenuClick);
             // 
             // groupBox1

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PicSizer
 {
-    public static class SharedVariable
+    public static class Value
     {
         /// <summary>
         /// 线程信号灯
@@ -22,8 +22,6 @@ namespace PicSizer
         public static Form1 mainForm;
         public static SettingForm settingForm = new SettingForm();
         public static ProgressForm progressForm = new ProgressForm();
-        public static DearXuan dearXuan = new DearXuan();
-        public static About about = new About();
 
         /// <summary>
         /// 程序设置

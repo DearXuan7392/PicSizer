@@ -213,6 +213,7 @@ namespace PicSizer
             // trackBar_Threads
             // 
             resources.ApplyResources(this.trackBar_Threads, "trackBar_Threads");
+            this.trackBar_Threads.LargeChange = 1;
             this.trackBar_Threads.Minimum = 1;
             this.trackBar_Threads.Name = "trackBar_Threads";
             this.trackBar_Threads.Value = 2;

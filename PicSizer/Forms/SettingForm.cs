@@ -26,7 +26,7 @@ namespace PicSizer
 
         private void SettingForm_Load(object sender, EventArgs e)
         {
-            LoadSetting(SharedVariable.setting);
+            LoadSetting(Value.setting);
         }
 
         private void LoadSetting(Setting setting)
@@ -102,8 +102,7 @@ namespace PicSizer
                 Dialog.ShowDialog_Error(fileNameError);
                 return;
             }
-            SharedVariable.setting = SaveSetting();
-            FileCheck.SetImageCodeInfo(SharedVariable.setting.extensionMode);
+            Value.setting = SaveSetting();
 
             this.Hide();
         }
@@ -237,19 +236,18 @@ namespace PicSizer
 
         private void SetTopMost(bool flag)
         {
-            if(SharedVariable.settingForm.TopMost != flag)
+            if(Value.settingForm.TopMost != flag)
             {
-                SharedVariable.settingForm.TopMost
-                    = SharedVariable.dearXuan.TopMost
-                    = SharedVariable.progressForm.TopMost
-                    = SharedVariable.mainForm.TopMost
+                Value.settingForm.TopMost
+                    = Value.progressForm.TopMost
+                    = Value.mainForm.TopMost
                     = flag;
             }
         }
 
         private void SettingForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            SetTopMost(SharedVariable.setting.topMost);
+            SetTopMost(Value.setting.topMost);
         }
 
         private void SettingForm_DragEnter(object sender, DragEventArgs e)

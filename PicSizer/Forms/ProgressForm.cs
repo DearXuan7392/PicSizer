@@ -34,7 +34,7 @@ namespace PicSizer
             label8.Text = "0%";
             button1.Enabled = true;
             progressBar1.Value = 0;
-            SharedVariable.ThreadExitNow = false;
+            Value.ThreadExitNow = false;
         }
 
         public void AddOne(bool flag)
@@ -71,7 +71,7 @@ namespace PicSizer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            SharedVariable.ThreadExitNow = true;
+            Value.ThreadExitNow = true;
             button1.Enabled = false;
         }
 

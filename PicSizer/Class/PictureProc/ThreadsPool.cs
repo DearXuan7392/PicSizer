@@ -1,4 +1,5 @@
-﻿using PicSizer.Partial;
+﻿using PicSizer.Custom;
+using PicSizer.Partial;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,9 +38,9 @@ namespace PicSizer.PictureProc
         public static void StartThreadsPool()
         {
             waitHandles.Clear();
-            PicIndex = SharedVariable.setting.StartIndex - 1;
+            PicIndex = Value.setting.StartIndex - 1;
             CollectionIndex = -1;
-            for(int i = 0; i < SharedVariable.setting.maxThreads; i++)
+            for(int i = 0; i < Value.setting.maxThreads; i++)
             {
                 ManualResetEvent manual = new ManualResetEvent(false);
                 waitHandles.Add(manual);
@@ -60,22 +61,20 @@ namespace PicSizer.PictureProc
         {
             int index;
             string filename;
-            ListViewItem item;
-            while(!SharedVariable.ThreadExitNow && (index = GetNextFileIndex()) != -1)
+            PicListViewItem item;
+            while(!Value.ThreadExitNow && (index = GetNextFileIndex()) != -1)
             {
-                item = FileCollection[index];
+                item = (PicListViewItem)FileCollection[index];
                 filename = item.SubItems[1].Text;
                 if (Resize.ResizeOnePicture(filename))
                 {
-                    item.SubItems[3].Text = PicState.Success;//已完成
-                    item.SubItems[3].ForeColor = System.Drawing.Color.Green;
+                    item.SetSuccess();//压缩完成
                 }
                 else
                 {
-                    item.SubItems[3].Text = PicState.Error;//错误
-                    item.SubItems[3].ForeColor = System.Drawing.Color.Red;
+                    item.SetError();//错误
                 }
-                SharedVariable.mainForm.listView1.EnsureVisible(index);
+                Value.mainForm.listView1.EnsureVisible(index);
             }
             manualResetEvent.Set();
             return;

@@ -21,14 +21,14 @@ namespace PicSizer.PictureProc
         /// </summary>
         public static Bitmap ResizeBitmap(Bitmap bitmap)
         {
-            if (SharedVariable.setting.resizeMode == ResizeMode.None) return bitmap;
+            if (Value.setting.resizeMode == ResizeMode.None) return bitmap;
             int width = bitmap.Width;
             int height = bitmap.Height;
             //求出比值
-            float widthByMin = (float)width / SharedVariable.setting.LimitWidth;
-            float heightByMin = (float)height / SharedVariable.setting.LimitHeight;
+            float widthByMin = (float)width / Value.setting.LimitWidth;
+            float heightByMin = (float)height / Value.setting.LimitHeight;
             //重新设定边长
-            if (SharedVariable.setting.resizeMode == ResizeMode.MinSize)//不小于限定值
+            if (Value.setting.resizeMode == ResizeMode.MinSize)//不小于限定值
             {
                 float min = Math.Min(widthByMin, heightByMin);
                 if(min > 1)
@@ -37,7 +37,7 @@ namespace PicSizer.PictureProc
                     height = (int)(height / min);
                 }
             }
-            else if(SharedVariable.setting.resizeMode == ResizeMode.MaxSize)//不大于限定值
+            else if(Value.setting.resizeMode == ResizeMode.MaxSize)//不大于限定值
             {
                 float max = Math.Max(widthByMin, heightByMin);
                 if(max > 1)
@@ -48,8 +48,8 @@ namespace PicSizer.PictureProc
             }
             else//强制修正
             {
-                width = SharedVariable.setting.LimitWidth;
-                height = SharedVariable.setting.LimitHeight;
+                width = Value.setting.LimitWidth;
+                height = Value.setting.LimitHeight;
             }
             //裁剪
             Bitmap newBitmap = new Bitmap(width, height);
@@ -66,6 +66,7 @@ namespace PicSizer.PictureProc
         /// </summary>
         public static void StartResizer(ListView.ListViewItemCollection collection, string resDir)
         {
+            FileCheck.SetImageCodeInfo(Value.setting.extensionMode);
             ThreadsPool.OutputDir = resDir;
             ThreadsPool.FileCollection = collection;
             ThreadsPool.StartThreadsPool();
@@ -75,7 +76,7 @@ namespace PicSizer.PictureProc
         {
             try
             {
-                if (SharedVariable.setting.compressionMode == CompressionMode.SizeFirst)
+                if (Value.setting.compressionMode == CompressionMode.SizeFirst)
                 {
                     if (!CompressionBySize(path)) throw new Exception("图片:" + path + "压缩失败");
                 }
@@ -89,7 +90,7 @@ namespace PicSizer.PictureProc
             catch(Exception e)
             {
                 Update(false); // 压缩失败，错误加一
-                switch (SharedVariable.setting.doWhenException)
+                switch (Value.setting.doWhenException)
                 {
                     case DoWhenException.IgnoreAndContinue:
                         break;
@@ -105,7 +106,7 @@ namespace PicSizer.PictureProc
                         break;
                     default:
                         Dialog.ShowDialog_Exception(e);
-                        SharedVariable.ThreadExitNow = true;
+                        Value.ThreadExitNow = true;
                         break;
                 }
                 return false;
@@ -142,7 +143,7 @@ namespace PicSizer.PictureProc
                 {
                     mid = (left + right) / 2;
                     size = GetBitmapSize(bitmap, image_type, mid);
-                    if(size <= SharedVariable.setting.LimitSize)
+                    if(size <= Value.setting.LimitSize)
                     {
                         left = mid;
                     }
@@ -153,7 +154,7 @@ namespace PicSizer.PictureProc
                 }
                 size = GetBitmapSize(bitmap, image_type, left);
                 //如果文件大小符合要求就输出
-                if(size <= SharedVariable.setting.LimitSize)
+                if(size <= Value.setting.LimitSize)
                 {
                     Encoder.encoderParameters.Param[0] = Encoder.GetParameter(left);
                     string result = GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
@@ -172,7 +173,7 @@ namespace PicSizer.PictureProc
             using(Bitmap bitmap = ResizeBitmap(new Bitmap(file)))
             {
                 BmpProc.SetBrightness(bitmap);
-                Encoder.encoderParameters.Param[0] = Encoder.GetParameter(SharedVariable.setting.CompressionValue);
+                Encoder.encoderParameters.Param[0] = Encoder.GetParameter(Value.setting.CompressionValue);
                 string result = GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
                 bitmap.Save(result, FileCheck.GetImageInfoByFilename(file), Encoder.encoderParameters);
                 return true;
@@ -185,13 +186,13 @@ namespace PicSizer.PictureProc
         public static string GetResultFileName(string ori, string dir, int num)
         {
             //如果选择“覆盖源文件”，则直接返回源文件路径
-            if (SharedVariable.CoverOriginalFile)
+            if (Value.CoverOriginalFile)
             {
                 return ori;
             }
             //求出后缀名
             string extension;
-            if (SharedVariable.setting.extensionMode == ExtensionMode.Original)
+            if (Value.setting.extensionMode == ExtensionMode.Original)
             {
                 //原格式
                 extension = Path.GetExtension(ori);
@@ -199,9 +200,9 @@ namespace PicSizer.PictureProc
             else
             {
                 //自定义格式
-                extension = SharedVariable.setting.extensionMode.ToFormat();
+                extension = Value.setting.extensionMode.ToFormat();
             }
-            switch (SharedVariable.setting.renameMode)
+            switch (Value.setting.renameMode)
             {
                 case RenameMode.Number://纯数字
                     return Path.Combine(dir, num + extension);
@@ -210,7 +211,7 @@ namespace PicSizer.PictureProc
                 case RenameMode.Custom://混合命名
                     string oriStr = Path.GetFileNameWithoutExtension(ori);//文件原名
                     string numStr = num.ToString();//序号
-                    return Path.Combine(dir, SharedVariable.setting.CustomRenameStr.Replace("{ori}", oriStr).Replace("{num}", numStr) + extension);
+                    return Path.Combine(dir, Value.setting.CustomRenameStr.Replace("{ori}", oriStr).Replace("{num}", numStr) + extension);
                 default:
                     return null;
             }
@@ -221,7 +222,7 @@ namespace PicSizer.PictureProc
         /// </summary>
         public static void OnExit()
         {
-            SharedVariable.progressForm.PrepareToHide();
+            Value.progressForm.PrepareToHide();
         }
 
         /// <summary>
@@ -230,7 +231,7 @@ namespace PicSizer.PictureProc
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Update(bool flag)
         {
-            SharedVariable.progressForm.AddOne(flag);
+            Value.progressForm.AddOne(flag);
         }
     }
 }

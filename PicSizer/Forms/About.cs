@@ -23,12 +23,12 @@ namespace PicSizer
 
         private void About_Load(object sender, EventArgs e)
         {
-
+            this.TopMost = PicSizer.Value.setting.topMost;
         }
 
         private void button_author_Click(object sender, EventArgs e)
         {
-            SharedVariable.dearXuan.ShowDialog();
+            (new DearXuan()).ShowDialog();
         }
     }
 }

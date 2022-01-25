@@ -19,14 +19,14 @@ namespace PicSizer.Partial
         /// [MethodImpl(MethodImplOptions.Synchronized)]
         public static void ShowDialog(string msg)
         {
-            MessageBox.Show(SharedVariable.mainForm, msg, _Title);
+            MessageBox.Show(Value.mainForm, msg, _Title);
             SetFocus();
         }
 
         public static void ShowDialog_ResizeFinish(int total, int success)
         {
             string s = "总共: " + total + " 张\n压缩完成: " + success + "张\n未完成: " + (total - success) + "张";
-            MessageBox.Show(SharedVariable.mainForm, s, "压缩已结束", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(Value.mainForm, s, "压缩已结束", MessageBoxButtons.OK, MessageBoxIcon.Information);
             SetFocus();
         }
 
@@ -35,7 +35,7 @@ namespace PicSizer.Partial
         /// </summary>
         public static void ShowDialog_Error(string msg)
         {
-            MessageBox.Show(SharedVariable.mainForm, msg, _Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(Value.mainForm, msg, _Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace PicSizer.Partial
         /// </summary>
         public static void ShowDialog_Warning(string msg)
         {
-            MessageBox.Show(SharedVariable.mainForm, msg, _Error, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(Value.mainForm, msg, _Error, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace PicSizer.Partial
         /// </summary>
         public static bool ShowDialog_OKDialog(string msg)
         {
-            return MessageBox.Show(SharedVariable.mainForm, msg, _Title, MessageBoxButtons.OKCancel) == DialogResult.OK;
+            return MessageBox.Show(Value.mainForm, msg, _Title, MessageBoxButtons.OKCancel) == DialogResult.OK;
         }
 
         /// <summary>
@@ -91,11 +91,37 @@ namespace PicSizer.Partial
         }
 
         /// <summary>
+        /// 显示打开文件对话框
+        /// </summary>
+        public static OpenFileDialog GetOpenFileDialog()
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Title = "添加图片";
+            if (Value.setting.AllowAnyExtension)
+            {
+                dialog.Filter = "图片(JPG,PNG,BMP,TIFF)|*.jpg;*.png;*.bmp;*.tiff|所有|*.*";
+            }
+            else
+            {
+                dialog.Filter = "图片(JPG,PNG,BMP,TIFF)|*.jpg;*.png;*.bmp;*.tiff";
+            }
+            dialog.Multiselect = true;
+            return dialog;
+        }
+
+        public static FolderBrowserDialog GetFolderBrowserDialog()
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            dialog.Description = "选择文件夹";
+            return dialog;
+        }
+
+        /// <summary>
         /// 获取焦点
         /// </summary>
         private static void SetFocus()
         {
-            SharedVariable.mainForm.Focus();
+            Value.mainForm.Focus();
         }
 
         public static void OpenLink(string link)
@@ -106,7 +132,7 @@ namespace PicSizer.Partial
             }
             catch (Exception)
             {
-                MessageBox.Show(SharedVariable.mainForm, "打开浏览器失败，请将链接\"" + link + "\"复制到浏览器打开.", "PicSizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Value.mainForm, "打开浏览器失败，请将链接\"" + link + "\"复制到浏览器打开.", "PicSizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

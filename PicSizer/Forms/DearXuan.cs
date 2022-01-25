@@ -29,6 +29,7 @@ namespace PicSizer
             textBox3.SelectionLength = 0;
             textBox4.SelectionStart = 0;
             textBox4.SelectionLength = 0;
+            this.TopMost = PicSizer.Value.setting.topMost;
         }
 
         private void OnCopyClick(object sender, EventArgs e)

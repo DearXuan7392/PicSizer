@@ -24,8 +24,8 @@ namespace PicSizer.Partial
                     Info.isGPUSupport = IsGPUSupport();
                     if (Info.isGPUSupport)
                     {
-                        SharedVariable.setting.useGPU = true;
-                        SharedVariable.settingForm.checkBox_UseGPU.Enabled = true;
+                        Value.setting.useGPU = true;
+                        Value.settingForm.checkBox_UseGPU.Enabled = true;
                     }
                 }
                 catch (Exception e)

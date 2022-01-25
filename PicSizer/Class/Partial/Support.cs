@@ -74,11 +74,11 @@ namespace PicSizer.Partial
         ShowAndExit = 4
     }
 
-    public class PicState
+    public enum PicState
     {
-        public readonly static string Waiting = "待压缩";
-        public readonly static string Success = "已完成";
-        public readonly static string Error = "错误";
+        Waiting = 0,
+        Success = 1,
+        Error = 2
     }
 
     [Serializable]
@@ -132,13 +132,17 @@ namespace PicSizer.Partial
     /// </summary>
     public static class Support
     {
-        //Enum转int
+        /// <summary>
+        /// Enum转int
+        /// </summary>
         public static int ToInt(this Enum e)
         {
             return e.GetHashCode();
         }
 
-        //FormatMode转后缀名
+        /// <summary>
+        /// FormatMode转后缀名
+        /// </summary>
         public static string ToFormat(this ExtensionMode formatMode)
         {
             switch (formatMode)
@@ -152,7 +156,24 @@ namespace PicSizer.Partial
             }
         }
 
-        //从path获取格式
+        public static string ToState(this PicState state)
+        {
+            switch (state)
+            {
+                case PicState.Waiting:
+                    return "待压缩";
+                case PicState.Success:
+                    return "已完成";
+                case PicState.Error:
+                    return "错误";
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// 从path获取格式
+        /// </summary>
         public static ExtensionMode GetFormat(this string path)
         {
             string format = Path.GetExtension(path).ToLower();
@@ -172,24 +193,19 @@ namespace PicSizer.Partial
             }
         }
 
-        //从地址获取ListViewItem
-        public static ListViewItem GetListViewItemByPath(string path)
+        /// <summary>
+        /// 文件大小(KB)转字符串
+        /// </summary>
+        public static string ToFileSizeStr(this long size)
         {
-            FileInfo fileInfo = new FileInfo(path);
-            ListViewItem item = new ListViewItem(fileInfo.Name);//文件名
-            item.SubItems.Add(fileInfo.FullName);//完整路径
-            long size = fileInfo.Length >> 10;//原始大小(单位:KB)
             if (size < 1024)
             {
-                item.SubItems.Add(size.ToString() + " KB");
+                return size.ToString() + " KB";
             }
             else
             {
-                item.SubItems.Add((size / 1024.0).ToString("#0.00") + " MB");
+                return (size / 1024.0).ToString("#0.00") + " MB";
             }
-            item.SubItems.Add("待压缩");//状态
-            item.UseItemStyleForSubItems = false;
-            return item;
         }
     }
 

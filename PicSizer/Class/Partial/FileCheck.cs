@@ -14,7 +14,7 @@ namespace PicSizer.Partial
         public static bool isExtensionCorrect(string path)
         {
             //如果允许任意后缀，则直接返回合法
-            if (SharedVariable.setting.AllowAnyExtension) return true;
+            if (Value.setting.AllowAnyExtension) return true;
             //查找点号位置
             int i = path.LastIndexOf('.');
             //没有后缀名，直接返回非法
@@ -40,7 +40,7 @@ namespace PicSizer.Partial
         public static System.Drawing.Imaging.ImageCodecInfo GetImageInfoByFilename(string path)
         {
             //返回原格式，则判断原始图片的格式
-            if(SharedVariable.SelectCodeInfo == null)
+            if(Value.SelectCodeInfo == null)
             {
                 int i = path.LastIndexOf('.');
                 if (i == -1) return Encoder.Info_Default;
@@ -62,32 +62,31 @@ namespace PicSizer.Partial
             //直接返回选定的格式
             else
             {
-                return SharedVariable.SelectCodeInfo;
+                return Value.SelectCodeInfo;
             }
         }
 
         /// <summary>
         /// 设置选中的图片格式
         /// </summary>
-        /// <param name="mode"></param>
         public static void SetImageCodeInfo(ExtensionMode mode)
         {
             switch (mode)
             {
                 case ExtensionMode.JPEG:
-                    SharedVariable.SelectCodeInfo = Encoder.Info_JPEG;
+                    Value.SelectCodeInfo = Encoder.Info_JPEG;
                     break;
                 case ExtensionMode.PNG:
-                    SharedVariable.SelectCodeInfo = Encoder.Info_PNG;
+                    Value.SelectCodeInfo = Encoder.Info_PNG;
                     break;
                 case ExtensionMode.BMP:
-                    SharedVariable.SelectCodeInfo = Encoder.Info_BMP;
+                    Value.SelectCodeInfo = Encoder.Info_BMP;
                     break;
                 case ExtensionMode.TIFF:
-                    SharedVariable.SelectCodeInfo = Encoder.Info_TIFF;
+                    Value.SelectCodeInfo = Encoder.Info_TIFF;
                     break;
                 case ExtensionMode.Original:
-                    SharedVariable.SelectCodeInfo = null;
+                    Value.SelectCodeInfo = null;
                     break;
             }
         }
