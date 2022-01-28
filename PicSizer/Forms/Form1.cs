@@ -26,7 +26,7 @@ namespace PicSizer
             this.Icon = Info.icon;
             //为静态量赋值
             Value.mainForm = this;
-            Text = Info.ProjectName + " " + Info.ProjectVersion;
+            this.Text = Info.ProjectName + " " + Info.ProjectVersion;
             collection = listView1.Items;
             listView1.GridLines = true;//增加分割线
             
@@ -53,10 +53,11 @@ namespace PicSizer
                 //判断文件后缀是否合法
                 if (FileCheck.isExtensionCorrect(path))
                 {
-                    //添加文件
+                    PicListViewItem item = new PicListViewItem(path);
+                    //添加到哈希集合里
                     picFiles.Add(path);
-                    //collection.Add(Support.GetListViewItemByPath(path));
-                    collection.Add(new PicListViewItem(path));
+                    //添加到列表里
+                    collection.Add(item);
                     return true;
                 }
                 else
@@ -64,6 +65,17 @@ namespace PicSizer
                     return false;
                 }
             }
+        }
+
+        /// <summary>
+        /// 移除一张图片
+        /// </summary>
+        private void RemovePicture(PicListViewItem item)
+        {
+            //从哈希集合移除
+            picFiles.Remove(item.FullPath);
+            //从集合里移除
+            collection.Remove(item);
         }
 
         /// <summary>
@@ -92,29 +104,14 @@ namespace PicSizer
         }
 
         /// <summary>
-        /// 移除一张图片
-        /// </summary>
-        private void RemovePicture(ListViewItem item)
-        {
-            //移除文件
-            picFiles.Remove(item.SubItems[1].Text);
-            collection.Remove(item);
-        }
-
-        /// <summary>
         /// 选择文件夹按钮
         /// </summary>
         private void OnChooseClick(object sender, EventArgs e)
         {
-            FolderBrowserDialog dialog = Dialog.GetFolderBrowserDialog();
-            if (dialog.ShowDialog() == DialogResult.OK)
+            string selectPath = Dialog.Show_FolderBrowserDialog();
+            if(selectPath != null)
             {
-                if (string.IsNullOrWhiteSpace(dialog.SelectedPath))
-                {
-                    Dialog.ShowDialog_Error("路径不能为空!");
-                    return;
-                }
-                textBox_OutputDirText.Text = dialog.SelectedPath;
+                textBox_OutputDirText.Text = selectPath;
             }
         }
 
@@ -287,15 +284,21 @@ namespace PicSizer
 
         private void 添加文件ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog dialog = Dialog.GetOpenFileDialog();
-            if (dialog.ShowDialog() == DialogResult.OK)
+            string[] fileList = Dialog.Show_OpenFileDialog();
+            if(fileList != null && fileList.Length != 0)
             {
-                int fileCount = dialog.FileNames.Length;
-                foreach (string path in dialog.FileNames)
+                int fileCount = fileList.Length;
+                //遍历文件数组
+                listView1.BeginUpdate();
+                foreach (string path in fileList)
                 {
+                    //如果添加成功，则剩余文件数减一
                     if (AddPicture(path)) fileCount--;
                 }
+                listView1.EndUpdate();
+                //全部添加完成后，更新右上角数字
                 UpdateSelectTotalNumLabel();
+                //如果此时fileCount不是0，则说明有图片被忽略
                 if (fileCount != 0)
                 {
                     Dialog.ShowDialog(fileCount + " 张重复的图片已被忽略.");
@@ -338,42 +341,32 @@ namespace PicSizer
             listView1.BeginUpdate();
             if (sender == 选中项ToolStripMenuItem)
             {
-                int count = listView1.SelectedItems.Count;
-                if (count == 0)
+                //如果选中项不为0则移除
+                if (listView1.SelectedItems.Count != 0)
                 {
-                    Dialog.ShowDialog_Warning("没有选中图片!");
-                    listView1.EndUpdate();
-                    return;
-                }
-                if (Dialog.ShowDialog_OKDialog("移除所选的 " + count + " 张图片?"))
-                {
-                    foreach (ListViewItem item in listView1.SelectedItems)
+                    foreach (PicListViewItem item in listView1.SelectedItems)
                     {
                         RemovePicture(item);
                     }
                 }
-                UpdateSelectTotalNumLabel();
-                listView1.Focus();
             }
             else if (sender == 已完成ToolStripMenuItem)
             {
-                for (int i = 0; i < collection.Count; i++)
+                foreach(PicListViewItem item in collection)
                 {
-                    if (((PicListViewItem)collection[i]).State == PicState.Success)
+                    if(item.State == PicState.Success)
                     {
-                        collection.RemoveAt(i);
-                        i--;
+                        RemovePicture(item);
                     }
                 }
             }
             else if (sender == 错误项ToolStripMenuItem)
             {
-                for (int i = 0; i < collection.Count; i++)
+                foreach(PicListViewItem item in collection)
                 {
-                    if (((PicListViewItem)collection[i]).State == PicState.Error)
+                    if(item.State == PicState.Error)
                     {
-                        collection.RemoveAt(i);
-                        i--;
+                        RemovePicture(item);
                     }
                 }
             }
@@ -386,6 +379,7 @@ namespace PicSizer
                 }
             }
             listView1.EndUpdate();
+            UpdateSelectTotalNumLabel();
         }
 
         private void OnListViewKetDown(object sender, KeyEventArgs e)
@@ -409,24 +403,32 @@ namespace PicSizer
 
         private void 打开文件夹ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
-            dialog.Description = "选择文件夹";
-            if (dialog.ShowDialog() == DialogResult.OK)
+            string selectPath = Dialog.Show_FolderBrowserDialog();
+            if(selectPath != null)
             {
-                if (string.IsNullOrWhiteSpace(dialog.SelectedPath))
-                {
-                    Dialog.ShowDialog_Warning("文件夹路径不能为空!");
-                    return;
-                }
-                List<string> fileList = GetPictureFromDir(dialog.SelectedPath);
+                List<string> fileList = GetPictureFromDir(selectPath);
                 listView1.BeginUpdate();
+                //遍历文件数组
                 foreach (string item in fileList)
                 {
                     AddPicture(item);
                 }
                 listView1.EndUpdate();
             }
-            return;
+        }
+
+        private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            //判断左键还是右键
+            if(e.Button == MouseButtons.Left)
+            {
+                //生成点击信息
+                ListViewHitTestInfo info = ((ListView)sender).HitTest(e.X, e.Y);
+                //获取点击项
+                PicListViewItem item = info.Item as PicListViewItem;
+                //打开文件夹并选中文件
+                System.Diagnostics.Process.Start("explorer", "/select," + item.FullPath);
+            }
         }
     }
 }

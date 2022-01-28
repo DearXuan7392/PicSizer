@@ -32,38 +32,35 @@ namespace PicSizer.PictureProc
             float widthByMin = (float)width / Value.setting.LimitWidth;
             float heightByMin = (float)height / Value.setting.LimitHeight;
             //重新设定边长
-            if (Value.setting.resizeMode == ResizeMode.MinSize)//不小于限定值
+            switch (Value.setting.resizeMode)
             {
-                float min = Math.Min(widthByMin, heightByMin);
-                if(min > 1)
-                {
-                    width = (int)(width / min);
-                    height = (int)(height / min);
-                }
+                case ResizeMode.MinSize://不小于限定值
+                    float min = Math.Min(widthByMin, heightByMin);
+                    if (min > 1)
+                    {
+                        width = (int)(width / min);
+                        height = (int)(height / min);
+                    }
+                    break;
+                case ResizeMode.MaxSize://不大于限定值
+                    float max = Math.Max(widthByMin, heightByMin);
+                    if (max > 1)
+                    {
+                        width = (int)(width / max);
+                        height = (int)(height / max);
+                    }
+                    break;
+                case ResizeMode.Custom://强制修正
+                    width = Value.setting.LimitWidth;
+                    height = Value.setting.LimitHeight;
+                    break;
+                case ResizeMode.Cut://裁剪
+                    return bitmap;
+                default://无修正
+                    //如果运行到这里说明图片位数不符，无需调整尺寸
+                    break;
             }
-            else if(Value.setting.resizeMode == ResizeMode.MaxSize)//不大于限定值
-            {
-                float max = Math.Max(widthByMin, heightByMin);
-                if(max > 1)
-                {
-                    width = (int)(width / max);
-                    height = (int)(height / max);
-                }
-            }
-            else if(Value.setting.resizeMode == ResizeMode.Custom)//强制修正
-            {
-                width = Value.setting.LimitWidth;
-                height = Value.setting.LimitHeight;
-            }
-            else if(Value.setting.resizeMode == ResizeMode.Cut)//裁剪
-            {
-                return bitmap;
-            }
-            else//无修正
-            {
-                
-            }
-            //裁剪
+            //缩放图片
             Bitmap newBitmap = new Bitmap(width, height,PixelFormat.Format24bppRgb);
             Graphics g = Graphics.FromImage(newBitmap);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;

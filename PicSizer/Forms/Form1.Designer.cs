@@ -118,6 +118,7 @@ namespace PicSizer
             this.listView1.DragDrop += new System.Windows.Forms.DragEventHandler(this.listView1_DragDrop);
             this.listView1.DragEnter += new System.Windows.Forms.DragEventHandler(this.DragEnter);
             this.listView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnListViewKetDown);
+            this.listView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDoubleClick);
             // 
             // fileName
             // 

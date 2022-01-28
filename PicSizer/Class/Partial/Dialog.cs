@@ -92,10 +92,12 @@ namespace PicSizer.Partial
         }
 
         /// <summary>
-        /// 显示打开文件对话框
+        /// 显示打开文件对话框并返回打开的文件
         /// </summary>
-        public static OpenFileDialog GetOpenFileDialog()
+        /// <returns>返回文件路径或null</returns>
+        public static string[] Show_OpenFileDialog()
         {
+            //初始化对话框
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Title = "添加图片";
             if (Value.setting.AllowAnyExtension)
@@ -106,15 +108,38 @@ namespace PicSizer.Partial
             {
                 dialog.Filter = "图片(JPG,PNG,BMP,TIFF)|*.jpg;*.png;*.bmp;*.tiff";
             }
+            //允许多选
             dialog.Multiselect = true;
-            return dialog;
+            //点击了确定
+            if(dialog.ShowDialog() == DialogResult.OK)
+            {
+                return dialog.FileNames;
+            }
+            return null;
         }
 
-        public static FolderBrowserDialog GetFolderBrowserDialog()
+        /// <summary>
+        /// 打开文件夹并返回文件夹路径
+        /// </summary>
+        /// <returns>文件夹路径或null</returns>
+        public static string Show_FolderBrowserDialog()
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.Description = "选择文件夹";
-            return dialog;
+            //点击确定
+            if(dialog.ShowDialog() == DialogResult.OK)
+            {
+                //路径为空
+                if (string.IsNullOrWhiteSpace(dialog.SelectedPath))
+                {
+                    Dialog.ShowDialog_Error("路径不能为空!");
+                    return null;
+                }
+                //返回文件夹路径
+                return dialog.SelectedPath;
+            }
+            //返回空
+            return null;
         }
 
         /// <summary>
