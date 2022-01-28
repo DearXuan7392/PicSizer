@@ -17,7 +17,8 @@ namespace PicSizer.Partial
         None = 0,
         MinSize = 1,
         MaxSize = 2,
-        Custom
+        Custom = 3,
+        Cut = 4
     }
 
     /// <summary>

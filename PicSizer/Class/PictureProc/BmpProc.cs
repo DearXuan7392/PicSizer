@@ -15,7 +15,6 @@ namespace PicSizer
         {
             //当亮度为100时跳过该函数
             if (Value.setting.brightness == 100) return;
-            _SetBrightnessByCSharp(bitmap);
             
             //根据GPU是否支持来决定使用GPU加速还是CPU计算
             if (Value.setting.useGPU && Info.isGPUSupport)

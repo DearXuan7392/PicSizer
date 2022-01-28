@@ -21,7 +21,11 @@ namespace PicSizer.PictureProc
         /// </summary>
         public static Bitmap ResizeBitmap(Bitmap bitmap)
         {
-            if (Value.setting.resizeMode == ResizeMode.None) return bitmap;
+            //图片位深度是24位且关闭了尺寸修正
+            if (Value.setting.resizeMode == ResizeMode.None && bitmap.PixelFormat == PixelFormat.Format24bppRgb)
+            {
+                return bitmap;
+            }
             int width = bitmap.Width;
             int height = bitmap.Height;
             //求出比值
@@ -46,13 +50,21 @@ namespace PicSizer.PictureProc
                     height = (int)(height / max);
                 }
             }
-            else//强制修正
+            else if(Value.setting.resizeMode == ResizeMode.Custom)//强制修正
             {
                 width = Value.setting.LimitWidth;
                 height = Value.setting.LimitHeight;
             }
+            else if(Value.setting.resizeMode == ResizeMode.Cut)//裁剪
+            {
+                return bitmap;
+            }
+            else//无修正
+            {
+                
+            }
             //裁剪
-            Bitmap newBitmap = new Bitmap(width, height);
+            Bitmap newBitmap = new Bitmap(width, height,PixelFormat.Format24bppRgb);
             Graphics g = Graphics.FromImage(newBitmap);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
             g.DrawImage(bitmap, new Rectangle(0, 0, width, height), new Rectangle(0, 0, bitmap.Width, bitmap.Height), GraphicsUnit.Pixel);

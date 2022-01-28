@@ -52,6 +52,7 @@ namespace PicSizer.Partial
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void ShowDialog_Exception(Exception e)
         {
+            //throw e;
             ShowDialog_Error(e.ToString());
         }
 

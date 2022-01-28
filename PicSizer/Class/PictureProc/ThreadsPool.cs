@@ -11,6 +11,9 @@ using System.Windows.Forms;
 
 namespace PicSizer.PictureProc
 {
+    /// <summary>
+    /// 线程池
+    /// </summary>
     public static class ThreadsPool
     {
         /// <summary>
