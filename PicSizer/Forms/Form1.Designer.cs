@@ -31,15 +31,8 @@ namespace PicSizer
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.button_StartResize = new System.Windows.Forms.Button();
-            this.textBox_OutputDirText = new System.Windows.Forms.TextBox();
-            this.button_Choose = new System.Windows.Forms.Button();
             this.button_Set = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.listView1 = new PicSizer_ControlLibrary.NoFlashListView();
-            this.fileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.fullPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.size = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.state = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.添加文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,8 +51,12 @@ namespace PicSizer
             this.文档ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radioButton_CustomDir = new System.Windows.Forms.RadioButton();
-            this.radioButton_Cover = new System.Windows.Forms.RadioButton();
+            this.listView1 = new PicSizer_ControlLibrary.PicListView();
+            this.fileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.fullPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.size = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.state = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.picDirPathText1 = new PicSizer_ControlLibrary.PicDirPathText();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -70,21 +67,6 @@ namespace PicSizer
             this.button_StartResize.Name = "button_StartResize";
             this.button_StartResize.UseVisualStyleBackColor = true;
             this.button_StartResize.Click += new System.EventHandler(this.OnResizeClick);
-            // 
-            // textBox_OutputDirText
-            // 
-            this.textBox_OutputDirText.AllowDrop = true;
-            resources.ApplyResources(this.textBox_OutputDirText, "textBox_OutputDirText");
-            this.textBox_OutputDirText.Name = "textBox_OutputDirText";
-            this.textBox_OutputDirText.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox1_DragDrop);
-            this.textBox_OutputDirText.DragEnter += new System.Windows.Forms.DragEventHandler(this.DragEnter);
-            // 
-            // button_Choose
-            // 
-            resources.ApplyResources(this.button_Choose, "button_Choose");
-            this.button_Choose.Name = "button_Choose";
-            this.button_Choose.UseVisualStyleBackColor = true;
-            this.button_Choose.Click += new System.EventHandler(this.OnChooseClick);
             // 
             // button_Set
             // 
@@ -100,49 +82,14 @@ namespace PicSizer
             this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label2.Name = "label2";
             // 
-            // listView1
-            // 
-            this.listView1.AllowDrop = true;
-            resources.ApplyResources(this.listView1, "listView1");
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.fileName,
-            this.fullPath,
-            this.size,
-            this.state});
-            this.listView1.FullRowSelect = true;
-            this.listView1.HideSelection = false;
-            this.listView1.Name = "listView1";
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
-            this.listView1.DragDrop += new System.Windows.Forms.DragEventHandler(this.listView1_DragDrop);
-            this.listView1.DragEnter += new System.Windows.Forms.DragEventHandler(this.DragEnter);
-            this.listView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnListViewKetDown);
-            this.listView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDoubleClick);
-            // 
-            // fileName
-            // 
-            resources.ApplyResources(this.fileName, "fileName");
-            // 
-            // fullPath
-            // 
-            resources.ApplyResources(this.fullPath, "fullPath");
-            // 
-            // size
-            // 
-            resources.ApplyResources(this.size, "size");
-            // 
-            // state
-            // 
-            resources.ApplyResources(this.state, "state");
-            // 
             // menuStrip1
             // 
+            resources.ApplyResources(this.menuStrip1, "menuStrip1");
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.文件ToolStripMenuItem,
             this.选择ToolStripMenuItem,
             this.帮助ToolStripMenuItem});
-            resources.ApplyResources(this.menuStrip1, "menuStrip1");
+            this.menuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.menuStrip1.Name = "menuStrip1";
             // 
             // 文件ToolStripMenuItem
@@ -158,19 +105,19 @@ namespace PicSizer
             // 
             this.添加文件ToolStripMenuItem.Name = "添加文件ToolStripMenuItem";
             resources.ApplyResources(this.添加文件ToolStripMenuItem, "添加文件ToolStripMenuItem");
-            this.添加文件ToolStripMenuItem.Click += new System.EventHandler(this.添加文件ToolStripMenuItem_Click);
+            this.添加文件ToolStripMenuItem.Click += new System.EventHandler(this.OnFileItemClick);
             // 
             // 打开文件夹ToolStripMenuItem
             // 
             this.打开文件夹ToolStripMenuItem.Name = "打开文件夹ToolStripMenuItem";
             resources.ApplyResources(this.打开文件夹ToolStripMenuItem, "打开文件夹ToolStripMenuItem");
-            this.打开文件夹ToolStripMenuItem.Click += new System.EventHandler(this.打开文件夹ToolStripMenuItem_Click);
+            this.打开文件夹ToolStripMenuItem.Click += new System.EventHandler(this.OnFileItemClick);
             // 
             // 退出ToolStripMenuItem
             // 
             this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
             resources.ApplyResources(this.退出ToolStripMenuItem, "退出ToolStripMenuItem");
-            this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
+            this.退出ToolStripMenuItem.Click += new System.EventHandler(this.OnFileItemClick);
             // 
             // 选择ToolStripMenuItem
             // 
@@ -185,13 +132,13 @@ namespace PicSizer
             // 
             this.全选ToolStripMenuItem.Name = "全选ToolStripMenuItem";
             resources.ApplyResources(this.全选ToolStripMenuItem, "全选ToolStripMenuItem");
-            this.全选ToolStripMenuItem.Click += new System.EventHandler(this.OnSelectAllClick);
+            this.全选ToolStripMenuItem.Click += new System.EventHandler(this.OnSelectItemClick);
             // 
             // 反选ToolStripMenuItem
             // 
             this.反选ToolStripMenuItem.Name = "反选ToolStripMenuItem";
             resources.ApplyResources(this.反选ToolStripMenuItem, "反选ToolStripMenuItem");
-            this.反选ToolStripMenuItem.Click += new System.EventHandler(this.OnSelectReverseClick);
+            this.反选ToolStripMenuItem.Click += new System.EventHandler(this.OnSelectItemClick);
             // 
             // 移除ToolStripMenuItem
             // 
@@ -257,28 +204,48 @@ namespace PicSizer
             // groupBox1
             // 
             resources.ApplyResources(this.groupBox1, "groupBox1");
-            this.groupBox1.Controls.Add(this.radioButton_CustomDir);
-            this.groupBox1.Controls.Add(this.radioButton_Cover);
-            this.groupBox1.Controls.Add(this.textBox_OutputDirText);
-            this.groupBox1.Controls.Add(this.button_Choose);
+            this.groupBox1.Controls.Add(this.picDirPathText1);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
             // 
-            // radioButton_CustomDir
+            // listView1
             // 
-            resources.ApplyResources(this.radioButton_CustomDir, "radioButton_CustomDir");
-            this.radioButton_CustomDir.Checked = true;
-            this.radioButton_CustomDir.Name = "radioButton_CustomDir";
-            this.radioButton_CustomDir.TabStop = true;
-            this.radioButton_CustomDir.UseVisualStyleBackColor = true;
-            this.radioButton_CustomDir.CheckedChanged += new System.EventHandler(this.CoverOriginalFile);
+            this.listView1.AllowDrop = true;
+            resources.ApplyResources(this.listView1, "listView1");
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.fileName,
+            this.fullPath,
+            this.size,
+            this.state});
+            this.listView1.FullRowSelect = true;
+            this.listView1.GridLines = true;
+            this.listView1.HideSelection = false;
+            this.listView1.Name = "listView1";
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.OnSelectUpdate += new PicSizer_ControlLibrary.PicListView.OnSelectUpdateEvent(this.UpdateSelectTotalNumLabel);
             // 
-            // radioButton_Cover
+            // fileName
             // 
-            resources.ApplyResources(this.radioButton_Cover, "radioButton_Cover");
-            this.radioButton_Cover.Name = "radioButton_Cover";
-            this.radioButton_Cover.UseVisualStyleBackColor = true;
-            this.radioButton_Cover.CheckedChanged += new System.EventHandler(this.CoverOriginalFile);
+            resources.ApplyResources(this.fileName, "fileName");
+            // 
+            // fullPath
+            // 
+            resources.ApplyResources(this.fullPath, "fullPath");
+            // 
+            // size
+            // 
+            resources.ApplyResources(this.size, "size");
+            // 
+            // state
+            // 
+            resources.ApplyResources(this.state, "state");
+            // 
+            // picDirPathText1
+            // 
+            this.picDirPathText1.AllowDrop = true;
+            resources.ApplyResources(this.picDirPathText1, "picDirPathText1");
+            this.picDirPathText1.Name = "picDirPathText1";
             // 
             // Form1
             // 
@@ -297,7 +264,6 @@ namespace PicSizer
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -305,8 +271,6 @@ namespace PicSizer
 
         #endregion
         private System.Windows.Forms.Button button_StartResize;
-        private System.Windows.Forms.TextBox textBox_OutputDirText;
-        private System.Windows.Forms.Button button_Choose;
         private System.Windows.Forms.Button button_Set;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ColumnHeader fileName;
@@ -325,15 +289,14 @@ namespace PicSizer
         private System.Windows.Forms.ToolStripMenuItem 反选ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 移除ToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton radioButton_CustomDir;
-        private System.Windows.Forms.RadioButton radioButton_Cover;
         private System.Windows.Forms.ColumnHeader state;
-        public PicSizer_ControlLibrary.NoFlashListView listView1;
+        public PicSizer_ControlLibrary.PicListView listView1;
         private System.Windows.Forms.ToolStripMenuItem 选中项ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 已完成ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 错误项ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 全部项ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 打开文件夹ToolStripMenuItem;
+        private PicSizer_ControlLibrary.PicDirPathText picDirPathText1;
     }
 }
 

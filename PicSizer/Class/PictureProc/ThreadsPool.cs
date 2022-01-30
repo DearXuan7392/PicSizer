@@ -1,5 +1,5 @@
-﻿using PicSizer.Custom;
-using PicSizer.Partial;
+﻿using PicSizer.Partial;
+using PicSizer_ControlLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +34,7 @@ namespace PicSizer.PictureProc
         /// <summary>
         /// 待压缩文件集合
         /// </summary>
-        public static ListView.ListViewItemCollection FileCollection;
+        public static PicListView listView = Value.mainForm.listView1;
 
         static List<WaitHandle> waitHandles = new List<WaitHandle>();
 
@@ -67,17 +67,17 @@ namespace PicSizer.PictureProc
             PicListViewItem item;
             while(!Value.ThreadExitNow && (index = GetNextFileIndex()) != -1)
             {
-                item = (PicListViewItem)FileCollection[index];
+                item = listView[index];
                 filename = item.SubItems[1].Text;
                 if (Resize.ResizeOnePicture(filename))
                 {
-                    item.SetSuccess();//压缩完成
+                    listView.UpdateStateToSuccess(item);
                 }
                 else
                 {
-                    item.SetError();//错误
+                    listView.UpdateStateToError(item);
                 }
-                Value.mainForm.listView1.EnsureVisible(index);
+                listView.EnsureVisible(index);
             }
             manualResetEvent.Set();
             return;
@@ -100,7 +100,7 @@ namespace PicSizer.PictureProc
         public static int GetNextFileIndex()
         {
             CollectionIndex += 1;
-            if (CollectionIndex < FileCollection.Count)
+            if (CollectionIndex < listView.Items.Count)
             {
                 return CollectionIndex;
             }

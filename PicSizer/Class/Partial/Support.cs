@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PicSizer_ControlLibrary;
+using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
@@ -73,13 +74,6 @@ namespace PicSizer.Partial
         /// 弹出错误并立即退出
         /// </summary>
         ShowAndExit = 4
-    }
-
-    public enum PicState
-    {
-        Waiting = 0,
-        Success = 1,
-        Error = 2
     }
 
     [Serializable]

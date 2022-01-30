@@ -40,7 +40,7 @@ namespace PicSizer
         {
             mainVersion = 4,
             secondVersion = 3,
-            thirdVersion = 4,
+            thirdVersion = 5,
             alpha = true
         };
 

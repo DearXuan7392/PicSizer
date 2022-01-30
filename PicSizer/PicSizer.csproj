@@ -226,7 +226,6 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class\Custom\PicListViewItem.cs" />
     <Compile Include="Class\Partial\FileCheck.cs" />
     <Compile Include="Class\PictureProc\Resize.cs" />
     <Compile Include="Class\PictureProc\BmpProc.cs" />

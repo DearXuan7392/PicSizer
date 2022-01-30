@@ -103,7 +103,7 @@ namespace PicSizer
                 return;
             }
             Value.setting = SaveSetting();
-
+            Value.mainForm.listView1.PictureCheck = Value.setting.AllowAnyExtension;
             this.Hide();
         }
 

@@ -121,6 +121,9 @@
   <data name="button_StartResize.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Right</value>
   </data>
+  <data name="button_StartResize.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="button_StartResize.Location" type="System.Drawing.Point, System.Drawing">
     <value>494, 372</value>
@@ -147,59 +150,11 @@
   <data name="&gt;&gt;button_StartResize.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
-  <data name="textBox_OutputDirText.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Bottom, Left, Right</value>
-  </data>
-  <data name="textBox_OutputDirText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>165, 19</value>
-  </data>
-  <data name="textBox_OutputDirText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>224, 21</value>
-  </data>
-  <data name="textBox_OutputDirText.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;textBox_OutputDirText.Name" xml:space="preserve">
-    <value>textBox_OutputDirText</value>
-  </data>
-  <data name="&gt;&gt;textBox_OutputDirText.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;textBox_OutputDirText.Parent" xml:space="preserve">
-    <value>groupBox1</value>
-  </data>
-  <data name="&gt;&gt;textBox_OutputDirText.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="button_Choose.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Bottom, Right</value>
-  </data>
-  <data name="button_Choose.Location" type="System.Drawing.Point, System.Drawing">
-    <value>395, 19</value>
-  </data>
-  <data name="button_Choose.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
-  <data name="button_Choose.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="button_Choose.Text" xml:space="preserve">
-    <value>选择</value>
-  </data>
-  <data name="&gt;&gt;button_Choose.Name" xml:space="preserve">
-    <value>button_Choose</value>
-  </data>
-  <data name="&gt;&gt;button_Choose.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button_Choose.Parent" xml:space="preserve">
-    <value>groupBox1</value>
-  </data>
-  <data name="&gt;&gt;button_Choose.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
   <data name="button_Set.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Right</value>
+  </data>
+  <data name="button_Set.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="button_Set.Location" type="System.Drawing.Point, System.Drawing">
     <value>494, 334</value>
@@ -231,6 +186,9 @@
   <data name="label2.Font" type="System.Drawing.Font, System.Drawing">
     <value>宋体, 12pt</value>
   </data>
+  <data name="label2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
     <value>494, 0</value>
   </data>
@@ -258,54 +216,12 @@
   <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="listView1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Bottom, Left, Right</value>
-  </data>
-  <data name="fileName.Text" xml:space="preserve">
-    <value>文件名</value>
-  </data>
-  <data name="fileName.Width" type="System.Int32, mscorlib">
-    <value>99</value>
-  </data>
-  <data name="fullPath.Text" xml:space="preserve">
-    <value>路径</value>
-  </data>
-  <data name="fullPath.Width" type="System.Int32, mscorlib">
-    <value>306</value>
-  </data>
-  <data name="size.Text" xml:space="preserve">
-    <value>文件大小</value>
-  </data>
-  <data name="size.Width" type="System.Int32, mscorlib">
-    <value>71</value>
-  </data>
-  <data name="state.Text" xml:space="preserve">
-    <value>状态</value>
-  </data>
-  <data name="listView1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 40</value>
-  </data>
-  <data name="listView1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>557, 288</value>
-  </data>
-  <data name="listView1.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
-  </data>
-  <data name="&gt;&gt;listView1.Name" xml:space="preserve">
-    <value>listView1</value>
-  </data>
-  <data name="&gt;&gt;listView1.Type" xml:space="preserve">
-    <value>PicSizer_ControlLibrary.NoFlashListView, PicSizer_ControlLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;listView1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;listView1.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="menuStrip1.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>None</value>
+  </data>
   <data name="添加文件ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>136, 22</value>
   </data>
@@ -429,59 +345,29 @@
   <data name="groupBox1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Left, Right</value>
   </data>
-  <data name="radioButton_CustomDir.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="picDirPathText1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 17</value>
   </data>
-  <data name="radioButton_CustomDir.Location" type="System.Drawing.Point, System.Drawing">
-    <value>88, 20</value>
+  <data name="picDirPathText1.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>350, 0</value>
   </data>
-  <data name="radioButton_CustomDir.Size" type="System.Drawing.Size, System.Drawing">
-    <value>71, 16</value>
+  <data name="picDirPathText1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>464, 27</value>
   </data>
-  <data name="radioButton_CustomDir.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
+  <data name="picDirPathText1.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
   </data>
-  <data name="radioButton_CustomDir.Text" xml:space="preserve">
-    <value>指定目录</value>
+  <data name="&gt;&gt;picDirPathText1.Name" xml:space="preserve">
+    <value>picDirPathText1</value>
   </data>
-  <data name="&gt;&gt;radioButton_CustomDir.Name" xml:space="preserve">
-    <value>radioButton_CustomDir</value>
+  <data name="&gt;&gt;picDirPathText1.Type" xml:space="preserve">
+    <value>PicSizer_ControlLibrary.PicDirPathText, PicSizer_ControlLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
-  <data name="&gt;&gt;radioButton_CustomDir.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;radioButton_CustomDir.Parent" xml:space="preserve">
+  <data name="&gt;&gt;picDirPathText1.Parent" xml:space="preserve">
     <value>groupBox1</value>
   </data>
-  <data name="&gt;&gt;radioButton_CustomDir.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;picDirPathText1.ZOrder" xml:space="preserve">
     <value>0</value>
-  </data>
-  <data name="radioButton_Cover.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="radioButton_Cover.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 20</value>
-  </data>
-  <data name="radioButton_Cover.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 16</value>
-  </data>
-  <data name="radioButton_Cover.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="radioButton_Cover.Text" xml:space="preserve">
-    <value>覆盖源文件</value>
-  </data>
-  <data name="&gt;&gt;radioButton_Cover.Name" xml:space="preserve">
-    <value>radioButton_Cover</value>
-  </data>
-  <data name="&gt;&gt;radioButton_Cover.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;radioButton_Cover.Parent" xml:space="preserve">
-    <value>groupBox1</value>
-  </data>
-  <data name="&gt;&gt;radioButton_Cover.ZOrder" xml:space="preserve">
-    <value>1</value>
   </data>
   <data name="groupBox1.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 360</value>
@@ -507,6 +393,51 @@
   <data name="&gt;&gt;groupBox1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="listView1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="fileName.Text" xml:space="preserve">
+    <value>文件名</value>
+  </data>
+  <data name="fileName.Width" type="System.Int32, mscorlib">
+    <value>99</value>
+  </data>
+  <data name="fullPath.Text" xml:space="preserve">
+    <value>路径</value>
+  </data>
+  <data name="fullPath.Width" type="System.Int32, mscorlib">
+    <value>306</value>
+  </data>
+  <data name="size.Text" xml:space="preserve">
+    <value>文件大小</value>
+  </data>
+  <data name="size.Width" type="System.Int32, mscorlib">
+    <value>71</value>
+  </data>
+  <data name="state.Text" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="listView1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 28</value>
+  </data>
+  <data name="listView1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>557, 300</value>
+  </data>
+  <data name="listView1.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="&gt;&gt;listView1.Name" xml:space="preserve">
+    <value>listView1</value>
+  </data>
+  <data name="&gt;&gt;listView1.Type" xml:space="preserve">
+    <value>PicSizer_ControlLibrary.PicListView, PicSizer_ControlLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;listView1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;listView1.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -524,30 +455,6 @@
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>PicSizer</value>
-  </data>
-  <data name="&gt;&gt;fileName.Name" xml:space="preserve">
-    <value>fileName</value>
-  </data>
-  <data name="&gt;&gt;fileName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;fullPath.Name" xml:space="preserve">
-    <value>fullPath</value>
-  </data>
-  <data name="&gt;&gt;fullPath.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;size.Name" xml:space="preserve">
-    <value>size</value>
-  </data>
-  <data name="&gt;&gt;size.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;state.Name" xml:space="preserve">
-    <value>state</value>
-  </data>
-  <data name="&gt;&gt;state.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;文件ToolStripMenuItem.Name" xml:space="preserve">
     <value>文件ToolStripMenuItem</value>
@@ -644,6 +551,30 @@
   </data>
   <data name="&gt;&gt;关于ToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;fileName.Name" xml:space="preserve">
+    <value>fileName</value>
+  </data>
+  <data name="&gt;&gt;fileName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;fullPath.Name" xml:space="preserve">
+    <value>fullPath</value>
+  </data>
+  <data name="&gt;&gt;fullPath.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;size.Name" xml:space="preserve">
+    <value>size</value>
+  </data>
+  <data name="&gt;&gt;size.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;state.Name" xml:space="preserve">
+    <value>state</value>
+  </data>
+  <data name="&gt;&gt;state.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>Form1</value>

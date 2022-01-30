@@ -73,11 +73,10 @@ namespace PicSizer.PictureProc
         /// <summary>
         /// 开始压缩
         /// </summary>
-        public static void StartResizer(ListView.ListViewItemCollection collection, string resDir)
+        public static void StartResizer(string resDir)
         {
             FileCheck.SetImageCodeInfo(Value.setting.extensionMode);
             ThreadsPool.OutputDir = resDir;
-            ThreadsPool.FileCollection = collection;
             ThreadsPool.StartThreadsPool();
         }
 

@@ -4,22 +4,12 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using PicSizer.Partial;
-using PicSizer.Custom;
+using PicSizer_ControlLibrary;
 
 namespace PicSizer
 {
     public partial class Form1 : Form
     {
-        /// <summary>
-        /// ListView集合
-        /// </summary>
-        private ListView.ListViewItemCollection collection;
-
-        /// <summary>
-        /// 用于检查文件是否重复
-        /// </summary>
-        private HashSet<string> picFiles = new HashSet<string>();
-
         public Form1()
         {
             InitializeComponent();
@@ -27,8 +17,6 @@ namespace PicSizer
             //为静态量赋值
             Value.mainForm = this;
             this.Text = Info.ProjectName + " " + Info.ProjectVersion;
-            collection = listView1.Items;
-            listView1.GridLines = true;//增加分割线
             
             DllExtern.DoInFirst();
         }
@@ -39,127 +27,30 @@ namespace PicSizer
         }
 
         /// <summary>
-        /// 添加一张图片
-        /// </summary>
-        private bool AddPicture(string path)
-        {
-            //判断文件是否已经在列表中
-            if (picFiles.Contains(path))
-            {
-                return false;
-            }
-            else
-            {
-                //判断文件后缀是否合法
-                if (FileCheck.isExtensionCorrect(path))
-                {
-                    PicListViewItem item = new PicListViewItem(path);
-                    //添加到哈希集合里
-                    picFiles.Add(path);
-                    //添加到列表里
-                    collection.Add(item);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 移除一张图片
-        /// </summary>
-        private void RemovePicture(PicListViewItem item)
-        {
-            //从哈希集合移除
-            picFiles.Remove(item.FullPath);
-            //从集合里移除
-            collection.Remove(item);
-        }
-
-        /// <summary>
-        /// 获取文件夹里的所有图片，包括子文件夹
-        /// </summary>
-        private List<string> GetPictureFromDir(string dirPath)
-        {
-            DirectoryInfo dir = new DirectoryInfo(dirPath);
-            List<string> fileList = new List<string>();
-            FileInfo[] files = dir.GetFiles();//文件夹里的所有图片
-            DirectoryInfo[] dirs = dir.GetDirectories();//文件夹里的所有子文件夹
-            //遍历所有子文件
-            foreach (FileInfo info in files)
-            {
-                if (FileCheck.isExtensionCorrect(info.FullName))
-                {
-                    fileList.Add(info.FullName);
-                }
-            }
-            //遍历所有子文件夹
-            foreach (DirectoryInfo info in dirs)
-            {
-                fileList.AddRange(GetPictureFromDir(info.FullName));
-            }
-            return fileList;
-        }
-
-        /// <summary>
-        /// 选择文件夹按钮
-        /// </summary>
-        private void OnChooseClick(object sender, EventArgs e)
-        {
-            string selectPath = Dialog.Show_FolderBrowserDialog();
-            if(selectPath != null)
-            {
-                textBox_OutputDirText.Text = selectPath;
-            }
-        }
-
-        /// <summary>
         /// 压缩按钮
         /// </summary>
         private void OnResizeClick(object sender, EventArgs e)
         {
-            string folderPath = textBox_OutputDirText.Text;
+            Value.CoverOriginalFile = picDirPathText1.IsUseOriginalDir();
+            string folderPath = null;
             //如果选择指定目录，则判断目录是否合法
             if (!Value.CoverOriginalFile)
             {
-                if (!Path.IsPathRooted(folderPath))
+                folderPath = picDirPathText1.GetDirPath();
+                if(folderPath == null)
                 {
-                    Dialog.ShowDialog_Error("请输入正确的绝对路径!");
+                    Dialog.ShowDialog_Error("保存路径有误.");
                     return;
                 }
-                if (Directory.Exists(folderPath))
-                {
-                    if (Directory.GetFiles(folderPath).Length > 0)
-                    {
-                        if (MessageBox.Show("文件夹内的文件将被覆盖!", "警告", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.OK)
-                        {
-                            return;
-                        }
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        DirectoryInfo dirInfo = new DirectoryInfo(folderPath);
-                        dirInfo.Create();
-                    }
-                    catch (Exception ex)
-                    {
-                        Dialog.ShowDialog_Exception(ex);
-                        return;
-                    }
-                }
             }
+            listView1.SetAllToWaiting();
             //创建处理图片的线程
             Thread thread = new Thread(() =>
             {
-                PictureProc.Resize.StartResizer(collection, folderPath);
+                PictureProc.Resize.StartResizer(folderPath);
             });
             thread.Priority = ThreadPriority.Highest;//设置线程优先级最高
-            Value.progressForm.init(collection.Count);
+            Value.progressForm.init(listView1.Items.Count);
             thread.Start();
             Value.progressForm.ShowDialog();
         }
@@ -172,143 +63,12 @@ namespace PicSizer
             Value.settingForm.ShowDialog();
         }
 
-        private void listView1_DragDrop(object sender, DragEventArgs e)
-        {
-            try
-            {
-                string[] files = e.Data.GetData(DataFormats.FileDrop, false) as string[];
-                int total = files.Length;
-                int success = 0;
-                foreach (string path in files)
-                {
-                    //该路径是文件
-                    if (File.Exists(path))
-                    {
-                        if (AddPicture(path)) success++;
-                    }
-                    //不是文件就是文件夹
-                    else
-                    {
-                        List<string> fList = GetPictureFromDir(path);
-                        total += fList.Count - 1;//图片总数加上文件夹内的图片总数，并减去文件夹自己
-                        //加载文件夹里的图片
-                        foreach (string f in fList)
-                        {
-                            if (AddPicture(f)) success++;
-                        }
-                    }
-                    
-                }
-                UpdateSelectTotalNumLabel();
-                if (total != success)
-                {
-                    string s = string.Format("共发现{0}个文件,其中{1}个因重复或格式不符而加载失败.", total, (total - success));
-                    Dialog.ShowDialog(s);
-                }
-            }
-            catch (Exception ex)
-            {
-                Dialog.ShowDialog_Exception(ex);
-            }
-        }
-
-        private new void DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                e.Effect = DragDropEffects.Copy;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
-            }
-        }
-
-        private void textBox1_DragDrop(object sender, DragEventArgs e)
-        {
-            try
-            {
-                string[] files = e.Data.GetData(DataFormats.FileDrop, false) as string[];
-                if (files.Length == 1 && Directory.Exists(files[0]))
-                {
-                    textBox_OutputDirText.Text = files[0];
-                }
-                else
-                {
-                    Dialog.ShowDialog_Warning("请拖入一个文件夹!");
-                }
-            }
-            catch (Exception ex)
-            {
-                Dialog.ShowDialog_Exception(ex);
-            }
-        }
-
-        private void OnSelectAllClick(object sender, EventArgs e)
-        {
-            listView1.BeginUpdate();
-            foreach (ListViewItem item in collection)
-            {
-                item.Selected = true;
-            }
-            UpdateSelectTotalNumLabel();
-            listView1.Focus();
-            listView1.EndUpdate();
-        }
-
-        private void OnSelectReverseClick(object sender, EventArgs e)
-        {
-            listView1.BeginUpdate();
-            foreach (ListViewItem item in collection)
-            {
-                item.Selected = !item.Selected;
-            }
-            UpdateSelectTotalNumLabel();
-            listView1.Focus();
-            listView1.EndUpdate();
-        }
-
         /// <summary>
         /// 更新左下角的Label，显示为"选中的项数/总项数"
         /// </summary>
-        private void UpdateSelectTotalNumLabel()
+        private void UpdateSelectTotalNumLabel(PicListView picListView, int select, int total)
         {
-            label2.Text = listView1.SelectedItems.Count + "/" + collection.Count;
-        }
-
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //更新选择的项数
-            UpdateSelectTotalNumLabel();
-        }
-
-        private void 添加文件ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string[] fileList = Dialog.Show_OpenFileDialog();
-            if(fileList != null && fileList.Length != 0)
-            {
-                int fileCount = fileList.Length;
-                //遍历文件数组
-                listView1.BeginUpdate();
-                foreach (string path in fileList)
-                {
-                    //如果添加成功，则剩余文件数减一
-                    if (AddPicture(path)) fileCount--;
-                }
-                listView1.EndUpdate();
-                //全部添加完成后，更新右上角数字
-                UpdateSelectTotalNumLabel();
-                //如果此时fileCount不是0，则说明有图片被忽略
-                if (fileCount != 0)
-                {
-                    Dialog.ShowDialog(fileCount + " 张重复的图片已被忽略.");
-                }
-            }
-        }
-
-        private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
+            label2.Text = select + "/" + total;
         }
 
         private void OnHelpMenuClick(object sender, EventArgs e)
@@ -327,107 +87,78 @@ namespace PicSizer
             }
         }
 
-        private void CoverOriginalFile(object sender, EventArgs e)
+        /// <summary>
+        /// 菜单栏-文件菜单
+        /// </summary>
+        private void OnFileItemClick(object sender, EventArgs e)
         {
-            Value.CoverOriginalFile = radioButton_Cover.Checked;
-            textBox_OutputDirText.Enabled = button_Choose.Enabled = !Value.CoverOriginalFile;
+            if(sender == 添加文件ToolStripMenuItem)
+            {
+                string[] fileList = Dialog.Show_OpenFileDialog();
+                if (fileList != null && fileList.Length != 0)
+                {
+                    int fileCount = fileList.Length;
+                    int result = listView1.AddPicturesFromPath(fileList);
+                    result = fileCount - result;
+                    //如果此时result不是0，则说明有图片被忽略
+                    if (result != 0)
+                    {
+                        Dialog.ShowDialog(result + " 张重复的图片已被忽略.");
+                    }
+                }
+            }
+            else if(sender == 打开文件夹ToolStripMenuItem)
+            {
+                string selectPath = Dialog.Show_FolderBrowserDialog();
+                if (selectPath != null)
+                {
+                    listView1.AddPicturesFromDirection(selectPath);
+                }
+            }
+            else if(sender == 退出ToolStripMenuItem)
+            {
+                Application.Exit();
+            }
         }
 
         /// <summary>
-        /// 按下移除按钮
+        /// 菜单栏-移除菜单
         /// </summary>
         private void OnRemoveItemClick(object sender, EventArgs e)
         {
-            listView1.BeginUpdate();
             if (sender == 选中项ToolStripMenuItem)
             {
-                //如果选中项不为0则移除
-                if (listView1.SelectedItems.Count != 0)
-                {
-                    foreach (PicListViewItem item in listView1.SelectedItems)
-                    {
-                        RemovePicture(item);
-                    }
-                }
+                listView1.RemovePicture(RemoveType.Select);
             }
             else if (sender == 已完成ToolStripMenuItem)
             {
-                foreach(PicListViewItem item in collection)
-                {
-                    if(item.State == PicState.Success)
-                    {
-                        RemovePicture(item);
-                    }
-                }
+                listView1.RemovePicture(RemoveType.Success);
             }
             else if (sender == 错误项ToolStripMenuItem)
             {
-                foreach(PicListViewItem item in collection)
-                {
-                    if(item.State == PicState.Error)
-                    {
-                        RemovePicture(item);
-                    }
-                }
+                listView1.RemovePicture(RemoveType.Error);
             }
             else if (sender == 全部项ToolStripMenuItem)
             {
                 if (Dialog.ShowDialog_OKDialog("是否清空列表,包括未完成的项目?"))
                 {
-                    collection.Clear();
-                    picFiles.Clear();
+                    listView1.RemovePicture(RemoveType.All);
                 }
             }
-            listView1.EndUpdate();
-            UpdateSelectTotalNumLabel();
         }
 
-        private void OnListViewKetDown(object sender, KeyEventArgs e)
+        /// <summary>
+        /// 菜单栏-选择菜单
+        /// </summary>
+        private void OnSelectItemClick(object sender, EventArgs e)
         {
-            if (e.KeyCode == Keys.A && e.Control)//Ctrl + A
+            if(sender == 全选ToolStripMenuItem)
             {
-                //模拟按下全选键
-                OnSelectAllClick(null, null);
+                listView1.SelectAll();
             }
-            else if (e.KeyCode == Keys.R && e.Control)
+            else if(sender == 反选ToolStripMenuItem)
             {
-                //模拟按下反选
-                OnSelectReverseClick(null, null);
-            }
-            else if (e.KeyCode == Keys.Delete || e.KeyCode == Keys.Back)
-            {
-                //模拟按下“删除选中项”
-                OnRemoveItemClick(选中项ToolStripMenuItem, null);
-            }
-        }
-
-        private void 打开文件夹ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string selectPath = Dialog.Show_FolderBrowserDialog();
-            if(selectPath != null)
-            {
-                List<string> fileList = GetPictureFromDir(selectPath);
-                listView1.BeginUpdate();
-                //遍历文件数组
-                foreach (string item in fileList)
-                {
-                    AddPicture(item);
-                }
-                listView1.EndUpdate();
-            }
-        }
-
-        private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            //判断左键还是右键
-            if(e.Button == MouseButtons.Left)
-            {
-                //生成点击信息
-                ListViewHitTestInfo info = ((ListView)sender).HitTest(e.X, e.Y);
-                //获取点击项
-                PicListViewItem item = info.Item as PicListViewItem;
-                //打开文件夹并选中文件
-                System.Diagnostics.Process.Start("explorer", "/select," + item.FullPath);
+                listView1.SelectReverse();
             }
         }
     }
