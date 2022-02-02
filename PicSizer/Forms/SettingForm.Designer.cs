@@ -451,7 +451,8 @@ namespace PicSizer
             resources.GetString("comboBox_ResizeMode.Items"),
             resources.GetString("comboBox_ResizeMode.Items1"),
             resources.GetString("comboBox_ResizeMode.Items2"),
-            resources.GetString("comboBox_ResizeMode.Items3")});
+            resources.GetString("comboBox_ResizeMode.Items3"),
+            resources.GetString("comboBox_ResizeMode.Items4")});
             resources.ApplyResources(this.comboBox_ResizeMode, "comboBox_ResizeMode");
             this.comboBox_ResizeMode.Name = "comboBox_ResizeMode";
             this.comboBox_ResizeMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_ResizeMode_SelectedIndexChanged);

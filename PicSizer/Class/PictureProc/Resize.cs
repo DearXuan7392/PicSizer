@@ -31,42 +31,79 @@ namespace PicSizer.PictureProc
             //求出比值
             float widthByMin = (float)width / Value.setting.LimitWidth;
             float heightByMin = (float)height / Value.setting.LimitHeight;
+            //temp是临时变量，用于计算缩放比例
+            float temp;
             //重新设定边长
             switch (Value.setting.resizeMode)
             {
                 case ResizeMode.MinSize://不小于限定值
-                    float min = Math.Min(widthByMin, heightByMin);
-                    if (min > 1)
+                    temp = Math.Min(widthByMin, heightByMin);
+                    if (temp > 1)
                     {
-                        width = (int)(width / min);
-                        height = (int)(height / min);
+                        width = (int)(width / temp);
+                        height = (int)(height / temp);
                     }
-                    break;
+                    return ScaleBitmap(bitmap, width, height);
                 case ResizeMode.MaxSize://不大于限定值
-                    float max = Math.Max(widthByMin, heightByMin);
-                    if (max > 1)
+                    temp = Math.Max(widthByMin, heightByMin);
+                    if (temp > 1)
                     {
-                        width = (int)(width / max);
-                        height = (int)(height / max);
+                        width = (int)(width / temp);
+                        height = (int)(height / temp);
                     }
-                    break;
+                    return ScaleBitmap(bitmap, width, height);
                 case ResizeMode.Custom://强制修正
                     width = Value.setting.LimitWidth;
                     height = Value.setting.LimitHeight;
-                    break;
+                    return ScaleBitmap(bitmap, width, height);
                 case ResizeMode.Cut://裁剪
-                    return bitmap;
+                    temp = Math.Min(widthByMin, heightByMin);
+                    //缩放图片，使得width和height有一个恰好满足要求，另一个大于等于要求，则下一步仅需要裁剪
+                    return CenterCutBitmap(bitmap, temp);
                 default://无修正
                     //如果运行到这里说明图片位数不符，无需调整尺寸
-                    break;
+                    return bitmap;
             }
+        }
+
+        /// <summary>
+        /// 缩放图片
+        /// </summary>
+        private static Bitmap ScaleBitmap(Bitmap bitmap, int width, int height)
+        {
             //缩放图片
-            Bitmap newBitmap = new Bitmap(width, height,PixelFormat.Format24bppRgb);
+            Bitmap newBitmap = new Bitmap(width, height, PixelFormat.Format24bppRgb);
             Graphics g = Graphics.FromImage(newBitmap);
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
-            g.DrawImage(bitmap, new Rectangle(0, 0, width, height), new Rectangle(0, 0, bitmap.Width, bitmap.Height), GraphicsUnit.Pixel);
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.DrawImage(bitmap,
+                new Rectangle(0, 0, width, height), //画在新Bitmap上的区域
+                new Rectangle(0, 0, bitmap.Width, bitmap.Height), //老Bitmap截取的区域
+                GraphicsUnit.Pixel);
             g.Dispose();//摧毁
             bitmap.Dispose();//摧毁
+            return newBitmap;
+        }
+
+        /// <summary>
+        /// 居中裁剪图片
+        /// </summary>
+        private static Bitmap CenterCutBitmap(Bitmap bitmap, float scale)
+        {
+            //width和height是bitmap需要裁剪的区域
+            int final_width = (int)(Value.setting.LimitWidth * scale);
+            int final_height = (int)(Value.setting.LimitHeight * scale);
+            //bitmap的裁剪区域左上角位置
+            int left = (bitmap.Width - final_width) / 2;
+            int top = (bitmap.Height - final_height) / 2;
+            Bitmap newBitmap = new Bitmap(Value.setting.LimitWidth, Value.setting.LimitHeight, PixelFormat.Format24bppRgb);
+            Graphics g = Graphics.FromImage(newBitmap);
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.DrawImage(bitmap,
+                new Rectangle(0, 0, Value.setting.LimitWidth, Value.setting.LimitHeight),
+                new Rectangle(left, top, final_width, final_height),
+                GraphicsUnit.Pixel);
+            g.Dispose();
+            bitmap.Dispose();
             return newBitmap;
         }
 

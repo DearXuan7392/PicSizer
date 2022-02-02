@@ -51,12 +51,13 @@ namespace PicSizer
             this.文档ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.picDirPathText1 = new PicSizer_ControlLibrary.PicDirPathText();
             this.listView1 = new PicSizer_ControlLibrary.PicListView();
             this.fileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.fullPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.size = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.state = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.picDirPathText1 = new PicSizer_ControlLibrary.PicDirPathText();
+            this.反馈和建议ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -179,6 +180,7 @@ namespace PicSizer
             this.帮助ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.作者ToolStripMenuItem,
             this.文档ToolStripMenuItem,
+            this.反馈和建议ToolStripMenuItem,
             this.关于ToolStripMenuItem});
             this.帮助ToolStripMenuItem.Name = "帮助ToolStripMenuItem";
             resources.ApplyResources(this.帮助ToolStripMenuItem, "帮助ToolStripMenuItem");
@@ -207,6 +209,12 @@ namespace PicSizer
             this.groupBox1.Controls.Add(this.picDirPathText1);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
+            // 
+            // picDirPathText1
+            // 
+            this.picDirPathText1.AllowDrop = true;
+            resources.ApplyResources(this.picDirPathText1, "picDirPathText1");
+            this.picDirPathText1.Name = "picDirPathText1";
             // 
             // listView1
             // 
@@ -241,11 +249,11 @@ namespace PicSizer
             // 
             resources.ApplyResources(this.state, "state");
             // 
-            // picDirPathText1
+            // 反馈和建议ToolStripMenuItem
             // 
-            this.picDirPathText1.AllowDrop = true;
-            resources.ApplyResources(this.picDirPathText1, "picDirPathText1");
-            this.picDirPathText1.Name = "picDirPathText1";
+            this.反馈和建议ToolStripMenuItem.Name = "反馈和建议ToolStripMenuItem";
+            resources.ApplyResources(this.反馈和建议ToolStripMenuItem, "反馈和建议ToolStripMenuItem");
+            this.反馈和建议ToolStripMenuItem.Click += new System.EventHandler(this.OnHelpMenuClick);
             // 
             // Form1
             // 
@@ -297,6 +305,7 @@ namespace PicSizer
         private System.Windows.Forms.ToolStripMenuItem 全部项ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 打开文件夹ToolStripMenuItem;
         private PicSizer_ControlLibrary.PicDirPathText picDirPathText1;
+        private System.Windows.Forms.ToolStripMenuItem 反馈和建议ToolStripMenuItem;
     }
 }
 
