@@ -17,8 +17,6 @@ namespace PicSizer
             //为静态量赋值
             Value.mainForm = this;
             this.Text = Info.ProjectName + " " + Info.ProjectVersion;
-            
-            DllExtern.DoInFirst();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -39,7 +37,6 @@ namespace PicSizer
                 folderPath = picDirPathText1.GetDirPath();
                 if(folderPath == null)
                 {
-                    Dialog.ShowDialog_Error("保存路径有误.");
                     return;
                 }
             }

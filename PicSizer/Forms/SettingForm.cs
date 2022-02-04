@@ -162,8 +162,25 @@ namespace PicSizer
 
         private void comboBox_CompressionMode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            numericUpDown_Size.Enabled = comboBox_KB_or_MB.Enabled = comboBox_CompressionMode.SelectedIndex == 0;
-            numericUpDown_Value.Enabled = comboBox_CompressionMode.SelectedIndex == 1;
+            //指定大小
+            if (comboBox_CompressionMode.SelectedIndex == 0)
+            {
+                numericUpDown_Size.Enabled = comboBox_KB_or_MB.Enabled = true;//文件大小控件可用
+                numericUpDown_Value.Enabled = false;//画质控件不可用
+                //指定大小时输出格式可以自定义
+                comboBox_ExtensionMode.Enabled = true;//允许用户修改后缀
+            }
+            //指定画质
+            else
+            {
+                numericUpDown_Size.Enabled = comboBox_KB_or_MB.Enabled = false;//文件大小控件不可用
+                numericUpDown_Value.Enabled = true;//画质控件可用
+                //指定画质时输出格式必须是JPEG
+                comboBox_ExtensionMode.SelectedIndex = 0;//选中JPEG
+                comboBox_ExtensionMode.Enabled = false;//禁止用户修改后缀
+            }
+            
+            
         }
 
         private void comboBox_ResizeMode_SelectedIndexChanged(object sender, EventArgs e)

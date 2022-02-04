@@ -13,6 +13,13 @@ namespace PicSizer.Partial
         private const string _Title = "PicSizer";
         private const string _Error = "错误";
 
+        private static string _Dialog_String_Filter_PictureOnly =
+            "常见类型|*.jpg;*.png;*.bmp" +
+            "|位图|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff;*.pcx;*.ico" +
+            "|矢量图|*.dxf;*.cgm;*.cdr;*.wmf;*.eps;*.emf";
+
+        private static string _Dialog_String_Filter_All = _Dialog_String_Filter_PictureOnly + "|所有|*.*";
+
         /// <summary>
         /// 显示弹窗
         /// </summary>
@@ -102,11 +109,11 @@ namespace PicSizer.Partial
             dialog.Title = "添加图片";
             if (Value.setting.AllowAnyExtension)
             {
-                dialog.Filter = "图片(JPG,PNG,BMP,TIFF)|*.jpg;*.png;*.bmp;*.tiff|所有|*.*";
+                dialog.Filter = _Dialog_String_Filter_All;
             }
             else
             {
-                dialog.Filter = "图片(JPG,PNG,BMP,TIFF)|*.jpg;*.png;*.bmp;*.tiff";
+                dialog.Filter = _Dialog_String_Filter_PictureOnly;
             }
             //允许多选
             dialog.Multiselect = true;

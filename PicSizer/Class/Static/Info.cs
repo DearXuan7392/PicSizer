@@ -36,18 +36,18 @@ namespace PicSizer
         /// <summary>
         /// 版本
         /// </summary>
-        public static readonly Partial.Version ProjectVersion = new Partial.Version()
+        public static readonly Unit.Version ProjectVersion = new Unit.Version()
         {
             mainVersion = 4,
-            secondVersion = 3,
-            thirdVersion = 6,
+            secondVersion = 5,
+            thirdVersion = 0,
             alpha = true
         };
 
         /// <summary>
         /// 配置文件的版本，防止跨版本导入
         /// </summary>
-        public static readonly Partial.Version SettingVersion = new Partial.Version()
+        public static readonly Unit.Version SettingVersion = new Unit.Version()
         {
             mainVersion = 1,
             secondVersion = 0,

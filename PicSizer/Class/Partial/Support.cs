@@ -31,7 +31,9 @@ namespace PicSizer.Partial
         QualityFirst = 1
     }
 
-    //命名方式
+    /// <summary>
+    /// 命名方式
+    /// </summary>
     public enum RenameMode
     {
         Number = 0,
@@ -39,7 +41,9 @@ namespace PicSizer.Partial
         Custom = 2
     }
 
-    //后缀方式
+    /// <summary>
+    /// 后缀方式 
+    /// </summary>
     public enum ExtensionMode
     {
         JPEG = 0,
@@ -76,52 +80,6 @@ namespace PicSizer.Partial
         ShowAndExit = 4
     }
 
-    [Serializable]
-    public class Version
-    {
-        /// <summary>
-        /// 主版本
-        /// </summary>
-        public byte mainVersion = 0;
-
-        /// <summary>
-        /// 次要版本
-        /// </summary>
-        public byte secondVersion = 0;
-
-        /// <summary>
-        /// 再次版本
-        /// </summary>
-        public byte thirdVersion = 0;
-
-        /// <summary>
-        /// 是否开发板
-        /// </summary>
-        public bool alpha = false;
-
-        /// <summary>
-        /// 版本比较
-        /// </summary>
-        public int CompareTo(Version other)
-        {
-            if (mainVersion != other.mainVersion) return mainVersion > other.mainVersion ? 1 : -1;
-            if (secondVersion != other.secondVersion) return secondVersion > other.secondVersion ? 1 : -1;
-            if (thirdVersion != other.thirdVersion) return thirdVersion > other.thirdVersion ? 1 : -1;
-            if (alpha == other.alpha) return 0;
-            return alpha ? -1 : 1;
-        }
-
-        override public string ToString()
-        {
-            string s = mainVersion + "." + secondVersion + "." + thirdVersion;
-            if (alpha)
-            {
-                s += "-alpha";
-            }
-            return s;
-        }
-    }
-
     /// <summary>
     /// 支持
     /// </summary>
@@ -146,60 +104,7 @@ namespace PicSizer.Partial
                 case ExtensionMode.PNG: return ".png";
                 case ExtensionMode.BMP: return ".bmp";
                 case ExtensionMode.TIFF: return ".tiff";
-                default:
-                    throw new Exception("内部错误: 文件格式转换时出错");
-            }
-        }
-
-        public static string ToState(this PicState state)
-        {
-            switch (state)
-            {
-                case PicState.Waiting:
-                    return "待压缩";
-                case PicState.Success:
-                    return "已完成";
-                case PicState.Error:
-                    return "错误";
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
-        /// 从path获取格式
-        /// </summary>
-        public static ExtensionMode GetFormat(this string path)
-        {
-            string format = Path.GetExtension(path).ToLower();
-            switch (format)
-            {
-                case ".jpg":
-                case ".jpeg":
-                    return ExtensionMode.JPEG;
-                case ".png":
-                    return ExtensionMode.PNG;
-                case ".bmp":
-                    return ExtensionMode.BMP;
-                case ".tiff":
-                    return ExtensionMode.TIFF;
-                default:
-                    throw new Exception("不支持的文件格式: \"" + format + "\"");
-            }
-        }
-
-        /// <summary>
-        /// 文件大小(KB)转字符串
-        /// </summary>
-        public static string ToFileSizeStr(this long size)
-        {
-            if (size < 1024)
-            {
-                return size.ToString() + " KB";
-            }
-            else
-            {
-                return (size / 1024.0).ToString("#0.00") + " MB";
+                default: return null;
             }
         }
     }

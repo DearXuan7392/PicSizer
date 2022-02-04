@@ -227,6 +227,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class\Partial\FileCheck.cs" />
+    <Compile Include="Class\PictureProc\Compress.cs" />
     <Compile Include="Class\PictureProc\Resize.cs" />
     <Compile Include="Class\PictureProc\BmpProc.cs" />
     <Compile Include="Class\Partial\DllExtern.cs">
@@ -235,6 +236,9 @@
     <Compile Include="Class\PictureProc\Encoder.cs" />
     <Compile Include="Class\PictureProc\ThreadsPool.cs" />
     <Compile Include="Class\Static\Info.cs" />
+    <Compile Include="Class\Static\ProjectInit.cs" />
+    <Compile Include="Class\Unit\Extension.cs" />
+    <Compile Include="Class\Unit\Version.cs" />
     <Compile Include="Forms\About.cs">
       <SubType>Form</SubType>
     </Compile>

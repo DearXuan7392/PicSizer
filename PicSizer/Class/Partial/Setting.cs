@@ -98,8 +98,8 @@ namespace PicSizer.Partial
         [Serializable]
         public class SettingFilePrefix
         {
-            public Version PicSizerVersion;
-            public Version SettingVersion;
+            public Unit.Version PicSizerVersion;
+            public Unit.Version SettingVersion;
         }
 
         public static void WriteSettingToFile(Setting setting, string filename)

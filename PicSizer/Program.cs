@@ -15,6 +15,7 @@ namespace PicSizer
         [STAThread]
         static void Main()
         {
+            PicSizer.Static.ProjectInit.Init();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
