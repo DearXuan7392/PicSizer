@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PicSizer.Partial;
+using System;
 using System.Windows.Forms;
-using PicSizer.Partial;
 
 namespace PicSizer
 {
@@ -46,11 +39,13 @@ namespace PicSizer
                 comboBox_KB_or_MB.SelectedIndex = 0;//KB
             }
             numericUpDown_Size.Value = size;//指定大小
+            comboBox_NonJPEGCompressMethod.SelectedIndex = setting.nonJEPGCompressMethod.ToInt();//非JPEG压缩方式
 
             //尺寸
             comboBox_ResizeMode.SelectedIndex = setting.resizeMode.ToInt();//尺寸修正
             numericUpDown_LimitWidth.Value = setting.LimitWidth;
             numericUpDown_LimitHeight.Value = setting.LimitHeight;
+            numericUpDown_IconSize.Value = setting.IconLimitSize;
 
             //命名
             comboBox_RenameMode.SelectedIndex = setting.renameMode.ToInt();//命名方式
@@ -60,6 +55,7 @@ namespace PicSizer
 
             //其它
             comboBox_DoWhenException.SelectedIndex = setting.doWhenException.ToInt();//异常处理
+            checkBox_AcceptExceedPicture.Checked = setting.AcceptExceedPicture;//是否接受超出限制的文件
             checkBox_AllowAnyExtension.Checked = setting.AllowAnyExtension;//允许任意后缀
             checkBox_TopMost.Checked = setting.topMost;//置顶
             numericUpDown_Threads.Value = setting.maxThreads;//最大线程数
@@ -72,9 +68,9 @@ namespace PicSizer
         private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
             //仅限输入数字
-            if(e.KeyChar < '0' || e.KeyChar > '9')
+            if (e.KeyChar < '0' || e.KeyChar > '9')
             {
-                if(e.KeyChar != 8 && e.KeyChar != 127)
+                if (e.KeyChar != 8 && e.KeyChar != 127)
                 {
                     e.KeyChar = EMPTY;
                 }
@@ -84,7 +80,7 @@ namespace PicSizer
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
             //限制最大大小为 1GB
-            if(comboBox_KB_or_MB.SelectedIndex == 0)//KB
+            if (comboBox_KB_or_MB.SelectedIndex == 0)//KB
             {
                 numericUpDown_Size.Maximum = 1048576;
             }
@@ -97,7 +93,7 @@ namespace PicSizer
         private void button_Save_Click(object sender, EventArgs e)
         {
             string fileNameError = CheckCustomName();
-            if(fileNameError != null)
+            if (fileNameError != null)
             {
                 Dialog.ShowDialog_Error(fileNameError);
                 return;
@@ -115,11 +111,13 @@ namespace PicSizer
                 compressionMode = (CompressionMode)comboBox_CompressionMode.SelectedIndex,//压缩模式
                 CompressionValue = (long)numericUpDown_Value.Value,//指定画质
                 LimitSize = comboBox_KB_or_MB.SelectedIndex == 0 ? (long)numericUpDown_Size.Value : (long)numericUpDown_Size.Value * 1024,//指定大小
+                nonJEPGCompressMethod = (NonJEPGCompressMethod)comboBox_NonJPEGCompressMethod.SelectedIndex,//非JPEG压缩方式
 
                 //尺寸
                 resizeMode = (ResizeMode)comboBox_ResizeMode.SelectedIndex,//尺寸修正
                 LimitWidth = (int)numericUpDown_LimitWidth.Value,
                 LimitHeight = (int)numericUpDown_LimitHeight.Value,
+                IconLimitSize = (byte)numericUpDown_IconSize.Value,
 
                 //命名
                 renameMode = (RenameMode)comboBox_RenameMode.SelectedIndex,//命名方式
@@ -129,6 +127,7 @@ namespace PicSizer
 
                 //其它
                 doWhenException = (DoWhenException)comboBox_DoWhenException.SelectedIndex,//异常处理
+                AcceptExceedPicture = checkBox_AcceptExceedPicture.Checked,//是否接受超出限制的文件
                 AllowAnyExtension = checkBox_AllowAnyExtension.Checked,//允许任意后缀
                 topMost = checkBox_TopMost.Checked,//置顶
                 maxThreads = (int)numericUpDown_Threads.Value,
@@ -167,20 +166,26 @@ namespace PicSizer
             {
                 numericUpDown_Size.Enabled = comboBox_KB_or_MB.Enabled = true;//文件大小控件可用
                 numericUpDown_Value.Enabled = false;//画质控件不可用
+                checkBox_AcceptExceedPicture.Enabled = true;//"接受超出大小的文件"控件可用
                 //指定大小时输出格式可以自定义
                 comboBox_ExtensionMode.Enabled = true;//允许用户修改后缀
+                comboBox_NonJPEGCompressMethod.Enabled = true;//非JPEG的压缩模式
+                numericUpDown_IconSize.Enabled = true;//ICON的限定尺寸可用
             }
             //指定画质
             else
             {
                 numericUpDown_Size.Enabled = comboBox_KB_or_MB.Enabled = false;//文件大小控件不可用
                 numericUpDown_Value.Enabled = true;//画质控件可用
+                checkBox_AcceptExceedPicture.Enabled = false;//"接受超出大小的文件"控件不可用
                 //指定画质时输出格式必须是JPEG
                 comboBox_ExtensionMode.SelectedIndex = 0;//选中JPEG
                 comboBox_ExtensionMode.Enabled = false;//禁止用户修改后缀
+                comboBox_NonJPEGCompressMethod.Enabled = false;//非JPEG的压缩模式
+                numericUpDown_IconSize.Enabled = false;//ICON的限定尺寸不可用
             }
-            
-            
+
+
         }
 
         private void comboBox_ResizeMode_SelectedIndexChanged(object sender, EventArgs e)
@@ -235,7 +240,7 @@ namespace PicSizer
                 Title = "读取配置",
                 Filter = "配置文件(PICS)|*.pics|所有|*.*",
             };
-            if(dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
                 Setting setting = SettingIO.ReadSettingFromFile(dialog.FileName);
                 if (setting != null)
@@ -253,7 +258,7 @@ namespace PicSizer
 
         private void SetTopMost(bool flag)
         {
-            if(Value.settingForm.TopMost != flag)
+            if (Value.settingForm.TopMost != flag)
             {
                 Value.settingForm.TopMost
                     = Value.progressForm.TopMost
@@ -282,7 +287,7 @@ namespace PicSizer
         private void SettingForm_DragDrop(object sender, DragEventArgs e)
         {
             string[] paths = e.Data.GetData(DataFormats.FileDrop, false) as string[];
-            if(paths?.Length != 1)
+            if (paths?.Length != 1)
             {
                 Dialog.ShowDialog_Error("请拖入配置文件,它的后缀名通常为\"" + Info.SettingFileExtension + "\"");
                 return;
@@ -298,7 +303,7 @@ namespace PicSizer
         private void checkBox_UseGPU_CheckedChanged(object sender, EventArgs e)
         {
             //如果GPU不支持
-            if(!Info.isGPUSupport && checkBox_UseGPU.Checked)
+            if (!Info.isGPUSupport && checkBox_UseGPU.Checked)
             {
                 checkBox_UseGPU.Checked = false;
             }
@@ -309,23 +314,11 @@ namespace PicSizer
         /// </summary>
         private string CheckCustomName()
         {
-            if(comboBox_RenameMode.SelectedIndex == 2 && !textBox_CustomRenameStr.Text.Contains("{ori}") && !textBox_CustomRenameStr.Text.Contains("{num}"))//自定义文件名
+            if (comboBox_RenameMode.SelectedIndex == 2 && !textBox_CustomRenameStr.Text.Contains("{ori}") && !textBox_CustomRenameStr.Text.Contains("{num}"))//自定义文件名
             {
                 return "自定义命名中必须出现\"{ori}\"或\"{num}\"";
             }
             return null;
-        }
-
-        private void comboBox_ExtensionMode_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if(comboBox_ExtensionMode.SelectedIndex != ExtensionMode.JPEG.ToInt())
-            {
-                label_Warn.Visible = true;
-            }
-            else
-            {
-                label_Warn.Visible = false;
-            }
         }
     }
 }

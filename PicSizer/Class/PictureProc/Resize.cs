@@ -1,17 +1,8 @@
 ﻿using PicSizer.Partial;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
-namespace PicSizer.PictureProc
+namespace PicSizer.Class.PictureProc
 {
     public static class Resize
     {
@@ -20,7 +11,6 @@ namespace PicSizer.PictureProc
         /// </summary>
         public static void StartResizer(string resDir)
         {
-            FileCheck.SetImageCodeInfo(Value.setting.extensionMode);
             ThreadsPool.OutputDir = resDir;
             ThreadsPool.StartThreadsPool();
         }
@@ -31,16 +21,16 @@ namespace PicSizer.PictureProc
             {
                 if (Value.setting.compressionMode == CompressionMode.SizeFirst)
                 {
-                    if (!Compress.CompressionBySize(path)) throw new Exception("图片:" + path + "压缩失败");
+                    if (!Compress.CompressionBySize(path)) throw new Exception("图片\"" + path + "\"压缩后仍较大");
                 }
                 else
                 {
-                    if (!Compress.CompressionByValue(path)) throw new Exception("图片:" + path + "压缩失败");
+                    if (!Compress.CompressionByValue(path)) throw new Exception("图片\"" + path + "\"压缩后仍较大");
                 }
                 Update(true); // 压缩成功，进度条加一
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Update(false); // 压缩失败，错误加一
                 switch (Value.setting.doWhenException)

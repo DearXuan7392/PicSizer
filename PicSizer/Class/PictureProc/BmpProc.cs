@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace PicSizer
+namespace PicSizer.Class.PictureProc
 {
     public static class BmpProc
     {
@@ -15,7 +11,7 @@ namespace PicSizer
         {
             //当亮度为100时跳过该函数
             if (Value.setting.brightness == 100) return;
-            
+
             //根据GPU是否支持来决定使用GPU加速还是CPU计算
             if (Value.setting.useGPU && Info.isGPUSupport)
             {
@@ -26,7 +22,7 @@ namespace PicSizer
                 _SetBrightnessByCSharp(bitmap);
             }
         }
-        
+
         /// <summary>
         /// 使用GPU加速调整亮度
         /// </summary>
@@ -45,7 +41,7 @@ namespace PicSizer
             }
             bitmap.UnlockBits(bitmapData);
         }
-        
+
         /// <summary>
         /// 使用CPU调整亮度
         /// </summary>
@@ -60,7 +56,7 @@ namespace PicSizer
             byte[] pic = new byte[size];
             IntPtr ptr = bitmapData.Scan0;
             Marshal.Copy(ptr, pic, 0, size);
-            for(int i = 0; i < size; i++)
+            for (int i = 0; i < size; i++)
             {
                 pic[i] = (byte)(pic[i] * Value.setting.brightness / 100);
             }

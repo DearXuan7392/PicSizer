@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PicSizer.Partial
 {
@@ -15,12 +10,17 @@ namespace PicSizer.Partial
         /// <summary>
         /// 尺寸修正模式
         /// </summary>
-        public ResizeMode resizeMode = ResizeMode.MinSize;
+        public ResizeMode resizeMode = ResizeMode.None;
 
         /// <summary>
         /// 压缩模式
         /// </summary>
         public CompressionMode compressionMode = CompressionMode.SizeFirst;
+
+        /// <summary>
+        /// 非JPEG图片的压缩方式
+        /// </summary>
+        public NonJEPGCompressMethod nonJEPGCompressMethod = NonJEPGCompressMethod.ScaleBased;
 
         /// <summary>
         /// 命名方式
@@ -41,6 +41,11 @@ namespace PicSizer.Partial
         /// 限制高度
         /// </summary>
         public int LimitHeight = 1080;
+
+        /// <summary>
+        /// ICON图标的尺寸，宽==高
+        /// </summary>
+        public byte IconLimitSize = 64;
 
         /// <summary>
         /// 指定大小(KB)
@@ -66,6 +71,11 @@ namespace PicSizer.Partial
         /// 错误处理
         /// </summary>
         public DoWhenException doWhenException = DoWhenException.IgnoreAndContinue;
+
+        /// <summary>
+        /// 当无法最小文件大小超过限制时，是否接受最小的文件大小
+        /// </summary>
+        public bool AcceptExceedPicture = false;
 
         /// <summary>
         /// 允许任意后缀
@@ -132,7 +142,7 @@ namespace PicSizer.Partial
                 {
                     BinaryFormatter binaryFormatter = new BinaryFormatter();
                     SettingFilePrefix settingFilePrefix = binaryFormatter.Deserialize(fileStream) as SettingFilePrefix;
-                    if(settingFilePrefix.SettingVersion.CompareTo(Info.SettingVersion) != 0)
+                    if (settingFilePrefix.SettingVersion.CompareTo(Info.SettingVersion) != 0)
                     {
                         if (!Dialog.ShowDialog_VersionError(settingFilePrefix))
                         {

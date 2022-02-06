@@ -127,7 +127,7 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="splitContainer1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 164</value>
+    <value>12, 172</value>
   </data>
   <data name="comboBox_ExtensionMode.Items" xml:space="preserve">
     <value>JPG/JPEG</value>
@@ -142,6 +142,12 @@
     <value>TIFF</value>
   </data>
   <data name="comboBox_ExtensionMode.Items4" xml:space="preserve">
+    <value>ICON</value>
+  </data>
+  <data name="comboBox_ExtensionMode.Items5" xml:space="preserve">
+    <value>GIF</value>
+  </data>
+  <data name="comboBox_ExtensionMode.Items6" xml:space="preserve">
     <value>原格式</value>
   </data>
   <data name="comboBox_ExtensionMode.Location" type="System.Drawing.Point, System.Drawing">
@@ -352,7 +358,7 @@
     <value>0, 0</value>
   </data>
   <data name="groupBox3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 165</value>
+    <value>217, 196</value>
   </data>
   <data name="groupBox3.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
@@ -384,14 +390,44 @@
   <data name="&gt;&gt;splitContainer1.Panel1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="checkBox_AcceptExceedPicture.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBox_AcceptExceedPicture.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkBox_AcceptExceedPicture.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 44</value>
+  </data>
+  <data name="checkBox_AcceptExceedPicture.Size" type="System.Drawing.Size, System.Drawing">
+    <value>156, 16</value>
+  </data>
+  <data name="checkBox_AcceptExceedPicture.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="checkBox_AcceptExceedPicture.Text" xml:space="preserve">
+    <value>接受超出大小限制的图片</value>
+  </data>
+  <data name="&gt;&gt;checkBox_AcceptExceedPicture.Name" xml:space="preserve">
+    <value>checkBox_AcceptExceedPicture</value>
+  </data>
+  <data name="&gt;&gt;checkBox_AcceptExceedPicture.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBox_AcceptExceedPicture.Parent" xml:space="preserve">
+    <value>groupBox4</value>
+  </data>
+  <data name="&gt;&gt;checkBox_AcceptExceedPicture.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="trackBar_Threads.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
   </data>
   <data name="trackBar_Threads.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 112</value>
+    <value>6, 137</value>
   </data>
   <data name="trackBar_Threads.Size" type="System.Drawing.Size, System.Drawing">
-    <value>202, 45</value>
+    <value>205, 45</value>
   </data>
   <data name="trackBar_Threads.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -406,10 +442,10 @@
     <value>groupBox4</value>
   </data>
   <data name="&gt;&gt;trackBar_Threads.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="numericUpDown_Threads.Location" type="System.Drawing.Point, System.Drawing">
-    <value>83, 85</value>
+    <value>83, 110</value>
   </data>
   <data name="numericUpDown_Threads.Size" type="System.Drawing.Size, System.Drawing">
     <value>120, 21</value>
@@ -427,13 +463,13 @@
     <value>groupBox4</value>
   </data>
   <data name="&gt;&gt;numericUpDown_Threads.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="label15.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="label15.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 87</value>
+    <value>6, 112</value>
   </data>
   <data name="label15.Size" type="System.Drawing.Size, System.Drawing">
     <value>71, 12</value>
@@ -454,13 +490,13 @@
     <value>groupBox4</value>
   </data>
   <data name="&gt;&gt;label15.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="checkBox_TopMost.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="checkBox_TopMost.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 68</value>
+    <value>6, 88</value>
   </data>
   <data name="checkBox_TopMost.Size" type="System.Drawing.Size, System.Drawing">
     <value>96, 16</value>
@@ -481,13 +517,13 @@
     <value>groupBox4</value>
   </data>
   <data name="&gt;&gt;checkBox_TopMost.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="checkBox_AllowAnyExtension.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="checkBox_AllowAnyExtension.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 46</value>
+    <value>6, 66</value>
   </data>
   <data name="checkBox_AllowAnyExtension.Size" type="System.Drawing.Size, System.Drawing">
     <value>96, 16</value>
@@ -508,7 +544,7 @@
     <value>groupBox4</value>
   </data>
   <data name="&gt;&gt;checkBox_AllowAnyExtension.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="comboBox_DoWhenException.Items" xml:space="preserve">
     <value>忽略并继续编号</value>
@@ -544,7 +580,7 @@
     <value>groupBox4</value>
   </data>
   <data name="&gt;&gt;comboBox_DoWhenException.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="label13.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -571,7 +607,7 @@
     <value>groupBox4</value>
   </data>
   <data name="&gt;&gt;label13.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="groupBox4.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -580,7 +616,7 @@
     <value>0, 0</value>
   </data>
   <data name="groupBox4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 165</value>
+    <value>217, 196</value>
   </data>
   <data name="groupBox4.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
@@ -613,7 +649,7 @@
     <value>1</value>
   </data>
   <data name="splitContainer1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>438, 165</value>
+    <value>438, 196</value>
   </data>
   <data name="splitContainer1.SplitterDistance" type="System.Int32, mscorlib">
     <value>217</value>
@@ -631,11 +667,8 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;splitContainer1.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>4</value>
   </data>
-  <metadata name="splitContainer2.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <data name="splitContainer2.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
   </data>
@@ -644,6 +677,57 @@
   </data>
   <data name="splitContainer2.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 12</value>
+  </data>
+  <data name="comboBox_NonJPEGCompressMethod.Items" xml:space="preserve">
+    <value>基于缩放的压缩</value>
+  </data>
+  <data name="comboBox_NonJPEGCompressMethod.Items1" xml:space="preserve">
+    <value>基于位深度的压缩</value>
+  </data>
+  <data name="comboBox_NonJPEGCompressMethod.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 121</value>
+  </data>
+  <data name="comboBox_NonJPEGCompressMethod.Size" type="System.Drawing.Size, System.Drawing">
+    <value>178, 20</value>
+  </data>
+  <data name="comboBox_NonJPEGCompressMethod.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="&gt;&gt;comboBox_NonJPEGCompressMethod.Name" xml:space="preserve">
+    <value>comboBox_NonJPEGCompressMethod</value>
+  </data>
+  <data name="&gt;&gt;comboBox_NonJPEGCompressMethod.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;comboBox_NonJPEGCompressMethod.Parent" xml:space="preserve">
+    <value>groupBox2</value>
+  </data>
+  <data name="&gt;&gt;comboBox_NonJPEGCompressMethod.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="label16.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 104</value>
+  </data>
+  <data name="label16.Size" type="System.Drawing.Size, System.Drawing">
+    <value>146, 12</value>
+  </data>
+  <data name="label16.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="label16.Text" xml:space="preserve">
+    <value>非JPEG和ICON的压缩方式:</value>
+  </data>
+  <data name="&gt;&gt;label16.Name" xml:space="preserve">
+    <value>label16</value>
+  </data>
+  <data name="&gt;&gt;label16.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label16.Parent" xml:space="preserve">
+    <value>groupBox2</value>
+  </data>
+  <data name="&gt;&gt;label16.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="comboBox_KB_or_MB.Items" xml:space="preserve">
     <value>KB</value>
@@ -670,7 +754,7 @@
     <value>groupBox2</value>
   </data>
   <data name="&gt;&gt;comboBox_KB_or_MB.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <data name="numericUpDown_Size.Location" type="System.Drawing.Point, System.Drawing">
     <value>66, 46</value>
@@ -691,7 +775,7 @@
     <value>groupBox2</value>
   </data>
   <data name="&gt;&gt;numericUpDown_Size.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <data name="label8.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -718,7 +802,7 @@
     <value>groupBox2</value>
   </data>
   <data name="&gt;&gt;label8.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="numericUpDown_Value.Location" type="System.Drawing.Point, System.Drawing">
     <value>66, 73</value>
@@ -739,7 +823,7 @@
     <value>groupBox2</value>
   </data>
   <data name="&gt;&gt;numericUpDown_Value.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>5</value>
   </data>
   <data name="label7.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -766,7 +850,7 @@
     <value>groupBox2</value>
   </data>
   <data name="&gt;&gt;label7.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>6</value>
   </data>
   <data name="label6.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -793,7 +877,7 @@
     <value>groupBox2</value>
   </data>
   <data name="&gt;&gt;label6.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>7</value>
   </data>
   <data name="comboBox_CompressionMode.Items" xml:space="preserve">
     <value>指定大小</value>
@@ -820,7 +904,7 @@
     <value>groupBox2</value>
   </data>
   <data name="&gt;&gt;comboBox_CompressionMode.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>8</value>
   </data>
   <data name="groupBox2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -829,7 +913,7 @@
     <value>0, 0</value>
   </data>
   <data name="groupBox2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 146</value>
+    <value>217, 154</value>
   </data>
   <data name="groupBox2.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -861,6 +945,84 @@
   <data name="&gt;&gt;splitContainer2.Panel1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="label18.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label18.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label18.Location" type="System.Drawing.Point, System.Drawing">
+    <value>174, 106</value>
+  </data>
+  <data name="label18.Size" type="System.Drawing.Size, System.Drawing">
+    <value>29, 12</value>
+  </data>
+  <data name="label18.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="label18.Text" xml:space="preserve">
+    <value>像素</value>
+  </data>
+  <data name="&gt;&gt;label18.Name" xml:space="preserve">
+    <value>label18</value>
+  </data>
+  <data name="&gt;&gt;label18.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label18.Parent" xml:space="preserve">
+    <value>groupBox1</value>
+  </data>
+  <data name="&gt;&gt;label18.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="numericUpDown_IconSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>95, 104</value>
+  </data>
+  <data name="numericUpDown_IconSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>73, 21</value>
+  </data>
+  <data name="numericUpDown_IconSize.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="&gt;&gt;numericUpDown_IconSize.Name" xml:space="preserve">
+    <value>numericUpDown_IconSize</value>
+  </data>
+  <data name="&gt;&gt;numericUpDown_IconSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;numericUpDown_IconSize.Parent" xml:space="preserve">
+    <value>groupBox1</value>
+  </data>
+  <data name="&gt;&gt;numericUpDown_IconSize.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="label17.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label17.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 106</value>
+  </data>
+  <data name="label17.Size" type="System.Drawing.Size, System.Drawing">
+    <value>83, 12</value>
+  </data>
+  <data name="label17.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="label17.Text" xml:space="preserve">
+    <value>icon图标尺寸:</value>
+  </data>
+  <data name="&gt;&gt;label17.Name" xml:space="preserve">
+    <value>label17</value>
+  </data>
+  <data name="&gt;&gt;label17.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label17.Parent" xml:space="preserve">
+    <value>groupBox1</value>
+  </data>
+  <data name="&gt;&gt;label17.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
   <data name="numericUpDown_LimitHeight.Location" type="System.Drawing.Point, System.Drawing">
     <value>65, 77</value>
   </data>
@@ -880,7 +1042,7 @@
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;numericUpDown_LimitHeight.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>3</value>
   </data>
   <data name="numericUpDown_LimitWidth.Location" type="System.Drawing.Point, System.Drawing">
     <value>65, 50</value>
@@ -901,7 +1063,7 @@
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;numericUpDown_LimitWidth.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>4</value>
   </data>
   <data name="label5.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -928,7 +1090,7 @@
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>5</value>
   </data>
   <data name="label4.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -955,7 +1117,7 @@
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>6</value>
   </data>
   <data name="label3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -982,7 +1144,7 @@
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>7</value>
   </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1009,7 +1171,7 @@
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>8</value>
   </data>
   <data name="comboBox_ResizeMode.Items" xml:space="preserve">
     <value>无修正</value>
@@ -1045,7 +1207,7 @@
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;comboBox_ResizeMode.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>9</value>
   </data>
   <data name="label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1072,7 +1234,7 @@
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>10</value>
   </data>
   <data name="groupBox1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -1081,7 +1243,7 @@
     <value>0, 0</value>
   </data>
   <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 146</value>
+    <value>217, 154</value>
   </data>
   <data name="groupBox1.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -1114,7 +1276,7 @@
     <value>1</value>
   </data>
   <data name="splitContainer2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>438, 146</value>
+    <value>438, 154</value>
   </data>
   <data name="splitContainer2.SplitterDistance" type="System.Int32, mscorlib">
     <value>217</value>
@@ -1132,7 +1294,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;splitContainer2.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>3</value>
   </data>
   <data name="button_Save.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Right</value>
@@ -1159,7 +1321,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;button_Save.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>5</value>
   </data>
   <data name="groupBox5.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
@@ -1270,7 +1432,7 @@
     <value>3</value>
   </data>
   <data name="groupBox5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 335</value>
+    <value>12, 374</value>
   </data>
   <data name="groupBox5.Size" type="System.Drawing.Size, System.Drawing">
     <value>438, 83</value>
@@ -1291,7 +1453,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;groupBox5.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>2</value>
   </data>
   <data name="button_Export.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Right</value>
@@ -1318,7 +1480,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;button_Export.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>1</value>
   </data>
   <data name="button_ReadSetting.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Right</value>
@@ -1345,33 +1507,6 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;button_ReadSetting.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="label_Warn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>316, 421</value>
-  </data>
-  <data name="label_Warn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 51</value>
-  </data>
-  <data name="label_Warn.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
-  </data>
-  <data name="label_Warn.Text" xml:space="preserve">
-    <value>警告:非JPEG格式的文件将使用缩放来压缩</value>
-  </data>
-  <data name="label_Warn.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;label_Warn.Name" xml:space="preserve">
-    <value>label_Warn</value>
-  </data>
-  <data name="&gt;&gt;label_Warn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label_Warn.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label_Warn.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

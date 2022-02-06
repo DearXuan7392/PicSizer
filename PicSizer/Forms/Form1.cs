@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using PicSizer.Partial;
+using PicSizer_ControlLibrary;
+using System;
 using System.Threading;
 using System.Windows.Forms;
-using PicSizer.Partial;
-using PicSizer_ControlLibrary;
 
 namespace PicSizer
 {
@@ -17,11 +15,15 @@ namespace PicSizer
             //为静态量赋值
             Value.mainForm = this;
             this.Text = Info.ProjectName + " " + Info.ProjectVersion;
+            foreach(string extension in Unit.Extension.BitmapSupportExtension)
+            {
+                this.listView1.ExtensionCollection.Add(extension);
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         /// <summary>
@@ -35,7 +37,7 @@ namespace PicSizer
             if (!Value.CoverOriginalFile)
             {
                 folderPath = picDirPathText1.GetDirPath();
-                if(folderPath == null)
+                if (folderPath == null)
                 {
                     return;
                 }
@@ -44,7 +46,7 @@ namespace PicSizer
             //创建处理图片的线程
             Thread thread = new Thread(() =>
             {
-                PictureProc.Resize.StartResizer(folderPath);
+                Class.PictureProc.Resize.StartResizer(folderPath);
             });
             thread.Priority = ThreadPriority.Highest;//设置线程优先级最高
             Value.progressForm.init(listView1.Items.Count);
@@ -82,7 +84,7 @@ namespace PicSizer
             {
                 Dialog.OpenLink("https://gitee.com/dearxuan/pic-sizer#%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D");
             }
-            else if(sender == 反馈和建议ToolStripMenuItem)
+            else if (sender == 反馈和建议ToolStripMenuItem)
             {
                 Dialog.OpenLink("https://gitee.com/dearxuan/pic-sizer/issues");
             }
@@ -93,7 +95,7 @@ namespace PicSizer
         /// </summary>
         private void OnFileItemClick(object sender, EventArgs e)
         {
-            if(sender == 添加文件ToolStripMenuItem)
+            if (sender == 添加文件ToolStripMenuItem)
             {
                 string[] fileList = Dialog.Show_OpenFileDialog();
                 if (fileList != null && fileList.Length != 0)
@@ -108,7 +110,7 @@ namespace PicSizer
                     }
                 }
             }
-            else if(sender == 打开文件夹ToolStripMenuItem)
+            else if (sender == 打开文件夹ToolStripMenuItem)
             {
                 string selectPath = Dialog.Show_FolderBrowserDialog();
                 if (selectPath != null)
@@ -116,7 +118,7 @@ namespace PicSizer
                     listView1.AddPicturesFromDirection(selectPath);
                 }
             }
-            else if(sender == 退出ToolStripMenuItem)
+            else if (sender == 退出ToolStripMenuItem)
             {
                 Application.Exit();
             }
@@ -153,11 +155,11 @@ namespace PicSizer
         /// </summary>
         private void OnSelectItemClick(object sender, EventArgs e)
         {
-            if(sender == 全选ToolStripMenuItem)
+            if (sender == 全选ToolStripMenuItem)
             {
                 listView1.SelectAll();
             }
-            else if(sender == 反选ToolStripMenuItem)
+            else if (sender == 反选ToolStripMenuItem)
             {
                 listView1.SelectReverse();
             }

@@ -1,20 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing.Imaging;
 
-namespace PicSizer
+namespace PicSizer.Class.PictureProc
 {
     public static class Encoder
     {
+        public static ImageCodecInfo _Info_JPEG = Encoder.GetEncoderInfo("image/jpeg");
+
         public static System.Drawing.Imaging.Encoder encoder = System.Drawing.Imaging.Encoder.Quality;
-        public static EncoderParameters encoderParameters = new EncoderParameters(1);
         public static EncoderParameter[] parameterList = new EncoderParameter[101];
 
         /// <summary>
-        /// 获取编码信息
+        /// 像素位数数组
+        /// </summary>
+        public static PixelFormat[] pixelFormats = new PixelFormat[]
+        {
+            PixelFormat.Format8bppIndexed,//901
+            PixelFormat.Format16bppArgb1555,//4536
+            PixelFormat.Format32bppArgb,//11474
+            PixelFormat.Format64bppArgb//16051
+        };
+
+        /// <summary>
+        /// 获取Bitmap编码数组
+        /// </summary>
+        public static EncoderParameters GetEncoderParameters(long value)
+        {
+            EncoderParameters encoderParameters = new EncoderParameters(1);
+            encoderParameters.Param[0] = GetParameter(value);
+            return encoderParameters;
+        }
+
+        /// <summary>
+        /// 获取Bitmap编码信息
         /// </summary>
         public static EncoderParameter GetParameter(long value)
         {
@@ -27,7 +44,7 @@ namespace PicSizer
         }
 
         /// <summary>
-        /// 获取编码信息
+        /// 获取图像编码信息
         /// </summary>
         public static ImageCodecInfo GetEncoderInfo(string type)
         {

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using PicSizer.Unit;
+using System;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PicSizer.Partial
@@ -13,10 +10,7 @@ namespace PicSizer.Partial
         private const string _Title = "PicSizer";
         private const string _Error = "错误";
 
-        private static string _Dialog_String_Filter_PictureOnly =
-            "常见类型|*.jpg;*.png;*.bmp" +
-            "|位图|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff;*.pcx;*.ico" +
-            "|矢量图|*.dxf;*.cgm;*.cdr;*.wmf;*.eps;*.emf";
+        private static string _Dialog_String_Filter_PictureOnly = "常规格式|*.jpg;*.png;*.bmp;" + Extension.ExtensionTypeListToFilter();
 
         private static string _Dialog_String_Filter_All = _Dialog_String_Filter_PictureOnly + "|所有|*.*";
 
@@ -76,7 +70,7 @@ namespace PicSizer.Partial
         /// </summary>
         public static bool ShowDialog_VersionError(SettingIO.SettingFilePrefix prefix)
         {
-            string s = "不匹配的文件版本!\n\n该配置文件对应的版本是: "+ prefix.PicSizerVersion.ToString() + "\n" +
+            string s = "不匹配的文件版本!\n\n该配置文件对应的版本是: " + prefix.PicSizerVersion.ToString() + "\n" +
                 "而您的版本是: " + Info.ProjectVersion.ToString() + "\n\n" +
                 "继续加载可能会引发错误，仍然要加载吗?";
             return ShowDialog_OKDialog(s);
@@ -118,7 +112,7 @@ namespace PicSizer.Partial
             //允许多选
             dialog.Multiselect = true;
             //点击了确定
-            if(dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
                 return dialog.FileNames;
             }
@@ -134,7 +128,7 @@ namespace PicSizer.Partial
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.Description = "选择文件夹";
             //点击确定
-            if(dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
                 //路径为空
                 if (string.IsNullOrWhiteSpace(dialog.SelectedPath))

@@ -3,9 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PicSizer.Partial
 {
@@ -43,59 +40,55 @@ namespace PicSizer.Partial
         }
 
         /// <summary>
-        /// 从文件名获取图片格式
+        /// 获取要把指定图片导出的格式
         /// </summary>
-        public static ImageCodecInfo GetImageInfoByFilename(string path)
+        public static ImageFormat GetFileExportFormat(string path)
         {
-            //返回原格式，则判断原始图片的格式
-            if(Value.SelectCodeInfo == null)
+            //选择了原格式
+            if(Value.setting.extensionMode == ExtensionMode.Original)
             {
-                string extension = GetExtension(path);
-                //找到对应的编码信息
-                if (Extension.BitmapExportExtension.ContainsKey(extension))
-                {
-                    return Extension.BitmapExportExtension[extension];
-                }
-                //没有找到编码信息
-                else
-                {
-                    throw new Exception("不支持导出的编码: \"" + extension + "\"");
-                }
+                return GetImageFormat(path);
             }
-            //直接返回选定的格式
+            //选择了某一个指定的格式
             else
             {
-                return Value.SelectCodeInfo;
+                return Value.setting.extensionMode.ToImageFormat();
             }
         }
 
         /// <summary>
-        /// 设置选中的图片格式
+        /// 从路径里获取图片编码方式
         /// </summary>
-        public static void SetImageCodeInfo(ExtensionMode mode)
+        public static ImageFormat GetImageFormat(string path)
         {
-            switch (mode)
+            string extension = GetExtension(path);
+            switch (extension)
             {
-                case ExtensionMode.JPEG:
-                    Value.SelectCodeInfo = Extension.BitmapExportExtension[".jpg"];
-                    break;
-                case ExtensionMode.PNG:
-                    Value.SelectCodeInfo = Extension.BitmapExportExtension[".png"];
-                    break;
-                case ExtensionMode.BMP:
-                    Value.SelectCodeInfo = Extension.BitmapExportExtension[".bmp"];
-                    break;
-                case ExtensionMode.TIFF:
-                    Value.SelectCodeInfo = Extension.BitmapExportExtension[".tiff"];
-                    break;
-                case ExtensionMode.Original:
-                    Value.SelectCodeInfo = null;
-                    break;
+                case ".jpg":
+                case ".jpeg":
+                    return ImageFormat.Jpeg;
+                case ".png":
+                    return ImageFormat.Png;
+                case ".bmp":
+                    return ImageFormat.Bmp;
+                case ".tif":
+                case ".tiff":
+                    return ImageFormat.Tiff;
+                case ".ico":
+                    return ImageFormat.Icon;
+                case ".gif":
+                    return ImageFormat.Gif;
+                case ".emf":
+                    return ImageFormat.Emf;
+                case ".wmf":
+                    return ImageFormat.Wmf;
+                default:
+                    throw new Exception("不支持导出的编码: \"" + extension + "\"");
             }
         }
 
         /// <summary>
-        /// 从给定的源文件，生成路径，序号获取文件名
+        /// 从给定的源文件，生成路径，序号获取文件名，并保存扩展名方式
         /// </summary>
         public static string GetResultFileName(string ori, string dir, int num)
         {

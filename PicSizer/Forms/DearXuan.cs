@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PicSizer
@@ -35,33 +28,33 @@ namespace PicSizer
         private void OnCopyClick(object sender, EventArgs e)
         {
             string copy = null;
-            if(sender == button1)
+            if (sender == button1)
             {
                 copy = textBox2.Text;
             }
-            else if(sender == button3)
+            else if (sender == button3)
             {
                 copy = textBox3.Text;
             }
-            else if(sender == button5)
+            else if (sender == button5)
             {
                 copy = textBox4.Text;
             }
-            if(copy != null) Clipboard.SetText(copy);
+            if (copy != null) Clipboard.SetText(copy);
         }
 
         private void OnOpenClick(object sender, EventArgs e)
         {
             string link = null;
-            if(sender == button2)
+            if (sender == button2)
             {
                 link = textBox2.Text;
             }
-            else if(sender == button4)
+            else if (sender == button4)
             {
                 link = textBox3.Text;
             }
-            else if(sender == button6)
+            else if (sender == button6)
             {
                 link = textBox4.Text;
             }
@@ -74,7 +67,7 @@ namespace PicSizer
             {
                 System.Diagnostics.Process.Start("mailto:mail@dearxuan.top");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Clipboard.SetText("mail@dearxuan.top");
                 MessageBox.Show("打开邮箱失败.邮箱地址已经复制到剪贴板.", "PicSizer", MessageBoxButtons.OK, MessageBoxIcon.Error);

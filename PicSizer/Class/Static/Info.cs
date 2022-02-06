@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
 namespace PicSizer
 {
@@ -39,9 +34,9 @@ namespace PicSizer
         public static readonly Unit.Version ProjectVersion = new Unit.Version()
         {
             mainVersion = 4,
-            secondVersion = 5,
+            secondVersion = 6,
             thirdVersion = 0,
-            alpha = true
+            alpha = false
         };
 
         /// <summary>
@@ -50,8 +45,8 @@ namespace PicSizer
         public static readonly Unit.Version SettingVersion = new Unit.Version()
         {
             mainVersion = 1,
-            secondVersion = 0,
-            thirdVersion = 1,
+            secondVersion = 1,
+            thirdVersion = 0,
             alpha = false
         };
     }

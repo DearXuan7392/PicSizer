@@ -50,6 +50,8 @@ namespace PicSizer
             this.label13 = new System.Windows.Forms.Label();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.comboBox_NonJPEGCompressMethod = new System.Windows.Forms.ComboBox();
+            this.label16 = new System.Windows.Forms.Label();
             this.comboBox_KB_or_MB = new System.Windows.Forms.ComboBox();
             this.numericUpDown_Size = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
@@ -58,6 +60,9 @@ namespace PicSizer
             this.label6 = new System.Windows.Forms.Label();
             this.comboBox_CompressionMode = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.numericUpDown_IconSize = new System.Windows.Forms.NumericUpDown();
+            this.label17 = new System.Windows.Forms.Label();
             this.numericUpDown_LimitHeight = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown_LimitWidth = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
@@ -74,7 +79,7 @@ namespace PicSizer
             this.label14 = new System.Windows.Forms.Label();
             this.button_Export = new System.Windows.Forms.Button();
             this.button_ReadSetting = new System.Windows.Forms.Button();
-            this.label_Warn = new System.Windows.Forms.Label();
+            this.checkBox_AcceptExceedPicture = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -92,6 +97,7 @@ namespace PicSizer
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Size)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Value)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_IconSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitWidth)).BeginInit();
             this.groupBox5.SuspendLayout();
@@ -135,10 +141,11 @@ namespace PicSizer
             resources.GetString("comboBox_ExtensionMode.Items1"),
             resources.GetString("comboBox_ExtensionMode.Items2"),
             resources.GetString("comboBox_ExtensionMode.Items3"),
-            resources.GetString("comboBox_ExtensionMode.Items4")});
+            resources.GetString("comboBox_ExtensionMode.Items4"),
+            resources.GetString("comboBox_ExtensionMode.Items5"),
+            resources.GetString("comboBox_ExtensionMode.Items6")});
             resources.ApplyResources(this.comboBox_ExtensionMode, "comboBox_ExtensionMode");
             this.comboBox_ExtensionMode.Name = "comboBox_ExtensionMode";
-            this.comboBox_ExtensionMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_ExtensionMode_SelectedIndexChanged);
             // 
             // label12
             // 
@@ -199,6 +206,7 @@ namespace PicSizer
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.checkBox_AcceptExceedPicture);
             this.groupBox4.Controls.Add(this.trackBar_Threads);
             this.groupBox4.Controls.Add(this.numericUpDown_Threads);
             this.groupBox4.Controls.Add(this.label15);
@@ -291,6 +299,8 @@ namespace PicSizer
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.comboBox_NonJPEGCompressMethod);
+            this.groupBox2.Controls.Add(this.label16);
             this.groupBox2.Controls.Add(this.comboBox_KB_or_MB);
             this.groupBox2.Controls.Add(this.numericUpDown_Size);
             this.groupBox2.Controls.Add(this.label8);
@@ -301,6 +311,21 @@ namespace PicSizer
             resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
+            // 
+            // comboBox_NonJPEGCompressMethod
+            // 
+            this.comboBox_NonJPEGCompressMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_NonJPEGCompressMethod.FormattingEnabled = true;
+            this.comboBox_NonJPEGCompressMethod.Items.AddRange(new object[] {
+            resources.GetString("comboBox_NonJPEGCompressMethod.Items"),
+            resources.GetString("comboBox_NonJPEGCompressMethod.Items1")});
+            resources.ApplyResources(this.comboBox_NonJPEGCompressMethod, "comboBox_NonJPEGCompressMethod");
+            this.comboBox_NonJPEGCompressMethod.Name = "comboBox_NonJPEGCompressMethod";
+            // 
+            // label16
+            // 
+            resources.ApplyResources(this.label16, "label16");
+            this.label16.Name = "label16";
             // 
             // comboBox_KB_or_MB
             // 
@@ -371,6 +396,9 @@ namespace PicSizer
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label18);
+            this.groupBox1.Controls.Add(this.numericUpDown_IconSize);
+            this.groupBox1.Controls.Add(this.label17);
             this.groupBox1.Controls.Add(this.numericUpDown_LimitHeight);
             this.groupBox1.Controls.Add(this.numericUpDown_LimitWidth);
             this.groupBox1.Controls.Add(this.label5);
@@ -382,6 +410,36 @@ namespace PicSizer
             resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
+            // 
+            // label18
+            // 
+            resources.ApplyResources(this.label18, "label18");
+            this.label18.Name = "label18";
+            // 
+            // numericUpDown_IconSize
+            // 
+            resources.ApplyResources(this.numericUpDown_IconSize, "numericUpDown_IconSize");
+            this.numericUpDown_IconSize.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDown_IconSize.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown_IconSize.Name = "numericUpDown_IconSize";
+            this.numericUpDown_IconSize.Value = new decimal(new int[] {
+            64,
+            0,
+            0,
+            0});
+            // 
+            // label17
+            // 
+            resources.ApplyResources(this.label17, "label17");
+            this.label17.Name = "label17";
             // 
             // numericUpDown_LimitHeight
             // 
@@ -527,18 +585,17 @@ namespace PicSizer
             this.button_ReadSetting.UseVisualStyleBackColor = true;
             this.button_ReadSetting.Click += new System.EventHandler(this.button_ReadSetting_Click);
             // 
-            // label_Warn
+            // checkBox_AcceptExceedPicture
             // 
-            this.label_Warn.ForeColor = System.Drawing.Color.Red;
-            resources.ApplyResources(this.label_Warn, "label_Warn");
-            this.label_Warn.Name = "label_Warn";
+            resources.ApplyResources(this.checkBox_AcceptExceedPicture, "checkBox_AcceptExceedPicture");
+            this.checkBox_AcceptExceedPicture.Name = "checkBox_AcceptExceedPicture";
+            this.checkBox_AcceptExceedPicture.UseVisualStyleBackColor = true;
             // 
             // SettingForm
             // 
             this.AllowDrop = true;
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.label_Warn);
             this.Controls.Add(this.button_ReadSetting);
             this.Controls.Add(this.button_Export);
             this.Controls.Add(this.groupBox5);
@@ -576,6 +633,7 @@ namespace PicSizer
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Value)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_IconSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitWidth)).EndInit();
             this.groupBox5.ResumeLayout(false);
@@ -632,6 +690,11 @@ namespace PicSizer
         private System.Windows.Forms.TrackBar trackBar_Threads;
         private System.Windows.Forms.Button button_Export;
         private System.Windows.Forms.Button button_ReadSetting;
-        private System.Windows.Forms.Label label_Warn;
+        private System.Windows.Forms.ComboBox comboBox_NonJPEGCompressMethod;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.NumericUpDown numericUpDown_IconSize;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.CheckBox checkBox_AcceptExceedPicture;
     }
 }

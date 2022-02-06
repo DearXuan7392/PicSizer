@@ -49,6 +49,7 @@ namespace PicSizer
             this.帮助ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.作者ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.文档ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.反馈和建议ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.picDirPathText1 = new PicSizer_ControlLibrary.PicDirPathText();
@@ -57,7 +58,6 @@ namespace PicSizer
             this.fullPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.size = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.state = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.反馈和建议ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -79,12 +79,13 @@ namespace PicSizer
             // label2
             // 
             resources.ApplyResources(this.label2, "label2");
-            this.label2.BackColor = System.Drawing.Color.White;
+            this.label2.BackColor = System.Drawing.SystemColors.Control;
             this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label2.Name = "label2";
             // 
             // menuStrip1
             // 
+            this.menuStrip1.BackColor = System.Drawing.SystemColors.Control;
             resources.ApplyResources(this.menuStrip1, "menuStrip1");
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.文件ToolStripMenuItem,
@@ -197,6 +198,12 @@ namespace PicSizer
             resources.ApplyResources(this.文档ToolStripMenuItem, "文档ToolStripMenuItem");
             this.文档ToolStripMenuItem.Click += new System.EventHandler(this.OnHelpMenuClick);
             // 
+            // 反馈和建议ToolStripMenuItem
+            // 
+            this.反馈和建议ToolStripMenuItem.Name = "反馈和建议ToolStripMenuItem";
+            resources.ApplyResources(this.反馈和建议ToolStripMenuItem, "反馈和建议ToolStripMenuItem");
+            this.反馈和建议ToolStripMenuItem.Click += new System.EventHandler(this.OnHelpMenuClick);
+            // 
             // 关于ToolStripMenuItem
             // 
             this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
@@ -248,12 +255,6 @@ namespace PicSizer
             // state
             // 
             resources.ApplyResources(this.state, "state");
-            // 
-            // 反馈和建议ToolStripMenuItem
-            // 
-            this.反馈和建议ToolStripMenuItem.Name = "反馈和建议ToolStripMenuItem";
-            resources.ApplyResources(this.反馈和建议ToolStripMenuItem, "反馈和建议ToolStripMenuItem");
-            this.反馈和建议ToolStripMenuItem.Click += new System.EventHandler(this.OnHelpMenuClick);
             // 
             // Form1
             // 

@@ -1,15 +1,9 @@
-﻿using PicSizer.Partial;
-using PicSizer_ControlLibrary;
-using System;
+﻿using PicSizer_ControlLibrary;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
-namespace PicSizer.PictureProc
+namespace PicSizer.Class.PictureProc
 {
     /// <summary>
     /// 线程池
@@ -43,7 +37,7 @@ namespace PicSizer.PictureProc
             waitHandles.Clear();
             PicIndex = Value.setting.StartIndex - 1;
             CollectionIndex = -1;
-            for(int i = 0; i < Value.setting.maxThreads; i++)
+            for (int i = 0; i < Value.setting.maxThreads; i++)
             {
                 ManualResetEvent manual = new ManualResetEvent(false);
                 waitHandles.Add(manual);
@@ -65,7 +59,7 @@ namespace PicSizer.PictureProc
             int index;
             string filename;
             PicListViewItem item;
-            while(!Value.ThreadExitNow && (index = GetNextFileIndex()) != -1)
+            while (!Value.ThreadExitNow && (index = GetNextFileIndex()) != -1)
             {
                 item = listView[index];
                 filename = item.SubItems[1].Text;

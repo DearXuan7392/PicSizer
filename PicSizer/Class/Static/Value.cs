@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PicSizer
+﻿namespace PicSizer
 {
     public static class Value
     {
@@ -27,10 +21,5 @@ namespace PicSizer
         /// 程序设置
         /// </summary>
         public static Partial.Setting setting = new Partial.Setting();
-
-        /// <summary>
-        /// 当前选中的图片后缀
-        /// </summary>
-        public static System.Drawing.Imaging.ImageCodecInfo SelectCodeInfo;
     }
 }
