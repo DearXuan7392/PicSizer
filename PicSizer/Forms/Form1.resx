@@ -223,19 +223,19 @@
     <value>None</value>
   </data>
   <data name="添加文件ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>136, 22</value>
   </data>
   <data name="添加文件ToolStripMenuItem.Text" xml:space="preserve">
     <value>添加文件</value>
   </data>
   <data name="打开文件夹ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>136, 22</value>
   </data>
   <data name="打开文件夹ToolStripMenuItem.Text" xml:space="preserve">
     <value>打开文件夹</value>
   </data>
   <data name="退出ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>136, 22</value>
   </data>
   <data name="退出ToolStripMenuItem.Text" xml:space="preserve">
     <value>退出</value>
@@ -247,13 +247,13 @@
     <value>文件</value>
   </data>
   <data name="全选ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>100, 22</value>
   </data>
   <data name="全选ToolStripMenuItem.Text" xml:space="preserve">
     <value>全选</value>
   </data>
   <data name="反选ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>100, 22</value>
   </data>
   <data name="反选ToolStripMenuItem.Text" xml:space="preserve">
     <value>反选</value>
@@ -283,7 +283,7 @@
     <value>全部项</value>
   </data>
   <data name="移除ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>100, 22</value>
   </data>
   <data name="移除ToolStripMenuItem.Text" xml:space="preserve">
     <value>移除</value>
@@ -295,25 +295,25 @@
     <value>选择</value>
   </data>
   <data name="作者ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>136, 22</value>
   </data>
   <data name="作者ToolStripMenuItem.Text" xml:space="preserve">
     <value>作者</value>
   </data>
   <data name="文档ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>136, 22</value>
   </data>
   <data name="文档ToolStripMenuItem.Text" xml:space="preserve">
     <value>文档</value>
   </data>
   <data name="反馈和建议ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>136, 22</value>
   </data>
   <data name="反馈和建议ToolStripMenuItem.Text" xml:space="preserve">
     <value>反馈和建议</value>
   </data>
   <data name="关于ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>136, 22</value>
   </data>
   <data name="关于ToolStripMenuItem.Text" xml:space="preserve">
     <value>关于</value>

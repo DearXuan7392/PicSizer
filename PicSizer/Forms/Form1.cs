@@ -31,6 +31,11 @@ namespace PicSizer
         /// </summary>
         private void OnResizeClick(object sender, EventArgs e)
         {
+            if(listView1.Items.Count == 0)
+            {
+                Dialog.ShowDialog_Warning("没有待压缩的图片.");
+                return;
+            }
             Value.CoverOriginalFile = picDirPathText1.IsUseOriginalDir();
             string folderPath = null;
             //如果选择指定目录，则判断目录是否合法
