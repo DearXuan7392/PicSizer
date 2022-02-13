@@ -58,7 +58,7 @@ namespace PicSizer.Class.PictureProc
         {
             int index;
             string filename;
-            PicListViewItem item;
+            PicSizer_ControlLibrary.Partial.PicListViewItem item;
             while (!Value.ThreadExitNow && (index = GetNextFileIndex()) != -1)
             {
                 item = listView[index];

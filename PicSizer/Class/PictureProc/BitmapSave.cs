@@ -82,7 +82,7 @@ namespace PicSizer.Class.PictureProc
                 writer.Write(size);
                 //偏移0xE处为图片主体部分长度，应减去标头
                 writer.Seek(0xE, SeekOrigin.Begin);
-                writer.Write((int)fileStream.Length - 14);
+                writer.Write((int)fileStream.Length - 22);
             }
             finally
             {
