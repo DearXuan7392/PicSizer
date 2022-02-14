@@ -72,7 +72,7 @@ namespace PicSizer
         /// </summary>
         private void UpdateSelectTotalNumLabel(PicListView picListView, int select, int total)
         {
-            label2.Text = select + "/" + total;
+            label2.Text = string.Format("已选中 {0}/{1}", select, total);
         }
 
         private void OnHelpMenuClick(object sender, EventArgs e)

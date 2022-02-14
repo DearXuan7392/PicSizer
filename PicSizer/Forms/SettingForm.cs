@@ -263,6 +263,7 @@ namespace PicSizer
                 Value.settingForm.TopMost
                     = Value.progressForm.TopMost
                     = Value.mainForm.TopMost
+                    = Value.mainForm.listView1.topMost
                     = flag;
             }
         }
