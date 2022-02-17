@@ -1,4 +1,5 @@
-﻿using PicSizer.Partial;
+﻿using PicSizer.Class.Partial;
+using PicSizer.Class.Static;
 using System;
 using System.Windows.Forms;
 
@@ -99,7 +100,7 @@ namespace PicSizer
                 return;
             }
             Value.setting = SaveSetting();
-            Value.mainForm.listView1.PictureCheck = Value.setting.AllowAnyExtension;
+            Value.mainForm.listView1.AllowAnyExtension = Value.setting.AllowAnyExtension;
             this.Hide();
         }
 

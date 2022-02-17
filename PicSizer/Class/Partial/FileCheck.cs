@@ -1,10 +1,11 @@
-﻿using PicSizer.Unit;
+﻿using PicSizer.Class.Unit;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
+using PicSizer.Class.Static;
 
-namespace PicSizer.Partial
+namespace PicSizer.Class.Partial
 {
     public static class FileCheck
     {

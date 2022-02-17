@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PicSizer.Unit
+namespace PicSizer.Class.Unit
 {
     [Serializable]
     public class Version

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using PicSizer.Class.Static;
 
 namespace PicSizer.Class.PictureProc
 {

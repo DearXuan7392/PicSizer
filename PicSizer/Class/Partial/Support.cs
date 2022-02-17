@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PicSizer.Partial
+namespace PicSizer.Class.Partial
 {
     /// <summary>
     /// 尺寸修正模式

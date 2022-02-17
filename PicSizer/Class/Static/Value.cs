@@ -1,4 +1,4 @@
-﻿namespace PicSizer
+﻿namespace PicSizer.Class.Static
 {
     public static class Value
     {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using PicSizer.Class.Static;
 
 namespace PicSizer.Class.PictureProc
 {

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using PicSizer.Class.Static;
 
-namespace PicSizer.Partial
+namespace PicSizer.Class.Partial
 {
     public static class DllExtern
     {
@@ -31,8 +32,10 @@ namespace PicSizer.Partial
                 {
                     //Dialog.ShowDialog_Exception(e);
                 }
-            });
-            thread.Priority = ThreadPriority.Highest;
+            })
+            {
+                Priority = ThreadPriority.Highest
+            };
             thread.Start();
         }
     }

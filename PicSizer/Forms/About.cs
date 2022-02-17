@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using PicSizer.Class.Static;
 
 namespace PicSizer
 {
@@ -16,7 +17,7 @@ namespace PicSizer
 
         private void About_Load(object sender, EventArgs e)
         {
-            this.TopMost = PicSizer.Value.setting.topMost;
+            this.TopMost = Value.setting.topMost;
         }
 
         private void button_author_Click(object sender, EventArgs e)

@@ -1,8 +1,9 @@
-﻿using PicSizer.Partial;
-using PicSizer_ControlLibrary;
+﻿using PicSizer_ControlLibrary;
 using System;
 using System.Threading;
 using System.Windows.Forms;
+using PicSizer.Class.Partial;
+using PicSizer.Class.Static;
 
 namespace PicSizer
 {
@@ -15,7 +16,7 @@ namespace PicSizer
             //为静态量赋值
             Value.mainForm = this;
             this.Text = Info.ProjectName + " " + Info.ProjectVersion;
-            foreach(string extension in Unit.Extension.BitmapSupportExtension)
+            foreach(string extension in Class.Unit.Extension.BitmapSupportExtension)
             {
                 this.listView1.ExtensionCollection.Add(extension);
             }
@@ -54,7 +55,7 @@ namespace PicSizer
                 Class.PictureProc.Resize.StartResizer(folderPath);
             });
             thread.Priority = ThreadPriority.Highest;//设置线程优先级最高
-            Value.progressForm.init(listView1.Items.Count);
+            Value.progressForm.Init(listView1.Items.Count);
             thread.Start();
             Value.progressForm.ShowDialog();
         }

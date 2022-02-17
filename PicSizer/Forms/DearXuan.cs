@@ -7,7 +7,7 @@ namespace PicSizer
     {
         public DearXuan()
         {
-            this.Icon = Info.icon;
+            this.Icon = Class.Static.Info.icon;
             InitializeComponent();
         }
 
@@ -22,7 +22,7 @@ namespace PicSizer
             textBox3.SelectionLength = 0;
             textBox4.SelectionStart = 0;
             textBox4.SelectionLength = 0;
-            this.TopMost = PicSizer.Value.setting.topMost;
+            this.TopMost = PicSizer.Class.Static.Value.setting.topMost;
         }
 
         private void OnCopyClick(object sender, EventArgs e)
@@ -58,7 +58,7 @@ namespace PicSizer
             {
                 link = textBox4.Text;
             }
-            if (link != null) Partial.Dialog.OpenLink(link);
+            if (link != null) PicSizer.Class.Partial.Dialog.OpenLink(link);
         }
 
         private void OnSendEmailClick(object sender, EventArgs e)

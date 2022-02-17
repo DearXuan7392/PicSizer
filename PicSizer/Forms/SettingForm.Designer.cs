@@ -41,6 +41,7 @@ namespace PicSizer
             this.comboBox_RenameMode = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.checkBox_AcceptExceedPicture = new System.Windows.Forms.CheckBox();
             this.trackBar_Threads = new System.Windows.Forms.TrackBar();
             this.numericUpDown_Threads = new System.Windows.Forms.NumericUpDown();
             this.label15 = new System.Windows.Forms.Label();
@@ -79,7 +80,6 @@ namespace PicSizer
             this.label14 = new System.Windows.Forms.Label();
             this.button_Export = new System.Windows.Forms.Button();
             this.button_ReadSetting = new System.Windows.Forms.Button();
-            this.checkBox_AcceptExceedPicture = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -217,6 +217,12 @@ namespace PicSizer
             resources.ApplyResources(this.groupBox4, "groupBox4");
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.TabStop = false;
+            // 
+            // checkBox_AcceptExceedPicture
+            // 
+            resources.ApplyResources(this.checkBox_AcceptExceedPicture, "checkBox_AcceptExceedPicture");
+            this.checkBox_AcceptExceedPicture.Name = "checkBox_AcceptExceedPicture";
+            this.checkBox_AcceptExceedPicture.UseVisualStyleBackColor = true;
             // 
             // trackBar_Threads
             // 
@@ -584,12 +590,6 @@ namespace PicSizer
             this.button_ReadSetting.Name = "button_ReadSetting";
             this.button_ReadSetting.UseVisualStyleBackColor = true;
             this.button_ReadSetting.Click += new System.EventHandler(this.button_ReadSetting_Click);
-            // 
-            // checkBox_AcceptExceedPicture
-            // 
-            resources.ApplyResources(this.checkBox_AcceptExceedPicture, "checkBox_AcceptExceedPicture");
-            this.checkBox_AcceptExceedPicture.Name = "checkBox_AcceptExceedPicture";
-            this.checkBox_AcceptExceedPicture.UseVisualStyleBackColor = true;
             // 
             // SettingForm
             // 

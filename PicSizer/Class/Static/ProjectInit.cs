@@ -1,8 +1,8 @@
-﻿using PicSizer.Partial;
-using PicSizer.Unit;
+﻿using PicSizer.Class.Partial;
 using System.Drawing.Imaging;
+using PicSizer.Class.Unit;
 
-namespace PicSizer.Static
+namespace PicSizer.Class.Static
 {
     public static class ProjectInit
     {

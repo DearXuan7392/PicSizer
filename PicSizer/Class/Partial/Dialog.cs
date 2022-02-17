@@ -1,9 +1,10 @@
-﻿using PicSizer.Unit;
+﻿using PicSizer.Class.Unit;
 using System;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using PicSizer.Class.Static;
 
-namespace PicSizer.Partial
+namespace PicSizer.Class.Partial
 {
     public static class Dialog
     {

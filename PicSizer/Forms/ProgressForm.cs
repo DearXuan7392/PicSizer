@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using PicSizer.Class.Static;
 
 namespace PicSizer
 {
@@ -16,7 +17,7 @@ namespace PicSizer
             CheckForIllegalCrossThreadCalls = false;
         }
 
-        public void init(int total)
+        public void Init(int total)
         {
             success = 0;
             error = 0;
@@ -71,7 +72,7 @@ namespace PicSizer
         public void PrepareToHide()
         {
             this.Hide();
-            PicSizer.Partial.Dialog.ShowDialog_ResizeFinish(total, success);
+            PicSizer.Class.Partial.Dialog.ShowDialog_ResizeFinish(total, success);
         }
     }
 }

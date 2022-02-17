@@ -1,9 +1,9 @@
-﻿using PicSizer.Partial;
-using PicSizer.Unit;
+﻿using PicSizer.Class.Partial;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using PicSizer.Class.Static;
 
 namespace PicSizer.Class.PictureProc
 {

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using PicSizer.Class.Static;
 
-namespace PicSizer.Partial
+namespace PicSizer.Class.Partial
 {
     [Serializable]
     public class Setting

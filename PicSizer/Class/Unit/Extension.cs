@@ -2,7 +2,7 @@
 using System.Drawing.Imaging;
 using System.Text;
 
-namespace PicSizer.Unit
+namespace PicSizer.Class.Unit
 {
     public static class Extension
     {

@@ -1,4 +1,4 @@
-﻿using PicSizer.Partial;
+﻿using PicSizer.Class.Partial;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PicSizer.Class.Static;
 
 namespace PicSizer.Class.PictureProc
 {

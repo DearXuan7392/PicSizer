@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace PicSizer
+namespace PicSizer.Class.Static
 {
     public static class Info
     {
@@ -35,7 +35,7 @@ namespace PicSizer
         {
             mainVersion = 4,
             secondVersion = 6,
-            thirdVersion = 1,
+            thirdVersion = 2,
             alpha = true
         };
 
