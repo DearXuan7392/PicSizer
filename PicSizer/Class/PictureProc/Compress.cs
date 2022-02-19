@@ -15,8 +15,11 @@ namespace PicSizer.Class.PictureProc
         /// <summary>
         /// 调整图片像素，如果输入了width和height，则无视设置，强制缩放到给定的尺寸
         /// </summary>
-        private static Bitmap ResizeBitmap(Bitmap bitmap)
+        private static Bitmap ResizeBitmap(Bitmap oldBitmap)
         {
+            //摧毁原本图片,以免占用源文件
+            Bitmap bitmap = new Bitmap(oldBitmap);
+            oldBitmap.Dispose();
             //图片位深度是24位且关闭了尺寸修正
             if (Value.setting.resizeMode == ResizeMode.None && bitmap.PixelFormat == PixelFormat.Format24bppRgb)
             {
