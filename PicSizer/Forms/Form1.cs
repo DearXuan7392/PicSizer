@@ -4,12 +4,13 @@ using System.Threading;
 using System.Windows.Forms;
 using PicSizer.Class.Partial;
 using PicSizer.Class.Static;
+using System.IO;
 
 namespace PicSizer
 {
     public partial class Form1 : Form
     {
-        public Form1()
+        public Form1(string[] args)
         {
             InitializeComponent();
             this.Icon = Info.icon;
@@ -19,6 +20,17 @@ namespace PicSizer
             foreach(string extension in Class.Unit.Extension.BitmapSupportExtension)
             {
                 this.listView1.ExtensionCollection.Add(extension);
+            }
+            foreach(string path in args)
+            {
+                if (File.Exists(path))
+                {
+                    listView1.AddPicturesFromPath(new string[] { path });
+                }
+                else if (Directory.Exists(path))
+                {
+                    listView1.AddPicturesFromDirection(path);
+                }
             }
         }
 

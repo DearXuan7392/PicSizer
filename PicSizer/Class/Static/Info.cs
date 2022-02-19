@@ -35,7 +35,7 @@ namespace PicSizer.Class.Static
         {
             mainVersion = 4,
             secondVersion = 6,
-            thirdVersion = 2,
+            thirdVersion = 3,
             alpha = true
         };
 
