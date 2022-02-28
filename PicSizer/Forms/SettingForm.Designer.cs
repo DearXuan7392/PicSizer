@@ -142,8 +142,7 @@ namespace PicSizer
             resources.GetString("comboBox_ExtensionMode.Items2"),
             resources.GetString("comboBox_ExtensionMode.Items3"),
             resources.GetString("comboBox_ExtensionMode.Items4"),
-            resources.GetString("comboBox_ExtensionMode.Items5"),
-            resources.GetString("comboBox_ExtensionMode.Items6")});
+            resources.GetString("comboBox_ExtensionMode.Items5")});
             resources.ApplyResources(this.comboBox_ExtensionMode, "comboBox_ExtensionMode");
             this.comboBox_ExtensionMode.Name = "comboBox_ExtensionMode";
             // 

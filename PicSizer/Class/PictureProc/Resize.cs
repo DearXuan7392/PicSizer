@@ -26,7 +26,17 @@ namespace PicSizer.Class.PictureProc
                 }
                 else
                 {
-                    if (!Compress.CompressionByValue(path)) throw new Exception("图片\"" + path + "\"压缩后仍较大");
+                    System.Drawing.Bitmap bitmap = null;
+                    try
+                    {
+                        bitmap = Compress.GetBitmapFromPath(path);
+                        string output = FileCheck.GetResultFileName(path, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
+                        if (!Compress.CompressionByValue(bitmap, output)) throw new Exception("图片\"" + path + "\"压缩后仍较大");
+                    }
+                    finally
+                    {
+                        bitmap?.Dispose();
+                    }
                 }
                 Update(true); // 压缩成功，进度条加一
                 return true;

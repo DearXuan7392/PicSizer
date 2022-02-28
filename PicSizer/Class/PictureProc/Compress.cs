@@ -12,14 +12,25 @@ namespace PicSizer.Class.PictureProc
     /// </summary>
     public static partial class Compress
     {
+        public static Bitmap GetBitmapFromPath(string path)
+        {
+            Bitmap source = null;
+            try
+            {
+                source = new Bitmap(path);
+                return new Bitmap(source);
+            }
+            finally
+            {
+                source?.Dispose();
+            }
+        }
+
         /// <summary>
         /// 调整图片像素，如果输入了width和height，则无视设置，强制缩放到给定的尺寸
         /// </summary>
-        private static Bitmap ResizeBitmap(Bitmap oldBitmap)
+        private static Bitmap ResizeBitmap(Bitmap bitmap)
         {
-            //摧毁原本图片,以免占用源文件
-            Bitmap bitmap = new Bitmap(oldBitmap);
-            oldBitmap.Dispose();
             //图片位深度是24位且关闭了尺寸修正
             if (Value.setting.resizeMode == ResizeMode.None && bitmap.PixelFormat == PixelFormat.Format24bppRgb)
             {
@@ -119,38 +130,51 @@ namespace PicSizer.Class.PictureProc
         /// </summary>
         public static bool CompressionBySize(string file)
         {
-            ImageFormat imageFormat = FileCheck.GetFileExportFormat(file);
-            //压缩为JPEG,
-            if (imageFormat == ImageFormat.Jpeg)
+            Bitmap bitmap = null;
+            try
             {
-                //压缩到指定大小
-                if(Value.setting.compressionMode == CompressionMode.SizeFirst)
+                //加载图片
+                bitmap = GetBitmapFromPath(file);
+                //获取输出路径
+                string output = FileCheck.GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
+                //获取输出格式
+                ImageFormat imageFormat = FileCheck.GetFileExportFormat(file);
+                //压缩为JPEG,
+                if (imageFormat == ImageFormat.Jpeg)
                 {
-                    return CompressionBySize_QualityFirst(file, Encoder._Info_JPEG);
+                    //压缩到指定大小
+                    if (Value.setting.compressionMode == CompressionMode.SizeFirst)
+                    {
+                        return CompressionBySize_QualityFirst(bitmap, output, Encoder._Info_JPEG);
+                    }
+                    //压缩到指定画质
+                    else
+                    {
+                        return CompressionByValue(bitmap, output);
+                    }
+
                 }
-                //压缩到指定画质
+                //压缩为ICON
+                else if (imageFormat == ImageFormat.Icon)
+                {
+                    return CompressionBySize_ScaleAndPixelDeep(bitmap, output);
+                }
+                //其它
                 else
                 {
-                    return CompressionByValue(file);
+                    if (Value.setting.nonJEPGCompressMethod == NonJEPGCompressMethod.PixelDeepBased)
+                    {
+                        return CompressionBySize_PixelDeepFirst(bitmap, output, imageFormat);
+                    }
+                    else
+                    {
+                        return CompressionBySize_ScaleFirst(bitmap, output, imageFormat);
+                    }
                 }
-                
             }
-            //压缩为ICON
-            else if(imageFormat == ImageFormat.Icon)
+            finally
             {
-                return CompressionBySize_ScaleAndPixelDeep(file);
-            }
-            //其它
-            else
-            {
-                if (Value.setting.nonJEPGCompressMethod == NonJEPGCompressMethod.PixelDeepBased)
-                {
-                    return CompressionBySize_PixelDeepFirst(file, imageFormat);
-                }
-                else
-                {
-                    return CompressionBySize_ScaleFirst(file, imageFormat);
-                }
+                bitmap?.Dispose();
             }
         }
 
@@ -237,17 +261,15 @@ namespace PicSizer.Class.PictureProc
         /// <summary>
         /// 基于画质压缩(仅限JPEG)
         /// </summary>
-        public static bool CompressionByValue(string file)
+        public static bool CompressionByValue(Bitmap bitmap, string output)
         {
-            Bitmap bitmap = null;
             try
             {
-                bitmap = ResizeBitmap(new Bitmap(file));
+                bitmap = ResizeBitmap(bitmap);
                 BmpProc.SetBrightness(bitmap);
                 EncoderParameters encoderParameters = new EncoderParameters(1);
                 encoderParameters.Param[0] = Encoder.GetParameter(Value.setting.CompressionValue);
-                string result = FileCheck.GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
-                bitmap.Save(result, Encoder._Info_JPEG, encoderParameters);
+                bitmap.Save(output, Encoder._Info_JPEG, encoderParameters);
                 return true;
             }
             finally
@@ -259,9 +281,9 @@ namespace PicSizer.Class.PictureProc
         /// <summary>
         /// 基于大小压缩,依照画质区分(仅限JPEG)
         /// </summary>
-        private static bool CompressionBySize_QualityFirst(string file, ImageCodecInfo image_type)
+        private static bool CompressionBySize_QualityFirst(Bitmap bitmap, string output, ImageCodecInfo image_type)
         {
-            using (Bitmap bitmap = ResizeBitmap(new Bitmap(file)))
+            using (bitmap = ResizeBitmap(bitmap))
             {
                 BmpProc.SetBrightness(bitmap);
                 EncoderParameters encoderParameters = new EncoderParameters(1);
@@ -289,8 +311,7 @@ namespace PicSizer.Class.PictureProc
                 if (sizeList[left] <= Value.setting.LimitSize || Value.setting.AcceptExceedPicture)
                 {
                     encoderParameters.Param[0] = Encoder.GetParameter(left);
-                    string result = FileCheck.GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
-                    bitmap.Save(result, image_type, encoderParameters);
+                    bitmap.Save(output, image_type, encoderParameters);
                     return true;
                 }
                 else
@@ -303,9 +324,9 @@ namespace PicSizer.Class.PictureProc
         /// <summary>
         /// 基于大小压缩,依照缩放比例区分(非JPEG)
         /// </summary>
-        private static bool CompressionBySize_ScaleFirst(string file, ImageFormat imageFormat)
+        private static bool CompressionBySize_ScaleFirst(Bitmap bitmap, string output, ImageFormat imageFormat)
         {
-            using (Bitmap bitmap = ResizeBitmap(new Bitmap(file)))
+            using (bitmap = ResizeBitmap(bitmap))
             {
                 BmpProc.SetBrightness(bitmap);
                 int left = 1, right = 100, mid = 50;
@@ -331,10 +352,9 @@ namespace PicSizer.Class.PictureProc
                 //如果文件大小符合要求或者接受超出限制的文件就输出
                 if (sizeList[left] <= Value.setting.LimitSize || Value.setting.AcceptExceedPicture)
                 {
-                    using (Bitmap output = ScaleBitmap(bitmap, bitmap.Width * left / 100, bitmap.Height * left / 100))
+                    using (Bitmap result = ScaleBitmap(bitmap, bitmap.Width * left / 100, bitmap.Height * left / 100))
                     {
-                        string result = FileCheck.GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
-                        BitmapSave.SaveBitmapToFile(output, result, imageFormat);
+                        BitmapSave.SaveBitmapToFile(result, output, imageFormat);
                         return true;
                     }
                 }
@@ -348,9 +368,9 @@ namespace PicSizer.Class.PictureProc
         /// <summary>
         /// 基于大小压缩,依照分辨率区分(非JPEG)
         /// </summary>
-        private static bool CompressionBySize_DpiFirst(string file, ImageFormat imageFormat)
+        private static bool CompressionBySize_DpiFirst(Bitmap bitmap, string output, ImageFormat imageFormat)
         {
-            using (Bitmap bitmap = ResizeBitmap(new Bitmap(file)))
+            using (bitmap = ResizeBitmap(bitmap))
             {
                 BmpProc.SetBrightness(bitmap);
                 int maxDpi = (int)Math.Max(bitmap.HorizontalResolution, bitmap.VerticalResolution);
@@ -378,8 +398,7 @@ namespace PicSizer.Class.PictureProc
                 if (sizeList[left] <= Value.setting.LimitSize || Value.setting.AcceptExceedPicture)
                 {
                     bitmap.SetResolution(bitmap.HorizontalResolution * left / maxDpi, bitmap.VerticalResolution * left / maxDpi);
-                    string result = FileCheck.GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
-                    BitmapSave.SaveBitmapToFile(bitmap, result, imageFormat);
+                    BitmapSave.SaveBitmapToFile(bitmap, output, imageFormat);
                     return true;
                 }
                 else
@@ -392,9 +411,9 @@ namespace PicSizer.Class.PictureProc
         /// <summary>
         /// 基于大小压缩,依照位深度区分(非JPEG)
         /// </summary>
-        private static bool CompressionBySize_PixelDeepFirst(string file, ImageFormat imageFormat)
+        private static bool CompressionBySize_PixelDeepFirst(Bitmap bitmap, string output, ImageFormat imageFormat)
         {
-            using (Bitmap bitmap = ResizeBitmap(new Bitmap(file)))
+            using (bitmap = ResizeBitmap(bitmap))
             {
                 BmpProc.SetBrightness(bitmap);
                 Rectangle rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
@@ -421,10 +440,9 @@ namespace PicSizer.Class.PictureProc
                 //如果文件大小符合要求或者接受超出限制的文件就输出
                 if (sizeList[left] <= Value.setting.LimitSize || Value.setting.AcceptExceedPicture)
                 {
-                    string result = FileCheck.GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
-                    using(Bitmap output = bitmap.Clone(rect, Encoder.pixelFormats[left]))
+                    using(Bitmap result = bitmap.Clone(rect, Encoder.pixelFormats[left]))
                     {
-                        BitmapSave.SaveBitmapToFile(output, result, imageFormat);
+                        BitmapSave.SaveBitmapToFile(result, output, imageFormat);
                     }
                     return true;
                 }
@@ -438,9 +456,9 @@ namespace PicSizer.Class.PictureProc
         /// <summary>
         /// 基于大小压缩,先缩放再按照位深度区分(仅限ICON)
         /// </summary>
-        private static bool CompressionBySize_ScaleAndPixelDeep(string file)
+        private static bool CompressionBySize_ScaleAndPixelDeep(Bitmap bitmap, string output)
         {
-            using (Bitmap bitmap = new Bitmap(new Bitmap(file), Value.setting.IconLimitSize, Value.setting.IconLimitSize))
+            using (bitmap = new Bitmap(bitmap, Value.setting.IconLimitSize, Value.setting.IconLimitSize))
             {
                 BmpProc.SetBrightness(bitmap);
                 Rectangle rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
@@ -467,10 +485,9 @@ namespace PicSizer.Class.PictureProc
                 //如果文件大小符合要求或者接受超出限制的文件就输出
                 if (sizeList[left] <= Value.setting.LimitSize || Value.setting.AcceptExceedPicture)
                 {
-                    string result = FileCheck.GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
-                    using (Bitmap output = bitmap.Clone(rect, Encoder.pixelFormats[left]))
+                    using (Bitmap result = bitmap.Clone(rect, Encoder.pixelFormats[left]))
                     {
-                        BitmapSave.SaveBitmapToFile(output, result, ImageFormat.Icon);
+                        BitmapSave.SaveBitmapToFile(result, output, ImageFormat.Icon);
                     }
                     return true;
                 }

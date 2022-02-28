@@ -10,24 +10,6 @@ namespace PicSizer.Class.Partial
     public static class FileCheck
     {
         /// <summary>
-        /// 用于储存允许的后缀名的哈希集合
-        /// </summary>
-        private static HashSet<string> ExtensionHashSet = new HashSet<string>();
-
-        /// <summary>
-        /// 判断文件后缀是否合法
-        /// </summary>
-        public static bool IsExtensionCorrect(string path)
-        {
-            //如果允许任意后缀，则直接返回合法
-            if (Value.setting.AllowAnyExtension) return true;
-            //获取后缀名
-            string extension = GetExtension(path);
-            //如果支持的格式里包括文件格式，则返回true
-            return Extension.BitmapSupportExtension.Contains(extension);
-        }
-
-        /// <summary>
         /// 获取文件后缀名(包括点号,小写字母)
         /// </summary>
         public static string GetExtension(string path)
@@ -77,12 +59,6 @@ namespace PicSizer.Class.Partial
                     return ImageFormat.Tiff;
                 case ".ico":
                     return ImageFormat.Icon;
-                case ".gif":
-                    return ImageFormat.Gif;
-                case ".emf":
-                    return ImageFormat.Emf;
-                case ".wmf":
-                    return ImageFormat.Wmf;
                 default:
                     throw new Exception("不支持导出的编码: \"" + extension + "\"");
             }

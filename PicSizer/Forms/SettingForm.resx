@@ -145,9 +145,6 @@
     <value>ICON</value>
   </data>
   <data name="comboBox_ExtensionMode.Items5" xml:space="preserve">
-    <value>GIF</value>
-  </data>
-  <data name="comboBox_ExtensionMode.Items6" xml:space="preserve">
     <value>原格式</value>
   </data>
   <data name="comboBox_ExtensionMode.Location" type="System.Drawing.Point, System.Drawing">

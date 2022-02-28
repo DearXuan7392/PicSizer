@@ -100,11 +100,11 @@ namespace PicSizer
             }
             else if (sender == 文档ToolStripMenuItem)
             {
-                Dialog.OpenLink("https://gitee.com/dearxuan/pic-sizer#%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D");
+                Dialog.OpenLink("https://picsizer.dearxuan.top");
             }
             else if (sender == 反馈和建议ToolStripMenuItem)
             {
-                Dialog.OpenLink("https://gitee.com/dearxuan/pic-sizer/issues");
+                Dialog.OpenLink("https://gitee.com/picsizer/pic-sizer/issues");
             }
         }
 

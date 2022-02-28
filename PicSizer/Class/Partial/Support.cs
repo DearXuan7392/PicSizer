@@ -43,8 +43,7 @@ namespace PicSizer.Class.Partial
         BMP = 2,
         TIFF = 3,
         ICON = 4,
-        GIF = 5,
-        Original = 6
+        Original = 5
     }
 
     /// <summary>
@@ -114,7 +113,6 @@ namespace PicSizer.Class.Partial
                 case ExtensionMode.BMP: return ".bmp";
                 case ExtensionMode.TIFF: return ".tiff";
                 case ExtensionMode.ICON: return ".ico";
-                case ExtensionMode.GIF: return ".gif";
                 default: return null;
             }
         }
@@ -128,7 +126,6 @@ namespace PicSizer.Class.Partial
                 case ExtensionMode.BMP: return System.Drawing.Imaging.ImageFormat.Bmp;
                 case ExtensionMode.TIFF: return System.Drawing.Imaging.ImageFormat.Tiff;
                 case ExtensionMode.ICON: return System.Drawing.Imaging.ImageFormat.Icon;
-                case ExtensionMode.GIF: return System.Drawing.Imaging.ImageFormat.Gif;
                 default: return null;
             }
         }

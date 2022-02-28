@@ -96,7 +96,7 @@ namespace PicSizer.Class.Partial
         /// <summary>
         /// 永远置顶
         /// </summary>
-        public bool topMost = false;
+        public bool topMost = true;
 
         /// <summary>
         /// 是否启动GPU加速
