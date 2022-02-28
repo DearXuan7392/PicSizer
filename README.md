@@ -29,7 +29,7 @@ PicSizer是一款图片批量压缩软件，解决了传统压缩软件只能指
 
 ### 下载地址
 
-[PicSizer发行版(x64)](https://gitee.com/dearxuan/pic-sizer/releases)
+[PicSizer发行版(x64)](https://gitee.com/picsizer/pic-sizer/releases)
 
 ### 界面截图
 
