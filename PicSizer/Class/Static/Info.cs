@@ -34,8 +34,8 @@ namespace PicSizer.Class.Static
         public static readonly Unit.Version ProjectVersion = new Unit.Version()
         {
             mainVersion = 4,
-            secondVersion = 6,
-            thirdVersion = 6,
+            secondVersion = 7,
+            thirdVersion = 0,
             alpha = false
         };
 
