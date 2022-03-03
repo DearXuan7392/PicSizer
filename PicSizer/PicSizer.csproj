@@ -211,10 +211,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class\Partial\FileCheck.cs" />
+    <Compile Include="Class\PictureProc\AtomBitmap.cs" />
     <Compile Include="Class\PictureProc\BitmapSave.cs" />
     <Compile Include="Class\PictureProc\Compress.cs" />
     <Compile Include="Class\PictureProc\Resize.cs" />
-    <Compile Include="Class\PictureProc\BmpProc.cs" />
+    <Compile Include="Class\PictureProc\Graphy.cs" />
     <Compile Include="Class\Partial\DllExtern.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
@@ -243,6 +244,7 @@
     <Compile Include="Forms\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Support.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Forms\ProgressForm.cs">
       <SubType>Form</SubType>

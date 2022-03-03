@@ -3,6 +3,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using PicSizer.Class.Static;
+using System.Drawing;
 
 namespace PicSizer.Class.Partial
 {
@@ -55,7 +56,14 @@ namespace PicSizer.Class.Partial
         public static void ShowDialog_Exception(Exception e)
         {
             //throw e;
-            ShowDialog_Error(e.ToString());
+            if (Info.ProjectVersion.alpha)
+            {
+                ShowDialog_Error(e.ToString());
+            }
+            else
+            {
+                ShowDialog_Error(e.Message);
+            }
         }
 
         /// <summary>
@@ -142,6 +150,20 @@ namespace PicSizer.Class.Partial
             }
             //返回空
             return null;
+        }
+
+        public static Color Show_ColorChooseDialog(Color color)
+        {
+            ColorDialog dialog = new ColorDialog();
+            dialog.Color = color;
+            if(dialog.ShowDialog() == DialogResult.OK)
+            {
+                return dialog.Color;
+            }
+            else
+            {
+                return color;
+            }
         }
 
         /// <summary>

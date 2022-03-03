@@ -20,10 +20,12 @@ namespace PicSizer.Class.PictureProc
         {
             try
             {
+                //大小优先
                 if (Value.setting.compressionMode == CompressionMode.SizeFirst)
                 {
                     if (!Compress.CompressionBySize(path)) throw new Exception("图片\"" + path + "\"压缩后仍较大");
                 }
+                //画质优先
                 else
                 {
                     System.Drawing.Bitmap bitmap = null;

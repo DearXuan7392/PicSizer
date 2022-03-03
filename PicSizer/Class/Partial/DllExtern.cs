@@ -10,7 +10,10 @@ namespace PicSizer.Class.Partial
         const string dll_path = "PicSizer_CUDA.dll";
 
         [DllImport(dll_path, EntryPoint = "SetBrightness", CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool SetBrightness(IntPtr ori, int length, byte dark);
+        public static extern bool SetBrightness(IntPtr ori, int width, int height, int stride, byte dark);
+
+        [DllImport(dll_path, EntryPoint = "SetAlphaPixelColor", CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool SetAlphaPixelColor(IntPtr ori, int width, int height, int stride, byte R, byte G, byte B);
 
         [DllImport(dll_path, EntryPoint = "IsGPUSupport", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool IsGPUSupport();
@@ -26,6 +29,7 @@ namespace PicSizer.Class.Partial
                     {
                         Value.setting.useGPU = true;
                         Value.settingForm.checkBox_UseGPU.Enabled = true;
+                        Value.settingForm.checkBox_UseGPU.Checked = true;
                     }
                 }
                 catch (Exception)

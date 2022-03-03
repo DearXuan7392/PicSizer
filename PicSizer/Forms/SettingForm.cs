@@ -8,14 +8,14 @@ namespace PicSizer
     public partial class SettingForm : Form
     {
         const char EMPTY = (char)0;//空字符
-        private bool isBrightnessChange = true;
-        private bool isMaxThreadsChange = true;
 
         public SettingForm()
         {
             InitializeComponent();
             this.Icon = Info.icon;
             CheckForIllegalCrossThreadCalls = false;
+            Forms.Support.BindNumericAndTrack(numericUpDown_Threads, trackBar_Threads);
+            Forms.Support.BindNumericAndTrack(numericUpDown_Brightness, trackBar_Brightness);
         }
 
         private void SettingForm_Load(object sender, EventArgs e)
@@ -64,6 +64,11 @@ namespace PicSizer
             //图像处理
             trackBar_Brightness.Value = setting.brightness;//亮度
             checkBox_UseGPU.Checked = setting.useGPU;//硬件加速
+            label_BackgroundColor.BackColor = System.Drawing.Color.FromArgb(
+                255,
+                setting.backgroundColor[0],
+                setting.backgroundColor[1],
+                setting.backgroundColor[2]);//背景色
         }
 
         private void OnKeyPress(object sender, KeyPressEventArgs e)
@@ -78,7 +83,7 @@ namespace PicSizer
             }
         }
 
-        private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboBox_KB_or_MB_SelectedIndexChanged(object sender, EventArgs e)
         {
             //限制最大大小为 1GB
             if (comboBox_KB_or_MB.SelectedIndex == 0)//KB
@@ -135,29 +140,15 @@ namespace PicSizer
 
                 //图像处理
                 brightness = (byte)trackBar_Brightness.Value,//亮度
-                useGPU = checkBox_UseGPU.Enabled && checkBox_UseGPU.Checked//硬件加速
+                useGPU = checkBox_UseGPU.Enabled && checkBox_UseGPU.Checked,//硬件加速
+                backgroundColor = new byte[]
+                {
+                    label_BackgroundColor.BackColor.R,
+                    label_BackgroundColor.BackColor.G,
+                    label_BackgroundColor.BackColor.B
+                }
             };
             return setting;
-        }
-
-        private void trackBar_Brightness_Scroll(object sender, EventArgs e)
-        {
-            if (isBrightnessChange)
-            {
-                isBrightnessChange = false;
-                numericUpDown_Brightness.Value = trackBar_Brightness.Value;
-                isBrightnessChange = true;
-            }
-        }
-
-        private void numericUpDown_Brightness_ValueChanged(object sender, EventArgs e)
-        {
-            if (isBrightnessChange)
-            {
-                isBrightnessChange = false;
-                trackBar_Brightness.Value = (int)numericUpDown_Brightness.Value;
-                isBrightnessChange = true;
-            }
         }
 
         private void comboBox_CompressionMode_SelectedIndexChanged(object sender, EventArgs e)
@@ -200,26 +191,6 @@ namespace PicSizer
             numericUpDown_StartIndex.Enabled = comboBox_RenameMode.SelectedIndex != 1;
         }
 
-        private void numericUpDown_Threads_ValueChanged(object sender, EventArgs e)
-        {
-            if (isMaxThreadsChange)
-            {
-                isMaxThreadsChange = false;
-                trackBar_Threads.Value = (int)numericUpDown_Threads.Value;
-                isMaxThreadsChange = true;
-            }
-        }
-
-        private void trackBar_Threads_Scroll(object sender, EventArgs e)
-        {
-            if (isMaxThreadsChange)
-            {
-                isMaxThreadsChange = false;
-                numericUpDown_Threads.Value = trackBar_Threads.Value;
-                isMaxThreadsChange = true;
-            }
-        }
-
         private void button_Export_Click(object sender, EventArgs e)
         {
             SaveFileDialog dialog = new SaveFileDialog()
@@ -254,24 +225,12 @@ namespace PicSizer
 
         private void checkBox_TopMost_CheckedChanged(object sender, EventArgs e)
         {
-            SetTopMost(checkBox_TopMost.Checked);
-        }
-
-        private void SetTopMost(bool flag)
-        {
-            if (Value.settingForm.TopMost != flag)
-            {
-                Value.settingForm.TopMost
-                    = Value.progressForm.TopMost
-                    = Value.mainForm.TopMost
-                    = Value.mainForm.listView1.topMost
-                    = flag;
-            }
+            Forms.Support.SetTopMost(checkBox_TopMost.Checked);
         }
 
         private void SettingForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            SetTopMost(Value.setting.topMost);
+            Forms.Support.SetTopMost(Value.setting.topMost);
         }
 
         private void SettingForm_DragEnter(object sender, DragEventArgs e)
@@ -321,6 +280,11 @@ namespace PicSizer
                 return "自定义命名中必须出现\"{ori}\"或\"{num}\"";
             }
             return null;
+        }
+
+        private void OnColorChoose(object sender, EventArgs e)
+        {
+            label_BackgroundColor.BackColor = Dialog.Show_ColorChooseDialog(label_BackgroundColor.BackColor);
         }
     }
 }

@@ -102,6 +102,18 @@ namespace PicSizer.Class.Partial
         /// 是否启动GPU加速
         /// </summary>
         public bool useGPU = false;
+
+        public byte[] backgroundColor = new byte[] { 255, 255, 255 };
+
+        /// <summary>
+        /// 水印模式
+        /// </summary>
+        public WatermarkMode watermarkMode = WatermarkMode.Non;
+
+        /// <summary>
+        /// 水印透明度,范围: 0~100,0表示完全没有,100表示明显水印
+        /// </summary>
+        public byte watermarkAlpha = 50;
     }
 
     public static class SettingIO

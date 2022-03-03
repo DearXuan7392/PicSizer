@@ -1,0 +1,55 @@
+﻿using PicSizer.Class.Partial;
+using PicSizer.Class.Static;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace PicSizer.Forms
+{
+    public static class Support
+    {
+        /// <summary>
+        /// 设置置顶
+        /// </summary>
+        public static void SetTopMost(bool flag)
+        {
+            if (Value.settingForm.TopMost != flag)
+            {
+                Value.settingForm.TopMost
+                    = Value.progressForm.TopMost
+                    = Value.mainForm.TopMost
+                    = Value.mainForm.listView1.topMost
+                    = flag;
+            }
+        }
+
+        /// <summary>
+        /// 绑定数字输入控件和滑动控件
+        /// </summary>
+        public static void BindNumericAndTrack(NumericUpDown numeric, TrackBar track)
+        {
+            bool ValueChange = true;
+            numeric.ValueChanged += (sender, args) =>
+            {
+                if (ValueChange)
+                {
+                    ValueChange = false;
+                    track.Value = (int)numeric.Value;
+                    ValueChange = true;
+                }
+            };
+            track.ValueChanged += (sender, args) =>
+            {
+                if (ValueChange)
+                {
+                    ValueChange = false;
+                    numeric.Value = track.Value;
+                    ValueChange = true;
+                }
+            };
+        }
+    }
+}

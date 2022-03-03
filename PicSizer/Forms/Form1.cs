@@ -36,7 +36,7 @@ namespace PicSizer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            PicSizer.Class.Static.ProjectInit.After();
         }
 
         /// <summary>

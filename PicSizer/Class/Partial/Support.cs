@@ -89,6 +89,34 @@ namespace PicSizer.Class.Partial
     }
 
     /// <summary>
+    /// 水印模式
+    /// </summary>
+    public enum WatermarkMode
+    {
+        Non = 0,
+        /// <summary>
+        /// 居中
+        /// </summary>
+        Center = 1,
+        /// <summary>
+        /// 左上
+        /// </summary>
+        LeftTop = 2,
+        /// <summary>
+        /// 左下
+        /// </summary>
+        LeftBottom = 3,
+        /// <summary>
+        /// 右上
+        /// </summary>
+        RightTop = 4,
+        /// <summary>
+        /// 右下
+        /// </summary>
+        RightBottom = 5
+    }
+
+    /// <summary>
     /// 支持
     /// </summary>
     public static class Support

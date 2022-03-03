@@ -78,6 +78,8 @@ namespace PicSizer
             this.comboBox_DoWhenException = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label_BackgroundColor = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
             this.checkBox_UseGPU = new System.Windows.Forms.CheckBox();
             this.numericUpDown_Brightness = new System.Windows.Forms.NumericUpDown();
             this.trackBar_Brightness = new System.Windows.Forms.TrackBar();
@@ -211,6 +213,7 @@ namespace PicSizer
             resources.GetString("comboBox_KB_or_MB.Items1")});
             resources.ApplyResources(this.comboBox_KB_or_MB, "comboBox_KB_or_MB");
             this.comboBox_KB_or_MB.Name = "comboBox_KB_or_MB";
+            this.comboBox_KB_or_MB.SelectedIndexChanged += new System.EventHandler(this.comboBox_KB_or_MB_SelectedIndexChanged);
             // 
             // numericUpDown_Size
             // 
@@ -232,6 +235,7 @@ namespace PicSizer
             0,
             0,
             0});
+            this.numericUpDown_Size.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
             // 
             // label8
             // 
@@ -249,6 +253,7 @@ namespace PicSizer
             0,
             0,
             0});
+            this.numericUpDown_Value.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
             // 
             // label7
             // 
@@ -272,6 +277,7 @@ namespace PicSizer
             resources.GetString("comboBox_CompressionMode.Items1")});
             resources.ApplyResources(this.comboBox_CompressionMode, "comboBox_CompressionMode");
             this.comboBox_CompressionMode.Name = "comboBox_CompressionMode";
+            this.comboBox_CompressionMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_CompressionMode_SelectedIndexChanged);
             // 
             // groupBox1
             // 
@@ -317,6 +323,7 @@ namespace PicSizer
             0,
             0,
             0});
+            this.numericUpDown_IconSize.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
             // 
             // label17
             // 
@@ -344,6 +351,7 @@ namespace PicSizer
             0,
             0,
             0});
+            this.numericUpDown_LimitHeight.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
             // 
             // numericUpDown_LimitWidth
             // 
@@ -365,6 +373,7 @@ namespace PicSizer
             0,
             0,
             0});
+            this.numericUpDown_LimitWidth.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
             // 
             // label5
             // 
@@ -403,6 +412,7 @@ namespace PicSizer
             resources.GetString("comboBox_ResizeMode.Items4")});
             resources.ApplyResources(this.comboBox_ResizeMode, "comboBox_ResizeMode");
             this.comboBox_ResizeMode.Name = "comboBox_ResizeMode";
+            this.comboBox_ResizeMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_ResizeMode_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -493,6 +503,7 @@ namespace PicSizer
             0,
             0,
             0});
+            this.numericUpDown_StartIndex.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
             // 
             // label10
             // 
@@ -511,6 +522,7 @@ namespace PicSizer
             resources.GetString("comboBox_RenameMode.Items2")});
             resources.ApplyResources(this.comboBox_RenameMode, "comboBox_RenameMode");
             this.comboBox_RenameMode.Name = "comboBox_RenameMode";
+            this.comboBox_RenameMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_RenameMode_SelectedIndexChanged);
             // 
             // label9
             // 
@@ -570,6 +582,7 @@ namespace PicSizer
             0,
             0,
             0});
+            this.numericUpDown_Threads.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
             // 
             // label15
             // 
@@ -583,6 +596,7 @@ namespace PicSizer
             this.checkBox_TopMost.CausesValidation = false;
             this.checkBox_TopMost.Name = "checkBox_TopMost";
             this.checkBox_TopMost.UseVisualStyleBackColor = true;
+            this.checkBox_TopMost.CheckedChanged += new System.EventHandler(this.checkBox_TopMost_CheckedChanged);
             // 
             // checkBox_AllowAnyExtension
             // 
@@ -615,6 +629,8 @@ namespace PicSizer
             // 
             this.tabPage2.BackColor = System.Drawing.Color.Transparent;
             this.tabPage2.CausesValidation = false;
+            this.tabPage2.Controls.Add(this.label_BackgroundColor);
+            this.tabPage2.Controls.Add(this.label19);
             this.tabPage2.Controls.Add(this.checkBox_UseGPU);
             this.tabPage2.Controls.Add(this.numericUpDown_Brightness);
             this.tabPage2.Controls.Add(this.trackBar_Brightness);
@@ -623,12 +639,27 @@ namespace PicSizer
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label_BackgroundColor
+            // 
+            this.label_BackgroundColor.BackColor = System.Drawing.Color.White;
+            this.label_BackgroundColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label_BackgroundColor.Cursor = System.Windows.Forms.Cursors.Hand;
+            resources.ApplyResources(this.label_BackgroundColor, "label_BackgroundColor");
+            this.label_BackgroundColor.Name = "label_BackgroundColor";
+            this.label_BackgroundColor.Click += new System.EventHandler(this.OnColorChoose);
+            // 
+            // label19
+            // 
+            resources.ApplyResources(this.label19, "label19");
+            this.label19.Name = "label19";
+            // 
             // checkBox_UseGPU
             // 
             resources.ApplyResources(this.checkBox_UseGPU, "checkBox_UseGPU");
             this.checkBox_UseGPU.CausesValidation = false;
             this.checkBox_UseGPU.Name = "checkBox_UseGPU";
             this.checkBox_UseGPU.UseVisualStyleBackColor = true;
+            this.checkBox_UseGPU.CheckedChanged += new System.EventHandler(this.checkBox_UseGPU_CheckedChanged);
             // 
             // numericUpDown_Brightness
             // 
@@ -640,6 +671,7 @@ namespace PicSizer
             0,
             0,
             0});
+            this.numericUpDown_Brightness.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
             // 
             // trackBar_Brightness
             // 
@@ -765,5 +797,7 @@ namespace PicSizer
         private System.Windows.Forms.NumericUpDown numericUpDown_Brightness;
         private System.Windows.Forms.TrackBar trackBar_Brightness;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label_BackgroundColor;
+        private System.Windows.Forms.Label label19;
     }
 }

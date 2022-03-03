@@ -26,98 +26,7 @@ namespace PicSizer.Class.PictureProc
             }
         }
 
-        /// <summary>
-        /// 调整图片像素，如果输入了width和height，则无视设置，强制缩放到给定的尺寸
-        /// </summary>
-        private static Bitmap ResizeBitmap(Bitmap bitmap)
-        {
-            //图片位深度是24位且关闭了尺寸修正
-            if (Value.setting.resizeMode == ResizeMode.None && bitmap.PixelFormat == PixelFormat.Format24bppRgb)
-            {
-                return bitmap;
-            }
-            int width = bitmap.Width;
-            int height = bitmap.Height;
-            //求出比值
-            float widthByMin = (float)width / Value.setting.LimitWidth;
-            float heightByMin = (float)height / Value.setting.LimitHeight;
-            //temp是临时变量，用于计算缩放比例
-            float temp;
-            //重新设定边长
-            switch (Value.setting.resizeMode)
-            {
-                case ResizeMode.MinSize://不小于限定值
-                    temp = Math.Min(widthByMin, heightByMin);
-                    if (temp > 1)
-                    {
-                        width = (int)(width / temp);
-                        height = (int)(height / temp);
-                    }
-                    return ScaleBitmap(bitmap, width, height);
-                case ResizeMode.MaxSize://不大于限定值
-                    temp = Math.Max(widthByMin, heightByMin);
-                    if (temp > 1)
-                    {
-                        width = (int)(width / temp);
-                        height = (int)(height / temp);
-                    }
-                    return ScaleBitmap(bitmap, width, height);
-                case ResizeMode.Custom://强制修正
-                    width = Value.setting.LimitWidth;
-                    height = Value.setting.LimitHeight;
-                    return ScaleBitmap(bitmap, width, height);
-                case ResizeMode.Cut://裁剪
-                    temp = Math.Min(widthByMin, heightByMin);
-                    //缩放图片，使得width和height有一个恰好满足要求，另一个大于等于要求，则下一步仅需要裁剪
-                    return CenterCutBitmap(bitmap, temp);
-                default://无修正
-                    //如果运行到这里说明图片位数不符，无需调整尺寸
-                    Bitmap output = bitmap.Clone(new Rectangle(0, 0, bitmap.Width, bitmap.Height), PixelFormat.Format24bppRgb);
-                    bitmap.Dispose();
-                    return output;
-            }
-        }
-
-        /// <summary>
-        /// 居中裁剪图片
-        /// </summary>
-        private static Bitmap CenterCutBitmap(Bitmap bitmap, float scale)
-        {
-            //width和height是bitmap需要裁剪的区域
-            int final_width = (int)(Value.setting.LimitWidth * scale);
-            int final_height = (int)(Value.setting.LimitHeight * scale);
-            //bitmap的裁剪区域左上角位置
-            int left = (bitmap.Width - final_width) / 2;
-            int top = (bitmap.Height - final_height) / 2;
-            Bitmap newBitmap = new Bitmap(Value.setting.LimitWidth, Value.setting.LimitHeight, PixelFormat.Format24bppRgb);
-            Graphics g = Graphics.FromImage(newBitmap);
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            g.DrawImage(bitmap,
-                new Rectangle(0, 0, Value.setting.LimitWidth, Value.setting.LimitHeight),
-                new Rectangle(left, top, final_width, final_height),
-                GraphicsUnit.Pixel);
-            g.Dispose();
-            bitmap.Dispose();
-            return newBitmap;
-        }
-
-        /// <summary>
-        /// 缩放图片
-        /// </summary>
-        private static Bitmap ScaleBitmap(Bitmap bitmap, int width, int height)
-        {
-            //缩放图片
-            Bitmap newBitmap = new Bitmap(width, height, PixelFormat.Format24bppRgb);
-            Graphics g = Graphics.FromImage(newBitmap);
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            g.DrawImage(bitmap,
-                new Rectangle(0, 0, width, height), //画在新Bitmap上的区域
-                new Rectangle(0, 0, bitmap.Width, bitmap.Height), //老Bitmap截取的区域
-                GraphicsUnit.Pixel);
-            g.Dispose();//摧毁
-            bitmap.Dispose();//摧毁
-            return newBitmap;
-        }
+        
     }
 
     /// <summary>
@@ -130,51 +39,49 @@ namespace PicSizer.Class.PictureProc
         /// </summary>
         public static bool CompressionBySize(string file)
         {
-            Bitmap bitmap = null;
+            AtomBitmap atomBitmap = null;
             try
             {
                 //加载图片
-                bitmap = GetBitmapFromPath(file);
+                atomBitmap = new AtomBitmap(file);
                 //获取输出路径
-                string output = FileCheck.GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
-                //获取输出格式
-                ImageFormat imageFormat = FileCheck.GetFileExportFormat(file);
+                atomBitmap.output = FileCheck.GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
                 //压缩为JPEG,
-                if (imageFormat == ImageFormat.Jpeg)
+                if (atomBitmap.exportImageFormat == ImageFormat.Jpeg)
                 {
                     //压缩到指定大小
                     if (Value.setting.compressionMode == CompressionMode.SizeFirst)
                     {
-                        return CompressionBySize_QualityFirst(bitmap, output, Encoder._Info_JPEG);
+                        return CompressionBySize_QualityFirst(atomBitmap.bitmap, atomBitmap.output, Encoder._Info_JPEG);
                     }
                     //压缩到指定画质
                     else
                     {
-                        return CompressionByValue(bitmap, output);
+                        return CompressionByValue(atomBitmap.bitmap, atomBitmap.output);
                     }
 
                 }
                 //压缩为ICON
-                else if (imageFormat == ImageFormat.Icon)
+                else if (atomBitmap.exportImageFormat == ImageFormat.Icon)
                 {
-                    return CompressionBySize_ScaleAndPixelDeep(bitmap, output);
+                    return CompressionBySize_ScaleAndPixelDeep(atomBitmap);
                 }
                 //其它
                 else
                 {
                     if (Value.setting.nonJEPGCompressMethod == NonJEPGCompressMethod.PixelDeepBased)
                     {
-                        return CompressionBySize_PixelDeepFirst(bitmap, output, imageFormat);
+                        return CompressionBySize_PixelDeepFirst(atomBitmap);
                     }
                     else
                     {
-                        return CompressionBySize_ScaleFirst(bitmap, output, imageFormat);
+                        return CompressionBySize_ScaleFirst(atomBitmap);
                     }
                 }
             }
             finally
             {
-                bitmap?.Dispose();
+                atomBitmap?.Dispose();
             }
         }
 
@@ -261,12 +168,11 @@ namespace PicSizer.Class.PictureProc
         /// <summary>
         /// 基于画质压缩(仅限JPEG)
         /// </summary>
-        public static bool CompressionByValue(Bitmap bitmap, string output)
+        public static bool CompressionByValue(Bitmap original, string output)
         {
             try
             {
-                bitmap = ResizeBitmap(bitmap);
-                BmpProc.SetBrightness(bitmap);
+                Bitmap bitmap = ResizeHelper.ResizeBitmap(original);
                 EncoderParameters encoderParameters = new EncoderParameters(1);
                 encoderParameters.Param[0] = Encoder.GetParameter(Value.setting.CompressionValue);
                 bitmap.Save(output, Encoder._Info_JPEG, encoderParameters);
@@ -274,7 +180,7 @@ namespace PicSizer.Class.PictureProc
             }
             finally
             {
-                bitmap?.Dispose();
+                original?.Dispose();
             }
         }
 
@@ -283,9 +189,8 @@ namespace PicSizer.Class.PictureProc
         /// </summary>
         private static bool CompressionBySize_QualityFirst(Bitmap bitmap, string output, ImageCodecInfo image_type)
         {
-            using (bitmap = ResizeBitmap(bitmap))
+            using (bitmap = ResizeHelper.ResizeBitmap(bitmap))
             {
-                BmpProc.SetBrightness(bitmap);
                 EncoderParameters encoderParameters = new EncoderParameters(1);
                 long left = 0L, right = 100L, mid = 0L;
                 long[] sizeList = new long[101];
@@ -324,177 +229,161 @@ namespace PicSizer.Class.PictureProc
         /// <summary>
         /// 基于大小压缩,依照缩放比例区分(非JPEG)
         /// </summary>
-        private static bool CompressionBySize_ScaleFirst(Bitmap bitmap, string output, ImageFormat imageFormat)
+        private static bool CompressionBySize_ScaleFirst(AtomBitmap atomBitmap)
         {
-            using (bitmap = ResizeBitmap(bitmap))
+            int left = 1, right = 100, mid = 50;
+            long[] sizeList = new long[101];
+            while (left < right - 1)
             {
-                BmpProc.SetBrightness(bitmap);
-                int left = 1, right = 100, mid = 50;
-                long[] sizeList = new long[101];
-                while (left < right - 1)
+                mid = (left + right) / 2;
+                sizeList[mid] = GetBitmapSizeByScale(atomBitmap.bitmap, atomBitmap.exportImageFormat, atomBitmap.bitmap.Width * mid / 100, atomBitmap.bitmap.Height * mid / 100);
+                if (sizeList[mid] <= Value.setting.LimitSize)
                 {
-                    mid = (left + right) / 2;
-                    sizeList[mid] = GetBitmapSizeByScale(bitmap, imageFormat, bitmap.Width * mid / 100, bitmap.Height * mid / 100);
-                    if (sizeList[mid] <= Value.setting.LimitSize)
-                    {
-                        left = mid;
-                    }
-                    else
-                    {
-                        right = mid;
-                    }
-                }
-                //获取缩放为left时的大小，即是不大于LimitSize的最高画质
-                if (sizeList[left] == 0)
-                {
-                    sizeList[left] = GetBitmapSizeByScale(bitmap, imageFormat, bitmap.Width * mid / 100, bitmap.Height * mid / 100);
-                }
-                //如果文件大小符合要求或者接受超出限制的文件就输出
-                if (sizeList[left] <= Value.setting.LimitSize || Value.setting.AcceptExceedPicture)
-                {
-                    using (Bitmap result = ScaleBitmap(bitmap, bitmap.Width * left / 100, bitmap.Height * left / 100))
-                    {
-                        BitmapSave.SaveBitmapToFile(result, output, imageFormat);
-                        return true;
-                    }
+                    left = mid;
                 }
                 else
                 {
-                    return false;
+                    right = mid;
                 }
+            }
+            //获取缩放为left时的大小，即是不大于LimitSize的最高画质
+            if (sizeList[left] == 0)
+            {
+                sizeList[left] = GetBitmapSizeByScale(atomBitmap.bitmap, atomBitmap.exportImageFormat, atomBitmap.bitmap.Width * mid / 100, atomBitmap.bitmap.Height * mid / 100);
+            }
+            //如果文件大小符合要求或者接受超出限制的文件就输出
+            if (sizeList[left] <= Value.setting.LimitSize || Value.setting.AcceptExceedPicture)
+            {
+                using (Bitmap result = ResizeHelper.ScaleBitmap(atomBitmap.bitmap, atomBitmap.bitmap.Width * left / 100, atomBitmap.bitmap.Height * left / 100))
+                {
+                    BitmapSave.SaveBitmapToFile(result, atomBitmap.output, atomBitmap.exportImageFormat);
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
             }
         }
 
         /// <summary>
         /// 基于大小压缩,依照分辨率区分(非JPEG)
         /// </summary>
-        private static bool CompressionBySize_DpiFirst(Bitmap bitmap, string output, ImageFormat imageFormat)
+        private static bool CompressionBySize_DpiFirst(AtomBitmap atomBitmap)
         {
-            using (bitmap = ResizeBitmap(bitmap))
+            int maxDpi = (int)Math.Max(atomBitmap.bitmap.HorizontalResolution, atomBitmap.bitmap.VerticalResolution);
+            int left = 1, right = maxDpi, mid = 0;
+            long[] sizeList = new long[right + 1];
+            while (left < right - 1)
             {
-                BmpProc.SetBrightness(bitmap);
-                int maxDpi = (int)Math.Max(bitmap.HorizontalResolution, bitmap.VerticalResolution);
-                int left = 1, right = maxDpi, mid = 0;
-                long[] sizeList = new long[right + 1];
-                while (left < right - 1)
+                mid = (left + right) / 2;
+                sizeList[mid] = GetBitmapSizeByDpi(atomBitmap.bitmap, atomBitmap.exportImageFormat, atomBitmap.bitmap.HorizontalResolution * mid / maxDpi, atomBitmap.bitmap.VerticalResolution * mid / maxDpi);
+                if (sizeList[mid] <= Value.setting.LimitSize)
                 {
-                    mid = (left + right) / 2;
-                    sizeList[mid] = GetBitmapSizeByDpi(bitmap, imageFormat, bitmap.HorizontalResolution * mid / maxDpi, bitmap.VerticalResolution * mid / maxDpi);
-                    if (sizeList[mid] <= Value.setting.LimitSize)
-                    {
-                        left = mid;
-                    }
-                    else
-                    {
-                        right = mid;
-                    }
-                }
-                //获取Dpi为left时的大小，即是不大于LimitSize的最高画质
-                if (sizeList[left] == 0)
-                {
-                    sizeList[left] = GetBitmapSizeByDpi(bitmap, imageFormat, bitmap.HorizontalResolution * left / maxDpi, bitmap.VerticalResolution * left / maxDpi);
-                }
-                //如果文件大小符合要求或者接受超出限制的文件就输出
-                if (sizeList[left] <= Value.setting.LimitSize || Value.setting.AcceptExceedPicture)
-                {
-                    bitmap.SetResolution(bitmap.HorizontalResolution * left / maxDpi, bitmap.VerticalResolution * left / maxDpi);
-                    BitmapSave.SaveBitmapToFile(bitmap, output, imageFormat);
-                    return true;
+                    left = mid;
                 }
                 else
                 {
-                    return false;
+                    right = mid;
                 }
+            }
+            //获取Dpi为left时的大小，即是不大于LimitSize的最高画质
+            if (sizeList[left] == 0)
+            {
+                sizeList[left] = GetBitmapSizeByDpi(atomBitmap.bitmap, atomBitmap.exportImageFormat, atomBitmap.bitmap.HorizontalResolution * left / maxDpi, atomBitmap.bitmap.VerticalResolution * left / maxDpi);
+            }
+            //如果文件大小符合要求或者接受超出限制的文件就输出
+            if (sizeList[left] <= Value.setting.LimitSize || Value.setting.AcceptExceedPicture)
+            {
+                atomBitmap.bitmap.SetResolution(atomBitmap.bitmap.HorizontalResolution * left / maxDpi, atomBitmap.bitmap.VerticalResolution * left / maxDpi);
+                BitmapSave.SaveBitmapToFile(atomBitmap.bitmap, atomBitmap.output, atomBitmap.exportImageFormat);
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
         /// <summary>
         /// 基于大小压缩,依照位深度区分(非JPEG)
         /// </summary>
-        private static bool CompressionBySize_PixelDeepFirst(Bitmap bitmap, string output, ImageFormat imageFormat)
+        private static bool CompressionBySize_PixelDeepFirst(AtomBitmap atomBitmap)
         {
-            using (bitmap = ResizeBitmap(bitmap))
+            Rectangle rect = new Rectangle(0, 0, atomBitmap.bitmap.Width, atomBitmap.bitmap.Height);
+            int left = 0, right = Encoder.pixelFormats.Length - 1, mid = 0;
+            long[] sizeList = new long[Encoder.pixelFormats.Length];
+            while (left < right - 1)
             {
-                BmpProc.SetBrightness(bitmap);
-                Rectangle rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
-                int left = 0, right = Encoder.pixelFormats.Length - 1, mid = 0;
-                long[] sizeList = new long[Encoder.pixelFormats.Length];
-                while (left < right - 1)
+                mid = (left + right) / 2;
+                sizeList[mid] = GetBitmapSizeByPixelDeep(atomBitmap.bitmap, atomBitmap.exportImageFormat, rect, Encoder.pixelFormats[mid]);
+                if (sizeList[mid] <= Value.setting.LimitSize)
                 {
-                    mid = (left + right) / 2;
-                    sizeList[mid] = GetBitmapSizeByPixelDeep(bitmap, imageFormat, rect, Encoder.pixelFormats[mid]);
-                    if (sizeList[mid] <= Value.setting.LimitSize)
-                    {
-                        left = mid;
-                    }
-                    else
-                    {
-                        right = mid;
-                    }
-                }
-                //获取画质为left时的大小，即是不大于LimitSize的最高画质
-                if (sizeList[left] == 0)
-                {
-                    sizeList[left] = GetBitmapSizeByPixelDeep(bitmap, imageFormat, rect, Encoder.pixelFormats[left]);
-                }
-                //如果文件大小符合要求或者接受超出限制的文件就输出
-                if (sizeList[left] <= Value.setting.LimitSize || Value.setting.AcceptExceedPicture)
-                {
-                    using(Bitmap result = bitmap.Clone(rect, Encoder.pixelFormats[left]))
-                    {
-                        BitmapSave.SaveBitmapToFile(result, output, imageFormat);
-                    }
-                    return true;
+                    left = mid;
                 }
                 else
                 {
-                    return false;
+                    right = mid;
                 }
+            }
+            //获取画质为left时的大小，即是不大于LimitSize的最高画质
+            if (sizeList[left] == 0)
+            {
+                sizeList[left] = GetBitmapSizeByPixelDeep(atomBitmap.bitmap, atomBitmap.exportImageFormat, rect, Encoder.pixelFormats[left]);
+            }
+            //如果文件大小符合要求或者接受超出限制的文件就输出
+            if (sizeList[left] <= Value.setting.LimitSize || Value.setting.AcceptExceedPicture)
+            {
+                using(Bitmap result = atomBitmap.bitmap.Clone(rect, Encoder.pixelFormats[left]))
+                {
+                    BitmapSave.SaveBitmapToFile(result, atomBitmap.output, atomBitmap.exportImageFormat);
+                }
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
         /// <summary>
         /// 基于大小压缩,先缩放再按照位深度区分(仅限ICON)
         /// </summary>
-        private static bool CompressionBySize_ScaleAndPixelDeep(Bitmap bitmap, string output)
+        private static bool CompressionBySize_ScaleAndPixelDeep(AtomBitmap atomBitmap)
         {
-            using (bitmap = new Bitmap(bitmap, Value.setting.IconLimitSize, Value.setting.IconLimitSize))
+            Rectangle rect = new Rectangle(0, 0, atomBitmap.bitmap.Width, atomBitmap.bitmap.Height);
+            int left = 0, right = Encoder.pixelFormats.Length - 1, mid = 0;
+            long[] sizeList = new long[Encoder.pixelFormats.Length];
+            while (left < right - 1)
             {
-                BmpProc.SetBrightness(bitmap);
-                Rectangle rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
-                int left = 0, right = Encoder.pixelFormats.Length - 1, mid = 0;
-                long[] sizeList = new long[Encoder.pixelFormats.Length];
-                while (left < right - 1)
+                mid = (left + right) / 2;
+                sizeList[mid] = GetBitmapSizeByPixelDeep(atomBitmap.bitmap, ImageFormat.Png, rect, Encoder.pixelFormats[mid]);
+                if (sizeList[mid] <= Value.setting.LimitSize)
                 {
-                    mid = (left + right) / 2;
-                    sizeList[mid] = GetBitmapSizeByPixelDeep(bitmap, ImageFormat.Png, rect, Encoder.pixelFormats[mid]);
-                    if (sizeList[mid] <= Value.setting.LimitSize)
-                    {
-                        left = mid;
-                    }
-                    else
-                    {
-                        right = mid;
-                    }
-                }
-                //获取画质为left时的大小，即是不大于LimitSize的最高画质
-                if (sizeList[left] == 0)
-                {
-                    sizeList[left] = GetBitmapSizeByPixelDeep(bitmap, ImageFormat.Png, rect, Encoder.pixelFormats[left]);
-                }
-                //如果文件大小符合要求或者接受超出限制的文件就输出
-                if (sizeList[left] <= Value.setting.LimitSize || Value.setting.AcceptExceedPicture)
-                {
-                    using (Bitmap result = bitmap.Clone(rect, Encoder.pixelFormats[left]))
-                    {
-                        BitmapSave.SaveBitmapToFile(result, output, ImageFormat.Icon);
-                    }
-                    return true;
+                    left = mid;
                 }
                 else
                 {
-                    return false;
+                    right = mid;
                 }
+            }
+            //获取画质为left时的大小，即是不大于LimitSize的最高画质
+            if (sizeList[left] == 0)
+            {
+                sizeList[left] = GetBitmapSizeByPixelDeep(atomBitmap.bitmap, ImageFormat.Png, rect, Encoder.pixelFormats[left]);
+            }
+            //如果文件大小符合要求或者接受超出限制的文件就输出
+            if (sizeList[left] <= Value.setting.LimitSize || Value.setting.AcceptExceedPicture)
+            {
+                using (Bitmap result = atomBitmap.bitmap.Clone(rect, Encoder.pixelFormats[left]))
+                {
+                    BitmapSave.SaveBitmapToFile(result, atomBitmap.output, ImageFormat.Icon);
+                }
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }

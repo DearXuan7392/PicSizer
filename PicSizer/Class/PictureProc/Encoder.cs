@@ -16,8 +16,7 @@ namespace PicSizer.Class.PictureProc
         {
             PixelFormat.Format8bppIndexed,//901
             PixelFormat.Format16bppArgb1555,//4536
-            PixelFormat.Format32bppArgb,//11474
-            PixelFormat.Format64bppArgb//16051
+            PixelFormat.Format32bppArgb//11474
         };
 
         /// <summary>

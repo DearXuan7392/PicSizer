@@ -7,7 +7,7 @@ namespace PicSizer.Class.Static
     public static class ProjectInit
     {
         /// <summary>
-        /// 程序运行时的初始化任务
+        /// 程序运行之前的初始化任务
         /// </summary>
         public static void Init()
         {
@@ -22,6 +22,15 @@ namespace PicSizer.Class.Static
                     Extension.BitmapSupportExtension.Add(extension);
                 }
             }
+        }
+
+        /// <summary>
+        /// 程序运行之后的初始化
+        /// </summary>
+        public static void After()
+        {
+            //设置置顶
+            Forms.Support.SetTopMost(Value.setting.topMost);
         }
     }
 }
