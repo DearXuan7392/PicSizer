@@ -25,8 +25,6 @@ namespace PicSizer.Class.PictureProc
                 source?.Dispose();
             }
         }
-
-        
     }
 
     /// <summary>
@@ -45,24 +43,23 @@ namespace PicSizer.Class.PictureProc
                 //加载图片
                 atomBitmap = new AtomBitmap(file);
                 //获取输出路径
-                atomBitmap.output = FileCheck.GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
+                atomBitmap.OutputFilename = FileCheck.GetResultFileName(file, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
                 //压缩为JPEG,
-                if (atomBitmap.exportImageFormat == ImageFormat.Jpeg)
+                if (atomBitmap.ExportImageFormat == ImageFormat.Jpeg)
                 {
                     //压缩到指定大小
                     if (Value.setting.compressionMode == CompressionMode.SizeFirst)
                     {
-                        return CompressionBySize_QualityFirst(atomBitmap.bitmap, atomBitmap.output, Encoder._Info_JPEG);
+                        return CompressionBySize_QualityFirst(atomBitmap.bitmap, atomBitmap.OutputFilename, Encoder._Info_JPEG);
                     }
                     //压缩到指定画质
                     else
                     {
-                        return CompressionByValue(atomBitmap.bitmap, atomBitmap.output);
+                        return CompressionByValue(atomBitmap.bitmap, atomBitmap.OutputFilename);
                     }
-
                 }
                 //压缩为ICON
-                else if (atomBitmap.exportImageFormat == ImageFormat.Icon)
+                else if (atomBitmap.ExportImageFormat == ImageFormat.Icon)
                 {
                     return CompressionBySize_ScaleAndPixelDeep(atomBitmap);
                 }
@@ -236,7 +233,7 @@ namespace PicSizer.Class.PictureProc
             while (left < right - 1)
             {
                 mid = (left + right) / 2;
-                sizeList[mid] = GetBitmapSizeByScale(atomBitmap.bitmap, atomBitmap.exportImageFormat, atomBitmap.bitmap.Width * mid / 100, atomBitmap.bitmap.Height * mid / 100);
+                sizeList[mid] = GetBitmapSizeByScale(atomBitmap.bitmap, atomBitmap.ExportImageFormat, atomBitmap.bitmap.Width * mid / 100, atomBitmap.bitmap.Height * mid / 100);
                 if (sizeList[mid] <= Value.setting.LimitSize)
                 {
                     left = mid;
@@ -249,16 +246,13 @@ namespace PicSizer.Class.PictureProc
             //获取缩放为left时的大小，即是不大于LimitSize的最高画质
             if (sizeList[left] == 0)
             {
-                sizeList[left] = GetBitmapSizeByScale(atomBitmap.bitmap, atomBitmap.exportImageFormat, atomBitmap.bitmap.Width * mid / 100, atomBitmap.bitmap.Height * mid / 100);
+                sizeList[left] = GetBitmapSizeByScale(atomBitmap.bitmap, atomBitmap.ExportImageFormat, atomBitmap.bitmap.Width * mid / 100, atomBitmap.bitmap.Height * mid / 100);
             }
             //如果文件大小符合要求或者接受超出限制的文件就输出
             if (sizeList[left] <= Value.setting.LimitSize || Value.setting.AcceptExceedPicture)
             {
-                using (Bitmap result = ResizeHelper.ScaleBitmap(atomBitmap.bitmap, atomBitmap.bitmap.Width * left / 100, atomBitmap.bitmap.Height * left / 100))
-                {
-                    BitmapSave.SaveBitmapToFile(result, atomBitmap.output, atomBitmap.exportImageFormat);
-                    return true;
-                }
+                atomBitmap.SaveToFileBySize(atomBitmap.bitmap.Width * left / 100, atomBitmap.bitmap.Height * left / 100);
+                return true;
             }
             else
             {
@@ -277,7 +271,7 @@ namespace PicSizer.Class.PictureProc
             while (left < right - 1)
             {
                 mid = (left + right) / 2;
-                sizeList[mid] = GetBitmapSizeByDpi(atomBitmap.bitmap, atomBitmap.exportImageFormat, atomBitmap.bitmap.HorizontalResolution * mid / maxDpi, atomBitmap.bitmap.VerticalResolution * mid / maxDpi);
+                sizeList[mid] = GetBitmapSizeByDpi(atomBitmap.bitmap, atomBitmap.ExportImageFormat, atomBitmap.bitmap.HorizontalResolution * mid / maxDpi, atomBitmap.bitmap.VerticalResolution * mid / maxDpi);
                 if (sizeList[mid] <= Value.setting.LimitSize)
                 {
                     left = mid;
@@ -290,13 +284,12 @@ namespace PicSizer.Class.PictureProc
             //获取Dpi为left时的大小，即是不大于LimitSize的最高画质
             if (sizeList[left] == 0)
             {
-                sizeList[left] = GetBitmapSizeByDpi(atomBitmap.bitmap, atomBitmap.exportImageFormat, atomBitmap.bitmap.HorizontalResolution * left / maxDpi, atomBitmap.bitmap.VerticalResolution * left / maxDpi);
+                sizeList[left] = GetBitmapSizeByDpi(atomBitmap.bitmap, atomBitmap.ExportImageFormat, atomBitmap.bitmap.HorizontalResolution * left / maxDpi, atomBitmap.bitmap.VerticalResolution * left / maxDpi);
             }
             //如果文件大小符合要求或者接受超出限制的文件就输出
             if (sizeList[left] <= Value.setting.LimitSize || Value.setting.AcceptExceedPicture)
             {
-                atomBitmap.bitmap.SetResolution(atomBitmap.bitmap.HorizontalResolution * left / maxDpi, atomBitmap.bitmap.VerticalResolution * left / maxDpi);
-                BitmapSave.SaveBitmapToFile(atomBitmap.bitmap, atomBitmap.output, atomBitmap.exportImageFormat);
+                atomBitmap.SaveToFileByResolution(atomBitmap.bitmap.HorizontalResolution * left / maxDpi, atomBitmap.bitmap.VerticalResolution * left / maxDpi);
                 return true;
             }
             else
@@ -316,7 +309,7 @@ namespace PicSizer.Class.PictureProc
             while (left < right - 1)
             {
                 mid = (left + right) / 2;
-                sizeList[mid] = GetBitmapSizeByPixelDeep(atomBitmap.bitmap, atomBitmap.exportImageFormat, rect, Encoder.pixelFormats[mid]);
+                sizeList[mid] = GetBitmapSizeByPixelDeep(atomBitmap.bitmap, atomBitmap.ExportImageFormat, rect, Encoder.pixelFormats[mid]);
                 if (sizeList[mid] <= Value.setting.LimitSize)
                 {
                     left = mid;
@@ -329,15 +322,12 @@ namespace PicSizer.Class.PictureProc
             //获取画质为left时的大小，即是不大于LimitSize的最高画质
             if (sizeList[left] == 0)
             {
-                sizeList[left] = GetBitmapSizeByPixelDeep(atomBitmap.bitmap, atomBitmap.exportImageFormat, rect, Encoder.pixelFormats[left]);
+                sizeList[left] = GetBitmapSizeByPixelDeep(atomBitmap.bitmap, atomBitmap.ExportImageFormat, rect, Encoder.pixelFormats[left]);
             }
             //如果文件大小符合要求或者接受超出限制的文件就输出
             if (sizeList[left] <= Value.setting.LimitSize || Value.setting.AcceptExceedPicture)
             {
-                using(Bitmap result = atomBitmap.bitmap.Clone(rect, Encoder.pixelFormats[left]))
-                {
-                    BitmapSave.SaveBitmapToFile(result, atomBitmap.output, atomBitmap.exportImageFormat);
-                }
+                atomBitmap.SaveToFileByBitDeep(rect, Encoder.pixelFormats[left]);
                 return true;
             }
             else
@@ -375,16 +365,10 @@ namespace PicSizer.Class.PictureProc
             //如果文件大小符合要求或者接受超出限制的文件就输出
             if (sizeList[left] <= Value.setting.LimitSize || Value.setting.AcceptExceedPicture)
             {
-                using (Bitmap result = atomBitmap.bitmap.Clone(rect, Encoder.pixelFormats[left]))
-                {
-                    BitmapSave.SaveBitmapToFile(result, atomBitmap.output, ImageFormat.Icon);
-                }
+                atomBitmap.SaveToFileByBitDeep(rect, Encoder.pixelFormats[left]);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
     }
 }

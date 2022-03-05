@@ -20,12 +20,12 @@ namespace PicSizer.Class.PictureProc
         /// <summary>
         /// 导出的格式
         /// </summary>
-        public ImageFormat exportImageFormat;
+        public ImageFormat ExportImageFormat;
 
         /// <summary>
         /// 输出路径
         /// </summary>
-        public string output;
+        public string OutputFilename;
 
         public AtomBitmap(string file)
         {
@@ -59,11 +59,11 @@ namespace PicSizer.Class.PictureProc
                 //判断要生成的文件后缀
                 if (Value.setting.extensionMode == ExtensionMode.Original)
                 {
-                    this.exportImageFormat = FileCheck.GetImageFormat(file);
+                    this.ExportImageFormat = FileCheck.GetImageFormat(file);
                 }
                 else
                 {
-                    this.exportImageFormat = Value.setting.extensionMode.ToImageFormat();
+                    this.ExportImageFormat = Value.setting.extensionMode.ToImageFormat();
                 }
             }
             catch (Exception)
@@ -74,6 +74,49 @@ namespace PicSizer.Class.PictureProc
             finally
             {
                 original?.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// 按照指定的长宽输出图片
+        /// </summary>
+        public void SaveToFileBySize(int width, int height)
+        {
+            Bitmap final = null;
+            try
+            {
+                final = ResizeHelper.ScaleBitmap(bitmap, width, height);
+                BitmapSave.SaveBitmapToFile(final, OutputFilename, ExportImageFormat);
+            }
+            finally
+            {
+                final?.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// 按照指定的分辨率输出图片
+        /// </summary>
+        public void SaveToFileByResolution(float horizontalResolution, float verticalResolution)
+        {
+            bitmap.SetResolution(horizontalResolution, verticalResolution);
+            BitmapSave.SaveBitmapToFile(bitmap, OutputFilename, ExportImageFormat);
+        }
+
+        /// <summary>
+        /// 根据指定的位深度输出图片
+        /// </summary>
+        public void SaveToFileByBitDeep(Rectangle rect, PixelFormat format)
+        {
+            Bitmap final = null;
+            try
+            {
+                final = bitmap.Clone(rect, format);
+                BitmapSave.SaveBitmapToFile(final, OutputFilename, ExportImageFormat);
+            }
+            finally
+            {
+                final?.Dispose();
             }
         }
 
