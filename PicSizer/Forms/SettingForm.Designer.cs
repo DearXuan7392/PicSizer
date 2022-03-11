@@ -37,18 +37,23 @@ namespace PicSizer
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.comboBox_NonJPEGCompressMethod = new System.Windows.Forms.ComboBox();
+            this.comboBox_CompressMode_ICON = new System.Windows.Forms.ComboBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.comboBox_CompressMode_Other = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
             this.comboBox_KB_or_MB = new System.Windows.Forms.ComboBox();
             this.numericUpDown_Size = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
-            this.numericUpDown_Value = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown_Quality = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.comboBox_CompressionMode = new System.Windows.Forms.ComboBox();
+            this.comboBox_CompressMode_JPEG = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.numericUpDown_IconHeight = new System.Windows.Forms.NumericUpDown();
+            this.label21 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
-            this.numericUpDown_IconSize = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown_IconWidth = new System.Windows.Forms.NumericUpDown();
             this.label17 = new System.Windows.Forms.Label();
             this.numericUpDown_LimitHeight = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown_LimitWidth = new System.Windows.Forms.NumericUpDown();
@@ -92,9 +97,10 @@ namespace PicSizer
             this.splitContainer2.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Size)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Value)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Quality)).BeginInit();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_IconSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_IconHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_IconWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -173,34 +179,51 @@ namespace PicSizer
             // groupBox2
             // 
             this.groupBox2.CausesValidation = false;
-            this.groupBox2.Controls.Add(this.comboBox_NonJPEGCompressMethod);
+            this.groupBox2.Controls.Add(this.comboBox_CompressMode_ICON);
+            this.groupBox2.Controls.Add(this.label22);
+            this.groupBox2.Controls.Add(this.comboBox_CompressMode_Other);
             this.groupBox2.Controls.Add(this.label16);
             this.groupBox2.Controls.Add(this.comboBox_KB_or_MB);
             this.groupBox2.Controls.Add(this.numericUpDown_Size);
             this.groupBox2.Controls.Add(this.label8);
-            this.groupBox2.Controls.Add(this.numericUpDown_Value);
+            this.groupBox2.Controls.Add(this.numericUpDown_Quality);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.comboBox_CompressionMode);
+            this.groupBox2.Controls.Add(this.comboBox_CompressMode_JPEG);
             resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
             // 
-            // comboBox_NonJPEGCompressMethod
+            // comboBox_CompressMode_ICON
             // 
-            this.comboBox_NonJPEGCompressMethod.CausesValidation = false;
-            this.comboBox_NonJPEGCompressMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_NonJPEGCompressMethod.FormattingEnabled = true;
-            this.comboBox_NonJPEGCompressMethod.Items.AddRange(new object[] {
-            resources.GetString("comboBox_NonJPEGCompressMethod.Items"),
-            resources.GetString("comboBox_NonJPEGCompressMethod.Items1")});
-            resources.ApplyResources(this.comboBox_NonJPEGCompressMethod, "comboBox_NonJPEGCompressMethod");
-            this.comboBox_NonJPEGCompressMethod.Name = "comboBox_NonJPEGCompressMethod";
+            this.comboBox_CompressMode_ICON.CausesValidation = false;
+            this.comboBox_CompressMode_ICON.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_CompressMode_ICON.FormattingEnabled = true;
+            this.comboBox_CompressMode_ICON.Items.AddRange(new object[] {
+            resources.GetString("comboBox_CompressMode_ICON.Items")});
+            resources.ApplyResources(this.comboBox_CompressMode_ICON, "comboBox_CompressMode_ICON");
+            this.comboBox_CompressMode_ICON.Name = "comboBox_CompressMode_ICON";
+            // 
+            // label22
+            // 
+            resources.ApplyResources(this.label22, "label22");
+            this.label22.Name = "label22";
+            // 
+            // comboBox_CompressMode_Other
+            // 
+            this.comboBox_CompressMode_Other.CausesValidation = false;
+            this.comboBox_CompressMode_Other.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_CompressMode_Other.FormattingEnabled = true;
+            this.comboBox_CompressMode_Other.Items.AddRange(new object[] {
+            resources.GetString("comboBox_CompressMode_Other.Items"),
+            resources.GetString("comboBox_CompressMode_Other.Items1")});
+            resources.ApplyResources(this.comboBox_CompressMode_Other, "comboBox_CompressMode_Other");
+            this.comboBox_CompressMode_Other.Name = "comboBox_CompressMode_Other";
             // 
             // label16
             // 
-            this.label16.CausesValidation = false;
             resources.ApplyResources(this.label16, "label16");
+            this.label16.CausesValidation = false;
             this.label16.Name = "label16";
             // 
             // comboBox_KB_or_MB
@@ -243,17 +266,17 @@ namespace PicSizer
             this.label8.CausesValidation = false;
             this.label8.Name = "label8";
             // 
-            // numericUpDown_Value
+            // numericUpDown_Quality
             // 
-            this.numericUpDown_Value.CausesValidation = false;
-            resources.ApplyResources(this.numericUpDown_Value, "numericUpDown_Value");
-            this.numericUpDown_Value.Name = "numericUpDown_Value";
-            this.numericUpDown_Value.Value = new decimal(new int[] {
+            this.numericUpDown_Quality.CausesValidation = false;
+            resources.ApplyResources(this.numericUpDown_Quality, "numericUpDown_Quality");
+            this.numericUpDown_Quality.Name = "numericUpDown_Quality";
+            this.numericUpDown_Quality.Value = new decimal(new int[] {
             80,
             0,
             0,
             0});
-            this.numericUpDown_Value.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
+            this.numericUpDown_Quality.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
             // 
             // label7
             // 
@@ -267,23 +290,26 @@ namespace PicSizer
             this.label6.CausesValidation = false;
             this.label6.Name = "label6";
             // 
-            // comboBox_CompressionMode
+            // comboBox_CompressMode_JPEG
             // 
-            this.comboBox_CompressionMode.CausesValidation = false;
-            this.comboBox_CompressionMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_CompressionMode.FormattingEnabled = true;
-            this.comboBox_CompressionMode.Items.AddRange(new object[] {
-            resources.GetString("comboBox_CompressionMode.Items"),
-            resources.GetString("comboBox_CompressionMode.Items1")});
-            resources.ApplyResources(this.comboBox_CompressionMode, "comboBox_CompressionMode");
-            this.comboBox_CompressionMode.Name = "comboBox_CompressionMode";
-            this.comboBox_CompressionMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_CompressionMode_SelectedIndexChanged);
+            this.comboBox_CompressMode_JPEG.CausesValidation = false;
+            this.comboBox_CompressMode_JPEG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_CompressMode_JPEG.FormattingEnabled = true;
+            this.comboBox_CompressMode_JPEG.Items.AddRange(new object[] {
+            resources.GetString("comboBox_CompressMode_JPEG.Items"),
+            resources.GetString("comboBox_CompressMode_JPEG.Items1")});
+            resources.ApplyResources(this.comboBox_CompressMode_JPEG, "comboBox_CompressMode_JPEG");
+            this.comboBox_CompressMode_JPEG.Name = "comboBox_CompressMode_JPEG";
+            this.comboBox_CompressMode_JPEG.SelectedIndexChanged += new System.EventHandler(this.CompressionMode_JPEG_SelectedIndexChanged);
             // 
             // groupBox1
             // 
             this.groupBox1.CausesValidation = false;
+            this.groupBox1.Controls.Add(this.label20);
+            this.groupBox1.Controls.Add(this.numericUpDown_IconHeight);
+            this.groupBox1.Controls.Add(this.label21);
             this.groupBox1.Controls.Add(this.label18);
-            this.groupBox1.Controls.Add(this.numericUpDown_IconSize);
+            this.groupBox1.Controls.Add(this.numericUpDown_IconWidth);
             this.groupBox1.Controls.Add(this.label17);
             this.groupBox1.Controls.Add(this.numericUpDown_LimitHeight);
             this.groupBox1.Controls.Add(this.numericUpDown_LimitWidth);
@@ -297,33 +323,67 @@ namespace PicSizer
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
             // 
+            // label20
+            // 
+            resources.ApplyResources(this.label20, "label20");
+            this.label20.CausesValidation = false;
+            this.label20.Name = "label20";
+            // 
+            // numericUpDown_IconHeight
+            // 
+            this.numericUpDown_IconHeight.CausesValidation = false;
+            resources.ApplyResources(this.numericUpDown_IconHeight, "numericUpDown_IconHeight");
+            this.numericUpDown_IconHeight.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDown_IconHeight.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown_IconHeight.Name = "numericUpDown_IconHeight";
+            this.numericUpDown_IconHeight.Value = new decimal(new int[] {
+            64,
+            0,
+            0,
+            0});
+            this.numericUpDown_IconHeight.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
+            // 
+            // label21
+            // 
+            resources.ApplyResources(this.label21, "label21");
+            this.label21.CausesValidation = false;
+            this.label21.Name = "label21";
+            // 
             // label18
             // 
             resources.ApplyResources(this.label18, "label18");
             this.label18.CausesValidation = false;
             this.label18.Name = "label18";
             // 
-            // numericUpDown_IconSize
+            // numericUpDown_IconWidth
             // 
-            this.numericUpDown_IconSize.CausesValidation = false;
-            resources.ApplyResources(this.numericUpDown_IconSize, "numericUpDown_IconSize");
-            this.numericUpDown_IconSize.Maximum = new decimal(new int[] {
+            this.numericUpDown_IconWidth.CausesValidation = false;
+            resources.ApplyResources(this.numericUpDown_IconWidth, "numericUpDown_IconWidth");
+            this.numericUpDown_IconWidth.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
-            this.numericUpDown_IconSize.Minimum = new decimal(new int[] {
+            this.numericUpDown_IconWidth.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericUpDown_IconSize.Name = "numericUpDown_IconSize";
-            this.numericUpDown_IconSize.Value = new decimal(new int[] {
+            this.numericUpDown_IconWidth.Name = "numericUpDown_IconWidth";
+            this.numericUpDown_IconWidth.Value = new decimal(new int[] {
             64,
             0,
             0,
             0});
-            this.numericUpDown_IconSize.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
+            this.numericUpDown_IconWidth.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
             // 
             // label17
             // 
@@ -464,6 +524,7 @@ namespace PicSizer
             resources.GetString("comboBox_ExtensionMode.Items5")});
             resources.ApplyResources(this.comboBox_ExtensionMode, "comboBox_ExtensionMode");
             this.comboBox_ExtensionMode.Name = "comboBox_ExtensionMode";
+            this.comboBox_ExtensionMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_ExtensionMode_SelectedIndexChanged);
             // 
             // label12
             // 
@@ -719,10 +780,11 @@ namespace PicSizer
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Size)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Value)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Quality)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_IconSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_IconHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_IconWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitWidth)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -753,18 +815,18 @@ namespace PicSizer
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.ComboBox comboBox_NonJPEGCompressMethod;
+        private System.Windows.Forms.ComboBox comboBox_CompressMode_Other;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.ComboBox comboBox_KB_or_MB;
         private System.Windows.Forms.NumericUpDown numericUpDown_Size;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.NumericUpDown numericUpDown_Value;
+        private System.Windows.Forms.NumericUpDown numericUpDown_Quality;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ComboBox comboBox_CompressionMode;
+        private System.Windows.Forms.ComboBox comboBox_CompressMode_JPEG;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.NumericUpDown numericUpDown_IconSize;
+        private System.Windows.Forms.NumericUpDown numericUpDown_IconWidth;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.NumericUpDown numericUpDown_LimitHeight;
         private System.Windows.Forms.NumericUpDown numericUpDown_LimitWidth;
@@ -799,5 +861,10 @@ namespace PicSizer
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label_BackgroundColor;
         private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.NumericUpDown numericUpDown_IconHeight;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.ComboBox comboBox_CompressMode_ICON;
     }
 }

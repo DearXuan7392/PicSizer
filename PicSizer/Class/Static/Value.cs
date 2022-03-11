@@ -12,6 +12,11 @@
         /// </summary>
         public static bool CoverOriginalFile = false;
 
+        /// <summary>
+        /// 输出目录
+        /// </summary>
+        public static string OutputDir;
+
         //窗体
         public static Form1 mainForm;
         public static SettingForm settingForm = new SettingForm();

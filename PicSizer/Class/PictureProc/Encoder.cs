@@ -14,6 +14,7 @@ namespace PicSizer.Class.PictureProc
         /// </summary>
         public static PixelFormat[] pixelFormats = new PixelFormat[]
         {
+            PixelFormat.Format4bppIndexed,
             PixelFormat.Format8bppIndexed,//901
             PixelFormat.Format16bppArgb1555,//4536
             PixelFormat.Format32bppArgb//11474

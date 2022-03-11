@@ -14,14 +14,19 @@ namespace PicSizer.Class.Partial
         public ResizeMode resizeMode = ResizeMode.None;
 
         /// <summary>
-        /// 压缩模式
+        /// JPEG图片的压缩方式
         /// </summary>
-        public CompressionMode compressionMode = CompressionMode.SizeFirst;
+        public CompressionMode_JPEG CompressionMode_Jpeg = CompressionMode_JPEG.SizeFirst;
 
         /// <summary>
-        /// 非JPEG图片的压缩方式
+        /// ICON图片的压缩方式
         /// </summary>
-        public NonJEPGCompressMethod nonJEPGCompressMethod = NonJEPGCompressMethod.ScaleBased;
+        public CompressionMode_ICON CompressionMode_Icon = CompressionMode_ICON.ScaleBased;
+
+        /// <summary>
+        /// 其它图片的压缩方式
+        /// </summary>
+        public CompressionMode_Other CompressionMode_Other = CompressionMode_Other.ScaleBased;
 
         /// <summary>
         /// 命名方式
@@ -44,9 +49,14 @@ namespace PicSizer.Class.Partial
         public int LimitHeight = 1080;
 
         /// <summary>
-        /// ICON图标的尺寸，宽==高
+        /// ICON图标的尺寸，宽
         /// </summary>
-        public byte IconLimitSize = 64;
+        public byte IconLimitWidth = 64;
+
+        /// <summary>
+        /// ICON图标的尺寸，高
+        /// </summary>
+        public byte IconLimitHeight = 64;
 
         /// <summary>
         /// 指定大小(KB)
@@ -56,7 +66,7 @@ namespace PicSizer.Class.Partial
         /// <summary>
         /// 指定画质
         /// </summary>
-        public long CompressionValue = 80L;
+        public long Quality = 80L;
 
         /// <summary>
         /// 起始下标
@@ -96,14 +106,14 @@ namespace PicSizer.Class.Partial
         /// <summary>
         /// 永远置顶
         /// </summary>
-        public bool topMost = true;
+        public bool topMost = false;
 
         /// <summary>
         /// 是否启动GPU加速
         /// </summary>
         public bool useGPU = false;
 
-        public byte[] backgroundColor = new byte[] { 255, 255, 255 };
+        public byte[] backgroundColor = { 255, 255, 255 };
 
         /// <summary>
         /// 水印模式

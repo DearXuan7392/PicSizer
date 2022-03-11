@@ -17,11 +17,6 @@ namespace PicSizer.Class.PictureProc
         private static int PicIndex = 0;
 
         /// <summary>
-        /// 输出目录
-        /// </summary>
-        public static string OutputDir;
-
-        /// <summary>
         /// 图片集合的下标
         /// </summary>
         private static int CollectionIndex = -1;

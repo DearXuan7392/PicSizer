@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
 using PicSizer.Class.Partial;
 using PicSizer.Class.Static;
@@ -12,34 +13,17 @@ namespace PicSizer.Class.PictureProc
         /// </summary>
         public static void StartResizer(string resDir)
         {
-            ThreadsPool.OutputDir = resDir;
+            Value.OutputDir = resDir;
             ThreadsPool.StartThreadsPool();
         }
 
         public static bool ResizeOnePicture(string path)
         {
+            AtomPic atomPic = null;
             try
             {
-                //大小优先
-                if (Value.setting.compressionMode == CompressionMode.SizeFirst)
-                {
-                    if (!Compress.CompressionBySize(path)) throw new Exception("图片\"" + path + "\"压缩后仍较大");
-                }
-                //画质优先
-                else
-                {
-                    System.Drawing.Bitmap bitmap = null;
-                    try
-                    {
-                        bitmap = Compress.GetBitmapFromPath(path);
-                        string output = FileCheck.GetResultFileName(path, ThreadsPool.OutputDir, ThreadsPool.GetPicNum());
-                        if (!Compress.CompressionByValue(bitmap, output)) throw new Exception("图片\"" + path + "\"压缩后仍较大");
-                    }
-                    finally
-                    {
-                        bitmap?.Dispose();
-                    }
-                }
+                atomPic = new AtomPic(path);
+                if(!Compress.CompressAtomPic(atomPic)) throw new Exception("图片\"" + path + "\"压缩后仍较大");
                 Update(true); // 压缩成功，进度条加一
                 return true;
             }
@@ -66,6 +50,10 @@ namespace PicSizer.Class.PictureProc
                         break;
                 }
                 return false;
+            }
+            finally
+            {
+                atomPic?.Dispose();
             }
         }
 

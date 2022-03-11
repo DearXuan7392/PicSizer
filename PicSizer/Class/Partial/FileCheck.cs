@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
+using PicSizer.Class.PictureProc;
 using PicSizer.Class.Static;
 
 namespace PicSizer.Class.Partial
@@ -22,80 +23,58 @@ namespace PicSizer.Class.Partial
             return path.Substring(i).ToLower();
         }
 
-        /// <summary>
-        /// 获取要把指定图片导出的格式
-        /// </summary>
-        public static ImageFormat GetFileExportFormat(string path)
+        public static ExtensionMode GetExtensionMode(string path)
         {
-            //选择了原格式
-            if(Value.setting.extensionMode == ExtensionMode.Original)
+            if (Value.setting.extensionMode == ExtensionMode.Original)
             {
-                return GetImageFormat(path);
+                string extension = GetExtension(path);
+                switch (extension)
+                {
+                    case ".jpg":
+                    case ".jpeg":
+                        return ExtensionMode.JPEG;
+                    case ".png":
+                        return ExtensionMode.PNG;
+                    case ".bmp":
+                        return ExtensionMode.BMP;
+                    case ".tif":
+                    case ".tiff":
+                        return ExtensionMode.TIFF;
+                    case ".ico":
+                    case ".icon":
+                        return ExtensionMode.ICON;
+                    default:
+                        throw new Exception("不支持导出的编码: \"" + extension + "\"");
+                }
             }
-            //选择了某一个指定的格式
             else
             {
-                return Value.setting.extensionMode.ToImageFormat();
-            }
-        }
-
-        /// <summary>
-        /// 从路径里获取图片编码方式
-        /// </summary>
-        public static ImageFormat GetImageFormat(string path)
-        {
-            string extension = GetExtension(path);
-            switch (extension)
-            {
-                case ".jpg":
-                case ".jpeg":
-                    return ImageFormat.Jpeg;
-                case ".png":
-                    return ImageFormat.Png;
-                case ".bmp":
-                    return ImageFormat.Bmp;
-                case ".tif":
-                case ".tiff":
-                    return ImageFormat.Tiff;
-                case ".ico":
-                    return ImageFormat.Icon;
-                default:
-                    throw new Exception("不支持导出的编码: \"" + extension + "\"");
+                return Value.setting.extensionMode;
             }
         }
 
         /// <summary>
         /// 从给定的源文件，生成路径，序号获取文件名，并保存扩展名方式
         /// </summary>
-        public static string GetResultFileName(string ori, string dir, int num)
+        public static string GetResultFileName(AtomPic atomPic, int num)
         {
             //如果选择“覆盖源文件”，则直接返回源文件路径
             if (Value.CoverOriginalFile)
             {
-                return ori;
+                return atomPic.originalFilename;
             }
             //求出后缀名
-            string extension;
-            if (Value.setting.extensionMode == ExtensionMode.Original)
-            {
-                //原格式
-                extension = GetExtension(ori);
-            }
-            else
-            {
-                //自定义格式
-                extension = Value.setting.extensionMode.ToFormat();
-            }
+            string extension = atomPic.Extension.ToFormat();
             switch (Value.setting.renameMode)
             {
                 case RenameMode.Number://纯数字
-                    return Path.Combine(dir, num + extension);
+                    return Path.Combine(Value.OutputDir, num + extension);
                 case RenameMode.Original://原名
-                    return Path.Combine(dir, Path.GetFileNameWithoutExtension(ori) + extension);
+                    return Path.Combine(Value.OutputDir, Path.GetFileNameWithoutExtension(atomPic.originalFilename) + extension);
                 case RenameMode.Custom://混合命名
-                    string oriStr = Path.GetFileNameWithoutExtension(ori);//文件原名
+                    string oriStr = Path.GetFileNameWithoutExtension(atomPic.originalFilename);//文件原名
                     string numStr = num.ToString();//序号
-                    return Path.Combine(dir, Value.setting.CustomRenameStr.Replace("{ori}", oriStr).Replace("{num}", numStr) + extension);
+                    return Path.Combine(Value.OutputDir, Value.setting.CustomRenameStr.Replace("{ori}", oriStr).Replace("{num}", numStr) + extension);
                 default:
                     return null;
             }

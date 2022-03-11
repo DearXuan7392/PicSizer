@@ -7,20 +7,61 @@ namespace PicSizer.Class.Partial
     /// </summary>
     public enum ResizeMode
     {
+        /// <summary>
+        /// 无修正
+        /// </summary>
         None = 0,
+        /// <summary>
+        /// 不小于限定值
+        /// </summary>
         MinSize = 1,
+        /// <summary>
+        /// 不大于限定值
+        /// </summary>
         MaxSize = 2,
+        /// <summary>
+        /// 强制修正
+        /// </summary>
         Custom = 3,
+        /// <summary>
+        /// 居中裁剪
+        /// </summary>
         Cut = 4
     }
 
     /// <summary>
     /// 压缩模式
     /// </summary>
-    public enum CompressionMode
+    public enum CompressionMode_JPEG
     {
         SizeFirst = 0,
         QualityFirst = 1
+    }
+
+    /// <summary>
+    /// 对ICON图片的压缩方式
+    /// </summary>
+    public enum CompressionMode_ICON
+    {
+        /// <summary>
+        /// 基于缩放的压缩
+        /// </summary>
+        ScaleBased = 0
+    }
+    
+    /// <summary>
+    /// 对其它图片的压缩方式
+    /// </summary>
+    public enum CompressionMode_Other
+    {
+        /// <summary>
+        /// 基于缩放的压缩
+        /// </summary>
+        ScaleBased = 0,
+        /// <summary>
+        /// 基于位深度的压缩
+        /// </summary>
+        BitDepthBased = 1
     }
 
     /// <summary>
@@ -71,21 +112,6 @@ namespace PicSizer.Class.Partial
         /// 弹出错误并立即退出
         /// </summary>
         ShowAndExit = 4
-    }
-
-    /// <summary>
-    /// 对非JPEG图片的压缩方式
-    /// </summary>
-    public enum NonJEPGCompressMethod
-    {
-        /// <summary>
-        /// 基于缩放的压缩
-        /// </summary>
-        ScaleBased = 0,
-        /// <summary>
-        /// 基于位深度的压缩
-        /// </summary>
-        PixelDeepBased = 1
     }
 
     /// <summary>
@@ -154,7 +180,7 @@ namespace PicSizer.Class.Partial
                 case ExtensionMode.BMP: return System.Drawing.Imaging.ImageFormat.Bmp;
                 case ExtensionMode.TIFF: return System.Drawing.Imaging.ImageFormat.Tiff;
                 case ExtensionMode.ICON: return System.Drawing.Imaging.ImageFormat.Icon;
-                default: return null;
+                default: throw new Exception("格式错误");
             }
         }
     }
