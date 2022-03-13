@@ -106,6 +106,10 @@ namespace PicSizer
             {
                 Dialog.OpenLink("https://gitee.com/picsizer/pic-sizer/issues");
             }
+            else if(sender == 检查更新ToolStripMenuItem)
+            {
+                Class.Partial.Update.CheckUpdate(Info.ProjectVersion.alpha);
+            }
         }
 
         /// <summary>
@@ -118,14 +122,7 @@ namespace PicSizer
                 string[] fileList = Dialog.Show_OpenFileDialog();
                 if (fileList != null && fileList.Length != 0)
                 {
-                    int fileCount = fileList.Length;
-                    int result = listView1.AddPicturesFromPath(fileList);
-                    result = fileCount - result;
-                    //如果此时result不是0，则说明有图片被忽略
-                    if (result != 0)
-                    {
-                        Dialog.ShowDialog(result + " 张重复的图片已被忽略.");
-                    }
+                    listView1.AddPicturesFromPath(fileList);
                 }
             }
             else if (sender == 打开文件夹ToolStripMenuItem)

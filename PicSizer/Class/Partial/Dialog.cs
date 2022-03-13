@@ -4,6 +4,8 @@ using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using PicSizer.Class.Static;
 using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace PicSizer.Class.Partial
 {
@@ -12,7 +14,8 @@ namespace PicSizer.Class.Partial
         private const string _Title = "PicSizer";
         private const string _Error = "错误";
 
-        private static string _Dialog_String_Filter_PictureOnly = "常规格式|*.jpg;*.png;*.bmp;" + Extension.ExtensionTypeListToFilter();
+        private static string _Dialog_String_Filter_PictureOnly =
+            "常规格式|*.jpg;*.png;*.bmp;" + Extension.ExtensionTypeListToFilter();
 
         private static string _Dialog_String_Filter_All = _Dialog_String_Filter_PictureOnly + "|所有|*.*";
 
@@ -74,14 +77,19 @@ namespace PicSizer.Class.Partial
             return MessageBox.Show(Value.mainForm, msg, _Title, MessageBoxButtons.OKCancel) == DialogResult.OK;
         }
 
+        public static DialogResult ShowDialog_RetryCancel(string msg)
+        {
+            return MessageBox.Show(Value.mainForm, msg, _Title, MessageBoxButtons.RetryCancel);
+        }
+
         /// <summary>
         /// 弹出版本错误框
         /// </summary>
         public static bool ShowDialog_VersionError(SettingIO.SettingFilePrefix prefix)
         {
             string s = "不匹配的文件版本!\n\n该配置文件对应的版本是: " + prefix.PicSizerVersion.ToString() + "\n" +
-                "而您的版本是: " + Info.ProjectVersion.ToString() + "\n\n" +
-                "继续加载可能会引发错误，仍然要加载吗?";
+                       "而您的版本是: " + Info.ProjectVersion.ToString() + "\n\n" +
+                       "继续加载可能会引发错误，仍然要加载吗?";
             return ShowDialog_OKDialog(s);
         }
 
@@ -118,6 +126,7 @@ namespace PicSizer.Class.Partial
             {
                 dialog.Filter = _Dialog_String_Filter_PictureOnly;
             }
+
             //允许多选
             dialog.Multiselect = true;
             //点击了确定
@@ -125,6 +134,7 @@ namespace PicSizer.Class.Partial
             {
                 return dialog.FileNames;
             }
+
             return null;
         }
 
@@ -145,9 +155,11 @@ namespace PicSizer.Class.Partial
                     Dialog.ShowDialog_Error("路径不能为空!");
                     return null;
                 }
+
                 //返回文件夹路径
                 return dialog.SelectedPath;
             }
+
             //返回空
             return null;
         }
@@ -156,7 +168,7 @@ namespace PicSizer.Class.Partial
         {
             ColorDialog dialog = new ColorDialog();
             dialog.Color = color;
-            if(dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
                 return dialog.Color;
             }
@@ -182,7 +194,8 @@ namespace PicSizer.Class.Partial
             }
             catch (Exception)
             {
-                MessageBox.Show(Value.mainForm, "打开浏览器失败，请将链接\"" + link + "\"复制到浏览器打开.", "PicSizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Value.mainForm, "打开浏览器失败，请将链接\"" + link + "\"复制到浏览器打开.", "PicSizer",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

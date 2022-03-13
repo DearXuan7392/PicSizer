@@ -51,6 +51,7 @@ namespace PicSizer
             this.文档ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.反馈和建议ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.检查更新ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.picDirPathText1 = new PicSizer_ControlLibrary.PicDirPathText();
             this.listView1 = new PicSizer_ControlLibrary.PicListView();
@@ -182,7 +183,8 @@ namespace PicSizer
             this.作者ToolStripMenuItem,
             this.文档ToolStripMenuItem,
             this.反馈和建议ToolStripMenuItem,
-            this.关于ToolStripMenuItem});
+            this.关于ToolStripMenuItem,
+            this.检查更新ToolStripMenuItem});
             this.帮助ToolStripMenuItem.Name = "帮助ToolStripMenuItem";
             resources.ApplyResources(this.帮助ToolStripMenuItem, "帮助ToolStripMenuItem");
             // 
@@ -190,25 +192,36 @@ namespace PicSizer
             // 
             this.作者ToolStripMenuItem.Name = "作者ToolStripMenuItem";
             resources.ApplyResources(this.作者ToolStripMenuItem, "作者ToolStripMenuItem");
+            this.作者ToolStripMenuItem.Tag = "0";
             this.作者ToolStripMenuItem.Click += new System.EventHandler(this.OnHelpMenuClick);
             // 
             // 文档ToolStripMenuItem
             // 
             this.文档ToolStripMenuItem.Name = "文档ToolStripMenuItem";
             resources.ApplyResources(this.文档ToolStripMenuItem, "文档ToolStripMenuItem");
+            this.文档ToolStripMenuItem.Tag = "1";
             this.文档ToolStripMenuItem.Click += new System.EventHandler(this.OnHelpMenuClick);
             // 
             // 反馈和建议ToolStripMenuItem
             // 
             this.反馈和建议ToolStripMenuItem.Name = "反馈和建议ToolStripMenuItem";
             resources.ApplyResources(this.反馈和建议ToolStripMenuItem, "反馈和建议ToolStripMenuItem");
+            this.反馈和建议ToolStripMenuItem.Tag = "2";
             this.反馈和建议ToolStripMenuItem.Click += new System.EventHandler(this.OnHelpMenuClick);
             // 
             // 关于ToolStripMenuItem
             // 
             this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
             resources.ApplyResources(this.关于ToolStripMenuItem, "关于ToolStripMenuItem");
+            this.关于ToolStripMenuItem.Tag = "3";
             this.关于ToolStripMenuItem.Click += new System.EventHandler(this.OnHelpMenuClick);
+            // 
+            // 检查更新ToolStripMenuItem
+            // 
+            this.检查更新ToolStripMenuItem.Name = "检查更新ToolStripMenuItem";
+            resources.ApplyResources(this.检查更新ToolStripMenuItem, "检查更新ToolStripMenuItem");
+            this.检查更新ToolStripMenuItem.Tag = "4";
+            this.检查更新ToolStripMenuItem.Click += new System.EventHandler(this.OnHelpMenuClick);
             // 
             // groupBox1
             // 
@@ -307,6 +320,7 @@ namespace PicSizer
         private System.Windows.Forms.ToolStripMenuItem 打开文件夹ToolStripMenuItem;
         private PicSizer_ControlLibrary.PicDirPathText picDirPathText1;
         private System.Windows.Forms.ToolStripMenuItem 反馈和建议ToolStripMenuItem;
+        public System.Windows.Forms.ToolStripMenuItem 检查更新ToolStripMenuItem;
     }
 }
 

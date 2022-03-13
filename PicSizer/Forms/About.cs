@@ -10,9 +10,10 @@ namespace PicSizer
         {
             InitializeComponent();
             this.Icon = Info.icon;
-            richTextBox1.Text = Info.ProjectName + "\n"
-                + "程序版本: " + Info.ProjectVersion + "\n\n"
-                + Info.Description;
+            richTextBox1.Text = richTextBox1.Text
+                .Replace("{{project_name}}", Info.ProjectName)
+                .Replace("{{project_version}}", Info.ProjectVersion.ToString());
+            button_download_alpha.Visible = !Info.ProjectVersion.alpha;
         }
 
         private void About_Load(object sender, EventArgs e)
@@ -23,6 +24,11 @@ namespace PicSizer
         private void button_author_Click(object sender, EventArgs e)
         {
             (new DearXuan()).ShowDialog();
+        }
+
+        private void button_download_alpha_Click(object sender, EventArgs e)
+        {
+            Class.Partial.Update.CheckUpdate(true);
         }
     }
 }

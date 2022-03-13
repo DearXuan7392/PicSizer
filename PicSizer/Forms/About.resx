@@ -163,14 +163,17 @@
     <value>None</value>
   </data>
   <data name="richTextBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>421, 129</value>
+    <value>421, 163</value>
   </data>
   <data name="richTextBox1.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
   <data name="richTextBox1.Text" xml:space="preserve">
-    <value>PicSizer
-</value>
+    <value>{{project_name}}
+程序版本: {{project_version}}
+
+{{project_name}}是一款可以指定压缩后大小的图片压缩软件，通过该软件，您可以轻易地将大量图片压缩到适合您的大小.
+本软件是一款开源软件，具体实现算法和程序代码均全部开放，因此您不必担心软件会存在病毒或后门.</value>
   </data>
   <data name="&gt;&gt;richTextBox1.Name" xml:space="preserve">
     <value>richTextBox1</value>
@@ -184,34 +187,34 @@
   <data name="&gt;&gt;richTextBox1.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="button_author.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Bottom, Right</value>
+  <data name="button_download_alpha.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
   </data>
-  <data name="button_author.Location" type="System.Drawing.Point, System.Drawing">
-    <value>358, 263</value>
+  <data name="button_download_alpha.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="button_author.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
+  <data name="button_download_alpha.Location" type="System.Drawing.Point, System.Drawing">
+    <value>344, 297</value>
   </data>
-  <data name="button_author.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
+  <data name="button_download_alpha.Size" type="System.Drawing.Size, System.Drawing">
+    <value>89, 33</value>
   </data>
-  <data name="button_author.Text" xml:space="preserve">
-    <value>作者</value>
+  <data name="button_download_alpha.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
   </data>
-  <data name="button_author.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
+  <data name="button_download_alpha.Text" xml:space="preserve">
+    <value>下载开发版</value>
   </data>
-  <data name="&gt;&gt;button_author.Name" xml:space="preserve">
-    <value>button_author</value>
+  <data name="&gt;&gt;button_download_alpha.Name" xml:space="preserve">
+    <value>button_download_alpha</value>
   </data>
-  <data name="&gt;&gt;button_author.Type" xml:space="preserve">
+  <data name="&gt;&gt;button_download_alpha.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;button_author.Parent" xml:space="preserve">
+  <data name="&gt;&gt;button_download_alpha.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;button_author.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;button_download_alpha.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -221,7 +224,7 @@
     <value>6, 12</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>445, 298</value>
+    <value>445, 338</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>

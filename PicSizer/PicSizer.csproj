@@ -205,6 +205,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class\Partial\FileCheck.cs" />
+    <Compile Include="Class\Partial\Update.cs" />
     <Compile Include="Class\PictureProc\AtomPic.cs" />
     <Compile Include="Class\PictureProc\BitmapStream.cs" />
     <Compile Include="Class\PictureProc\Compress.cs" />
@@ -220,6 +221,7 @@
     <Compile Include="Class\Static\ProjectInit.cs" />
     <Compile Include="Class\Static\Setting.cs" />
     <Compile Include="Class\Unit\Extension.cs" />
+    <Compile Include="Class\Unit\UpdateMsg.cs" />
     <Compile Include="Class\Unit\Version.cs" />
     <Compile Include="Forms\About.cs">
       <SubType>Form</SubType>

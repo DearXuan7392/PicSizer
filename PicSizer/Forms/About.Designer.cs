@@ -32,7 +32,7 @@ namespace PicSizer
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(About));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.button_author = new System.Windows.Forms.Button();
+            this.button_download_alpha = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -51,18 +51,18 @@ namespace PicSizer
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
             // 
-            // button_author
+            // button_download_alpha
             // 
-            resources.ApplyResources(this.button_author, "button_author");
-            this.button_author.Name = "button_author";
-            this.button_author.UseVisualStyleBackColor = true;
-            this.button_author.Click += new System.EventHandler(this.button_author_Click);
+            resources.ApplyResources(this.button_download_alpha, "button_download_alpha");
+            this.button_download_alpha.Name = "button_download_alpha";
+            this.button_download_alpha.UseVisualStyleBackColor = true;
+            this.button_download_alpha.Click += new System.EventHandler(this.button_download_alpha_Click);
             // 
             // About
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.button_author);
+            this.Controls.Add(this.button_download_alpha);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -79,6 +79,6 @@ namespace PicSizer
 
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.Button button_author;
+        private System.Windows.Forms.Button button_download_alpha;
     }
 }

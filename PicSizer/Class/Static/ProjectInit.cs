@@ -1,5 +1,6 @@
 ﻿using PicSizer.Class.Partial;
 using System.Drawing.Imaging;
+using System.Threading;
 using PicSizer.Class.Unit;
 
 namespace PicSizer.Class.Static
@@ -22,6 +23,16 @@ namespace PicSizer.Class.Static
                     Extension.BitmapSupportExtension.Add(extension);
                 }
             }
+            
+            //检查更新信息
+            Thread thread = new Thread(() =>
+            {
+                Update.GetLatestVersions();
+            })
+            {
+                Priority = ThreadPriority.Normal
+            };
+            thread.Start();
         }
 
         /// <summary>
