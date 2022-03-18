@@ -8,7 +8,7 @@ using PicSizer.Class.Static;
 
 namespace PicSizer.Class.Partial
 {
-    public static class FileCheck
+    public static class FileProc
     {
         /// <summary>
         /// 获取文件后缀名(包括点号,小写字母)

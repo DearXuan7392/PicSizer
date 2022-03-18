@@ -1,5 +1,5 @@
 ﻿
-namespace PicSizer
+namespace PicSizer.Forms
 {
     partial class DearXuan
     {
@@ -176,6 +176,7 @@ namespace PicSizer
             this.Controls.Add(this.pictureBox1);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DearXuan";

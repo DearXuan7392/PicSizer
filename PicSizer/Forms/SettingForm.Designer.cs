@@ -1,5 +1,5 @@
 ﻿
-namespace PicSizer
+namespace PicSizer.Forms
 {
     partial class SettingForm
     {
@@ -763,10 +763,12 @@ namespace PicSizer
             this.Controls.Add(this.button_Save);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SettingForm";
             this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SettingForm_FormClosing);
             this.Load += new System.EventHandler(this.SettingForm_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.SettingForm_DragDrop);

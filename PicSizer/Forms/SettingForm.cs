@@ -3,7 +3,7 @@ using PicSizer.Class.Static;
 using System;
 using System.Windows.Forms;
 
-namespace PicSizer
+namespace PicSizer.Forms
 {
     public partial class SettingForm : Form
     {

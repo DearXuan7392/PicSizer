@@ -18,9 +18,9 @@
         public static string OutputDir;
 
         //窗体
-        public static Form1 mainForm;
-        public static SettingForm settingForm = new SettingForm();
-        public static ProgressForm progressForm = new ProgressForm();
+        public static Forms.Form1 mainForm;
+        public static Forms.SettingForm settingForm = new Forms.SettingForm();
+        public static Forms.ProgressForm progressForm = new Forms.ProgressForm();
 
         /// <summary>
         /// 程序设置

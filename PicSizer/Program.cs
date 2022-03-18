@@ -14,7 +14,7 @@ namespace PicSizer
             PicSizer.Class.Static.ProjectInit.Init();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1(args));
+            Application.Run(new Forms.Form1(args));
         }
     }
 }

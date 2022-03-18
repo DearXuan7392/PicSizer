@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using PicSizer.Class.Static;
 
-namespace PicSizer
+namespace PicSizer.Forms
 {
     public partial class ProgressForm : Form
     {
@@ -13,6 +13,7 @@ namespace PicSizer
         public ProgressForm()
         {
             InitializeComponent();
+            Support.ForbidAltF4(this);
             this.Icon = Info.icon;
             CheckForIllegalCrossThreadCalls = false;
         }
@@ -47,15 +48,6 @@ namespace PicSizer
             label6.Text = error.ToString();
             label8.Text = percent + "%";
             progressBar1.Value = percent;
-        }
-
-        private void OnKeyDown(object sender, KeyEventArgs e)
-        {
-            //屏蔽Alt+F4
-            if (e.KeyCode == Keys.F4 && e.Alt == true)
-            {
-                e.Handled = true;
-            }
         }
 
         private void ProgressForm_Load(object sender, EventArgs e)

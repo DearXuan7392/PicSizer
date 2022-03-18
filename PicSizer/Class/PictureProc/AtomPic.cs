@@ -31,7 +31,7 @@ namespace PicSizer.Class.PictureProc
         /// </summary>
         public string OutputFilename
         {
-            get => FileCheck.GetResultFileName(this, ThreadsPool.GetPicNum());
+            get => FileProc.GetResultFileName(this, ThreadsPool.GetPicNum());
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace PicSizer.Class.PictureProc
             try
             {
                 //判断要生成的文件后缀
-                Extension = FileCheck.GetExtensionMode(originalFilename);
+                Extension = FileProc.GetExtensionMode(originalFilename);
                 ExportImageFormat = Extension == ExtensionMode.ICON
                     ? ImageFormat.Png
                     : Extension.ToImageFormat();

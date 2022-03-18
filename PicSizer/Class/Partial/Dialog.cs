@@ -9,7 +9,7 @@ using System.Text;
 
 namespace PicSizer.Class.Partial
 {
-    public static class Dialog
+    public static partial class Dialog
     {
         private const string _Title = "PicSizer";
         private const string _Error = "错误";
@@ -161,6 +161,25 @@ namespace PicSizer.Class.Partial
             }
 
             //返回空
+            return null;
+        }
+
+        /// <summary>
+        /// 将新版本下载到硬盘
+        /// </summary>
+        public static string Show_SaveOnDiskDialog()
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Title = "选择保存路径";
+            dialog.DefaultExt = "txt";
+            dialog.Filter = "可执行文件|*.exe";
+            dialog.FileName = "PicSizer.exe";
+            //点击了确定
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                return dialog.FileNames[0];
+            }
+
             return null;
         }
 

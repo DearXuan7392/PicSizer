@@ -6,7 +6,7 @@ using PicSizer.Class.Partial;
 using PicSizer.Class.Static;
 using System.IO;
 
-namespace PicSizer
+namespace PicSizer.Forms
 {
     public partial class Form1 : Form
     {
@@ -178,6 +178,11 @@ namespace PicSizer
             {
                 listView1.SelectReverse();
             }
+        }
+
+        private void OnAppExit(object sender, FormClosedEventArgs e)
+        {
+            System.Environment.Exit(0);
         }
     }
 }

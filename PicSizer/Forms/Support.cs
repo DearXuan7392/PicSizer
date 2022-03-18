@@ -26,6 +26,17 @@ namespace PicSizer.Forms
             }
         }
 
+        public static void ForbidAltF4(Form form)
+        {
+            form.KeyDown += (sender, e) =>
+            {
+                if (e.KeyCode == Keys.F4 && e.Alt)
+                {
+                    e.Handled = true;
+                }
+            };
+        }
+
         /// <summary>
         /// 绑定数字输入控件和滑动控件
         /// </summary>

@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using PicSizer.Class.Static;
 
-namespace PicSizer
+namespace PicSizer.Forms
 {
     public partial class About : Form
     {

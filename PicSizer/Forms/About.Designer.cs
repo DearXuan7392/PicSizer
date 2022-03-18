@@ -1,5 +1,5 @@
 ﻿
-namespace PicSizer
+namespace PicSizer.Forms
 {
     partial class About
     {
@@ -30,18 +30,11 @@ namespace PicSizer
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(About));
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.button_download_alpha = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // pictureBox1
-            // 
-            resources.ApplyResources(this.pictureBox1, "pictureBox1");
-            this.pictureBox1.Image = global::PicSizer.Resource.PicSizer_png;
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.TabStop = false;
             // 
             // richTextBox1
             // 
@@ -58,6 +51,13 @@ namespace PicSizer
             this.button_download_alpha.UseVisualStyleBackColor = true;
             this.button_download_alpha.Click += new System.EventHandler(this.button_download_alpha_Click);
             // 
+            // pictureBox1
+            // 
+            resources.ApplyResources(this.pictureBox1, "pictureBox1");
+            this.pictureBox1.Image = global::PicSizer.Resource.PicSizer_png;
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.TabStop = false;
+            // 
             // About
             // 
             resources.ApplyResources(this, "$this");
@@ -66,9 +66,11 @@ namespace PicSizer
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "About";
+            this.ShowInTaskbar = false;
             this.Load += new System.EventHandler(this.About_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);

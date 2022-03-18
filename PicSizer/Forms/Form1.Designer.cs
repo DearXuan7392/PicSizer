@@ -1,5 +1,5 @@
 ﻿
-namespace PicSizer
+namespace PicSizer.Forms
 {
     partial class Form1
     {
@@ -280,8 +280,10 @@ namespace PicSizer
             this.Controls.Add(this.button_StartResize);
             this.Controls.Add(this.menuStrip1);
             this.DoubleBuffered = true;
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnAppExit);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

@@ -19,8 +19,17 @@ namespace PicSizer.Class.Partial
         private static UpdateMsg Version_Official = null;
         private static UpdateMsg Version_Alpha = null;
 
+        /// <summary>
+        /// 正在查询的标记
+        /// </summary>
+        private static bool CanConnect = true;
+
         private static string _Already_Latest = "当前版本(" + Info.ProjectVersion + ")已经是最新版!";
 
+        /// <summary>
+        /// 检查更新
+        /// </summary>
+        /// <param name="alpha">待检测的版本,如果是正式版则只会查找正式版;如果是测试版则同时查找正式版和测试版</param>
         public static void CheckUpdate(bool alpha)
         {
             if (Version_Official == null || Version_Alpha == null)
@@ -32,21 +41,35 @@ namespace PicSizer.Class.Partial
                 }
                 return;
             }
-            
-            UpdateMsg latest = alpha
-                ? Version_Alpha
-                : Version_Official;
-                //当前版本小于最新版
+
+            //查找更新的版本
+            UpdateMsg latest;
+            if (alpha)
+            {
+                latest = Version_Alpha.Version.CompareTo(Version_Official.Version) > 0
+                    ? Version_Alpha
+                    : Version_Official;
+            }
+            else
+            {
+                latest = Version_Official;
+            }
+            //当前版本小于最新版
             if (Info.ProjectVersion.CompareTo(latest.Version) < 0)
             {
                 string s = "发现新版本(" + Info.ProjectVersion + " -> " + latest.Version + "):\n\n更新日志:\n" 
                            + latest.desc 
                            + (latest.Version.alpha
                            ? "\n开发版可能不稳定,是否仍要下载?"
-                           : "\n立即前往下载?");
+                           : "\n立即下载?");
                 if (Dialog.ShowDialog_OKDialog(s))
                 {
-                    Dialog.OpenLink(latest.download);
+                    //Dialog.OpenLink(latest.download);
+                    string path = Dialog.Show_SaveOnDiskDialog();
+                    if (!string.IsNullOrWhiteSpace(path))
+                    {
+                        HttpReader.SaveFileToDisk(latest.download, path);
+                    }
                 }
             }
             else
@@ -64,33 +87,37 @@ namespace PicSizer.Class.Partial
             {
                 return;
             }
-            WebClient client = new WebClient();
-            client.Encoding = Encoding.UTF8;
-            foreach (string url in _URL)
+
+            if (CanConnect)
             {
-                try
+                CanConnect = false;
+                const int delay = 500; // 单次连接最大时长(ms)
+                foreach (string url in _URL)
                 {
-                    string data = client.DownloadString(url);
-                    XmlDocument xmlDocument = new XmlDocument();
-                    xmlDocument.LoadXml(data);
-                    XmlNode root = xmlDocument.SelectSingleNode("picsizer");
-                    Version_Official = ReadVersionFromXmlNode(root.SelectSingleNode("official"));
-                    Version_Alpha = ReadVersionFromXmlNode(root.SelectSingleNode("alpha"));
-                    Version_Alpha.Version.alpha = true;
-                    if (Info.ProjectVersion.CompareTo(Version_Official.Version) >= 0)
+                    try
                     {
-                        Value.mainForm.检查更新ToolStripMenuItem.Text = "已是最新版";
+                        XmlDocument xmlDocument = new XmlDocument();
+                        xmlDocument.LoadXml(HttpReader.ReadTextFromUrl(url, delay));
+                        XmlNode root = xmlDocument.SelectSingleNode("picsizer");
+                        Version_Official = ReadVersionFromXmlNode(root.SelectSingleNode("official"));
+                        Version_Alpha = ReadVersionFromXmlNode(root.SelectSingleNode("alpha"));
+                        Version_Alpha.Version.alpha = true;
+                        if (Info.ProjectVersion.CompareTo(Version_Official.Version) >= 0)
+                        {
+                            Value.mainForm.检查更新ToolStripMenuItem.Text = "已是最新版";
+                        }
+                        else
+                        {
+                            Value.mainForm.检查更新ToolStripMenuItem.Text = "更新可用!";
+                        }
+                        return;
                     }
-                    else
-                    {
-                        Value.mainForm.检查更新ToolStripMenuItem.Text = "更新可用!";
-                    }
-                    return;
+                    catch(Exception)
+                    { }
                 }
-                catch(Exception)
-                { }
+                Version_Official = Version_Alpha = null;
+                CanConnect = true;
             }
-            Version_Official = Version_Alpha = null;
         }
 
         private static UpdateMsg ReadVersionFromXmlNode(XmlNode node)

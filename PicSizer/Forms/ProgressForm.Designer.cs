@@ -1,5 +1,5 @@
 ﻿
-namespace PicSizer
+namespace PicSizer.Forms
 {
     partial class ProgressForm
     {
@@ -111,12 +111,13 @@ namespace PicSizer
             this.Controls.Add(this.progressBar1);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ProgressForm";
             this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Load += new System.EventHandler(this.ProgressForm_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
