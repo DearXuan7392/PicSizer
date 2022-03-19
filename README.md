@@ -1,4 +1,4 @@
-## 项目介绍(v4.7.0)
+## 项目介绍(v4.9.1)
 
 PicSizer是一款图片批量压缩软件，解决了传统压缩软件只能指定压缩比，而不能指定压缩后的大小的问题。
 
@@ -29,7 +29,11 @@ PicSizer是一款图片批量压缩软件，解决了传统压缩软件只能指
 
 ### 下载地址
 
-[PicSizer发行版(x64)](https://gitee.com/picsizer/pic-sizer/releases)
+[从Gitee下载最新版](https://gitee.com/picsizer/pic-sizer/releases)
+
+[从Vercel直链下载稳定版](https://picsizer.dearxuan.top/official)
+
+[从Vercel直链下载开发版](https://picsizer.dearxuan.top/alpha)
 
 ### 界面截图
 
@@ -41,7 +45,7 @@ PicSizer是一款图片批量压缩软件，解决了传统压缩软件只能指
 
 ## 格式说明
 
-PicSizer可以读取的格式很多，但是支持的输出格式只有JPEG, PNG, BMP, TIFF, ICON四个，并且会自动调整压缩策略。
+PicSizer可以读取的格式很多，但是支持的输出格式只有JPEG, PNG, BMP, TIFF, ICON五个，并且会自动调整压缩策略。
 
 其中JPEG支持画质压缩,而其它格式的图片仅支持缩放压缩和位深度压缩,[点击这里](#压缩方式)快速跳转到相关说明
 
