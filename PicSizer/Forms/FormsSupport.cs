@@ -2,6 +2,7 @@
 using PicSizer.Class.Static;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,6 +62,33 @@ namespace PicSizer.Forms
                     ValueChange = true;
                 }
             };
+        }
+
+        /// <summary>
+        /// 把颜色转成byte数组
+        /// </summary>
+        public static byte[] ColorToBytes(Color color)
+        {
+            return new byte[]
+            {
+                color.R,
+                color.G,
+                color.B
+            };
+        }
+
+        /// <summary>
+        /// 把byte数组转成颜色
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        public static Color BytesToColor(byte[] bytes)
+        {
+            return Color.FromArgb(
+                255,
+                bytes[0],
+                bytes[1],
+                bytes[2]);
         }
     }
 }
