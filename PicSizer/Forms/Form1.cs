@@ -104,7 +104,7 @@ namespace PicSizer.Forms
             }
             else if (sender == 反馈和建议ToolStripMenuItem)
             {
-                Dialog.OpenLink("https://gitee.com/picsizer/pic-sizer/issues");
+                System.Diagnostics.Process.Start("mailto:picsizer@dearxuan.top");
             }
             else if(sender == 检查更新ToolStripMenuItem)
             {

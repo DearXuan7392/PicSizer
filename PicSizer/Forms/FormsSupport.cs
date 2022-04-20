@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace PicSizer.Forms
 {
-    public static class Support
+    public static class FormsSupport
     {
         /// <summary>
         /// 设置置顶
@@ -80,12 +80,10 @@ namespace PicSizer.Forms
         /// <summary>
         /// 把byte数组转成颜色
         /// </summary>
-        /// <param name="bytes"></param>
-        /// <returns></returns>
-        public static Color BytesToColor(byte[] bytes)
+        public static Color BytesToColor(byte[] bytes, byte alpha = 255)
         {
             return Color.FromArgb(
-                255,
+                alpha,
                 bytes[0],
                 bytes[1],
                 bytes[2]);

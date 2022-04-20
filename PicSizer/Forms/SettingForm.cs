@@ -12,8 +12,9 @@ namespace PicSizer.Forms
             InitializeComponent();
             this.Icon = Info.icon;
             CheckForIllegalCrossThreadCalls = false;
-            Forms.Support.BindNumericAndTrack(numericUpDown_Threads, trackBar_Threads);
-            Forms.Support.BindNumericAndTrack(numericUpDown_Brightness, trackBar_Brightness);
+            Forms.FormsSupport.BindNumericAndTrack(numericUpDown_Threads, trackBar_Threads);
+            Forms.FormsSupport.BindNumericAndTrack(numericUpDown_Brightness, trackBar_Brightness);
+            Forms.FormsSupport.BindNumericAndTrack(numericUpDown_WatermarkTransparency, trackBar_WatermarkTransparency);
         }
 
         private void SettingForm_Load(object sender, EventArgs e)
@@ -67,11 +68,15 @@ namespace PicSizer.Forms
             //图像处理
             trackBar_Brightness.Value = setting.brightness;//亮度
             checkBox_UseGPU.Checked = setting.useGPU;//硬件加速
-            label_BackgroundColor.BackColor = System.Drawing.Color.FromArgb(
-                255,
-                setting.backgroundColor[0],
-                setting.backgroundColor[1],
-                setting.backgroundColor[2]);//背景色
+            label_BackgroundColor.BackColor = FormsSupport.BytesToColor(setting.backgroundColor);//背景色
+            
+            //水印
+            comboBox_WatermarkMode.SelectedIndex = setting.watermarkMode.ToInt();
+            label_WatermarkColor.BackColor = label_WatermarkFont.ForeColor 
+                = FormsSupport.BytesToColor(setting.watermarkColor);//水印颜色
+            label_WatermarkFont.Font = setting.watermarkFont;//水印字体
+            numericUpDown_WatermarkTransparency.Value = setting.watermarkAlpha;//水印不透明度
+            textBox_WatermarkText.Text = setting.watermarkText;//水印文本
         }
 
         /// <summary>
@@ -158,12 +163,14 @@ namespace PicSizer.Forms
                 //图像处理
                 brightness = (byte)trackBar_Brightness.Value,//亮度
                 useGPU = checkBox_UseGPU.Enabled && checkBox_UseGPU.Checked,//硬件加速
-                backgroundColor = new byte[]
-                {
-                    label_BackgroundColor.BackColor.R,
-                    label_BackgroundColor.BackColor.G,
-                    label_BackgroundColor.BackColor.B
-                }
+                backgroundColor = FormsSupport.ColorToBytes(label_BackgroundColor.BackColor),//背景色
+                
+                //水印
+                watermarkMode = (WatermarkMode)comboBox_WatermarkMode.SelectedIndex,
+                watermarkColor = FormsSupport.ColorToBytes(label_WatermarkColor.BackColor),//水印颜色
+                watermarkFont = label_WatermarkFont.Font,//水印字体
+                watermarkAlpha = (byte)numericUpDown_WatermarkTransparency.Value,//水印不透明度
+                watermarkText = textBox_WatermarkText.Text//水印文本
             };
             return setting;
         }
@@ -211,6 +218,19 @@ namespace PicSizer.Forms
         }
 
         /// <summary>
+        /// 水印模式被修改
+        /// </summary>
+        private void comboBox_WatermarkMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            numericUpDown_WatermarkTransparency.Enabled
+                = trackBar_WatermarkTransparency.Enabled
+                = label_WatermarkColor.Enabled
+                = label_WatermarkFont.Enabled
+                = textBox_WatermarkText.Enabled
+                = comboBox_WatermarkMode.SelectedIndex != WatermarkMode.Non.ToInt();
+        }
+
+        /// <summary>
         /// 单击"导出"按钮
         /// </summary>
         private void button_Export_Click(object sender, EventArgs e)
@@ -253,7 +273,7 @@ namespace PicSizer.Forms
         /// </summary>
         private void checkBox_TopMost_CheckedChanged(object sender, EventArgs e)
         {
-            Forms.Support.SetTopMost(checkBox_TopMost.Checked);
+            Forms.FormsSupport.SetTopMost(checkBox_TopMost.Checked);
         }
 
         /// <summary>
@@ -261,7 +281,7 @@ namespace PicSizer.Forms
         /// </summary>
         private void SettingForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Forms.Support.SetTopMost(Value.setting.topMost);
+            Forms.FormsSupport.SetTopMost(Value.setting.topMost);
         }
 
         private void SettingForm_DragEnter(object sender, DragEventArgs e)
@@ -321,7 +341,7 @@ namespace PicSizer.Forms
         /// </summary>
         private void OnColorChoose(object sender, EventArgs e)
         {
-            label_BackgroundColor.BackColor = Dialog.Show_ColorChooseDialog(label_BackgroundColor.BackColor);
+            ((Label)sender).BackColor = Dialog.Show_ColorChooseDialog(label_BackgroundColor.BackColor);
         }
 
         /// <summary>
@@ -365,6 +385,19 @@ namespace PicSizer.Forms
                     numericUpDown_Size.Enabled = comboBox_KB_or_MB.Enabled = true;
                     break;
             }
+        }
+
+        private void OnFontChoose(object sender, EventArgs e)
+        {
+            ((Label)sender).Font = Dialog.Show_FontChooseDialog(((Label)sender).Font);
+        }
+
+        private void OnWatermarkColorChoose(object sender, EventArgs e)
+        {
+            Label label = sender as Label;
+            label.BackColor 
+                = label_WatermarkFont.ForeColor
+                = Dialog.Show_ColorChooseDialog(label.BackColor);
         }
     }
 }

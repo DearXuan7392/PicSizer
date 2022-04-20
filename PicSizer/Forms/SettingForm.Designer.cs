@@ -83,12 +83,25 @@ namespace PicSizer.Forms
             this.comboBox_DoWhenException = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.comboBox_WatermarkMode = new System.Windows.Forms.ComboBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.trackBar_WatermarkTransparency = new System.Windows.Forms.TrackBar();
+            this.numericUpDown_WatermarkTransparency = new System.Windows.Forms.NumericUpDown();
+            this.label26 = new System.Windows.Forms.Label();
+            this.label_WatermarkFont = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label_WatermarkColor = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.textBox_WatermarkText = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.label_BackgroundColor = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.checkBox_UseGPU = new System.Windows.Forms.CheckBox();
-            this.numericUpDown_Brightness = new System.Windows.Forms.NumericUpDown();
-            this.trackBar_Brightness = new System.Windows.Forms.TrackBar();
             this.label14 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.trackBar_Brightness = new System.Windows.Forms.TrackBar();
+            this.numericUpDown_Brightness = new System.Windows.Forms.NumericUpDown();
+            this.checkBox_UseGPU = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -113,8 +126,12 @@ namespace PicSizer.Forms
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_Threads)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Threads)).BeginInit();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Brightness)).BeginInit();
+            this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_WatermarkTransparency)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_WatermarkTransparency)).BeginInit();
+            this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_Brightness)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Brightness)).BeginInit();
             this.SuspendLayout();
             // 
             // button_Save
@@ -690,15 +707,126 @@ namespace PicSizer.Forms
             // 
             this.tabPage2.BackColor = System.Drawing.Color.Transparent;
             this.tabPage2.CausesValidation = false;
-            this.tabPage2.Controls.Add(this.label_BackgroundColor);
-            this.tabPage2.Controls.Add(this.label19);
+            this.tabPage2.Controls.Add(this.groupBox6);
+            this.tabPage2.Controls.Add(this.groupBox5);
             this.tabPage2.Controls.Add(this.checkBox_UseGPU);
-            this.tabPage2.Controls.Add(this.numericUpDown_Brightness);
-            this.tabPage2.Controls.Add(this.trackBar_Brightness);
-            this.tabPage2.Controls.Add(this.label14);
             resources.ApplyResources(this.tabPage2, "tabPage2");
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // groupBox6
+            // 
+            resources.ApplyResources(this.groupBox6, "groupBox6");
+            this.groupBox6.Controls.Add(this.comboBox_WatermarkMode);
+            this.groupBox6.Controls.Add(this.label27);
+            this.groupBox6.Controls.Add(this.trackBar_WatermarkTransparency);
+            this.groupBox6.Controls.Add(this.numericUpDown_WatermarkTransparency);
+            this.groupBox6.Controls.Add(this.label26);
+            this.groupBox6.Controls.Add(this.label_WatermarkFont);
+            this.groupBox6.Controls.Add(this.label25);
+            this.groupBox6.Controls.Add(this.label_WatermarkColor);
+            this.groupBox6.Controls.Add(this.label24);
+            this.groupBox6.Controls.Add(this.textBox_WatermarkText);
+            this.groupBox6.Controls.Add(this.label23);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.TabStop = false;
+            // 
+            // comboBox_WatermarkMode
+            // 
+            this.comboBox_WatermarkMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_WatermarkMode.FormattingEnabled = true;
+            this.comboBox_WatermarkMode.Items.AddRange(new object[] {
+            resources.GetString("comboBox_WatermarkMode.Items"),
+            resources.GetString("comboBox_WatermarkMode.Items1"),
+            resources.GetString("comboBox_WatermarkMode.Items2"),
+            resources.GetString("comboBox_WatermarkMode.Items3"),
+            resources.GetString("comboBox_WatermarkMode.Items4"),
+            resources.GetString("comboBox_WatermarkMode.Items5")});
+            resources.ApplyResources(this.comboBox_WatermarkMode, "comboBox_WatermarkMode");
+            this.comboBox_WatermarkMode.Name = "comboBox_WatermarkMode";
+            this.comboBox_WatermarkMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_WatermarkMode_SelectedIndexChanged);
+            // 
+            // label27
+            // 
+            resources.ApplyResources(this.label27, "label27");
+            this.label27.Name = "label27";
+            // 
+            // trackBar_WatermarkTransparency
+            // 
+            resources.ApplyResources(this.trackBar_WatermarkTransparency, "trackBar_WatermarkTransparency");
+            this.trackBar_WatermarkTransparency.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
+            this.trackBar_WatermarkTransparency.CausesValidation = false;
+            this.trackBar_WatermarkTransparency.LargeChange = 10;
+            this.trackBar_WatermarkTransparency.Maximum = 100;
+            this.trackBar_WatermarkTransparency.Name = "trackBar_WatermarkTransparency";
+            this.trackBar_WatermarkTransparency.SmallChange = 5;
+            this.trackBar_WatermarkTransparency.TickFrequency = 10;
+            this.trackBar_WatermarkTransparency.Value = 100;
+            // 
+            // numericUpDown_WatermarkTransparency
+            // 
+            this.numericUpDown_WatermarkTransparency.CausesValidation = false;
+            resources.ApplyResources(this.numericUpDown_WatermarkTransparency, "numericUpDown_WatermarkTransparency");
+            this.numericUpDown_WatermarkTransparency.Name = "numericUpDown_WatermarkTransparency";
+            this.numericUpDown_WatermarkTransparency.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // label26
+            // 
+            resources.ApplyResources(this.label26, "label26");
+            this.label26.Name = "label26";
+            // 
+            // label_WatermarkFont
+            // 
+            this.label_WatermarkFont.BackColor = System.Drawing.Color.Transparent;
+            this.label_WatermarkFont.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label_WatermarkFont.Cursor = System.Windows.Forms.Cursors.Hand;
+            resources.ApplyResources(this.label_WatermarkFont, "label_WatermarkFont");
+            this.label_WatermarkFont.Name = "label_WatermarkFont";
+            this.label_WatermarkFont.Click += new System.EventHandler(this.OnFontChoose);
+            // 
+            // label25
+            // 
+            resources.ApplyResources(this.label25, "label25");
+            this.label25.Name = "label25";
+            // 
+            // label_WatermarkColor
+            // 
+            this.label_WatermarkColor.BackColor = System.Drawing.Color.White;
+            this.label_WatermarkColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label_WatermarkColor.Cursor = System.Windows.Forms.Cursors.Hand;
+            resources.ApplyResources(this.label_WatermarkColor, "label_WatermarkColor");
+            this.label_WatermarkColor.Name = "label_WatermarkColor";
+            this.label_WatermarkColor.Click += new System.EventHandler(this.OnWatermarkColorChoose);
+            // 
+            // label24
+            // 
+            resources.ApplyResources(this.label24, "label24");
+            this.label24.Name = "label24";
+            // 
+            // textBox_WatermarkText
+            // 
+            resources.ApplyResources(this.textBox_WatermarkText, "textBox_WatermarkText");
+            this.textBox_WatermarkText.Name = "textBox_WatermarkText";
+            // 
+            // label23
+            // 
+            resources.ApplyResources(this.label23, "label23");
+            this.label23.Name = "label23";
+            // 
+            // groupBox5
+            // 
+            resources.ApplyResources(this.groupBox5, "groupBox5");
+            this.groupBox5.Controls.Add(this.label_BackgroundColor);
+            this.groupBox5.Controls.Add(this.label14);
+            this.groupBox5.Controls.Add(this.label19);
+            this.groupBox5.Controls.Add(this.trackBar_Brightness);
+            this.groupBox5.Controls.Add(this.numericUpDown_Brightness);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.TabStop = false;
             // 
             // label_BackgroundColor
             // 
@@ -709,30 +837,16 @@ namespace PicSizer.Forms
             this.label_BackgroundColor.Name = "label_BackgroundColor";
             this.label_BackgroundColor.Click += new System.EventHandler(this.OnColorChoose);
             // 
+            // label14
+            // 
+            resources.ApplyResources(this.label14, "label14");
+            this.label14.CausesValidation = false;
+            this.label14.Name = "label14";
+            // 
             // label19
             // 
             resources.ApplyResources(this.label19, "label19");
             this.label19.Name = "label19";
-            // 
-            // checkBox_UseGPU
-            // 
-            resources.ApplyResources(this.checkBox_UseGPU, "checkBox_UseGPU");
-            this.checkBox_UseGPU.CausesValidation = false;
-            this.checkBox_UseGPU.Name = "checkBox_UseGPU";
-            this.checkBox_UseGPU.UseVisualStyleBackColor = true;
-            this.checkBox_UseGPU.CheckedChanged += new System.EventHandler(this.checkBox_UseGPU_CheckedChanged);
-            // 
-            // numericUpDown_Brightness
-            // 
-            this.numericUpDown_Brightness.CausesValidation = false;
-            resources.ApplyResources(this.numericUpDown_Brightness, "numericUpDown_Brightness");
-            this.numericUpDown_Brightness.Name = "numericUpDown_Brightness";
-            this.numericUpDown_Brightness.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.numericUpDown_Brightness.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
             // 
             // trackBar_Brightness
             // 
@@ -746,11 +860,25 @@ namespace PicSizer.Forms
             this.trackBar_Brightness.TickFrequency = 10;
             this.trackBar_Brightness.Value = 100;
             // 
-            // label14
+            // numericUpDown_Brightness
             // 
-            resources.ApplyResources(this.label14, "label14");
-            this.label14.CausesValidation = false;
-            this.label14.Name = "label14";
+            this.numericUpDown_Brightness.CausesValidation = false;
+            resources.ApplyResources(this.numericUpDown_Brightness, "numericUpDown_Brightness");
+            this.numericUpDown_Brightness.Name = "numericUpDown_Brightness";
+            this.numericUpDown_Brightness.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDown_Brightness.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
+            // 
+            // checkBox_UseGPU
+            // 
+            resources.ApplyResources(this.checkBox_UseGPU, "checkBox_UseGPU");
+            this.checkBox_UseGPU.CausesValidation = false;
+            this.checkBox_UseGPU.Name = "checkBox_UseGPU";
+            this.checkBox_UseGPU.UseVisualStyleBackColor = true;
+            this.checkBox_UseGPU.CheckedChanged += new System.EventHandler(this.checkBox_UseGPU_CheckedChanged);
             // 
             // SettingForm
             // 
@@ -802,8 +930,14 @@ namespace PicSizer.Forms
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Threads)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Brightness)).EndInit();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_WatermarkTransparency)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_WatermarkTransparency)).EndInit();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_Brightness)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Brightness)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -868,5 +1002,18 @@ namespace PicSizer.Forms
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.ComboBox comboBox_CompressMode_ICON;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.Label label_WatermarkFont;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label label_WatermarkColor;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.TextBox textBox_WatermarkText;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.TrackBar trackBar_WatermarkTransparency;
+        private System.Windows.Forms.NumericUpDown numericUpDown_WatermarkTransparency;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.ComboBox comboBox_WatermarkMode;
+        private System.Windows.Forms.Label label27;
     }
 }

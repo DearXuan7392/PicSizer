@@ -41,7 +41,7 @@ namespace PicSizer.Class.Static
         public static void After()
         {
             //设置置顶
-            Forms.Support.SetTopMost(Value.setting.topMost);
+            Forms.FormsSupport.SetTopMost(Value.setting.topMost);
         }
     }
 }

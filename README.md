@@ -1,4 +1,4 @@
-## 项目介绍(v4.9.1)
+## 项目介绍(v4.9.2)
 
 PicSizer是一款图片批量压缩软件，解决了传统压缩软件只能指定压缩比，而不能指定压缩后的大小的问题。
 
@@ -8,7 +8,7 @@ PicSizer是一款图片批量压缩软件，解决了传统压缩软件只能指
 
 如果你想知道软件的原理，可以参考以下文章
 
-[C#图像压缩相关方法总结](https://www.dearxuan.top/2022/02/07/C-%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%E7%9B%B8%E5%85%B3%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/)
+[C#图像压缩相关方法总结](https://www.dearxuan.com/2022/02/07/C-%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%E7%9B%B8%E5%85%B3%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/)
 
 ## PicSizer的优势
 
@@ -29,11 +29,11 @@ PicSizer是一款图片批量压缩软件，解决了传统压缩软件只能指
 
 ### 下载地址
 
-[从Gitee下载最新版](https://gitee.com/picsizer/pic-sizer/releases)
+[转到Gitee下载](https://gitee.com/picsizer/pic-sizer/releases)
 
-[从Vercel直链下载稳定版](https://picsizer.dearxuan.top/official)
+[直链下载稳定版](https://picsizer.dearxuan.com/official)
 
-[从Vercel直链下载开发版](https://picsizer.dearxuan.top/alpha)
+[直链下载开发版](https://picsizer.dearxuan.com/alpha)
 
 ### 界面截图
 
@@ -319,7 +319,7 @@ PicSizer支持最多10个线程同时处理图片，但是默认只使用2个线
 
 你可以在设置里修改并发线程数。
 
-### 配置文件
+### 导出设置
 
 你可以将配置文件导出以便下次快速修改相关设置。
 

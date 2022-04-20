@@ -65,11 +65,11 @@ namespace PicSizer.Forms
         {
             try
             {
-                System.Diagnostics.Process.Start("mailto:mail@dearxuan.top");
+                System.Diagnostics.Process.Start("mailto:mail@dearxuan.com");
             }
             catch (Exception)
             {
-                Clipboard.SetText("mail@dearxuan.top");
+                Clipboard.SetText("mail@dearxuan.com");
                 MessageBox.Show("打开邮箱失败.邮箱地址已经复制到剪贴板.", "PicSizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

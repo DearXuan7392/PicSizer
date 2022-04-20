@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using PicSizer.Class.Static;
@@ -123,7 +124,22 @@ namespace PicSizer.Class.Partial
         /// <summary>
         /// 水印透明度,范围: 0~100,0表示完全没有,100表示明显水印
         /// </summary>
-        public byte watermarkAlpha = 50;
+        public byte watermarkAlpha = 100;
+
+        /// <summary>
+        /// 水印字体
+        /// </summary>
+        public Font watermarkFont = SystemFonts.DefaultFont;
+
+        /// <summary>
+        /// 水印颜色
+        /// </summary>
+        public byte[] watermarkColor = {0, 0, 0};
+
+        /// <summary>
+        /// 水印字符
+        /// </summary>
+        public string watermarkText = null;
     }
 
     public static class SettingIO

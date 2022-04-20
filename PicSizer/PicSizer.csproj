@@ -204,7 +204,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class\Net\HttpReader.cs" />
+    <Compile Include="Class\Net\Http.cs" />
     <Compile Include="Class\Net\Update.cs" />
     <Compile Include="Class\Partial\FileProc.cs" />
     <Compile Include="Class\PictureProc\AtomPic.cs" />
@@ -249,7 +249,7 @@
     <Compile Include="Forms\UpdateSaveForm.Designer.cs">
       <DependentUpon>UpdateSaveForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Support.cs" />
+    <Compile Include="Forms\FormsSupport.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Forms\ProgressForm.cs">
       <SubType>Form</SubType>

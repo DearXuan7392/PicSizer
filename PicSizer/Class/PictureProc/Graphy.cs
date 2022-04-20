@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using PicSizer.Class.Partial;
 using PicSizer.Class.Static;
 
 namespace PicSizer.Class.PictureProc
@@ -46,7 +47,62 @@ namespace PicSizer.Class.PictureProc
         /// </summary>
         public static void AddWatermark(Bitmap bitmap)
         {
-
+            if(Value.setting.watermarkMode == WatermarkMode.Non) return;
+            Graphics g = null;
+            //水印参数
+            Color color = Forms.FormsSupport.BytesToColor(Value.setting.watermarkColor,
+                (byte)(Value.setting.watermarkAlpha * 255 / 100)); // 水印颜色
+            //图片尺寸
+            int width = bitmap.Width;
+            int height = bitmap.Height;
+            try
+            {
+                g = Graphics.FromImage(bitmap);
+                //字符串画在Bitmap上的尺寸
+                SizeF sizeF = g.MeasureString(Value.setting.watermarkText, Value.setting.watermarkFont);
+                //水印范围
+                float textWidth = sizeF.Width;
+                float textHeight = sizeF.Height;
+                float rectX;
+                float rectY;
+                //选取位置
+                switch (Value.setting.watermarkMode)
+                {
+                    case WatermarkMode.Center:
+                        rectX = (width - textWidth) / 2;
+                        rectY = (height - textHeight) / 2;
+                        break;
+                    case WatermarkMode.LeftTop:
+                        rectX = 0;
+                        rectY = 0;
+                        break;
+                    case WatermarkMode.LeftBottom:
+                        rectX = 0;
+                        rectY = height - textWidth;
+                        break;
+                    case WatermarkMode.RightTop:
+                        rectX = width - textWidth;
+                        rectY = 0;
+                        break;
+                    case WatermarkMode.RightBottom:
+                        rectX = width - textWidth;
+                        rectY = height - textHeight;
+                        break;
+                    default:
+                        return;
+                }
+                RectangleF textArea = new RectangleF(rectX, rectY, textWidth, textHeight);
+                SolidBrush brush = new SolidBrush(color);
+                g.DrawString(
+                    Value.setting.watermarkText, 
+                    Value.setting.watermarkFont, 
+                    brush, 
+                    textArea);
+            }
+            finally
+            {
+                g?.Dispose();
+            }
         }
 
         /// <summary>
@@ -71,7 +127,7 @@ namespace PicSizer.Class.PictureProc
         /// <summary>
         /// 使用CPU调整亮度(RGB格式,一个像素3字节)
         /// </summary>
-        private unsafe static void _SetBrightnessByCSharp(Bitmap bitmap)
+        private static void _SetBrightnessByCSharp(Bitmap bitmap)
         {
             int width = bitmap.Width, height = bitmap.Height;
             BitmapData bitmapData = bitmap.LockBits(
@@ -113,7 +169,7 @@ namespace PicSizer.Class.PictureProc
             bitmap.UnlockBits(bitmapData);
         }
 
-        private unsafe static void _SetAlphaPixelColorByCSharp(Bitmap bitmap)
+        private static void _SetAlphaPixelColorByCSharp(Bitmap bitmap)
         {
             int width = bitmap.Width, height = bitmap.Height;
             BitmapData bitmapData = bitmap.LockBits(

@@ -12,7 +12,7 @@ namespace PicSizer.Class.Partial
     {
         private static readonly string[] _URL =
         {
-            "https://picsizer.dearxuan.top/version",
+            "https://picsizer.dearxuan.com/version",
             "https://picsizer.vercel.app/version"
         };
 
@@ -68,7 +68,7 @@ namespace PicSizer.Class.Partial
                     string path = Dialog.Show_SaveOnDiskDialog();
                     if (!string.IsNullOrWhiteSpace(path))
                     {
-                        HttpReader.SaveFileToDisk(latest.download, path);
+                        Http.SaveFileToDisk(latest.download, path);
                     }
                 }
             }
@@ -97,7 +97,7 @@ namespace PicSizer.Class.Partial
                     try
                     {
                         XmlDocument xmlDocument = new XmlDocument();
-                        xmlDocument.LoadXml(HttpReader.ReadTextFromUrl(url, delay));
+                        xmlDocument.LoadXml(Http.ReadTextFromUrl(url, delay));
                         XmlNode root = xmlDocument.SelectSingleNode("picsizer");
                         Version_Official = ReadVersionFromXmlNode(root.SelectSingleNode("official"));
                         Version_Alpha = ReadVersionFromXmlNode(root.SelectSingleNode("alpha"));

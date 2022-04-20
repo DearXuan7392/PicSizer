@@ -103,6 +103,8 @@ namespace PicSizer.Class.PictureProc
                 
                 //设置亮度
                 Graphy.SetBrightness(bitmap);
+                //添加水印
+                Graphy.AddWatermark(bitmap);
             }
             finally
             {

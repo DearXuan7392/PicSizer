@@ -38,7 +38,7 @@ namespace PicSizer.Forms
         public UpdateSaveForm(string url, string path)
         {
             InitializeComponent();
-            Support.ForbidAltF4(this);
+            FormsSupport.ForbidAltF4(this);
             CheckForIllegalCrossThreadCalls = false;
             TopMost = Value.setting.topMost;
             this.url = url;

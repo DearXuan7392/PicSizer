@@ -13,7 +13,7 @@ namespace PicSizer.Forms
         public ProgressForm()
         {
             InitializeComponent();
-            Support.ForbidAltF4(this);
+            FormsSupport.ForbidAltF4(this);
             this.Icon = Info.icon;
             CheckForIllegalCrossThreadCalls = false;
         }

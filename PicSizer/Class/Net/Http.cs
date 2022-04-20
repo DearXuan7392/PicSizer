@@ -5,7 +5,7 @@ using PicSizer.Forms;
 
 namespace PicSizer.Class.Partial
 {
-    public static class HttpReader
+    public static class Http
     {
         /// <summary>
         /// 从指定url读取text
@@ -28,9 +28,22 @@ namespace PicSizer.Class.Partial
             }
         }
 
+        /// <summary>
+        /// 将远程文件下载到本地硬盘
+        /// </summary>
         public static void SaveFileToDisk(string url, string path)
         {
             new UpdateSaveForm(url, path).ShowDialog();
+        }
+
+        /// <summary>
+        /// 发送反馈
+        /// </summary>
+        /// <param name="feedback"></param>
+        /// <returns></returns>
+        public static bool SendStrToServer(string feedback)
+        {
+            return true;
         }
         
         private class PicWebClient : WebClient

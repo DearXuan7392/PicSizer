@@ -58,7 +58,6 @@ namespace PicSizer.Class.Partial
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void ShowDialog_Exception(Exception e)
         {
-            //throw e;
             if (Info.ProjectVersion.alpha)
             {
                 ShowDialog_Error(e.ToString());
@@ -183,6 +182,9 @@ namespace PicSizer.Class.Partial
             return null;
         }
 
+        /// <summary>
+        /// 弹出选择颜色对话框
+        /// </summary>
         public static Color Show_ColorChooseDialog(Color color)
         {
             ColorDialog dialog = new ColorDialog();
@@ -194,6 +196,23 @@ namespace PicSizer.Class.Partial
             else
             {
                 return color;
+            }
+        }
+
+        /// <summary>
+        /// 弹出选择字体嘴滑开
+        /// </summary>
+        public static Font Show_FontChooseDialog(Font font)
+        {
+            FontDialog dialog = new FontDialog();
+            dialog.Font = font;
+            if(dialog.ShowDialog() == DialogResult.OK)
+            {
+                return dialog.Font;
+            }
+            else
+            {
+                return font;
             }
         }
 

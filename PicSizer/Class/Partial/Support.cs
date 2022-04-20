@@ -119,6 +119,9 @@ namespace PicSizer.Class.Partial
     /// </summary>
     public enum WatermarkMode
     {
+        /// <summary>
+        /// 无水印
+        /// </summary>
         Non = 0,
         /// <summary>
         /// 居中
