@@ -5,7 +5,8 @@
 
   <Costura>
     <Unmanaged64Assemblies>
-      PicSizer_CUDA
+      PicLibrary
+      libwebp
     </Unmanaged64Assemblies>
   </Costura>
 </Weavers>

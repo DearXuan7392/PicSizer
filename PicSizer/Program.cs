@@ -1,4 +1,7 @@
-﻿using System;
+﻿using PicSizer.Window;
+using System;
+using System.Diagnostics;
+using System.Runtime;
 using System.Windows.Forms;
 
 namespace PicSizer
@@ -11,10 +14,12 @@ namespace PicSizer
         [STAThread]
         static void Main(string[] args)
         {
-            PicSizer.Class.Static.ProjectInit.Init();
+            //载入dll
+            FileIO.DLL.LoadDll();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Forms.Form1(args));
+            Application.Run(new Window.Forms.MainForm());
+
         }
     }
 }
