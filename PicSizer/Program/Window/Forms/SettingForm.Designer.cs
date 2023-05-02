@@ -1,0 +1,806 @@
+﻿
+namespace PicSizer.Window.Forms
+{
+    partial class SettingForm
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingForm));
+            this.button_Save = new System.Windows.Forms.Button();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.comboBox_KB_or_MB = new System.Windows.Forms.ComboBox();
+            this.numericUpDown_Size = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
+            this.numericUpDown_Quality = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.comboBox_CompressType = new System.Windows.Forms.ComboBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.numericUpDown_LimitHeight = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown_LimitWidth = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.comboBox_ResizeMode = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.comboBox_ExtensionMode = new System.Windows.Forms.ComboBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.textBox_OutputFilename = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.numericUpDown_StartIndex = new System.Windows.Forms.NumericUpDown();
+            this.label10 = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.checkBox_AcceptExceedPicture = new System.Windows.Forms.CheckBox();
+            this.trackBar_Threads = new System.Windows.Forms.TrackBar();
+            this.numericUpDown_Threads = new System.Windows.Forms.NumericUpDown();
+            this.label15 = new System.Windows.Forms.Label();
+            this.checkBox_TopMost = new System.Windows.Forms.CheckBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.comboBox_WatermarkMode = new System.Windows.Forms.ComboBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.trackBar_WatermarkTransparency = new System.Windows.Forms.TrackBar();
+            this.numericUpDown_WatermarkTransparency = new System.Windows.Forms.NumericUpDown();
+            this.label26 = new System.Windows.Forms.Label();
+            this.label_WatermarkFont = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label_WatermarkColor = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.textBox_WatermarkText = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label_BackgroundColor = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.trackBar_Brightness = new System.Windows.Forms.TrackBar();
+            this.numericUpDown_Brightness = new System.Windows.Forms.NumericUpDown();
+            this.checkBox_UseGPU = new System.Windows.Forms.CheckBox();
+            this.toolTip_GPU = new System.Windows.Forms.ToolTip(this.components);
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Size)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Quality)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitWidth)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_StartIndex)).BeginInit();
+            this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_Threads)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Threads)).BeginInit();
+            this.tabPage2.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_WatermarkTransparency)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_WatermarkTransparency)).BeginInit();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_Brightness)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Brightness)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // button_Save
+            // 
+            resources.ApplyResources(this.button_Save, "button_Save");
+            this.button_Save.CausesValidation = false;
+            this.button_Save.Name = "button_Save";
+            this.button_Save.UseVisualStyleBackColor = true;
+            this.button_Save.Click += new System.EventHandler(this.button_Save_Click);
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.CausesValidation = false;
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            resources.ApplyResources(this.tabControl1, "tabControl1");
+            this.tabControl1.Multiline = true;
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.BackColor = System.Drawing.Color.Transparent;
+            this.tabPage1.CausesValidation = false;
+            this.tabPage1.Controls.Add(this.splitContainer2);
+            this.tabPage1.Controls.Add(this.splitContainer1);
+            resources.ApplyResources(this.tabPage1, "tabPage1");
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer2
+            // 
+            resources.ApplyResources(this.splitContainer2, "splitContainer2");
+            this.splitContainer2.CausesValidation = false;
+            this.splitContainer2.Name = "splitContainer2";
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.groupBox2);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
+            this.splitContainer2.TabStop = false;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.CausesValidation = false;
+            this.groupBox2.Controls.Add(this.comboBox_KB_or_MB);
+            this.groupBox2.Controls.Add(this.numericUpDown_Size);
+            this.groupBox2.Controls.Add(this.label8);
+            this.groupBox2.Controls.Add(this.numericUpDown_Quality);
+            this.groupBox2.Controls.Add(this.label7);
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Controls.Add(this.comboBox_CompressType);
+            resources.ApplyResources(this.groupBox2, "groupBox2");
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.TabStop = false;
+            // 
+            // comboBox_KB_or_MB
+            // 
+            this.comboBox_KB_or_MB.CausesValidation = false;
+            this.comboBox_KB_or_MB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_KB_or_MB.FormattingEnabled = true;
+            this.comboBox_KB_or_MB.Items.AddRange(new object[] {
+            resources.GetString("comboBox_KB_or_MB.Items"),
+            resources.GetString("comboBox_KB_or_MB.Items1")});
+            resources.ApplyResources(this.comboBox_KB_or_MB, "comboBox_KB_or_MB");
+            this.comboBox_KB_or_MB.Name = "comboBox_KB_or_MB";
+            this.comboBox_KB_or_MB.SelectedIndexChanged += new System.EventHandler(this.comboBox_KB_or_MB_SelectedIndexChanged);
+            // 
+            // numericUpDown_Size
+            // 
+            this.numericUpDown_Size.CausesValidation = false;
+            resources.ApplyResources(this.numericUpDown_Size, "numericUpDown_Size");
+            this.numericUpDown_Size.Maximum = new decimal(new int[] {
+            1048576,
+            0,
+            0,
+            0});
+            this.numericUpDown_Size.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown_Size.Name = "numericUpDown_Size";
+            this.numericUpDown_Size.Value = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numericUpDown_Size.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
+            // 
+            // label8
+            // 
+            resources.ApplyResources(this.label8, "label8");
+            this.label8.CausesValidation = false;
+            this.label8.Name = "label8";
+            // 
+            // numericUpDown_Quality
+            // 
+            this.numericUpDown_Quality.CausesValidation = false;
+            resources.ApplyResources(this.numericUpDown_Quality, "numericUpDown_Quality");
+            this.numericUpDown_Quality.Name = "numericUpDown_Quality";
+            this.numericUpDown_Quality.Value = new decimal(new int[] {
+            80,
+            0,
+            0,
+            0});
+            this.numericUpDown_Quality.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
+            // 
+            // label7
+            // 
+            resources.ApplyResources(this.label7, "label7");
+            this.label7.CausesValidation = false;
+            this.label7.Name = "label7";
+            // 
+            // label6
+            // 
+            resources.ApplyResources(this.label6, "label6");
+            this.label6.CausesValidation = false;
+            this.label6.Name = "label6";
+            // 
+            // comboBox_CompressType
+            // 
+            this.comboBox_CompressType.CausesValidation = false;
+            this.comboBox_CompressType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_CompressType.FormattingEnabled = true;
+            this.comboBox_CompressType.Items.AddRange(new object[] {
+            resources.GetString("comboBox_CompressType.Items"),
+            resources.GetString("comboBox_CompressType.Items1")});
+            resources.ApplyResources(this.comboBox_CompressType, "comboBox_CompressType");
+            this.comboBox_CompressType.Name = "comboBox_CompressType";
+            this.comboBox_CompressType.SelectedIndexChanged += new System.EventHandler(this.CompressionMode_JPEG_SelectedIndexChanged);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.CausesValidation = false;
+            this.groupBox1.Controls.Add(this.numericUpDown_LimitHeight);
+            this.groupBox1.Controls.Add(this.numericUpDown_LimitWidth);
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.comboBox_ResizeMode);
+            this.groupBox1.Controls.Add(this.label1);
+            resources.ApplyResources(this.groupBox1, "groupBox1");
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.TabStop = false;
+            // 
+            // numericUpDown_LimitHeight
+            // 
+            this.numericUpDown_LimitHeight.CausesValidation = false;
+            resources.ApplyResources(this.numericUpDown_LimitHeight, "numericUpDown_LimitHeight");
+            this.numericUpDown_LimitHeight.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numericUpDown_LimitHeight.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown_LimitHeight.Name = "numericUpDown_LimitHeight";
+            this.numericUpDown_LimitHeight.Value = new decimal(new int[] {
+            1080,
+            0,
+            0,
+            0});
+            this.numericUpDown_LimitHeight.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
+            // 
+            // numericUpDown_LimitWidth
+            // 
+            this.numericUpDown_LimitWidth.CausesValidation = false;
+            resources.ApplyResources(this.numericUpDown_LimitWidth, "numericUpDown_LimitWidth");
+            this.numericUpDown_LimitWidth.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numericUpDown_LimitWidth.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown_LimitWidth.Name = "numericUpDown_LimitWidth";
+            this.numericUpDown_LimitWidth.Value = new decimal(new int[] {
+            1920,
+            0,
+            0,
+            0});
+            this.numericUpDown_LimitWidth.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
+            // 
+            // label5
+            // 
+            resources.ApplyResources(this.label5, "label5");
+            this.label5.CausesValidation = false;
+            this.label5.Name = "label5";
+            // 
+            // label4
+            // 
+            resources.ApplyResources(this.label4, "label4");
+            this.label4.CausesValidation = false;
+            this.label4.Name = "label4";
+            // 
+            // label3
+            // 
+            resources.ApplyResources(this.label3, "label3");
+            this.label3.CausesValidation = false;
+            this.label3.Name = "label3";
+            // 
+            // label2
+            // 
+            resources.ApplyResources(this.label2, "label2");
+            this.label2.CausesValidation = false;
+            this.label2.Name = "label2";
+            // 
+            // comboBox_ResizeMode
+            // 
+            this.comboBox_ResizeMode.CausesValidation = false;
+            this.comboBox_ResizeMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_ResizeMode.FormattingEnabled = true;
+            this.comboBox_ResizeMode.Items.AddRange(new object[] {
+            resources.GetString("comboBox_ResizeMode.Items"),
+            resources.GetString("comboBox_ResizeMode.Items1"),
+            resources.GetString("comboBox_ResizeMode.Items2"),
+            resources.GetString("comboBox_ResizeMode.Items3"),
+            resources.GetString("comboBox_ResizeMode.Items4")});
+            resources.ApplyResources(this.comboBox_ResizeMode, "comboBox_ResizeMode");
+            this.comboBox_ResizeMode.Name = "comboBox_ResizeMode";
+            this.comboBox_ResizeMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_ResizeMode_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.CausesValidation = false;
+            this.label1.Name = "label1";
+            // 
+            // splitContainer1
+            // 
+            resources.ApplyResources(this.splitContainer1, "splitContainer1");
+            this.splitContainer1.CausesValidation = false;
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.groupBox3);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.groupBox4);
+            this.splitContainer1.TabStop = false;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.CausesValidation = false;
+            this.groupBox3.Controls.Add(this.comboBox_ExtensionMode);
+            this.groupBox3.Controls.Add(this.label12);
+            this.groupBox3.Controls.Add(this.textBox_OutputFilename);
+            this.groupBox3.Controls.Add(this.label11);
+            this.groupBox3.Controls.Add(this.numericUpDown_StartIndex);
+            this.groupBox3.Controls.Add(this.label10);
+            resources.ApplyResources(this.groupBox3, "groupBox3");
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.TabStop = false;
+            // 
+            // comboBox_ExtensionMode
+            // 
+            this.comboBox_ExtensionMode.CausesValidation = false;
+            this.comboBox_ExtensionMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_ExtensionMode.FormattingEnabled = true;
+            this.comboBox_ExtensionMode.Items.AddRange(new object[] {
+            resources.GetString("comboBox_ExtensionMode.Items"),
+            resources.GetString("comboBox_ExtensionMode.Items1"),
+            resources.GetString("comboBox_ExtensionMode.Items2"),
+            resources.GetString("comboBox_ExtensionMode.Items3")});
+            resources.ApplyResources(this.comboBox_ExtensionMode, "comboBox_ExtensionMode");
+            this.comboBox_ExtensionMode.Name = "comboBox_ExtensionMode";
+            this.comboBox_ExtensionMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_ExtensionMode_SelectedIndexChanged);
+            // 
+            // label12
+            // 
+            resources.ApplyResources(this.label12, "label12");
+            this.label12.CausesValidation = false;
+            this.label12.Name = "label12";
+            // 
+            // textBox_OutputFilename
+            // 
+            this.textBox_OutputFilename.CausesValidation = false;
+            resources.ApplyResources(this.textBox_OutputFilename, "textBox_OutputFilename");
+            this.textBox_OutputFilename.Name = "textBox_OutputFilename";
+            // 
+            // label11
+            // 
+            resources.ApplyResources(this.label11, "label11");
+            this.label11.CausesValidation = false;
+            this.label11.Name = "label11";
+            // 
+            // numericUpDown_StartIndex
+            // 
+            this.numericUpDown_StartIndex.CausesValidation = false;
+            resources.ApplyResources(this.numericUpDown_StartIndex, "numericUpDown_StartIndex");
+            this.numericUpDown_StartIndex.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
+            this.numericUpDown_StartIndex.Minimum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDown_StartIndex.Name = "numericUpDown_StartIndex";
+            this.numericUpDown_StartIndex.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown_StartIndex.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
+            // 
+            // label10
+            // 
+            resources.ApplyResources(this.label10, "label10");
+            this.label10.CausesValidation = false;
+            this.label10.Name = "label10";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.CausesValidation = false;
+            this.groupBox4.Controls.Add(this.checkBox_AcceptExceedPicture);
+            this.groupBox4.Controls.Add(this.trackBar_Threads);
+            this.groupBox4.Controls.Add(this.numericUpDown_Threads);
+            this.groupBox4.Controls.Add(this.label15);
+            this.groupBox4.Controls.Add(this.checkBox_TopMost);
+            resources.ApplyResources(this.groupBox4, "groupBox4");
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.TabStop = false;
+            // 
+            // checkBox_AcceptExceedPicture
+            // 
+            resources.ApplyResources(this.checkBox_AcceptExceedPicture, "checkBox_AcceptExceedPicture");
+            this.checkBox_AcceptExceedPicture.CausesValidation = false;
+            this.checkBox_AcceptExceedPicture.Name = "checkBox_AcceptExceedPicture";
+            this.checkBox_AcceptExceedPicture.UseVisualStyleBackColor = true;
+            // 
+            // trackBar_Threads
+            // 
+            resources.ApplyResources(this.trackBar_Threads, "trackBar_Threads");
+            this.trackBar_Threads.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
+            this.trackBar_Threads.CausesValidation = false;
+            this.trackBar_Threads.LargeChange = 1;
+            this.trackBar_Threads.Minimum = 1;
+            this.trackBar_Threads.Name = "trackBar_Threads";
+            this.trackBar_Threads.Value = 2;
+            // 
+            // numericUpDown_Threads
+            // 
+            this.numericUpDown_Threads.CausesValidation = false;
+            resources.ApplyResources(this.numericUpDown_Threads, "numericUpDown_Threads");
+            this.numericUpDown_Threads.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDown_Threads.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown_Threads.Name = "numericUpDown_Threads";
+            this.numericUpDown_Threads.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.numericUpDown_Threads.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
+            // 
+            // label15
+            // 
+            resources.ApplyResources(this.label15, "label15");
+            this.label15.CausesValidation = false;
+            this.label15.Name = "label15";
+            // 
+            // checkBox_TopMost
+            // 
+            resources.ApplyResources(this.checkBox_TopMost, "checkBox_TopMost");
+            this.checkBox_TopMost.CausesValidation = false;
+            this.checkBox_TopMost.Name = "checkBox_TopMost";
+            this.checkBox_TopMost.UseVisualStyleBackColor = true;
+            this.checkBox_TopMost.CheckedChanged += new System.EventHandler(this.checkBox_TopMost_CheckedChanged);
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.BackColor = System.Drawing.Color.Transparent;
+            this.tabPage2.CausesValidation = false;
+            this.tabPage2.Controls.Add(this.groupBox6);
+            this.tabPage2.Controls.Add(this.groupBox5);
+            this.tabPage2.Controls.Add(this.checkBox_UseGPU);
+            resources.ApplyResources(this.tabPage2, "tabPage2");
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // groupBox6
+            // 
+            resources.ApplyResources(this.groupBox6, "groupBox6");
+            this.groupBox6.Controls.Add(this.comboBox_WatermarkMode);
+            this.groupBox6.Controls.Add(this.label27);
+            this.groupBox6.Controls.Add(this.trackBar_WatermarkTransparency);
+            this.groupBox6.Controls.Add(this.numericUpDown_WatermarkTransparency);
+            this.groupBox6.Controls.Add(this.label26);
+            this.groupBox6.Controls.Add(this.label_WatermarkFont);
+            this.groupBox6.Controls.Add(this.label25);
+            this.groupBox6.Controls.Add(this.label_WatermarkColor);
+            this.groupBox6.Controls.Add(this.label24);
+            this.groupBox6.Controls.Add(this.textBox_WatermarkText);
+            this.groupBox6.Controls.Add(this.label23);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.TabStop = false;
+            // 
+            // comboBox_WatermarkMode
+            // 
+            this.comboBox_WatermarkMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_WatermarkMode.FormattingEnabled = true;
+            this.comboBox_WatermarkMode.Items.AddRange(new object[] {
+            resources.GetString("comboBox_WatermarkMode.Items"),
+            resources.GetString("comboBox_WatermarkMode.Items1"),
+            resources.GetString("comboBox_WatermarkMode.Items2"),
+            resources.GetString("comboBox_WatermarkMode.Items3"),
+            resources.GetString("comboBox_WatermarkMode.Items4"),
+            resources.GetString("comboBox_WatermarkMode.Items5")});
+            resources.ApplyResources(this.comboBox_WatermarkMode, "comboBox_WatermarkMode");
+            this.comboBox_WatermarkMode.Name = "comboBox_WatermarkMode";
+            this.comboBox_WatermarkMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_WatermarkMode_SelectedIndexChanged);
+            // 
+            // label27
+            // 
+            resources.ApplyResources(this.label27, "label27");
+            this.label27.Name = "label27";
+            // 
+            // trackBar_WatermarkTransparency
+            // 
+            resources.ApplyResources(this.trackBar_WatermarkTransparency, "trackBar_WatermarkTransparency");
+            this.trackBar_WatermarkTransparency.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
+            this.trackBar_WatermarkTransparency.CausesValidation = false;
+            this.trackBar_WatermarkTransparency.LargeChange = 10;
+            this.trackBar_WatermarkTransparency.Maximum = 100;
+            this.trackBar_WatermarkTransparency.Name = "trackBar_WatermarkTransparency";
+            this.trackBar_WatermarkTransparency.SmallChange = 5;
+            this.trackBar_WatermarkTransparency.TickFrequency = 10;
+            this.trackBar_WatermarkTransparency.Value = 100;
+            // 
+            // numericUpDown_WatermarkTransparency
+            // 
+            this.numericUpDown_WatermarkTransparency.CausesValidation = false;
+            resources.ApplyResources(this.numericUpDown_WatermarkTransparency, "numericUpDown_WatermarkTransparency");
+            this.numericUpDown_WatermarkTransparency.Name = "numericUpDown_WatermarkTransparency";
+            this.numericUpDown_WatermarkTransparency.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // label26
+            // 
+            resources.ApplyResources(this.label26, "label26");
+            this.label26.Name = "label26";
+            // 
+            // label_WatermarkFont
+            // 
+            this.label_WatermarkFont.BackColor = System.Drawing.Color.Transparent;
+            this.label_WatermarkFont.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label_WatermarkFont.Cursor = System.Windows.Forms.Cursors.Hand;
+            resources.ApplyResources(this.label_WatermarkFont, "label_WatermarkFont");
+            this.label_WatermarkFont.Name = "label_WatermarkFont";
+            this.label_WatermarkFont.Click += new System.EventHandler(this.OnFontChoose);
+            // 
+            // label25
+            // 
+            resources.ApplyResources(this.label25, "label25");
+            this.label25.Name = "label25";
+            // 
+            // label_WatermarkColor
+            // 
+            this.label_WatermarkColor.BackColor = System.Drawing.Color.White;
+            this.label_WatermarkColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label_WatermarkColor.Cursor = System.Windows.Forms.Cursors.Hand;
+            resources.ApplyResources(this.label_WatermarkColor, "label_WatermarkColor");
+            this.label_WatermarkColor.Name = "label_WatermarkColor";
+            this.label_WatermarkColor.Click += new System.EventHandler(this.OnWatermarkColorChoose);
+            // 
+            // label24
+            // 
+            resources.ApplyResources(this.label24, "label24");
+            this.label24.Name = "label24";
+            // 
+            // textBox_WatermarkText
+            // 
+            resources.ApplyResources(this.textBox_WatermarkText, "textBox_WatermarkText");
+            this.textBox_WatermarkText.Name = "textBox_WatermarkText";
+            // 
+            // label23
+            // 
+            resources.ApplyResources(this.label23, "label23");
+            this.label23.Name = "label23";
+            // 
+            // groupBox5
+            // 
+            resources.ApplyResources(this.groupBox5, "groupBox5");
+            this.groupBox5.Controls.Add(this.label_BackgroundColor);
+            this.groupBox5.Controls.Add(this.label14);
+            this.groupBox5.Controls.Add(this.label19);
+            this.groupBox5.Controls.Add(this.trackBar_Brightness);
+            this.groupBox5.Controls.Add(this.numericUpDown_Brightness);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.TabStop = false;
+            // 
+            // label_BackgroundColor
+            // 
+            this.label_BackgroundColor.BackColor = System.Drawing.Color.White;
+            this.label_BackgroundColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label_BackgroundColor.Cursor = System.Windows.Forms.Cursors.Hand;
+            resources.ApplyResources(this.label_BackgroundColor, "label_BackgroundColor");
+            this.label_BackgroundColor.Name = "label_BackgroundColor";
+            this.label_BackgroundColor.Click += new System.EventHandler(this.OnColorChoose);
+            // 
+            // label14
+            // 
+            resources.ApplyResources(this.label14, "label14");
+            this.label14.CausesValidation = false;
+            this.label14.Name = "label14";
+            // 
+            // label19
+            // 
+            resources.ApplyResources(this.label19, "label19");
+            this.label19.Name = "label19";
+            // 
+            // trackBar_Brightness
+            // 
+            resources.ApplyResources(this.trackBar_Brightness, "trackBar_Brightness");
+            this.trackBar_Brightness.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
+            this.trackBar_Brightness.CausesValidation = false;
+            this.trackBar_Brightness.LargeChange = 10;
+            this.trackBar_Brightness.Maximum = 100;
+            this.trackBar_Brightness.Name = "trackBar_Brightness";
+            this.trackBar_Brightness.SmallChange = 5;
+            this.trackBar_Brightness.TickFrequency = 10;
+            this.trackBar_Brightness.Value = 100;
+            // 
+            // numericUpDown_Brightness
+            // 
+            this.numericUpDown_Brightness.CausesValidation = false;
+            resources.ApplyResources(this.numericUpDown_Brightness, "numericUpDown_Brightness");
+            this.numericUpDown_Brightness.Name = "numericUpDown_Brightness";
+            this.numericUpDown_Brightness.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDown_Brightness.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
+            // 
+            // checkBox_UseGPU
+            // 
+            resources.ApplyResources(this.checkBox_UseGPU, "checkBox_UseGPU");
+            this.checkBox_UseGPU.CausesValidation = false;
+            this.checkBox_UseGPU.Name = "checkBox_UseGPU";
+            this.toolTip_GPU.SetToolTip(this.checkBox_UseGPU, resources.GetString("checkBox_UseGPU.ToolTip"));
+            this.checkBox_UseGPU.UseVisualStyleBackColor = true;
+            this.checkBox_UseGPU.CheckedChanged += new System.EventHandler(this.checkBox_UseGPU_CheckedChanged);
+            // 
+            // toolTip_GPU
+            // 
+            this.toolTip_GPU.IsBalloon = true;
+            // 
+            // SettingForm
+            // 
+            this.AllowDrop = true;
+            resources.ApplyResources(this, "$this");
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.button_Save);
+            this.DoubleBuffered = true;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.KeyPreview = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "SettingForm";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SettingForm_FormClosing);
+            this.Load += new System.EventHandler(this.SettingForm_Load);
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Size)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Quality)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_LimitWidth)).EndInit();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_StartIndex)).EndInit();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_Threads)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Threads)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_WatermarkTransparency)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_WatermarkTransparency)).EndInit();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_Brightness)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Brightness)).EndInit();
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+        private System.Windows.Forms.Button button_Save;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.ComboBox comboBox_KB_or_MB;
+        private System.Windows.Forms.NumericUpDown numericUpDown_Size;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.NumericUpDown numericUpDown_Quality;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox comboBox_CompressType;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.NumericUpDown numericUpDown_LimitHeight;
+        private System.Windows.Forms.NumericUpDown numericUpDown_LimitWidth;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox comboBox_ResizeMode;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.ComboBox comboBox_ExtensionMode;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox textBox_OutputFilename;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.NumericUpDown numericUpDown_StartIndex;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.CheckBox checkBox_AcceptExceedPicture;
+        private System.Windows.Forms.TrackBar trackBar_Threads;
+        private System.Windows.Forms.NumericUpDown numericUpDown_Threads;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.CheckBox checkBox_TopMost;
+        public System.Windows.Forms.CheckBox checkBox_UseGPU;
+        private System.Windows.Forms.NumericUpDown numericUpDown_Brightness;
+        private System.Windows.Forms.TrackBar trackBar_Brightness;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label_BackgroundColor;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.Label label_WatermarkFont;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label label_WatermarkColor;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.TextBox textBox_WatermarkText;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.TrackBar trackBar_WatermarkTransparency;
+        private System.Windows.Forms.NumericUpDown numericUpDown_WatermarkTransparency;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.ComboBox comboBox_WatermarkMode;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.ToolTip toolTip_GPU;
+    }
+}

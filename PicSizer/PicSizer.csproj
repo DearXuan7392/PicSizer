@@ -34,7 +34,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\PicSizer.ico</ApplicationIcon>
+    <ApplicationIcon>PicSizer.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>PicSizer.Program</StartupObject>
@@ -54,7 +54,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -62,6 +63,23 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>x64</PlatformTarget>
+    <DefineConstants>
+    </DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>false</Optimize>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>Custom</TargetZone>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Costura, Version=5.7.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -71,9 +89,6 @@
       <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="PicSizer_ControlLibrary">
-      <HintPath>Resources\PicSizer_ControlLibrary.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -199,95 +214,142 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="UIAutomationClientsideProviders" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class\Net\Http.cs" />
-    <Compile Include="Class\Net\Update.cs" />
-    <Compile Include="Class\Partial\FileProc.cs" />
-    <Compile Include="Class\PictureProc\AtomPic.cs" />
-    <Compile Include="Class\PictureProc\BitmapStream.cs" />
-    <Compile Include="Class\PictureProc\Compress.cs" />
-    <Compile Include="Class\PictureProc\Resize.cs" />
-    <Compile Include="Class\PictureProc\Graphy.cs" />
-    <Compile Include="Class\Partial\DllExtern.cs">
+    <Compile Include="Program\Deliver\DirProc.cs" />
+    <Compile Include="Program\Deliver\Task.cs" />
+    <Compile Include="Program\FileIO\DLL\DLL.cs" />
+    <Compile Include="Program\FileIO\DLL\DLL_CUDA.cs" />
+    <Compile Include="Program\FileIO\DLL\DLL_WEBP_Decode.cs" />
+    <Compile Include="Program\FileIO\DLL\DLL_WEBP_Encode.cs" />
+    <Compile Include="Program\FileIO\OutputPath.cs" />
+    <Compile Include="Program\Logic\Compress\CompressItem\ITaskBased.cs" />
+    <Compile Include="Program\Logic\Compress\CompressItem\CompressTaskItem.cs" />
+    <Compile Include="Program\Logic\Compress\CompressItem\Compress_Based.cs" />
+    <Compile Include="Program\Logic\Compress\ICON\CompressByFileSize.cs" />
+    <Compile Include="Program\Logic\Compress\ICON\CompressByStrength.cs" />
+    <Compile Include="Program\Logic\Compress\ICON\ICON.cs" />
+    <Compile Include="Program\Logic\Compress\JPEG\CompressByFileSize.cs" />
+    <Compile Include="Program\Logic\Compress\JPEG\CompressByStrength.cs" />
+    <Compile Include="Program\Logic\Compress\JPEG\JPEG.cs" />
+    <Compile Include="Program\Logic\Compress\PNG\CompressByFileSize.cs" />
+    <Compile Include="Program\Logic\Compress\PNG\CompressByStrength.cs" />
+    <Compile Include="Program\Logic\Compress\PNG\PNG.cs" />
+    <Compile Include="Program\Logic\Compress\WEBP\CompressByFileSize.cs" />
+    <Compile Include="Program\Logic\Compress\WEBP\CompressByStrength.cs" />
+    <Compile Include="Program\Logic\Compress\WEBP\WEBP.cs" />
+    <Compile Include="Program\Logic\Graph\Graph.cs" />
+    <Compile Include="Program\Logic\Graph\Graph_BlindWatermark.cs" />
+    <Compile Include="Program\Logic\Graph\Graph_PixelBackColor.cs" />
+    <Compile Include="Program\Logic\Graph\Graph_Resize.cs" />
+    <Compile Include="Program\Server\Prefix.cs" />
+    <Compile Include="Program\Logic\Graph\Graph_Brightness.cs" />
+    <Compile Include="Program\Logic\Graph\Graph_Watermark.cs" />
+    <Compile Include="Program\Server\ThreadsPool_Partial.cs" />
+    <Compile Include="Program\Static\PicInfo.cs" />
+    <Compile Include="Program\Static\PicStrings.cs" />
+    <Compile Include="Program\Static\PicUnit.cs" />
+    <Compile Include="Program\Static\PicValue.cs" />
+    <Compile Include="Program\Static\Setting\PicSetting_Brightness.cs" />
+    <Compile Include="Program\Static\Setting\PicSetting_Compress.cs" />
+    <Compile Include="Program\Static\Setting\PicSetting_PixelBackColor.cs" />
+    <Compile Include="Program\Static\Setting\PicSetting_Resize.cs" />
+    <Compile Include="Program\Static\Setting\PicSetting_System.cs" />
+    <Compile Include="Program\Static\Setting\PicSetting_Watermark.cs" />
+    <Compile Include="Program\Window\Assemble\PicListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Program\Window\Assemble\PicListView.Designer.cs">
+      <DependentUpon>PicListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program\Window\Assemble\PicListViewMenu.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Program\Window\Assemble\PicListViewMenu.Designer.cs">
+      <DependentUpon>PicListViewMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program\Window\Assemble\PicListView_Domain.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Program\Window\Assemble\PicListView_Event.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Program\Window\Assemble\PicListView_Override.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Program\Window\FormsControl.cs" />
+    <Compile Include="Program\Window\Forms\PicPreViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Program\Window\Forms\PicPreViewForm.Designer.cs">
+      <DependentUpon>PicPreViewForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program\Window\Forms\SettingForm_Event.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Program\FileIO\DLL\DLL_CPP.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="Class\PictureProc\Encoder.cs" />
-    <Compile Include="Class\PictureProc\ResizeHelper.cs" />
-    <Compile Include="Class\PictureProc\ThreadsPool.cs" />
-    <Compile Include="Class\Static\Info.cs" />
-    <Compile Include="Class\Static\ProjectInit.cs" />
-    <Compile Include="Class\Static\Setting.cs" />
-    <Compile Include="Class\Unit\Extension.cs" />
-    <Compile Include="Class\Unit\UpdateMsg.cs" />
-    <Compile Include="Class\Unit\Version.cs" />
-    <Compile Include="Forms\About.cs">
+    <Compile Include="Program\FileIO\FileProc.cs" />
+    <Compile Include="Program\FileIO\Extension.cs" />
+    <Compile Include="Program\Window\Forms\AboutForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\About.Designer.cs">
-      <DependentUpon>About.cs</DependentUpon>
+    <Compile Include="Program\Window\Forms\AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\DearXuan.cs">
+    <Compile Include="Program\Window\Partial\Dialog.cs" />
+    <Compile Include="Program\Window\Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\DearXuan.Designer.cs">
-      <DependentUpon>DearXuan.cs</DependentUpon>
+    <Compile Include="Program\Window\Forms\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Class\Partial\Dialog.cs" />
-    <Compile Include="Forms\Form1.cs">
+    <Compile Include="Program\Window\Assemble\PicListViewItem.cs" />
+    <Compile Include="Program\Window\PicBaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Program\Window\PicBaseForm.Designer.cs">
+      <DependentUpon>PicBaseForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UpdateSaveForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\UpdateSaveForm.Designer.cs">
-      <DependentUpon>UpdateSaveForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormsSupport.cs" />
+    <Compile Include="Program\Window\Support.cs" />
+    <Compile Include="Program\Logic\Compress\Compress.cs" />
+    <Compile Include="Program\Logic\Compress\CompressItem\Encoder.cs" />
+    <Compile Include="Program\Server\ThreadsPool.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Forms\ProgressForm.cs">
+    <Compile Include="Program\Window\Forms\ProgressForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ProgressForm.Designer.cs">
+    <Compile Include="Program\Window\Forms\ProgressForm.Designer.cs">
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Forms\SettingForm.cs">
+    <Compile Include="Program\Window\Forms\SettingForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SettingForm.Designer.cs">
+    <Compile Include="Program\Window\Forms\SettingForm.Designer.cs">
       <DependentUpon>SettingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Class\Partial\Support.cs" />
-    <Compile Include="Class\Static\Value.cs" />
+    <Compile Include="Program\Window\Partial\Support.cs" />
     <Compile Include="Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Forms\About.resx">
-      <DependentUpon>About.cs</DependentUpon>
+    <EmbeddedResource Include="Program\Window\Forms\AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DearXuan.byn.resx">
-      <DependentUpon>DearXuan.cs</DependentUpon>
+    <EmbeddedResource Include="Program\Window\Forms\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DearXuan.resx">
-      <DependentUpon>DearXuan.cs</DependentUpon>
+    <EmbeddedResource Include="Program\Window\Forms\PicPreViewForm.resx">
+      <DependentUpon>PicPreViewForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ProgressForm.resx">
+    <EmbeddedResource Include="Program\Window\Forms\ProgressForm.resx">
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UpdateSaveForm.resx">
-      <DependentUpon>UpdateSaveForm.cs</DependentUpon>
+    <EmbeddedResource Include="Program\Window\PicBaseForm.resx">
+      <DependentUpon>PicBaseForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -298,13 +360,14 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Forms\SettingForm.resx">
+    <EmbeddedResource Include="Program\Window\Forms\SettingForm.resx">
       <DependentUpon>SettingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="PicSizer_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
@@ -321,8 +384,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\yoimiya.ico" />
-    <None Include="Resources\yoimiya.jpg" />
     <None Include="Resources\PicSizer.png" />
   </ItemGroup>
   <ItemGroup>
@@ -338,15 +399,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Costura64\PicSizer_CUDA.dll" />
-  </ItemGroup>
-  <ItemGroup>
+    <EmbeddedResource Include="Costura64\PicLibrary.dll" />
+    <EmbeddedResource Include="Costura64\libwebp.dll" />
     <Content Include="FodyWeavers.xml" />
+    <Content Include="PicSizer.ico" />
+    <None Include="Resources\image_error.png" />
     <None Include="Resources\PicSizer.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

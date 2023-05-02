@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="CPP">
+      <UniqueIdentifier>{3ba5570f-2901-4f2f-952f-5057a56eed6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CUDA">
+      <UniqueIdentifier>{80f70774-f184-4330-a5a2-13702dec8ce8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="head">
+      <UniqueIdentifier>{0a4947e3-2a8c-49b9-91ef-b66448e9ce20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Support">
+      <UniqueIdentifier>{5d48971a-2871-44c2-b9fc-00b6d59aa119}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="Brightness.cu">
+      <Filter>CUDA</Filter>
+    </CudaCompile>
+    <CudaCompile Include="TransparentPixelBkgColor.cu">
+      <Filter>CUDA</Filter>
+    </CudaCompile>
+    <CudaCompile Include="main.cu">
+      <Filter>head</Filter>
+    </CudaCompile>
+    <CudaCompile Include="CompressPNG.cu">
+      <Filter>CUDA</Filter>
+    </CudaCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Brightness.cpp">
+      <Filter>CPP</Filter>
+    </ClCompile>
+    <ClCompile Include="TransparentPixelBkgColor.cpp">
+      <Filter>CPP</Filter>
+    </ClCompile>
+    <ClCompile Include="CompressPNG.cpp">
+      <Filter>CPP</Filter>
+    </ClCompile>
+    <ClCompile Include="webp.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cudaH.cuh">
+      <Filter>head</Filter>
+    </ClInclude>
+    <ClInclude Include="cppH.h">
+      <Filter>head</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PicLibrary.rc" />
+  </ItemGroup>
+</Project>
