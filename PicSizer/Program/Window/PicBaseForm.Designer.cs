@@ -1,4 +1,4 @@
-﻿namespace PicSizer.Window
+﻿namespace PicSizer.Program.Window
 {
     partial class PicBaseForm
     {

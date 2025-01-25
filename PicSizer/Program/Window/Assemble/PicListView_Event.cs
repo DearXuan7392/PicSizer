@@ -1,12 +1,11 @@
-﻿using PicSizer.Static;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿#region
 
-namespace PicSizer.Window.Assemble
+using System.Windows.Forms;
+using PicSizer.Program.Static;
+
+#endregion
+
+namespace PicSizer.Program.Window.Assemble
 {
     public partial class PicListView : ListView
     {
@@ -28,81 +27,89 @@ namespace PicSizer.Window.Assemble
         {
             //关闭监听
             PicValue.PicListSelectListenerEnable = false;
-            this.BeginUpdate();
+            BeginUpdate();
             switch (selectType)
             {
                 //全选
                 case EventType.SelectAll:
-                    foreach (PicListViewItem item in this.Items)
+                    foreach (PicListViewItem item in Items)
                     {
                         item.Selected = true;
                     }
+
                     break;
                 //反选
                 case EventType.SelectReverse:
-                    foreach (PicListViewItem item in this.Items)
+                    foreach (PicListViewItem item in Items)
                     {
                         item.Selected = !item.Selected;
                     }
+
                     break;
                 //删除全部的项
                 case EventType.RemoveAll:
-                    foreach (PicListViewItem item in this.Items)
+                    foreach (PicListViewItem item in Items)
                     {
-                        this.Items.Clear();
-                        this.ItemPathHashSet.Clear();
+                        Items.Clear();
+                        ItemPathHashSet.Clear();
                     }
+
                     break;
                 //删除等待中的项
                 case EventType.RemoveWaiting:
-                    for(int i = this.Items.Count - 1; i >= 0; i--)
+                    for (int i = Items.Count - 1; i >= 0; i--)
                     {
                         PicListViewItem item = this[i];
-                        if (item.State == Static.PicUnit.PicItemState.Waiting)
+                        if (item.State == PicUnit.PicItemState.Waiting)
                         {
-                            this.Items.RemoveAt(i);
-                            this.ItemPathHashSet.Remove(item.FullPath);
+                            Items.RemoveAt(i);
+                            ItemPathHashSet.Remove(item.FullPath);
                         }
                     }
+
                     break;
                 //删除已完成的项
                 case EventType.RemoveSuccess:
-                    for (int i = this.Items.Count - 1; i >= 0; i--)
+                    for (int i = Items.Count - 1; i >= 0; i--)
                     {
                         PicListViewItem item = this[i];
-                        if (item.State == Static.PicUnit.PicItemState.Success)
+                        if (item.State == PicUnit.PicItemState.Success)
                         {
-                            this.Items.RemoveAt(i);
-                            this.ItemPathHashSet.Remove(item.FullPath);
+                            Items.RemoveAt(i);
+                            ItemPathHashSet.Remove(item.FullPath);
                         }
                     }
+
                     break;
                 //删除错误的项
                 case EventType.RemoveError:
-                    for (int i = this.Items.Count - 1; i >= 0; i--)
+                    for (int i = Items.Count - 1; i >= 0; i--)
                     {
                         PicListViewItem item = this[i];
-                        if (item.State == Static.PicUnit.PicItemState.Error)
+                        if (item.State == PicUnit.PicItemState.Error)
                         {
-                            this.Items.RemoveAt(i);
-                            this.ItemPathHashSet.Remove(item.FullPath);
+                            Items.RemoveAt(i);
+                            ItemPathHashSet.Remove(item.FullPath);
                         }
                     }
+
                     break;
                 //删除选中项
                 case EventType.RemoveSelectedItem:
-                    for (int i = this.Items.Count - 1; i >= 0; i--)
+                    for (int i = Items.Count - 1; i >= 0; i--)
                     {
                         PicListViewItem item = this[i];
                         if (item.Selected)
                         {
-                            this.Items.RemoveAt(i);
-                            this.ItemPathHashSet.Remove(item.FullPath);
+                            Items.RemoveAt(i);
+                            ItemPathHashSet.Remove(item.FullPath);
                         }
                     }
+
                     break;
             }
-            this.EndUpdate();
+
+            EndUpdate();
             //打开监听
             PicValue.PicListSelectListenerEnable = true;
             //更新一次数据

@@ -1,17 +1,16 @@
-﻿using PicSizer.Static;
-using PicSizer.Window.Assemble;
-using PicSizer.Window.Partial;
+﻿#region
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PicSizer.Program.Static;
+using PicSizer.Program.Window.Assemble;
 
-namespace PicSizer.FileIO
+#endregion
+
+namespace PicSizer.Program.FileIO
 {
-    public static partial class OutputPath
+    public static class OutputPath
     {
         public static string GetOutputPath(string input, int index)
         {
@@ -29,10 +28,11 @@ namespace PicSizer.FileIO
                     string finalPath = Path.Combine(PicValue.OutputDirection, relativePath);
                     //获取最终路径对应的文件夹,如不存在则创建
                     DirectoryInfo info = new DirectoryInfo(Path.GetDirectoryName(finalPath));
-                    if(!info.Exists)
+                    if (!info.Exists)
                     {
                         info.Create();
                     }
+
                     return finalPath;
                 //输出到统一文件夹,不保存结构
                 case PicUnit.OutputType.OutputDirection:
@@ -63,16 +63,16 @@ namespace PicSizer.FileIO
                     {
                         ++i;
                     }
+
                     if (i == 0)
                     {
                         return "";
                     }
-                    else
-                    {
-                        root = root.Substring(0, i);
-                    }
+
+                    root = root.Substring(0, i);
                 }
             }
+
             return root;
         }
 

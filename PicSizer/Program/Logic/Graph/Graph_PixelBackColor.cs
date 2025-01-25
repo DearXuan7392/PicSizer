@@ -1,13 +1,15 @@
-﻿using PicSizer.FileIO;
-using PicSizer.Static;
-using PicSizer.Window.Partial;
+﻿#region
+
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using static PicSizer.Static.PicUnit;
+using PicSizer.Program.FileIO;
+using PicSizer.Program.Static;
 
-namespace PicSizer.Logic
+#endregion
+
+namespace PicSizer.Program.Logic.Graph
 {
     public static partial class Graph
     {
@@ -16,7 +18,7 @@ namespace PicSizer.Logic
         /// </summary>
         public static void SetTransparentPixelBackgroundColor(ref Bitmap bitmap)
         {
-            if (PicSetting.UseGPU && PicValue.IsGPUSupport)
+            if (PicSetting.UseGPU && PicValue.IsGpuSupport)
             {
                 _SetTransparentPixelBackgroundColorByCUDA(bitmap);
             }
@@ -33,16 +35,17 @@ namespace PicSizer.Logic
                 new Rectangle(0, 0, width, height),
                 ImageLockMode.ReadWrite,
                 PixelFormat.Format32bppArgb);
-            int stride = bitmapData.Stride;//图片扫描宽度
+            int stride = bitmapData.Stride; //图片扫描宽度
             IntPtr ptr = bitmapData.Scan0;
-            if (!DLL.CUDA_SetTransparentPixelBackgroundColor(
-                ptr, width, height, stride, 
-                PicSetting.BackgroundColor[0],
-                PicSetting.BackgroundColor[1],
-                PicSetting.BackgroundColor[2]))
+            if (!Dll.CUDA_SetTransparentPixelBackgroundColor(
+                    ptr, width, height, stride,
+                    PicSetting.BackgroundColor[0],
+                    PicSetting.BackgroundColor[1],
+                    PicSetting.BackgroundColor[2]))
             {
                 throw new Exception("使用GPU加速时遇到了未知错误");
             }
+
             bitmap.UnlockBits(bitmapData);
         }
 
@@ -53,16 +56,17 @@ namespace PicSizer.Logic
                 new Rectangle(0, 0, width, height),
                 ImageLockMode.ReadWrite,
                 PixelFormat.Format32bppArgb);
-            int stride = bitmapData.Stride;//图片扫描宽度
+            int stride = bitmapData.Stride; //图片扫描宽度
             IntPtr ptr = bitmapData.Scan0;
-            if (!DLL.CPP_SetTransparentPixelBackgroundColor(
-                ptr, width, height, stride,
-                PicSetting.BackgroundColor[0],
-                PicSetting.BackgroundColor[1],
-                PicSetting.BackgroundColor[2]))
+            if (!Dll.CPP_SetTransparentPixelBackgroundColor(
+                    ptr, width, height, stride,
+                    PicSetting.BackgroundColor[0],
+                    PicSetting.BackgroundColor[1],
+                    PicSetting.BackgroundColor[2]))
             {
                 throw new Exception("使用GPU加速时遇到了未知错误");
             }
+
             bitmap.UnlockBits(bitmapData);
         }
 
@@ -73,7 +77,7 @@ namespace PicSizer.Logic
                 new Rectangle(0, 0, width, height),
                 ImageLockMode.ReadWrite,
                 PixelFormat.Format32bppArgb);
-            int stride = bitmapData.Stride;//图片扫描宽度
+            int stride = bitmapData.Stride; //图片扫描宽度
             int size = stride * height;
             byte[] pic = new byte[size];
             IntPtr ptr = bitmapData.Scan0;
@@ -86,16 +90,17 @@ namespace PicSizer.Logic
             {
                 for (int x = 0; x < width; ++x)
                 {
-                    position = y * stride + x * 4;//像素起始地址(格式BGRA)
-                    byte alpha = pic[position + 3];//透明通道
-                    if (alpha == 255) continue;//如果是完全不透明则跳过
-                    pic[position + 3] = 255;//修改为完全不透明
+                    position = y * stride + x * 4; //像素起始地址(格式BGRA)
+                    byte alpha = pic[position + 3]; //透明通道
+                    if (alpha == 255) continue; //如果是完全不透明则跳过
+                    pic[position + 3] = 255; //修改为完全不透明
                     //修改RGB颜色
                     pic[position + 2] = (byte)((pic[position + 2] * alpha + R * (255 - alpha)) / 255);
                     pic[position + 1] = (byte)((pic[position + 1] * alpha + G * (255 - alpha)) / 255);
                     pic[position] = (byte)((pic[position] * alpha + B * (255 - alpha)) / 255);
                 }
             }
+
             Marshal.Copy(pic, 0, ptr, size);
             bitmap.UnlockBits(bitmapData);
         }

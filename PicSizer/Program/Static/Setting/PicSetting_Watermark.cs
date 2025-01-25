@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static PicSizer.Static.PicUnit;
+﻿#region
 
-namespace PicSizer.Static
+using System.Drawing;
+using static PicSizer.Program.Static.PicUnit;
+
+#endregion
+
+namespace PicSizer.Program.Static
 {
     public static partial class PicSetting
     {
         /// <summary>
         /// 水印类型
         /// </summary>
-        public static WatermarkType WatermarkType = WatermarkType.Non;
+        public static PicUnit.WatermarkType WatermarkType = PicUnit.WatermarkType.Non;
 
         /// <summary>
         /// 水印透明度,范围: 0~100,0表示完全没有,100表示明显水印

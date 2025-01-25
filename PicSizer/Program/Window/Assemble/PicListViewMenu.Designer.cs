@@ -1,4 +1,4 @@
-﻿namespace PicSizer.Window.Assemble
+﻿namespace PicSizer.Program.Window.Assemble
 {
     partial class PicListViewMenu
     {

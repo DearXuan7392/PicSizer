@@ -1,10 +1,14 @@
-﻿using PicSizer.Static;
-using PicSizer.Window.Partial;
+﻿#region
+
 using System;
 using System.Windows.Forms;
-using static PicSizer.Static.PicUnit;
+using PicSizer.Program.Static;
+using PicSizer.Program.Window.Partial;
+using static PicSizer.Program.Static.PicUnit;
 
-namespace PicSizer.Window.Forms
+#endregion
+
+namespace PicSizer.Program.Window.Forms
 {
     public partial class SettingForm : PicBaseForm
     {
@@ -20,8 +24,8 @@ namespace PicSizer.Window.Forms
             splitContainer2.SplitterDistance = splitContainer2.Width / 2 - 4;
             trackBar_Threads.Width = groupBox4.Width - 16;
             //设置滑动条和数字狂最大值
-            numericUpDown_Threads.Maximum = PicValue.CpuCoresNum;//最大线程数
-            trackBar_Threads.Maximum = PicValue.CpuCoresNum;//最大线程数
+            numericUpDown_Threads.Maximum = PicValue.CpuCoresNum; //最大线程数
+            trackBar_Threads.Maximum = PicValue.CpuCoresNum; //最大线程数
         }
 
         private void SettingForm_Load(object sender, EventArgs e)
@@ -50,11 +54,11 @@ namespace PicSizer.Window.Forms
         private void comboBox_KB_or_MB_SelectedIndexChanged(object sender, EventArgs e)
         {
             //限制最大大小为 1GB
-            if (comboBox_KB_or_MB.SelectedIndex == 0)//KB
+            if (comboBox_KB_or_MB.SelectedIndex == 0) //KB
             {
                 numericUpDown_Size.Maximum = 1048576;
             }
-            else//MB
+            else //MB
             {
                 numericUpDown_Size.Maximum = 1024;
             }
@@ -68,17 +72,16 @@ namespace PicSizer.Window.Forms
             //指定画质
             if (comboBox_CompressType.SelectedIndex == 0)
             {
-                numericUpDown_Size.Enabled = comboBox_KB_or_MB.Enabled = false;//则文件大小控件不可用
-                numericUpDown_Quality.Enabled = true;//画质控件可用
-                checkBox_AcceptExceedPicture.Enabled = false;//"接受超出大小的文件"控件不可用
-                
+                numericUpDown_Size.Enabled = comboBox_KB_or_MB.Enabled = false; //则文件大小控件不可用
+                numericUpDown_Quality.Enabled = true; //画质控件可用
+                checkBox_AcceptExceedPicture.Enabled = false; //"接受超出大小的文件"控件不可用
             }
             //指定大小
             else
             {
-                numericUpDown_Size.Enabled = comboBox_KB_or_MB.Enabled = true;//文件大小控件可用
-                numericUpDown_Quality.Enabled = false;//画质控件不可用
-                checkBox_AcceptExceedPicture.Enabled = true;//"接受超出大小的文件"控件可
+                numericUpDown_Size.Enabled = comboBox_KB_or_MB.Enabled = true; //文件大小控件可用
+                numericUpDown_Quality.Enabled = false; //画质控件不可用
+                checkBox_AcceptExceedPicture.Enabled = true; //"接受超出大小的文件"控件可
             }
         }
 
@@ -87,7 +90,8 @@ namespace PicSizer.Window.Forms
         /// </summary>
         private void comboBox_ResizeMode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            numericUpDown_LimitWidth.Enabled = numericUpDown_LimitHeight.Enabled = comboBox_ResizeMode.SelectedIndex != 0;
+            numericUpDown_LimitWidth.Enabled =
+                numericUpDown_LimitHeight.Enabled = comboBox_ResizeMode.SelectedIndex != 0;
         }
 
         /// <summary>
@@ -97,10 +101,10 @@ namespace PicSizer.Window.Forms
         {
             numericUpDown_WatermarkTransparency.Enabled
                 = trackBar_WatermarkTransparency.Enabled
-                = label_WatermarkColor.Enabled
-                = label_WatermarkFont.Enabled
-                = textBox_WatermarkText.Enabled
-                = comboBox_WatermarkMode.SelectedIndex != PicUnit.WatermarkType.Non.ToInt();
+                    = label_WatermarkColor.Enabled
+                        = label_WatermarkFont.Enabled
+                            = textBox_WatermarkText.Enabled
+                                = comboBox_WatermarkMode.SelectedIndex != WatermarkType.Non.ToInt();
         }
 
         /// <summary>
@@ -137,7 +141,7 @@ namespace PicSizer.Window.Forms
         private void checkBox_UseGPU_CheckedChanged(object sender, EventArgs e)
         {
             //如果GPU不支持
-            if (!PicValue.IsGPUSupport && checkBox_UseGPU.Checked)
+            if (!PicValue.IsGpuSupport && checkBox_UseGPU.Checked)
             {
                 checkBox_UseGPU.Checked = false;
             }
@@ -165,9 +169,9 @@ namespace PicSizer.Window.Forms
         private void OnWatermarkColorChoose(object sender, EventArgs e)
         {
             Label label = sender as Label;
-            label.BackColor 
+            label.BackColor
                 = label_WatermarkFont.ForeColor
-                = Dialog.Show_ColorChooseDialog(label.BackColor);
+                    = Dialog.Show_ColorChooseDialog(label.BackColor);
         }
 
         /// <summary>
@@ -176,7 +180,7 @@ namespace PicSizer.Window.Forms
         private void button_Save_Click(object sender, EventArgs e)
         {
             SaveSetting();
-            this.Close();
+            Close();
         }
 
         /// <summary>
@@ -187,22 +191,23 @@ namespace PicSizer.Window.Forms
             string extension = null;
             switch ((ExtensionType)comboBox_ExtensionMode.SelectedIndex)
             {
-                case ExtensionType.JPEG:
+                case ExtensionType.Jpeg:
                     extension = ".jpg";
                     break;
-                case ExtensionType.PNG:
+                case ExtensionType.Png:
                     extension = ".png";
                     break;
-                case ExtensionType.WEBP:
+                case ExtensionType.Webp:
                     extension = ".webp";
                     break;
                 case ExtensionType.Origin:
                     extension = ".{ext}";
                     break;
             }
+
             string ori = textBox_OutputFilename.Text;
             int index = ori.IndexOf('.');
-            if(index != -1)
+            if (index != -1)
             {
                 textBox_OutputFilename.Text = ori.Substring(0, index) + extension;
             }

@@ -1,13 +1,14 @@
-﻿using PicSizer.Static;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static PicSizer.Static.PicUnit;
+﻿#region
 
-namespace PicSizer.Logic
+using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using PicSizer.Program.Static;
+using static PicSizer.Program.Static.PicUnit;
+
+#endregion
+
+namespace PicSizer.Program.Logic.Graph
 {
     public static partial class Graph
     {
@@ -16,10 +17,11 @@ namespace PicSizer.Logic
         /// </summary>
         public static void ResizeBitmap(ref Bitmap bitmap)
         {
-            if(PicSetting.ResizeType == ResizeType.Non)
+            if (PicSetting.ResizeType == ResizeType.Non)
             {
                 return;
             }
+
             //获取图片尺寸
             int width = bitmap.Width;
             int height = bitmap.Height;
@@ -31,30 +33,32 @@ namespace PicSizer.Logic
             //重新设定边长
             switch (PicSetting.ResizeType)
             {
-                case ResizeType.NotSmallerThanLimit://不小于限定值
+                case ResizeType.NotSmallerThanLimit: //不小于限定值
                     temp = Math.Min(widthByMin, heightByMin);
                     if (temp > 1)
                     {
                         width = (int)(width / temp);
                         height = (int)(height / temp);
                     }
+
                     ScaleBitmap(ref bitmap, width, height);
                     break;
-                case ResizeType.NotBiggerThanLimit://不大于限定值
+                case ResizeType.NotBiggerThanLimit: //不大于限定值
                     temp = Math.Max(widthByMin, heightByMin);
                     if (temp > 1)
                     {
                         width = (int)(width / temp);
                         height = (int)(height / temp);
                     }
+
                     ScaleBitmap(ref bitmap, width, height);
                     break;
-                case ResizeType.ForceCut://裁剪
+                case ResizeType.ForceCut: //裁剪
                     temp = Math.Min(widthByMin, heightByMin);
                     //缩放图片，使得width和height有一个恰好满足要求，另一个大于等于要求，则下一步仅需要裁剪
                     CenterCutBitmap(ref bitmap, temp);
                     break;
-                case ResizeType.ForceScale://不考虑长宽比强制缩放
+                case ResizeType.ForceScale: //不考虑长宽比强制缩放
                     width = PicSetting.LimitWidth;
                     height = PicSetting.LimitHeight;
                     ScaleBitmap(ref bitmap, width, height);
@@ -75,7 +79,7 @@ namespace PicSizer.Logic
             int top = (bitmap.Height - limitHeight) / 2;
             Bitmap newBitmap = new Bitmap(PicSetting.LimitWidth, PicSetting.LimitHeight, bitmap.PixelFormat);
             Graphics g = Graphics.FromImage(newBitmap);
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
             g.DrawImage(bitmap,
                 new Rectangle(0, 0, PicSetting.LimitWidth, PicSetting.LimitHeight),
                 new Rectangle(left, top, limitWidth, limitHeight),
@@ -93,12 +97,12 @@ namespace PicSizer.Logic
             //缩放图片
             Bitmap newBitmap = new Bitmap(width, height, bitmap.PixelFormat);
             Graphics g = Graphics.FromImage(newBitmap);
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
             g.DrawImage(bitmap,
                 new Rectangle(0, 0, width, height), //画在新Bitmap上的区域
                 new Rectangle(0, 0, bitmap.Width, bitmap.Height), //老Bitmap截取的区域
                 GraphicsUnit.Pixel);
-            g.Dispose();//摧毁
+            g.Dispose(); //摧毁
             bitmap.Dispose();
             bitmap = newBitmap;
         }

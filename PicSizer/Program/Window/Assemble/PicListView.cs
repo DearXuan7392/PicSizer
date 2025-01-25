@@ -1,17 +1,11 @@
-﻿using PicSizer.Static;
-using PicSizer.Window.Partial;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿#region
+
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PicSizer.Window.Assemble
+#endregion
+
+namespace PicSizer.Program.Window.Assemble
 {
     public partial class PicListView : ListView
     {
@@ -20,14 +14,8 @@ namespace PicSizer.Window.Assemble
         /// </summary>
         public PicListViewItem this[int index]
         {
-            get
-            {
-                return (PicListViewItem)this.Items[index];
-            }
-            set
-            {
-                this.Items[index] = value;
-            }
+            get { return (PicListViewItem)Items[index]; }
+            set { Items[index] = value; }
         }
 
         /// <summary>
@@ -35,9 +23,9 @@ namespace PicSizer.Window.Assemble
         /// </summary>
         public int AddPicturesFromDirectory(string dir)
         {
-            this.BeginUpdate();
+            BeginUpdate();
             int success = _AddPicturesFromDirectory(dir);
-            this.EndUpdate();
+            EndUpdate();
             FormsControl.MainForm.UpdateSelectTotalNumLabel();
             return success;
 
@@ -52,6 +40,7 @@ namespace PicSizer.Window.Assemble
                 {
                     _success += AddPicturesFromPath(fileInfo.FullName);
                 }
+
                 //递归遍历文件夹
                 foreach (DirectoryInfo directory in directoryInfos)
                 {
@@ -68,13 +57,14 @@ namespace PicSizer.Window.Assemble
         public int AddPicturesFromPath(string[] picList)
         {
             int success = 0;
-            this.BeginUpdate();
+            BeginUpdate();
             //拆分开一张一张加入
             foreach (string pic in picList)
             {
                 success += AddPicturesFromPath(pic);
             }
-            this.EndUpdate();
+
+            EndUpdate();
             FormsControl.MainForm.UpdateSelectTotalNumLabel();
             return success;
         }
@@ -85,18 +75,17 @@ namespace PicSizer.Window.Assemble
         private int AddPicturesFromPath(string path)
         {
             //检测图片是否存在
-            if (this.ItemPathHashSet.Contains(path)) {
+            if (ItemPathHashSet.Contains(path))
+            {
                 return 0;
             }
-            else
-            {
-                //添加到列表
-                PicListViewItem item = new PicListViewItem(path);
-                this.Items.Add(item);
-                //添加到集合
-                this.ItemPathHashSet.Add(path);
-                return 1;
-            }
+
+            //添加到列表
+            PicListViewItem item = new PicListViewItem(path);
+            Items.Add(item);
+            //添加到集合
+            ItemPathHashSet.Add(path);
+            return 1;
         }
     }
 }

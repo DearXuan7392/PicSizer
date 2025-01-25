@@ -1,6 +1,10 @@
-﻿using System;
+﻿#region
 
-namespace PicSizer.Window.Partial
+using System;
+
+#endregion
+
+namespace PicSizer.Program.Window.Partial
 {
     /// <summary>
     /// 支持
@@ -15,5 +19,4 @@ namespace PicSizer.Window.Partial
             return e.GetHashCode();
         }
     }
-
 }

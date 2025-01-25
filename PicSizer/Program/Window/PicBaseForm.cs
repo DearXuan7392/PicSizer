@@ -1,9 +1,12 @@
-﻿using PicSizer.Static;
-using PicSizer.Window.Partial;
+﻿#region
+
 using System;
 using System.Windows.Forms;
+using PicSizer.Program.Static;
 
-namespace PicSizer.Window
+#endregion
+
+namespace PicSizer.Program.Window
 {
     /// <summary>
     /// PicSizer基础窗体
@@ -14,26 +17,25 @@ namespace PicSizer.Window
         {
             InitializeComponent();
             //屏蔽Alt+F4
-            Window.Support.ForbidAltF4(this);
+            Support.ForbidAltF4(this);
             //设置图标
-            this.Icon = PicInfo.icon;
+            Icon = PicInfo.AppIcon;
             //关闭线程安全检查
             CheckForIllegalCrossThreadCalls = false;
             //置顶
-            this.TopMost = PicSetting.TopMost;
+            TopMost = PicSetting.TopMost;
             //添加到窗体数组
             FormsControl.FormList.Add(this);
         }
 
         private void PicBaseForm_Load(object sender, EventArgs e)
         {
-            
         }
 
         private void PicBaseForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             FormsControl.FormList.Remove(this);
-            this.Dispose();
+            Dispose();
         }
     }
 }

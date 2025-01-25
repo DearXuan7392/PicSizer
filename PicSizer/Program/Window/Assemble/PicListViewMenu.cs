@@ -1,24 +1,24 @@
-﻿using PicSizer.Static;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿#region
 
-namespace PicSizer.Window.Assemble
+using System;
+using System.Diagnostics;
+using System.Windows.Forms;
+using PicSizer.Program.Static;
+using PicSizer.Program.Window.Partial;
+
+#endregion
+
+namespace PicSizer.Program.Window.Assemble
 {
     public partial class PicListViewMenu : ContextMenuStrip
     {
         public PicListViewMenu()
         {
             InitializeComponent();
-            this.Items.Add("在Explorer显示", null, OnItemClick_Show);
-            this.Items.Add("预览", null, OnItemClick_Preview);
-            this.Items.Add("删除", null, OnItemClick_Delete);
+            Items.Add("在Explorer显示", null, OnItemClick_Show);
+            Items.Add("预览", null, OnItemClick_Preview);
+            Items.Add("删除", null, OnItemClick_Delete);
+            Items.Add("错误信息", null, OnItemClick_ErrorInfo);
         }
 
         protected override void OnPaint(PaintEventArgs pe)
@@ -28,7 +28,8 @@ namespace PicSizer.Window.Assemble
 
         private void OnItemClick_Show(object obj, EventArgs e)
         {
-            System.Diagnostics.Process.Start("explorer", "/select," + ((PicListViewItem)PicValue.picListView.SelectedItems[0]).FullPath);
+            Process.Start("explorer",
+                "/select," + ((PicListViewItem)PicValue.PicListView.SelectedItems[0]).FullPath);
         }
 
         private void OnItemClick_Preview(object obj, EventArgs e)
@@ -38,7 +39,13 @@ namespace PicSizer.Window.Assemble
 
         private void OnItemClick_Delete(object obj, EventArgs e)
         {
-            PicValue.picListView.InvokeEvent(PicListView.EventType.RemoveSelectedItem);
+            PicValue.PicListView.InvokeEvent(PicListView.EventType.RemoveSelectedItem);
+        }
+
+        private void OnItemClick_ErrorInfo(object obj, EventArgs e)
+        {
+            string info = ((PicListViewItem)PicValue.PicListView.SelectedItems[0]).Message;
+            Dialog.ShowDialog_Error(info ?? "无错误信息");
         }
     }
 }

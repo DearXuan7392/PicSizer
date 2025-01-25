@@ -1,28 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static PicSizer.Static.PicUnit;
+﻿#region
 
-namespace PicSizer.Static
+using static PicSizer.Program.Static.PicUnit;
+
+#endregion
+
+namespace PicSizer.Program.Static
 {
     public static partial class PicSetting
     {
         /// <summary>
         /// 输出类型
         /// </summary>
-        public static OutputType OutputType = OutputType.OutputDirection;
+        public static PicUnit.OutputType OutputType = PicUnit.OutputType.OutputDirection;
 
         /// <summary>
         /// 后缀格式
         /// </summary>
-        public static ExtensionType ExtensionType = ExtensionType.JPEG;
+        public static PicUnit.ExtensionType ExtensionType = PicUnit.ExtensionType.Jpeg;
 
         /// <summary>
         /// 按画质压缩的画质值(1~100)
         /// </summary>
-        public static int Strength = 80;
+        public static int Quality = 80;
 
         /// <summary>
         /// 是否接受超出大小的图片
@@ -47,6 +46,6 @@ namespace PicSizer.Static
         /// <summary>
         /// 压缩方式
         /// </summary>
-        public static CompressType CompressType = CompressType.Strength;
+        public static PicUnit.CompressType CompressType = PicUnit.CompressType.Quality;
     }
 }

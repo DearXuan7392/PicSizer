@@ -1,12 +1,16 @@
-﻿using System;
-using System.Threading;
-using System.Windows.Forms;
-using PicSizer.Window.Partial;
-using System.IO;
-using PicSizer.Static;
-using PicSizer.Window.Assemble;
+﻿#region
 
-namespace PicSizer.Window.Forms
+using System;
+using System.IO;
+using System.Windows.Forms;
+using PicSizer.Program.Deliver;
+using PicSizer.Program.Static;
+using PicSizer.Program.Window.Partial;
+using PicSizer.Program.Window.Assemble;
+
+#endregion
+
+namespace PicSizer.Program.Window.Forms
 {
     public partial class MainForm : PicBaseForm
     {
@@ -14,13 +18,12 @@ namespace PicSizer.Window.Forms
         {
             InitializeComponent();
             //为静态量赋值
-            PicValue.picListView = this.PicListView;
+            PicValue.PicListView = PicListView;
             FormsControl.MainForm = this;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
         }
 
         /// <summary>
@@ -30,7 +33,7 @@ namespace PicSizer.Window.Forms
         {
             //开始压缩任务
             PicValue.OutputDirection = textBox_OutputDir.Text;
-            
+
             if (radioButton_CoverOrigin.Checked)
             {
                 PicSetting.OutputType = PicUnit.OutputType.CoverOrigin;
@@ -44,7 +47,7 @@ namespace PicSizer.Window.Forms
                 PicSetting.OutputType = PicUnit.OutputType.OutputStructure;
             }
 
-            Deliver.Task.StartCompressTask();
+            Task.StartCompressTask();
         }
 
         /// <summary>
@@ -60,8 +63,8 @@ namespace PicSizer.Window.Forms
         /// </summary>
         public void UpdateSelectTotalNumLabel()
         {
-            int select = this.PicListView.SelectedItems.Count;
-            int total = this.PicListView.Items.Count;
+            int select = PicListView.SelectedItems.Count;
+            int total = PicListView.Items.Count;
             label_SelectByTotal.Text = $"{select}/{total}";
         }
 
@@ -110,21 +113,21 @@ namespace PicSizer.Window.Forms
         {
             if (sender == 选中项ToolStripMenuItem)
             {
-                PicListView.InvokeEvent(PicListView.EventType.RemoveSelectedItem);
+                PicListView.InvokeEvent(Assemble.PicListView.EventType.RemoveSelectedItem);
             }
             else if (sender == 已完成ToolStripMenuItem)
             {
-                PicListView.InvokeEvent(PicListView.EventType.RemoveSuccess);
+                PicListView.InvokeEvent(Assemble.PicListView.EventType.RemoveSuccess);
             }
             else if (sender == 错误项ToolStripMenuItem)
             {
-                PicListView.InvokeEvent(PicListView.EventType.RemoveError);
+                PicListView.InvokeEvent(Assemble.PicListView.EventType.RemoveError);
             }
             else if (sender == 全部项ToolStripMenuItem)
             {
                 if (Dialog.ShowDialog_OKDialog("是否清空列表,包括未完成的项目?"))
                 {
-                    PicListView.InvokeEvent(PicListView.EventType.RemoveAll);
+                    PicListView.InvokeEvent(Assemble.PicListView.EventType.RemoveAll);
                 }
             }
         }
@@ -136,11 +139,11 @@ namespace PicSizer.Window.Forms
         {
             if (sender == 全选ToolStripMenuItem)
             {
-                PicListView.InvokeEvent(PicListView.EventType.SelectAll);
+                PicListView.InvokeEvent(Assemble.PicListView.EventType.SelectAll);
             }
             else if (sender == 反选ToolStripMenuItem)
             {
-                PicListView.InvokeEvent(PicListView.EventType.SelectReverse);
+                PicListView.InvokeEvent(Assemble.PicListView.EventType.SelectReverse);
             }
         }
 
@@ -149,7 +152,7 @@ namespace PicSizer.Window.Forms
         /// </summary>
         private void OnAppExit(object sender, FormClosedEventArgs e)
         {
-            System.Environment.Exit(0);
+            Environment.Exit(0);
         }
 
         private void textBox_OutputDir_DragEnter(object sender, DragEventArgs e)
@@ -175,7 +178,7 @@ namespace PicSizer.Window.Forms
 
         private void radioButton_CheckedChanged(object sender, EventArgs e)
         {
-            if(radioButton_CoverOrigin.Checked)
+            if (radioButton_CoverOrigin.Checked)
             {
                 textBox_OutputDir.Enabled = false;
                 button_OpenFolder.Enabled = false;

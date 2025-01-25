@@ -1,12 +1,15 @@
-﻿using PicSizer.FileIO;
-using PicSizer.Static;
-using PicSizer.Window.Partial;
+﻿#region
+
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using PicSizer.Program.FileIO;
+using PicSizer.Program.Static;
 
-namespace PicSizer.Logic
+#endregion
+
+namespace PicSizer.Program.Logic.Graph
 {
     public static partial class Graph
     {
@@ -45,10 +48,11 @@ namespace PicSizer.Logic
             int stride = bitmapData.Stride;
             // 内存起始地址
             IntPtr ptr = bitmapData.Scan0;
-            if (!DLL.CUDA_SetBrightness(ptr, width, height, stride, PicSetting.Brightness))
+            if (!Dll.CUDA_SetBrightness(ptr, width, height, stride, PicSetting.Brightness))
             {
                 throw new Exception("使用GPU加速时遇到了未知错误");
             }
+
             bitmap.UnlockBits(bitmapData);
         }
 
@@ -79,10 +83,9 @@ namespace PicSizer.Logic
             {
                 for (int y = 0; y < height; y++)
                 {
-                    if(pixelBits == 4 && x % 4 == 3)
+                    if (pixelBits == 4 && x % 4 == 3)
                     {
                         // 跳过Alpha通道
-                        continue;
                     }
                     else
                     {
@@ -91,6 +94,7 @@ namespace PicSizer.Logic
                     }
                 }
             }
+
             // 复制回内存中并解锁像素
             Marshal.Copy(pic, 0, ptr, size);
             bitmap.UnlockBits(bitmapData);
@@ -106,12 +110,13 @@ namespace PicSizer.Logic
                 new Rectangle(0, 0, width, height),
                 ImageLockMode.ReadWrite,
                 PixelFormat.Format24bppRgb);
-            int stride = bitmapData.Stride;//图片扫描宽度
+            int stride = bitmapData.Stride; //图片扫描宽度
             IntPtr ptr = bitmapData.Scan0;
-            if (!DLL.CPP_SetBrightness(ptr, width, height, stride, PicSetting.Brightness))
+            if (!Dll.CPP_SetBrightness(ptr, width, height, stride, PicSetting.Brightness))
             {
                 throw new Exception("使用GPU加速时遇到了未知错误");
             }
+
             bitmap.UnlockBits(bitmapData);
         }
     }

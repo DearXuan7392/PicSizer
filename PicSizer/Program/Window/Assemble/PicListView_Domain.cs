@@ -1,12 +1,11 @@
-﻿using PicSizer.Window.Forms;
-using System;
+﻿#region
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PicSizer.Window.Assemble
+#endregion
+
+namespace PicSizer.Program.Window.Assemble
 {
     /// <summary>
     /// PicListView的属性类
@@ -27,6 +26,6 @@ namespace PicSizer.Window.Assemble
         /// <summary>
         /// 右键菜单
         /// </summary>
-        private PicListViewMenu picListViewMenu = new PicListViewMenu();
+        private readonly PicListViewMenu picListViewMenu = new PicListViewMenu();
     }
 }

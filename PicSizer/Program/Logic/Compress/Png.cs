@@ -1,39 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing.Imaging;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PicSizer.Static;
-using System.Runtime.InteropServices;
-using PicSizer.FileIO;
+﻿#region
 
-namespace PicSizer.Logic
+using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Runtime.InteropServices;
+using PicSizer.Program.FileIO;
+
+#endregion
+
+namespace PicSizer.Program.Logic.Compress
 {
-    public partial class ICON
+    public class Png : CompressItem
     {
-        /// <summary>
-        /// 以指定压缩强度输出JPEG图片
-        /// </summary>
-        /// <param name="strength">压缩强度</param>
-        /// <param name="output">输出路径</param>
-        public void Compress_By_Strength(int strength, string output)
+        public Png(string imgPath, string outputFilename)
         {
-            strength = 101 - strength;
-            if (PicSetting.UseGPU && PicValue.IsGPUSupport)
-            {
-                _CompressByCUDA(ref bitmap, strength);
-            }
-            else
-            {
-                _CompressByCPP(ref bitmap, strength);
-            }
-            
-            bitmap.Save(output, Encoder._Info_PNG, null);
+            Init(imgPath, outputFilename);
         }
 
-        private static void _CompressByCPP(ref Bitmap bitmap, int strength)
+        protected override void WriteToStreamWithQuality(Stream stream, int quality)
+        {
+            Bitmap copy = null;
+            try
+            {
+                copy = (Bitmap)Img.Clone();
+                var compressStrength = MaxQuality - quality + 1;
+                _CompressByCPP(copy, compressStrength);
+                copy.Save(stream, Encoder.InfoPng, null);
+            }
+            finally
+            {
+                copy?.Dispose();
+            }
+        }
+
+        private static void _CompressByCPP(Bitmap bitmap, int strength)
         {
             BitmapData bitmapData = bitmap.LockBits(
                 new Rectangle(0, 0, bitmap.Width, bitmap.Height),
@@ -42,14 +43,14 @@ namespace PicSizer.Logic
             // 单个像素长度
             int pixelBits = bitmap.PixelFormat == PixelFormat.Format24bppRgb
                 ? 3 // 24 位 RGB 格式
-                : 4;// 32  位 ARGB 格式
+                : 4; // 32  位 ARGB 格式
             // 像素所在内存区域起始地址
             IntPtr ptr = bitmapData.Scan0;
-            DLL.CPP_CompressPNG(ptr, bitmap.Width, bitmap.Height, bitmapData.Stride, pixelBits, strength);
+            Dll.CPP_CompressPNG(ptr, bitmap.Width, bitmap.Height, bitmapData.Stride, pixelBits, strength);
             bitmap.UnlockBits(bitmapData);
         }
 
-        private static void _CompressByCUDA(ref Bitmap bitmap, int strength)
+        private static void _CompressByCUDA(Bitmap bitmap, int strength)
         {
             BitmapData bitmapData = bitmap.LockBits(
                 new Rectangle(0, 0, bitmap.Width, bitmap.Height),
@@ -58,17 +59,17 @@ namespace PicSizer.Logic
             // 单个像素长度
             int pixelBits = bitmap.PixelFormat == PixelFormat.Format24bppRgb
                 ? 3 // 24 位 RGB 格式
-                : 4;// 32  位 ARGB 格式
+                : 4; // 32  位 ARGB 格式
             // 像素所在内存区域起始地址
             IntPtr ptr = bitmapData.Scan0;
-            DLL.CUDA_CompressPNG(ptr, bitmap.Width, bitmap.Height, bitmapData.Stride, pixelBits, strength);
+            Dll.CUDA_CompressPNG(ptr, bitmap.Width, bitmap.Height, bitmapData.Stride, pixelBits, strength);
             bitmap.UnlockBits(bitmapData);
         }
 
         /// <summary>
         /// 压缩PNG(CSharp)
         /// </summary>
-        private static void _CompressByCSharp(ref Bitmap bitmap, int strength)
+        private static void _CompressByCSharp(Bitmap bitmap, int strength)
         {
             BitmapData bitmapData = bitmap.LockBits(
                 new Rectangle(0, 0, bitmap.Width, bitmap.Height),
@@ -77,7 +78,7 @@ namespace PicSizer.Logic
             // 单个像素长度
             int pixelBits = bitmap.PixelFormat == PixelFormat.Format24bppRgb
                 ? 3 // 24 位 RGB 格式
-                : 4;// 32  位 ARGB 格式
+                : 4; // 32  位 ARGB 格式
             // 图片扫描宽度
             int stride = bitmapData.Stride;
             // 图片占用总内存大小
@@ -92,7 +93,7 @@ namespace PicSizer.Logic
             int offset = strength / 2;
             for (int x = 0; x < bitmap.Width * pixelBits; x++)
             {
-                for(int y = 0; y < bitmap.Height; y++)
+                for (int y = 0; y < bitmap.Height; y++)
                 {
                     int position = y * stride + x;
                     // 当前像素是 32 位像素格式里的透明像素,且值为 0 或 255,则跳过
@@ -101,13 +102,14 @@ namespace PicSizer.Logic
                     {
                         continue;
                     }
+
                     int result = pic[position] / strength * strength + offset;
                     pic[position] = result <= 255
                         ? (byte)result
                         : (byte)255;
-
                 }
             }
+
             Marshal.Copy(pic, 0, ptr, size);
             bitmap.UnlockBits(bitmapData);
         }

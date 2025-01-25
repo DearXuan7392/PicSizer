@@ -1,21 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region
+
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace PicSizer.Logic
+#endregion
+
+namespace PicSizer.Program.Logic.Graph
 {
     public static partial class Graph
     {
+        public static void InitGraph(ref Bitmap img)
+        {
+            ResizeBitmap(ref img);
+            //水印
+            AddWatermark(ref img);
+            //亮度
+            SetBrightness(ref img);
+        }
+
         /// <summary>
         /// 把颜色转成byte数组
         /// </summary>
         public static byte[] ColorToBytes(Color color)
         {
-            return new byte[]
+            return new[]
             {
                 color.R,
                 color.G,

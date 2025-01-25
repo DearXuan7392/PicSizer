@@ -1,43 +1,40 @@
-﻿using System.Collections.Generic;
-using System.Drawing.Imaging;
+﻿#region
+
+using System.Collections.Generic;
 using System.Text;
 
-namespace PicSizer.Window.Unit
+#endregion
+
+namespace PicSizer.Program.FileIO
 {
     public static class Extension
     {
         /// <summary>
-        /// Bitmap支持的格式的集合(小写,包括点号)
-        /// </summary>
-        public static HashSet<string> BitmapSupportExtension = new HashSet<string>();
-
-        /// <summary>
         /// 后缀名列表
         /// </summary>
-        public static ExtensionTypeList[] extensionTypeLists = new ExtensionTypeList[]
-        {
-            new ExtensionTypeList()
+        private static readonly ExtensionTypeList[] ExtensionTypeLists = {
+            new ExtensionTypeList
             {
-                name = "位图",
-                list = new string[]
+                Name = "位图",
+                List = new[]
                 {
-                    ".jpg",".jpeg",".png",".bmp",".tif",".tiff",".pcx",".ico"
+                    ".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff", ".pcx", ".ico"
                 }
             },
-            new ExtensionTypeList()
+            new ExtensionTypeList
             {
-                name = "矢量图",
-                list = new string[]
+                Name = "矢量图",
+                List = new[]
                 {
-                    ".dxf",".cgm",".cdr",".wmf",".eps",".emf"
+                    ".dxf", ".cgm", ".cdr", ".wmf", ".eps", ".emf"
                 }
             }
         };
 
-        public class ExtensionTypeList
+        private class ExtensionTypeList
         {
-            public string name;
-            public string[] list;
+            public string Name;
+            public string[] List;
         }
 
         /// <summary>
@@ -46,13 +43,13 @@ namespace PicSizer.Window.Unit
         public static string ExtensionTypeListToFilter()
         {
             StringBuilder stringBuilder = new StringBuilder();
-            foreach (ExtensionTypeList typeList in extensionTypeLists)
+            foreach (ExtensionTypeList typeList in ExtensionTypeLists)
             {
                 stringBuilder
                     .Append("|")
-                    .Append(typeList.name)
+                    .Append(typeList.Name)
                     .Append("|");
-                foreach (string extension in typeList.list)
+                foreach (string extension in typeList.List)
                 {
                     stringBuilder
                         .Append("*")
@@ -60,6 +57,7 @@ namespace PicSizer.Window.Unit
                         .Append(";");
                 }
             }
+
             return stringBuilder.ToString();
         }
     }

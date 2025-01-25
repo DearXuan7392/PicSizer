@@ -1,24 +1,27 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.Threading;
-using PicSizer.Static;
-using PicSizer.Window.Partial;
-using static PicSizer.Static.PicUnit;
+﻿#region
 
-namespace PicSizer.FileIO
+using System;
+using System.Runtime.InteropServices;
+using PicSizer.Program.Static;
+using PicSizer.Program.Window.Partial;
+using static PicSizer.Program.Static.PicUnit;
+
+#endregion
+
+namespace PicSizer.Program.FileIO
 {
-    public static partial class DLL
+    public static partial class Dll
     {
         /// <summary>
         /// 通用dll路径
         /// </summary>
-        private const string DLL_PATH = "PicLibrary.dll";
+        private const string DllPath = "PicLibrary.dll";
 
         /// <summary>
         /// CUDA 判断GPU是否支持CUDA
         /// </summary>
         /// <returns></returns>
-        [DllImport(DLL_PATH, EntryPoint = "LoadDll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DllPath, EntryPoint = "LoadDll", CallingConvention = CallingConvention.Cdecl)]
         private static extern int _LoadDll(ref PicDllResultStr res);
 
         /// <summary>
@@ -29,11 +32,11 @@ namespace PicSizer.FileIO
             try
             {
                 //返回CUDA错误码
-                int _Pic_Dll_Error = _LoadDll(ref PicValue.picDllResult);
+                int picDllError = _LoadDll(ref PicValue.PicDllResult);
                 //未报错且GPU数量大于 0,则启用加速
-                if (_Pic_Dll_Error == 0 && PicValue.picDllResult.GpuCount > 0)
+                if (picDllError == 0 && PicValue.PicDllResult.GpuCount > 0)
                 {
-                    PicValue.IsGPUSupport = true;
+                    PicValue.IsGpuSupport = true;
                 }
             }
             catch (Exception e)

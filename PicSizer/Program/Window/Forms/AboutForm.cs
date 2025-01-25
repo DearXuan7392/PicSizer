@@ -1,8 +1,11 @@
-﻿using PicSizer.Static;
-using System;
-using System.Windows.Forms;
+﻿#region
 
-namespace PicSizer.Window.Forms
+using System;
+using PicSizer.Program.Static;
+
+#endregion
+
+namespace PicSizer.Program.Window.Forms
 {
     public partial class AboutForm : PicBaseForm
     {
@@ -16,7 +19,6 @@ namespace PicSizer.Window.Forms
 
         private void About_Load(object sender, EventArgs e)
         {
-            
         }
     }
 }

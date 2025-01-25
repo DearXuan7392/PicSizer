@@ -1,9 +1,12 @@
-﻿using System;
-using System.Windows.Forms;
-using PicSizer.Static;
-using PicSizer.Window.Partial;
+﻿#region
 
-namespace PicSizer.Window.Forms
+using System;
+using System.Windows.Forms;
+using PicSizer.Program.Static;
+
+#endregion
+
+namespace PicSizer.Program.Window.Forms
 {
     public partial class ProgressForm : PicBaseForm
     {
@@ -15,7 +18,6 @@ namespace PicSizer.Window.Forms
 
         private void ProgressForm_Load(object sender, EventArgs e)
         {
-
         }
 
         /// <summary>
@@ -40,7 +42,7 @@ namespace PicSizer.Window.Forms
         private void ProgressForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             FormsControl.ProgressForm = null;
-            this.Dispose();
+            Dispose();
         }
     }
 }

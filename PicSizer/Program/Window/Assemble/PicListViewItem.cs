@@ -1,32 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static PicSizer.Static.PicUnit;
+﻿#region
 
-namespace PicSizer.Window.Assemble
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
+using PicSizer.Program.FileIO;
+using static PicSizer.Program.Static.PicUnit;
+
+#endregion
+
+namespace PicSizer.Program.Window.Assemble
 {
-    public class PicListViewItem : System.Windows.Forms.ListViewItem
+    public class PicListViewItem : ListViewItem
     {
         /// <summary>
         /// 文件大小(单位:KB)
         /// </summary>
-        private long _Size;
+        private long _size;
 
         /// <summary>
         /// 图片状态
         /// </summary>
-        private PicItemState _State;
+        private PicItemState _state;
+
+        private string _message = null;
 
         /// <summary>
         /// 文件名
         /// </summary>
         public string FileName
         {
-            get { return this.SubItems[0].Text; }
-            set { this.SubItems[0].Text = value; }
+            get => SubItems[0].Text;
+            private set => SubItems[0].Text = value;
         }
 
         /// <summary>
@@ -34,8 +38,8 @@ namespace PicSizer.Window.Assemble
         /// </summary>
         public string FullPath
         {
-            get { return this.SubItems[1].Text; }
-            set { this.SubItems[1].Text = value; }
+            get => SubItems[1].Text;
+            private set => SubItems[1].Text = value;
         }
 
         /// <summary>
@@ -43,40 +47,49 @@ namespace PicSizer.Window.Assemble
         /// </summary>
         public long Size
         {
-            get { return this._Size; }
-            set
+            get => _size;
+            private set
             {
-                this._Size = value;
-                this.SubItems[2].Text = FileIO.FileProc.FileSizeToString(_Size);
+                _size = value;
+                SubItems[2].Text = FileProc.FileSizeToString(_size);
             }
         }
+
+        /// <summary>
+        /// 其他信息
+        /// </summary>
+        public string Message { get; set; }
 
         /// <summary>
         /// 状态
         /// </summary>
         public PicItemState State
         {
-            get { return this._State; }
+            get => _state;
             set
             {
-                this._State = value;
+                _state = value;
                 switch (value)
                 {
                     case PicItemState.Waiting:
-                        this.SubItems[3].Text = "待压缩";
-                        this.SubItems[3].ForeColor = System.Drawing.Color.Black;
+                        SubItems[3].Text = "待压缩";
+                        SubItems[3].ForeColor = Color.Black;
                         break;
                     case PicItemState.Compression:
-                        this.SubItems[3].Text = "压缩中";
-                        this.SubItems[3].ForeColor = System.Drawing.Color.Blue;
+                        SubItems[3].Text = "压缩中";
+                        SubItems[3].ForeColor = Color.Blue;
                         break;
                     case PicItemState.Success:
-                        this.SubItems[3].Text = "已完成";
-                        this.SubItems[3].ForeColor = System.Drawing.Color.Green;
+                        SubItems[3].Text = "完成";
+                        SubItems[3].ForeColor = Color.Green;
+                        break;
+                    case PicItemState.OutOfLimit:
+                        SubItems[3].Text = "超出";
+                        SubItems[3].ForeColor = Color.Orange;
                         break;
                     case PicItemState.Error:
-                        this.SubItems[3].Text = "错误";
-                        this.SubItems[3].ForeColor = System.Drawing.Color.Red;
+                        SubItems[3].Text = "错误";
+                        SubItems[3].ForeColor = Color.Red;
                         break;
                 }
             }
@@ -86,14 +99,15 @@ namespace PicSizer.Window.Assemble
         {
             for (int i = 0; i < 3; i++)
             {
-                this.SubItems.Add(new ListViewSubItem());
+                SubItems.Add(new ListViewSubItem());
             }
-            this.UseItemStyleForSubItems = false;
+
+            UseItemStyleForSubItems = false;
             FileInfo fileInfo = new FileInfo(path);
-            this.FullPath = fileInfo.FullName;
-            this.FileName = fileInfo.Name;
-            this.Size = fileInfo.Length >> 10;//单位:KB
-            this.State = PicItemState.Waiting;
+            FullPath = fileInfo.FullName;
+            FileName = fileInfo.Name;
+            Size = fileInfo.Length >> 10; //单位:KB
+            State = PicItemState.Waiting;
         }
     }
 }

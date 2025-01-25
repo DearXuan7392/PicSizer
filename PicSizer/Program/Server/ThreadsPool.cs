@@ -1,16 +1,17 @@
-﻿using PicSizer.Deliver;
-using PicSizer.Logic;
-using PicSizer.Static;
-using PicSizer.Window;
-using PicSizer.Window.Assemble;
-using PicSizer.Window.Partial;
-using System;
+﻿#region
+
 using System.Collections.Generic;
-using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using PicSizer.Program.Deliver;
+using PicSizer.Program.Logic.Compress;
+using PicSizer.Program.Static;
+using PicSizer.Program.Window;
+using PicSizer.Program.Window.Assemble;
 
-namespace PicSizer.Server
+#endregion
+
+namespace PicSizer.Program.Server
 {
     /// <summary>
     /// 线程池
@@ -20,22 +21,22 @@ namespace PicSizer.Server
         /// <summary>
         /// 等待句柄,用于阻碍线程推进
         /// </summary>
-        private static List<WaitHandle> waitHandles = new List<WaitHandle>();
+        private static readonly List<WaitHandle> WaitHandles = new List<WaitHandle>();
 
         /// <summary>
         /// 待压缩图片总数
         /// </summary>
-        private static int totalNum = 0;
+        private static int _totalNum;
 
         /// <summary>
         /// 已压缩图片总数
         /// </summary>
-        private static int currentNum = 0;
+        private static int _currentNum;
 
         /// <summary>
         /// 出错的图片数量
         /// </summary>
-        private static int errorNum = 0;
+        private static int _errorNum;
 
         /// <summary>
         /// 开始多线程压缩
@@ -43,30 +44,28 @@ namespace PicSizer.Server
         public static void StartThreadsPool()
         {
             //初始化数据
-            totalNum = PicValue.picListView.Items.Count;
-            currentNum = 0;
+            _totalNum = PicValue.PicListView.Items.Count;
+            _currentNum = 0;
             //初始化下标
-            Index_Of_PicListView = 0;
-            Index_Of_Output = PicSetting.OutputIndex;
+            _indexOfPicListView = 0;
+            _indexOfOutput = PicSetting.OutputIndex;
             //初始化等待句柄
             PicValue.ExitNow = false;
-            waitHandles.Clear();
+            WaitHandles.Clear();
             //创建异步任务
             for (int i = 0; i < PicSetting.MaxThreads; i++)
             {
                 //新建等待句柄并加入数组
                 ManualResetEvent manual = new ManualResetEvent(false);
-                waitHandles.Add(manual);
-                Thread thread = new Thread(() =>
-                {
-                    DoInThread(manual);
-                });
+                WaitHandles.Add(manual);
+                Thread thread = new Thread(() => { DoInThread(manual); });
                 thread.Priority = ThreadPriority.Highest;
                 thread.Start();
             }
+
             //等待所有句柄完成
-            WaitHandle.WaitAll(waitHandles.ToArray());
-            Task.OnTaskEnd(currentNum, errorNum, totalNum);
+            WaitHandle.WaitAll(WaitHandles.ToArray());
+            Task.OnTaskEnd(_currentNum, _errorNum, _totalNum);
         }
 
         private static void DoInThread(ManualResetEvent manualResetEvent)
@@ -77,46 +76,41 @@ namespace PicSizer.Server
             //没有点击退出且后续还有图片
             while (!PicValue.ExitNow && GetNextOutputPictureInfo(out item, out input, out output))
             {
-                Bitmap bitmap = null;
-                bool result = false;
-                item.State = PicUnit.PicItemState.Compression; 
-                try
+                item.State = PicUnit.PicItemState.Compression;
+                PicResult result = CompressItem.Compress(input, output);
+                UpdateResult(result.Ok);
+
+                if (result.CompressResult == PicResult.CompressResultEnum.Ok)
                 {
-                    //获取经过预处理之后的图片
-                    bitmap = Prefix.GetBitmap(input);
-                    //对图片进行压缩,并返回结果
-                    Logic.Compress.CompressPicture(bitmap, output);
-                    result = true;
+                    item.State = PicUnit.PicItemState.Success;
                 }
-                catch(Exception e)
+                else if (result.CompressResult == PicResult.CompressResultEnum.OutOfLimit)
                 {
-                    result = false;
-                    Dialog.ShowDialog_Exception(e);
+                    item.State = PicUnit.PicItemState.OutOfLimit;
                 }
-                finally
+                else
                 {
-                    bitmap?.Dispose();
+                    item.State = PicUnit.PicItemState.Error;
+                    item.Message = result.Message;
                 }
-                UpdateResult(result);
-                item.State = result
-                    ? PicUnit.PicItemState.Success
-                    : PicUnit.PicItemState.Error;
             }
+
             manualResetEvent.Set();
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         private static void UpdateResult(bool result)
         {
-            if(result)
+            if (result)
             {
-                currentNum++;
+                _currentNum++;
             }
             else
             {
-                errorNum++;
+                _errorNum++;
             }
-            FormsControl.ProgressForm?.UpdateProgress(currentNum, errorNum, totalNum);
+
+            FormsControl.ProgressForm?.UpdateProgress(_currentNum, _errorNum, _totalNum);
         }
     }
 }

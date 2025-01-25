@@ -1,13 +1,12 @@
-﻿using PicSizer.FileIO;
-using PicSizer.Static;
-using PicSizer.Window.Partial;
-using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
-using static PicSizer.Static.PicUnit;
+﻿#region
 
-namespace PicSizer.Logic
+using System.Drawing;
+using PicSizer.Program.Static;
+using static PicSizer.Program.Static.PicUnit;
+
+#endregion
+
+namespace PicSizer.Program.Logic.Graph
 {
     public static partial class Graph
     {
@@ -60,6 +59,7 @@ namespace PicSizer.Logic
                     default:
                         return;
                 }
+
                 RectangleF textArea = new RectangleF(rectX, rectY, textWidth, textHeight);
                 SolidBrush brush = new SolidBrush(color);
                 g.DrawString(

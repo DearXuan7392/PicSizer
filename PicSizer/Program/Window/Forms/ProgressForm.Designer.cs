@@ -1,5 +1,5 @@
 ﻿
-namespace PicSizer.Window.Forms
+namespace PicSizer.Program.Window.Forms
 {
     partial class ProgressForm
     {

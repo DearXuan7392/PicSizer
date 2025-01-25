@@ -1,5 +1,7 @@
 ﻿
-namespace PicSizer.Window.Forms
+using PicSizer.Program.Window.Assemble;
+
+namespace PicSizer.Program.Window.Forms
 {
     partial class MainForm
     {
@@ -24,8 +26,8 @@ namespace PicSizer.Window.Forms
         #region Windows 窗体设计器生成的代码
 
         /// <summary>
-        /// 设计器支持所需的方法 - 不要修改
-        /// 使用代码编辑器修改此方法的内容。
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
@@ -55,11 +57,11 @@ namespace PicSizer.Window.Forms
             this.radioButton_OutputDirection = new System.Windows.Forms.RadioButton();
             this.radioButton_OutputStructure = new System.Windows.Forms.RadioButton();
             this.radioButton_CoverOrigin = new System.Windows.Forms.RadioButton();
-            this.PicListView = new PicSizer.Window.Assemble.PicListView();
-            this.fileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.fullPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.size = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.state = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.PicListView = new PicListView();
+            this.fileName = new System.Windows.Forms.ColumnHeader();
+            this.fullPath = new System.Windows.Forms.ColumnHeader();
+            this.size = new System.Windows.Forms.ColumnHeader();
+            this.state = new System.Windows.Forms.ColumnHeader();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -90,19 +92,13 @@ namespace PicSizer.Window.Forms
             this.menuStrip1.BackColor = System.Drawing.SystemColors.Control;
             resources.ApplyResources(this.menuStrip1, "menuStrip1");
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.文件ToolStripMenuItem,
-            this.选择ToolStripMenuItem,
-            this.帮助ToolStripMenuItem});
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this.文件ToolStripMenuItem, this.选择ToolStripMenuItem, this.帮助ToolStripMenuItem });
             this.menuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.menuStrip1.Name = "menuStrip1";
             // 
             // 文件ToolStripMenuItem
             // 
-            this.文件ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.添加文件ToolStripMenuItem,
-            this.打开文件夹ToolStripMenuItem,
-            this.退出ToolStripMenuItem});
+            this.文件ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { this.添加文件ToolStripMenuItem, this.打开文件夹ToolStripMenuItem, this.退出ToolStripMenuItem });
             this.文件ToolStripMenuItem.Name = "文件ToolStripMenuItem";
             resources.ApplyResources(this.文件ToolStripMenuItem, "文件ToolStripMenuItem");
             // 
@@ -126,10 +122,7 @@ namespace PicSizer.Window.Forms
             // 
             // 选择ToolStripMenuItem
             // 
-            this.选择ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.全选ToolStripMenuItem,
-            this.反选ToolStripMenuItem,
-            this.移除ToolStripMenuItem});
+            this.选择ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { this.全选ToolStripMenuItem, this.反选ToolStripMenuItem, this.移除ToolStripMenuItem });
             this.选择ToolStripMenuItem.Name = "选择ToolStripMenuItem";
             resources.ApplyResources(this.选择ToolStripMenuItem, "选择ToolStripMenuItem");
             // 
@@ -147,11 +140,7 @@ namespace PicSizer.Window.Forms
             // 
             // 移除ToolStripMenuItem
             // 
-            this.移除ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.选中项ToolStripMenuItem,
-            this.已完成ToolStripMenuItem,
-            this.错误项ToolStripMenuItem,
-            this.全部项ToolStripMenuItem});
+            this.移除ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { this.选中项ToolStripMenuItem, this.已完成ToolStripMenuItem, this.错误项ToolStripMenuItem, this.全部项ToolStripMenuItem });
             this.移除ToolStripMenuItem.Name = "移除ToolStripMenuItem";
             resources.ApplyResources(this.移除ToolStripMenuItem, "移除ToolStripMenuItem");
             // 
@@ -181,8 +170,7 @@ namespace PicSizer.Window.Forms
             // 
             // 帮助ToolStripMenuItem
             // 
-            this.帮助ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.关于ToolStripMenuItem});
+            this.帮助ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { this.关于ToolStripMenuItem });
             this.帮助ToolStripMenuItem.Name = "帮助ToolStripMenuItem";
             resources.ApplyResources(this.帮助ToolStripMenuItem, "帮助ToolStripMenuItem");
             // 
@@ -252,11 +240,7 @@ namespace PicSizer.Window.Forms
             // 
             this.PicListView.AllowDrop = true;
             resources.ApplyResources(this.PicListView, "PicListView");
-            this.PicListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.fileName,
-            this.fullPath,
-            this.size,
-            this.state});
+            this.PicListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { this.fileName, this.fullPath, this.size, this.state });
             this.PicListView.FullRowSelect = true;
             this.PicListView.GridLines = true;
             this.PicListView.HideSelection = false;
@@ -302,7 +286,6 @@ namespace PicSizer.Window.Forms
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
@@ -322,7 +305,7 @@ namespace PicSizer.Window.Forms
         private System.Windows.Forms.ToolStripMenuItem 移除ToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ColumnHeader state;
-        private Window.Assemble.PicListView PicListView;
+        private PicListView PicListView;
         private System.Windows.Forms.ToolStripMenuItem 选中项ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 已完成ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 错误项ToolStripMenuItem;

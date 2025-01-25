@@ -1,13 +1,11 @@
-﻿using PicSizer.Static;
-using System;
-using System.Collections.Generic;
+﻿#region
+
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PicSizer.Window
+#endregion
+
+namespace PicSizer.Program.Window
 {
     /// <summary>
     /// PicSizer窗体支持类
@@ -33,23 +31,23 @@ namespace PicSizer.Window
         /// </summary>
         public static void BindNumericAndTrack(NumericUpDown numeric, TrackBar track)
         {
-            bool ValueChange = true;
+            bool valueChange = true;
             numeric.ValueChanged += (sender, args) =>
             {
-                if (ValueChange)
+                if (valueChange)
                 {
-                    ValueChange = false;
+                    valueChange = false;
                     track.Value = (int)numeric.Value;
-                    ValueChange = true;
+                    valueChange = true;
                 }
             };
             track.ValueChanged += (sender, args) =>
             {
-                if (ValueChange)
+                if (valueChange)
                 {
-                    ValueChange = false;
+                    valueChange = false;
                     numeric.Value = track.Value;
-                    ValueChange = true;
+                    valueChange = true;
                 }
             };
         }
@@ -59,7 +57,7 @@ namespace PicSizer.Window
         /// </summary>
         public static byte[] ColorToBytes(Color color)
         {
-            return new byte[]
+            return new[]
             {
                 color.R,
                 color.G,

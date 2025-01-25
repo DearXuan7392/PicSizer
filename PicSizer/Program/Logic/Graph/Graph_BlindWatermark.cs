@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region
+
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace PicSizer.Logic
+#endregion
+
+namespace PicSizer.Program.Logic.Graph
 {
     public static partial class Graph
     {
@@ -21,7 +21,7 @@ namespace PicSizer.Logic
                 new Rectangle(0, 0, width, height),
                 ImageLockMode.ReadWrite,
                 PixelFormat.Format32bppArgb);
-            int stride = bitmapData.Stride;//图片扫描宽度
+            int stride = bitmapData.Stride; //图片扫描宽度
             int size = stride * height;
             byte[] pic = new byte[size];
             IntPtr ptr = bitmapData.Scan0;
@@ -31,8 +31,7 @@ namespace PicSizer.Logic
             {
                 for (int x = 0; x < width; ++x)
                 {
-                    position = y * stride + x * 4;//像素起始地址(格式BGRA)
-
+                    position = y * stride + x * 4; //像素起始地址(格式BGRA)
                 }
             }
         }

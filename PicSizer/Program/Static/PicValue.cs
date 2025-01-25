@@ -1,16 +1,12 @@
-﻿using PicSizer.Window.Partial;
-using PicSizer.Window.Assemble;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static PicSizer.Static.PicUnit;
-using System.Windows.Forms;
-using PicSizer.Window;
-using PicSizer.Window.Forms;
+﻿#region
 
-namespace PicSizer.Static
+using System;
+using PicSizer.Program.Window.Assemble;
+using static PicSizer.Program.Static.PicUnit;
+
+#endregion
+
+namespace PicSizer.Program.Static
 {
     public static class PicValue
     {
@@ -27,7 +23,7 @@ namespace PicSizer.Static
         /// <summary>
         /// PicListView
         /// </summary>
-        public static PicListView picListView = null;
+        public static PicListView PicListView = null;
 
         /// <summary>
         /// 压缩过程中立即退出
@@ -47,11 +43,11 @@ namespace PicSizer.Static
         /// <summary>
         /// GPU是否支持
         /// </summary>
-        public static bool IsGPUSupport = false;
+        public static bool IsGpuSupport = false;
 
         /// <summary>
         /// DLL加载结果
         /// </summary>
-        public static PicDllResultStr picDllResult = new PicDllResultStr();
+        public static PicDllResultStr PicDllResult = new PicUnit.PicDllResultStr();
     }
 }

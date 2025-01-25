@@ -1,13 +1,13 @@
-﻿using PicSizer.Static;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿#region
 
-namespace PicSizer.Window.Assemble
+using System;
+using System.IO;
+using System.Windows.Forms;
+using PicSizer.Program.Static;
+
+#endregion
+
+namespace PicSizer.Program.Window.Assemble
 {
     public partial class PicListView : ListView
     {
@@ -30,7 +30,7 @@ namespace PicSizer.Window.Assemble
             if (e.Button == MouseButtons.Right)
             {
                 //生成点击信息
-                ListViewHitTestInfo info = this.HitTest(e.X, e.Y);
+                ListViewHitTestInfo info = HitTest(e.X, e.Y);
                 //获取点击项
                 PicListViewItem item = info.Item as PicListViewItem;
                 //弹出菜单
@@ -47,7 +47,7 @@ namespace PicSizer.Window.Assemble
             if (e.Button == MouseButtons.Left)
             {
                 //生成点击信息
-                ListViewHitTestInfo info = this.HitTest(e.X, e.Y);
+                ListViewHitTestInfo info = HitTest(e.X, e.Y);
                 //获取点击项
                 PicListViewItem item = info.Item as PicListViewItem;
                 //打开文件夹并选中文件
@@ -62,7 +62,7 @@ namespace PicSizer.Window.Assemble
         /// </summary>
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.A && e.Control)//Ctrl + A
+            if (e.KeyCode == Keys.A && e.Control) //Ctrl + A
             {
                 InvokeEvent(EventType.SelectAll);
             }

@@ -1,16 +1,16 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.Threading;
-using PicSizer.Static;
-using PicSizer.Window.Partial;
-using static PicSizer.Static.PicUnit;
+﻿#region
 
-namespace PicSizer.FileIO
+using System;
+using System.Runtime.InteropServices;
+
+#endregion
+
+namespace PicSizer.Program.FileIO
 {
     /// <summary>
     /// PicSizer dll加载类
     /// </summary>
-    public static partial class DLL
+    public static partial class Dll
     {
         /// <summary>
         /// C++ 设置图片亮度
@@ -20,7 +20,7 @@ namespace PicSizer.FileIO
         /// <param name="height">图片高度</param>
         /// <param name="stride">扫描行</param>
         /// <param name="dark">亮度</param>
-        [DllImport(DLL_PATH, EntryPoint = "CPP_SetBrightness", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DllPath, EntryPoint = "CPP_SetBrightness", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool CPP_SetBrightness(IntPtr ori, int width, int height, int stride, byte brightness);
 
         /// <summary>
@@ -34,8 +34,10 @@ namespace PicSizer.FileIO
         /// <param name="G">G参量</param>
         /// <param name="B">B参量</param>
         /// <returns></returns>
-        [DllImport(DLL_PATH, EntryPoint = "CPP_SetTransparentPixelBackgroundColor", CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool CPP_SetTransparentPixelBackgroundColor(IntPtr ori, int width, int height, int stride, byte R, byte G, byte B);
+        [DllImport(DllPath, EntryPoint = "CPP_SetTransparentPixelBackgroundColor",
+            CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool CPP_SetTransparentPixelBackgroundColor(IntPtr ori, int width, int height, int stride,
+            byte R, byte G, byte B);
 
         /// <summary>
         /// CUDA 压缩PNG图片
@@ -46,7 +48,8 @@ namespace PicSizer.FileIO
         /// <param name="stride">扫描行</param>
         /// <param name="pixelBits">像素位数</param>
         /// <param name="level">压缩强度</param>
-        [DllImport(DLL_PATH, EntryPoint = "CUDA_CompressPNG", CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool CPP_CompressPNG(IntPtr ori, int width, int height, int stride, int pixelBits, int level);
+        [DllImport(DllPath, EntryPoint = "CUDA_CompressPNG", CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool CPP_CompressPNG(IntPtr ori, int width, int height, int stride, int pixelBits,
+            int level);
     }
 }

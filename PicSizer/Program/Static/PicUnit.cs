@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿#region
 
-namespace PicSizer.Static
+using System.Runtime.InteropServices;
+
+#endregion
+
+namespace PicSizer.Program.Static
 {
     public static class PicUnit
-    {   
+    {
         /// <summary>
         /// 输出类型
         /// </summary>
@@ -24,9 +23,9 @@ namespace PicSizer.Static
         /// </summary>
         public enum ExtensionType
         {
-            JPEG = 0,
-            PNG = 1,
-            WEBP = 2,
+            Jpeg = 0,
+            Png = 1,
+            Webp = 2,
             Origin = 3,
         }
 
@@ -35,8 +34,7 @@ namespace PicSizer.Static
         /// </summary>
         public enum CompressType
         {
-            Strength = 0,
-
+            Quality = 0,
             FileSize = 1,
         }
 
@@ -48,7 +46,8 @@ namespace PicSizer.Static
             Waiting = 0,
             Compression = 1,
             Success = 2,
-            Error = 3,
+            OutOfLimit = 3,
+            Error = 4,
         }
 
         /// <summary>
@@ -120,6 +119,6 @@ namespace PicSizer.Static
             /// </summary>
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4096)]
             public char[] GpuErrorStr;
-        };
+        }
     }
 }

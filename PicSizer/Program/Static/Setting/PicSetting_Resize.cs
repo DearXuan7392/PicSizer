@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static PicSizer.Static.PicUnit;
+﻿#region
 
-namespace PicSizer.Static
+using static PicSizer.Program.Static.PicUnit;
+
+#endregion
+
+namespace PicSizer.Program.Static
 {
     public static partial class PicSetting
     {
@@ -22,6 +21,6 @@ namespace PicSizer.Static
         /// <summary>
         /// 裁剪模式
         /// </summary>
-        public static ResizeType ResizeType = ResizeType.Non;
+        public static PicUnit.ResizeType ResizeType = PicUnit.ResizeType.Non;
     }
 }

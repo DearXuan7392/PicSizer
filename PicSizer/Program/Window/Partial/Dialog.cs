@@ -1,31 +1,35 @@
-﻿using System;
+﻿#region
+
+using System;
+using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using System.Drawing;
-using PicSizer.Window.Unit;
-using PicSizer.Static;
+using PicSizer.Program.FileIO;
 
-namespace PicSizer.Window.Partial
+#endregion
+
+namespace PicSizer.Program.Window.Partial
 {
     /// <summary>
     /// PicSizer对话框类
     /// </summary>
-    public static partial class Dialog
+    public static class Dialog
     {
         /// <summary>
         /// 默认对话框标题
         /// </summary>
-        private const string _Title = "PicSizer";
+        private const string Title = "PicSizer";
 
         /// <summary>
         /// 报错对话框标题
         /// </summary>
-        private const string _Error = "错误";
+        private const string Error = "错误";
 
-        private static string _Dialog_String_Filter_PictureOnly =
+        private static readonly string DialogStringFilterPictureOnly =
             "常规格式|*.jpg;*.png;*.bmp;" + Extension.ExtensionTypeListToFilter();
 
-        private static string _Dialog_String_Filter_All = _Dialog_String_Filter_PictureOnly + "|所有|*.*";
+        private static string _dialogStringFilterAll = DialogStringFilterPictureOnly + "|所有|*.*";
 
         /// <summary>
         /// 显示一般弹窗
@@ -33,7 +37,7 @@ namespace PicSizer.Window.Partial
         /// [MethodImpl(MethodImplOptions.Synchronized)]
         public static void ShowDialog(string msg)
         {
-            MessageBox.Show(FormsControl.MainForm, msg, _Title);
+            MessageBox.Show(FormsControl.MainForm, msg, Title);
             SetFocus();
         }
 
@@ -44,13 +48,14 @@ namespace PicSizer.Window.Partial
         /// <param name="success">压缩成功的数量</param>
         public static void ShowDialog_ResizeFinish(int total, int success)
         {
-            string s = 
+            string s =
                 $"总共: {total} 张\n" +
                 $"压缩完成: {success} 张\n" +
                 $"未完成: {(total - success)} 张";
             FormsControl.MainForm.Invoke(new Action(() =>
             {
-                MessageBox.Show(FormsControl.MainForm, s, "压缩已结束", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(FormsControl.MainForm, s, "压缩已结束", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }));
         }
 
@@ -59,7 +64,7 @@ namespace PicSizer.Window.Partial
         /// </summary>
         public static void ShowDialog_Error(string msg)
         {
-            MessageBox.Show(FormsControl.MainForm, msg, _Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(FormsControl.MainForm, msg, Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         /// <summary>
@@ -67,7 +72,7 @@ namespace PicSizer.Window.Partial
         /// </summary>
         public static void ShowDialog_Warning(string msg)
         {
-            MessageBox.Show(FormsControl.MainForm, msg, _Error, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(FormsControl.MainForm, msg, Error, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         /// <summary>
@@ -84,7 +89,7 @@ namespace PicSizer.Window.Partial
         /// </summary>
         public static bool ShowDialog_OKDialog(string msg)
         {
-            return MessageBox.Show(FormsControl.MainForm, msg, _Title, MessageBoxButtons.OKCancel) == DialogResult.OK;
+            return MessageBox.Show(FormsControl.MainForm, msg, Title, MessageBoxButtons.OKCancel) == DialogResult.OK;
         }
 
         /// <summary>
@@ -92,7 +97,7 @@ namespace PicSizer.Window.Partial
         /// </summary>
         public static DialogResult ShowDialog_RetryCancel(string msg)
         {
-            return MessageBox.Show(FormsControl.MainForm, msg, _Title, MessageBoxButtons.RetryCancel);
+            return MessageBox.Show(FormsControl.MainForm, msg, Title, MessageBoxButtons.RetryCancel);
         }
 
         /// <summary>
@@ -104,7 +109,7 @@ namespace PicSizer.Window.Partial
             //初始化对话框
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Title = "添加图片";
-            dialog.Filter = _Dialog_String_Filter_PictureOnly;
+            dialog.Filter = DialogStringFilterPictureOnly;
             //允许多选
             dialog.Multiselect = true;
             //点击了确定
@@ -130,7 +135,7 @@ namespace PicSizer.Window.Partial
                 //路径为空
                 if (string.IsNullOrWhiteSpace(dialog.SelectedPath))
                 {
-                    Dialog.ShowDialog_Error("路径不能为空!");
+                    ShowDialog_Error("路径不能为空!");
                     return null;
                 }
 
@@ -172,10 +177,8 @@ namespace PicSizer.Window.Partial
             {
                 return dialog.Color;
             }
-            else
-            {
-                return color;
-            }
+
+            return color;
         }
 
         /// <summary>
@@ -185,14 +188,12 @@ namespace PicSizer.Window.Partial
         {
             FontDialog dialog = new FontDialog();
             dialog.Font = font;
-            if(dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
                 return dialog.Font;
             }
-            else
-            {
-                return font;
-            }
+
+            return font;
         }
 
         /// <summary>
@@ -200,7 +201,7 @@ namespace PicSizer.Window.Partial
         /// </summary>
         private static void SetFocus()
         {
-            if(FormsControl.MainForm != null)
+            if (FormsControl.MainForm != null)
             {
                 FormsControl.MainForm.Focus();
             }
@@ -213,11 +214,11 @@ namespace PicSizer.Window.Partial
         {
             try
             {
-                System.Diagnostics.Process.Start(link);
+                Process.Start(link);
             }
             catch (Exception)
             {
-                MessageBox.Show(FormsControl.MainForm, $"打开浏览器失败，请将链接 {link} 复制到浏览器打开.", _Title,
+                MessageBox.Show(FormsControl.MainForm, $"打开浏览器失败，请将链接 {link} 复制到浏览器打开.", Title,
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

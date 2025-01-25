@@ -1,23 +1,22 @@
-﻿using PicSizer.Static;
-using PicSizer.Window.Assemble;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿#region
 
-namespace PicSizer.Window.Forms
+using System;
+using System.Drawing;
+using System.Threading;
+using System.Windows.Forms;
+using PicSizer.Program.FileIO;
+using PicSizer.Program.Static;
+using PicSizer.Program.Window.Assemble;
+
+#endregion
+
+namespace PicSizer.Program.Window.Forms
 {
     public partial class PicPreViewForm : PicBaseForm
     {
-        private int index = 0;
+        private int _index;
 
-        private Bitmap bitmap = null;
+        private Bitmap _img;
 
         /// <summary>
         /// 使用低画质图片
@@ -31,7 +30,6 @@ namespace PicSizer.Window.Forms
 
         private void PicPreViewForm_Load(object sender, EventArgs e)
         {
-
         }
 
         /// <summary>
@@ -40,22 +38,22 @@ namespace PicSizer.Window.Forms
         /// <param name="index"></param>
         public void UpdatePreviewPicture(int index)
         {
-            this.index = index;
-            PicListViewItem item = PicValue.picListView[index];
-            this.Text = string.Format($"第{index + 1}张:\"{item.FullPath}\"");
+            this._index = index;
+            PicListViewItem item = PicValue.PicListView[index];
+            Text = string.Format($"第{index + 1}张:\"{item.FullPath}\"");
             //异步加载图片
             LoadPictureAsync(index);
             //选中目标项
-            PicValue.picListView.SelectedItems.Clear();
-            PicValue.picListView[index].Selected = true;
-            PicValue.picListView.EnsureVisible(index);
+            PicValue.PicListView.SelectedItems.Clear();
+            PicValue.PicListView[index].Selected = true;
+            PicValue.PicListView.EnsureVisible(index);
             arrow_left.Enabled = index != 0;
-            arrow_right.Enabled = index != PicValue.picListView.Items.Count - 1;
+            arrow_right.Enabled = index != PicValue.PicListView.Items.Count - 1;
         }
 
         public void ShowTempBitmap(ref Bitmap bitmap)
         {
-            this.pictureBox1.Image = bitmap;
+            pictureBox1.Image = bitmap;
             label1.Text = "文 件 名: 预览图";
             label2.Text = "图片大小: 预览图";
             label3.Text = "图片尺寸:" + bitmap.Width + "×" + bitmap.Height;
@@ -69,11 +67,11 @@ namespace PicSizer.Window.Forms
             Thread thread = new Thread(() =>
             {
                 //获取Item项
-                PicListViewItem item = PicValue.picListView[index];
+                PicListViewItem item = PicValue.PicListView[index];
                 Bitmap bitmap;
                 //修改下方信息
                 label1.Text = "文 件 名:" + item.FileName;
-                label2.Text = "图片大小:" + FileIO.FileProc.FileSizeToString(item.Size);
+                label2.Text = "图片大小:" + FileProc.FileSizeToString(item.Size);
                 //加载Bitmap,该过程耗时
                 try
                 {
@@ -83,8 +81,9 @@ namespace PicSizer.Window.Forms
                 {
                     bitmap = null;
                 }
+
                 //两者相等,说明需要加载的图片没有发生变化
-                if (this.index == index)
+                if (this._index == index)
                 {
                     //进入临界区
                     lock (this)
@@ -92,24 +91,25 @@ namespace PicSizer.Window.Forms
                         //加载失败
                         if (bitmap == null)
                         {
-                            this.pictureBox1.Image = pictureBox1.ErrorImage;
+                            pictureBox1.Image = pictureBox1.ErrorImage;
                             label3.Text = "图片尺寸: 无";
                         }
                         //加载成功
                         else
                         {
                             //摧毁上一张图片
-                            if (this.bitmap != null)
+                            if (this._img != null)
                             {
-                                this.bitmap.Dispose();
+                                this._img.Dispose();
                             }
+
                             //加载当前图片
-                            this.bitmap = bitmap;
-                            this.pictureBox1.Image = bitmap;
+                            this._img = bitmap;
+                            pictureBox1.Image = bitmap;
                             //修改下方信息
                             label1.Text = "文 件 名:" + item.FileName;
-                            label2.Text = "图片大小:" + FileIO.FileProc.FileSizeToString(item.Size);
-                            label3.Text = "图片尺寸:" + this.bitmap.Width + "×" + this.bitmap.Height;
+                            label2.Text = "图片大小:" + FileProc.FileSizeToString(item.Size);
+                            label3.Text = "图片尺寸:" + this._img.Width + "×" + this._img.Height;
                         }
                     }
                 }
@@ -127,17 +127,17 @@ namespace PicSizer.Window.Forms
             //点击“上一张”
             if (sender == arrow_left)
             {
-                if (index > 0)
+                if (_index > 0)
                 {
-                    UpdatePreviewPicture(--index);
+                    UpdatePreviewPicture(--_index);
                 }
             }
             //下一张
             else
             {
-                if (index < PicValue.picListView.Items.Count - 1)
+                if (_index < PicValue.PicListView.Items.Count - 1)
                 {
-                    UpdatePreviewPicture(++index);
+                    UpdatePreviewPicture(++_index);
                 }
             }
         }
@@ -155,17 +155,17 @@ namespace PicSizer.Window.Forms
         /// </summary>
         protected override void OnClosed(EventArgs e)
         {
-            this.Dispose();
-            if (bitmap != null)
+            Dispose();
+            if (_img != null)
             {
-                bitmap.Dispose();
+                _img.Dispose();
             }
         }
 
         private void PicPreViewForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             FormsControl.PicPreViewForm = null;
-            this.Dispose();
+            Dispose();
         }
     }
 }
