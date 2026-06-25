@@ -200,10 +200,8 @@ func (pf *ProgressForm) handleCancel() {
 
 	if pf.Dialog != nil {
 		pf.Dialog.Synchronize(func() {
-			if pf.labelInfo != nil {
-				pf.labelInfo.SetText(strs.StrWaitingForFinish)
-			}
 			if pf.btnCancel != nil {
+				pf.btnCancel.SetText(strs.StrWaitingForFinish)
 				pf.btnCancel.SetEnabled(false)
 			}
 		})
