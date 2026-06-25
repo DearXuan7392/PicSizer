@@ -1,6 +1,6 @@
 package setting
 
-// AlphaHandleType 透明通道处理方式
+// AlphaHandleType 表示透明通道处理方式的枚举类型。
 type AlphaHandleType int
 
 const (

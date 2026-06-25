@@ -1,11 +1,11 @@
 package setting
 
-// 扩展名类型
+// ExtensionType 表示输出图片格式的枚举类型。
 type ExtensionType int
 
 const (
 	ExtJPEG ExtensionType = iota
 	ExtPNG
 	ExtWebP
-	ExtOrigin // 保持原格式
+	ExtOrigin
 )

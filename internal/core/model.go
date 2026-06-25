@@ -5,63 +5,61 @@ import (
 	"fmt"
 )
 
-// 数据模型模块
-
-// PicResult 压缩结果
+// PicResult 表示单张图片的压缩结果。
+// Ok 为 true 时表示压缩成功，CompressResult 指明具体结果类型。
 type PicResult struct {
 	Ok             bool
 	CompressResult CompressResultEnum
 	Message        string
 }
 
-// CompressResultEnum 压缩结果枚举
+// CompressResultEnum 表示压缩结果类型的枚举。
 type CompressResultEnum int
 
 const (
-	ResultOk         CompressResultEnum = iota // 成功
-	ResultOutOfLimit                           // 超出限制
-	ResultError                                // 错误
+	ResultOk CompressResultEnum = iota
+	ResultOutOfLimit
+	ResultError
 )
 
-// GetOk 返回成功结果
+// GetOk 返回一个表示压缩成功的 PicResult。
 func GetOk() *PicResult {
 	return &PicResult{Ok: true, CompressResult: ResultOk}
 }
 
-// GetOutOfLimit 返回超出限制结果
+// GetOutOfLimit 返回一个表示超出大小限制的 PicResult。
 func GetOutOfLimit() *PicResult {
 	return &PicResult{Ok: false, CompressResult: ResultOutOfLimit, Message: ErrOutOfLimit}
 }
 
-// GetError 返回错误结果
+// GetError 返回一个包含指定错误信息的 PicResult。
 func GetError(message string) *PicResult {
 	return &PicResult{Ok: false, CompressResult: ResultError, Message: message}
 }
 
-// GetErrorf 返回格式化错误结果
+// GetErrorf 返回一个包含格式化错误信息的 PicResult。
 func GetErrorf(format string, args ...interface{}) *PicResult {
 	return &PicResult{Ok: false, CompressResult: ResultError, Message: fmt.Sprintf(format, args...)}
 }
 
-// PicItem 图片项目信息
+// PicItem 表示待压缩图片的项目信息，包含文件路径、大小和压缩状态。
 type PicItem struct {
-	FullPath   string               // 完整路径
-	FileName   string               // 文件名
-	OrigSize   int64                // 原始大小（字节）
-	NewSize    int64                // 新大小（字节）
-	State      setting.PicItemState // 状态
-	Message    string               // 错误信息
-	OutputPath string               // 输出路径
+	FullPath   string
+	FileName   string
+	OrigSize   int64
+	NewSize    int64
+	State      setting.PicItemState
+	Message    string
+	OutputPath string
 }
 
-// 全局运行时变量
 var (
-	OutputDirPath string // 输出目录
-	PublicDirPath string // 公共目录（保留结构时使用）
-	ExitFlag      bool   // 是否退出压缩
+	OutputDirPath string
+	PublicDirPath string
+	ExitFlag      bool
 )
 
-// FormatFileSize 格式化文件大小
+// FormatFileSize 将字节数格式化为人类可读的字符串，自动选择 B/KB/MB 单位。
 func FormatFileSize(size int64) string {
 	if size < 1024 {
 		return fmt.Sprintf("%d B", size)

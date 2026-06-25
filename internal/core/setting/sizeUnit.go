@@ -1,6 +1,6 @@
 package setting
 
-// 文件大小单位
+// SizeUnit 表示文件大小单位的枚举类型。
 type SizeUnit int
 
 const (

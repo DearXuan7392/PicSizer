@@ -1,10 +1,7 @@
 package setting
 
-import (
-	"sync"
-)
-
-// Setting 配置结构体
+// Setting 表示程序的所有配置项。
+// 配置存储在全局变量 CurrentSetting 中，程序启动时初始化为默认值。
 type Setting struct {
 	// 压缩设置
 	CompressType CompressType // 压缩类型
@@ -40,16 +37,14 @@ type Setting struct {
 	PngKeepIndexedAlpha bool
 }
 
-// 全局配置变量
 var (
 	CurrentSetting Setting
-	mu             sync.RWMutex
 )
 
-// 默认配置
+// DefaultSetting 表示配置的默认值。
 var DefaultSetting = Setting{
 	CompressType:        CompressQuality,
-	Quality:             QualityLevelClear, // 默认清晰画质 (映射后为 80)
+	Quality:             QualityLevelClear,
 	LimitSize:           400,
 	SizeUnit:            UnitKB,
 	AcceptExceed:        false,
@@ -63,32 +58,33 @@ var DefaultSetting = Setting{
 	Scale:               ScaleNone,
 	ScaleWidth:          1920,
 	ScaleHeight:         1080,
-	JpegQuality:         0,    // 默认不启用精细化画质
-	WebPQuality:         0,    // 默认不启用精细化画质
-	PngKeepIndexedAlpha: true, // 默认在 PNG 索引格式压缩时预留透明像素
+	JpegQuality:         0,
+	WebPQuality:         0,
+	PngKeepIndexedAlpha: true,
 }
 
-// InitSetting 初始化配置为默认值
+// InitSetting 将 CurrentSetting 重置为默认值。
 func InitSetting() {
 	CurrentSetting = DefaultSetting
 }
 
-// GetSetting 获取当前配置
+// GetSetting 返回当前配置的副本。
 func GetSetting() Setting {
 	return CurrentSetting
 }
 
-// UpdateSetting 更新配置
+// UpdateSetting 用指定配置更新 CurrentSetting。
 func UpdateSetting(s Setting) {
 	CurrentSetting = s
 }
 
-// UpdateSettingWithOutputType 仅更新输出类型
+// UpdateSettingWithOutputType 仅更新当前配置的输出方式字段。
 func UpdateSettingWithOutputType(ot OutputType) {
 	CurrentSetting.OutputType = ot
 }
 
-// GetExtensionString 根据扩展名类型获取后缀字符串
+// GetExtensionString 根据扩展名类型返回对应的文件后缀字符串。
+// 若传入未知类型，返回空字符串。
 func GetExtensionString(ext ExtensionType) string {
 	switch ext {
 	case ExtJPEG:

@@ -1,13 +1,10 @@
 package core
 
-// 静态文本模块 - 所有程序文本集中管理
-
-// 程序信息
+// AppName 和 AppVersion 分别表示应用程序的名称和版本号。
 var (
 	AppName    = "PicSizer"
 	AppVersion = "v6.0.0"
 
-	// 窗口标题
 	TitleMain     = AppName + " - 图片压缩工具"
 	TitleSetting  = "压缩设置"
 	TitleAbout    = "关于 " + AppName
@@ -53,7 +50,6 @@ var (
 	TextAbout = "关于"
 )
 
-// 设置相关
 var (
 	// 输出方式
 	TextOutputMode   = "输出方式"

@@ -12,26 +12,23 @@ import (
 	"PicSizer/internal/preprocess"
 )
 
-// Compressor 统一压缩接口
+// Compressor 定义统一的压缩器接口。
+// 各图片格式（JPEG/PNG/WebP）需实现该接口。
 type Compressor interface {
-	// 按质量压缩
 	CompressByQuality(quality setting.QualityLevel) *core.PicResult
-	// 按文件大小压缩（二分查找最优质量）
 	CompressByFileSize(limitBytes int64) *core.PicResult
 }
 
-// Compress 统一压缩入口，根据输出格式选择对应的压缩器
+// Compress 是统一压缩入口，根据输入路径和输出路径执行完整压缩流程。
+// 流程包括：加载图片 -> 预处理 -> 选择压缩器 -> 执行压缩。
 func Compress(inputPath, outputPath string) *core.PicResult {
-	// 1. 加载图片
 	imgData, err := codec.LoadImage(inputPath)
 	if err != nil {
 		return core.GetErrorf("加载图片失败: %v", err)
 	}
 
-	// 2. 预处理流程 (在压缩前对图像进行处理, 例如透明通道处理)
 	imgData = preprocess.Process(imgData)
 
-	// 3. 根据输出扩展名选择压缩器
 	ext := fileio.GetExtension(outputPath)
 	var compressor Compressor
 
@@ -46,7 +43,6 @@ func Compress(inputPath, outputPath string) *core.PicResult {
 		return core.GetErrorf("\"%s\"格式不受支持", ext)
 	}
 
-	// 5. 根据压缩类型执行压缩
 	set := setting.GetSetting()
 	var result *core.PicResult
 
@@ -54,7 +50,6 @@ func Compress(inputPath, outputPath string) *core.PicResult {
 	case setting.CompressQuality:
 		result = compressor.CompressByQuality(set.Quality)
 	case setting.CompressFileSize:
-		// 根据单位转换为字节
 		var limitBytes int64
 		switch set.SizeUnit {
 		case setting.UnitKB:
@@ -72,13 +67,13 @@ func Compress(inputPath, outputPath string) *core.PicResult {
 	return result
 }
 
-// baseCompressor 基础压缩器
 type baseCompressor struct {
 	img        image.Image
 	maxQuality int
 }
 
-// compressByQuality 按质量压缩的通用实现
+// compressByQuality 是各格式压缩器共享的质量压缩通用实现。
+// encode 参数由具体格式压缩器提供，用于执行实际的编码操作。
 func (c *baseCompressor) compressByQuality(quality int, encode func(int) ([]byte, error), outputPath string) *core.PicResult {
 	if quality < 1 || quality > c.maxQuality {
 		return core.GetError(core.ErrArgOutOfRange)
@@ -89,13 +84,11 @@ func (c *baseCompressor) compressByQuality(quality int, encode func(int) ([]byte
 		return core.GetErrorf("编码失败: %v", err)
 	}
 
-	// 确保输出目录存在
 	dir := filepath.Dir(outputPath)
 	if err := fileio.EnsureDir(dir); err != nil {
 		return core.GetErrorf("创建目录失败: %v", err)
 	}
 
-	// 写入文件
 	err = os.WriteFile(outputPath, data, 0644)
 	if err != nil {
 		return core.GetErrorf("写入文件失败: %v", err)
@@ -104,18 +97,16 @@ func (c *baseCompressor) compressByQuality(quality int, encode func(int) ([]byte
 	return core.GetOk()
 }
 
-// compressByFileSize 按文件大小压缩的通用实现（二分查找）
+// compressByFileSize 是各格式压缩器共享的二分查找大小压缩通用实现。
+// 通过二分查找在 1 到 maxQuality 之间寻找不超过 limitBytes 的最高质量。
 func (c *baseCompressor) compressByFileSize(limitBytes int64, encode func(int) ([]byte, error), outputPath string) *core.PicResult {
 	left, right := 1, c.maxQuality
 
-	// 缓存已测试的质量对应的文件大小
 	sizeCache := make(map[int]int64)
 
-	// 二分查找最优质量
 	for left < right-1 {
 		mid := (left + right) / 2
 
-		// 获取当前质量下的文件大小
 		size, ok := sizeCache[mid]
 		if !ok {
 			data, err := encode(mid)
@@ -133,7 +124,6 @@ func (c *baseCompressor) compressByFileSize(limitBytes int64, encode func(int) (
 		}
 	}
 
-	// 获取 left 质量下的大小
 	if _, ok := sizeCache[left]; !ok {
 		data, err := encode(left)
 		if err != nil {
@@ -142,7 +132,6 @@ func (c *baseCompressor) compressByFileSize(limitBytes int64, encode func(int) (
 		sizeCache[left] = int64(len(data))
 	}
 
-	// 如果符合要求或接受超出，则输出
 	if sizeCache[left] <= limitBytes || setting.GetSetting().AcceptExceed {
 		data, err := encode(left)
 		if err != nil {

@@ -1,7 +1,7 @@
 package setting
 
-// ScaleType 缩放方式
-// 控制图像在压缩前是否进行尺寸调整, 6 种模式见常量说明.
+// ScaleType 表示缩放方式的枚举类型。
+// 控制图像在压缩前是否进行尺寸调整，共 6 种模式。
 type ScaleType int
 
 const (

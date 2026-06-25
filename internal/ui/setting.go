@@ -15,12 +15,9 @@ import (
 // settingControlWidth 设置窗口中输入框 / 下拉框的统一固定宽度 (单位: 像素)
 const settingControlWidth = 200
 
-// groupVerticalSpacing 控制不同 GroupBox 之间的垂直间隔 (单位: 像素)
-// 如果第一页间隔太大，可以尝试减小此值（如 4 或 6）
-// 如果后两页间隔太小，可以尝试增大此值（如 8 或 10）
 const groupVerticalSpacing = 8
 
-// SettingForm 设置窗口
+// SettingForm 表示设置窗口，包含三个选项卡页面：常规设置、图像预处理和高级设置。
 type SettingForm struct {
 	*walk.Dialog
 
@@ -40,41 +37,39 @@ type SettingForm struct {
 	threadSlider      *walk.Slider
 	topMostCheck      *walk.CheckBox
 
-	// 高级设置控件
+	// 预处理设置控件
 	alphaCombo  *walk.ComboBox
 	scaleCombo  *walk.ComboBox
 	scaleWidth  *walk.NumberEdit
 	scaleHeight *walk.NumberEdit
 
-	// 高级设置 - 各格式精细化画质 (JPEG / PNG / WebP)
+	// 高级设置
 	jpegQualityEdit      *walk.NumberEdit
 	webpQualityEdit      *walk.NumberEdit
 	pngKeepAlphaCheckBox *walk.CheckBox
 
 	maxThreads int
 
-	// onTopMostChanged 设置保存后回调, 用于通知主窗口应用置顶变更
-	onTopMostChanged func(bool)
-	// onOutputTypeChanged 设置保存后回调, 用于通知主窗口同步输出方式单选框
+	onTopMostChanged    func(bool)
 	onOutputTypeChanged func(setting.OutputType)
 }
 
-// NewSettingForm 创建设置窗口
+// NewSettingForm 创建设置窗口实例。
 func NewSettingForm() *SettingForm {
 	return &SettingForm{}
 }
 
-// SetOnTopMostChanged 设置置顶变更回调 (由主窗口在创建后注入)
+// SetOnTopMostChanged 设置置顶变更回调，由主窗口在创建后注入。
 func (sf *SettingForm) SetOnTopMostChanged(fn func(bool)) {
 	sf.onTopMostChanged = fn
 }
 
-// SetOnOutputTypeChanged 设置输出方式变更回调 (由主窗口在创建后注入)
+// SetOnOutputTypeChanged 设置输出方式变更回调，由主窗口在创建后注入。
 func (sf *SettingForm) SetOnOutputTypeChanged(fn func(setting.OutputType)) {
 	sf.onOutputTypeChanged = fn
 }
 
-// Show 显示设置窗口
+// Show 显示设置窗口。窗口包含三个选项卡页面，关闭后调用方可通过回调获取用户修改的设置。
 func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 	set := setting.GetSetting()
 	// 获取 CPU 逻辑核心数
@@ -425,12 +420,10 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 								Title:  core.TextAdvPNGSettings,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
-									// 修复对齐问题：给空白 Label 增加 MinSize，使其宽度与上方 makeLabelWithTip 产生的宽度大致一致
 									declarative.Label{
 										Text:    " ",
 										MinSize: declarative.Size{Width: 150, Height: 0},
 									},
-									// 复选框, 靠右对齐以与其他控件保持一致
 									sf.makeCheckBoxWithTip(&sf.pngKeepAlphaCheckBox, core.TextPngKeepIndexedAlpha, set.PngKeepIndexedAlpha, core.TipPngKeepIndexedAlpha),
 								},
 							},
@@ -507,7 +500,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 	return nil
 }
 
-// onCompressModeChange 压缩模式切换
+// onCompressModeChange 响应压缩模式切换，启用或禁用相关控件。
 func (sf *SettingForm) onCompressModeChange() {
 	if sf.qualityRadio == nil || sf.fileSizeRadio == nil {
 		return
@@ -530,7 +523,7 @@ func (sf *SettingForm) onCompressModeChange() {
 	}
 }
 
-// onQualitySliderChange 画质滑块数值发生改变时的联动事件
+// onQualitySliderChange 响应画质滑块值变化，更新画质等级标签文字。
 func (sf *SettingForm) onQualitySliderChange() {
 	if sf.qualitySlider == nil || sf.qualityLabel == nil {
 		return
@@ -540,7 +533,7 @@ func (sf *SettingForm) onQualitySliderChange() {
 	sf.qualityLabel.SetText(qualityLevelToString(level))
 }
 
-// onOutputTypeChange 输出方式切换
+// onOutputTypeChange 响应输出方式切换，启用或禁用输出格式相关控件。
 func (sf *SettingForm) onOutputTypeChange() {
 	if sf.outputTypeCombo == nil {
 		return
@@ -558,21 +551,21 @@ func (sf *SettingForm) onOutputTypeChange() {
 	}
 }
 
-// onThreadEditChange 线程数输入框变化
+// onThreadEditChange 响应线程数输入框变化，同步更新滑块位置。
 func (sf *SettingForm) onThreadEditChange() {
 	if sf.maxThreadsEdit != nil && sf.threadSlider != nil {
 		sf.threadSlider.SetValue(int(sf.maxThreadsEdit.Value()))
 	}
 }
 
-// onThreadSliderChange 线程数滑块变化
+// onThreadSliderChange 响应线程数滑块变化，同步更新输入框数值。
 func (sf *SettingForm) onThreadSliderChange() {
 	if sf.threadSlider != nil && sf.maxThreadsEdit != nil {
 		sf.maxThreadsEdit.SetValue(float64(sf.threadSlider.Value()))
 	}
 }
 
-// onScaleModeChange 缩放方式切换
+// onScaleModeChange 响应缩放方式切换，启用或禁用缩放宽高输入框。
 func (sf *SettingForm) onScaleModeChange() {
 	if sf.scaleCombo == nil {
 		return
@@ -586,7 +579,8 @@ func (sf *SettingForm) onScaleModeChange() {
 	}
 }
 
-// saveSetting 保存设置
+// saveSetting 从 UI 控件读取所有值，进行校验后写入全局配置。
+// 返回 false 表示用户取消保存（校验失败或用户取消了警告弹窗）。
 func (sf *SettingForm) saveSetting() bool {
 	set := setting.GetSetting()
 	oldTopMost := set.TopMost
@@ -711,7 +705,6 @@ func (sf *SettingForm) saveSetting() bool {
 		newScaleHeight = int(sf.scaleHeight.Value())
 	}
 
-	// 高级设置 - 各格式精细化画质 (0 表示未启用)
 	var newJpegQuality int
 	if sf.jpegQualityEdit != nil {
 		newJpegQuality = int(sf.jpegQualityEdit.Value())
@@ -721,7 +714,6 @@ func (sf *SettingForm) saveSetting() bool {
 		newWebPQuality = int(sf.webpQualityEdit.Value())
 	}
 
-	// 高级设置 - PNG 索引格式预留透明像素
 	var newPngKeepIndexedAlpha bool
 	if sf.pngKeepAlphaCheckBox != nil {
 		newPngKeepIndexedAlpha = sf.pngKeepAlphaCheckBox.Checked()
@@ -753,7 +745,7 @@ func (sf *SettingForm) saveSetting() bool {
 	}
 
 	// ============================================================
-	// 第四阶段: 校验通过，写入 setting 持久化
+	// 第四阶段: 写入 setting 持久化
 	// ============================================================
 	set.CompressType = newCompressType
 	set.Quality = newQuality
@@ -884,7 +876,7 @@ func qualityLevelToString(level setting.QualityLevel) string {
 	}
 }
 
-// 新增辅助函数：将 core.QualityLevel 转换为滑块刻度值 (0-3)
+// 辅助函数：将 core.QualityLevel 转换为滑块刻度值 (0-3)
 func qualityLevelToSliderValue(level setting.QualityLevel) int {
 	switch level {
 	case setting.QualityLevelPoor:
@@ -896,11 +888,11 @@ func qualityLevelToSliderValue(level setting.QualityLevel) int {
 	case setting.QualityLevelBest:
 		return 3
 	default:
-		return 2 // 默认“清晰”
+		return 2
 	}
 }
 
-// 新增辅助函数：将滑块刻度值 (0-3) 转换为 core.QualityLevel
+// 辅助函数：将滑块刻度值 (0-3) 转换为 core.QualityLevel
 func sliderValueToQualityLevel(val int) setting.QualityLevel {
 	switch val {
 	case 0:
@@ -916,7 +908,7 @@ func sliderValueToQualityLevel(val int) setting.QualityLevel {
 	}
 }
 
-// makeLabelWithTip 构造一个 "文本标签 + (?) 提示链接" 组合控件
+// makeLabelWithTip 构造"文本标签 + (?) 提示链接"组合控件。
 func (sf *SettingForm) makeLabelWithTip(label, tip string) declarative.Composite {
 	return declarative.Composite{
 		Layout: declarative.HBox{Spacing: 4, MarginsZero: true},
@@ -939,15 +931,12 @@ func (sf *SettingForm) makeLabelWithTip(label, tip string) declarative.Composite
 	}
 }
 
-// makeCheckBoxWithTip 构造一个 "复选框 + (?) 提示链接" 组合控件
-// 外层容器通过 HSpacer 右对齐，内部 HBox 左对齐，与 Grid 中其他第二列控件视觉一致
+// makeCheckBoxWithTip 构造"复选框 + (?) 提示链接"组合控件。
 func (sf *SettingForm) makeCheckBoxWithTip(assignTo **walk.CheckBox, text string, checked bool, tip string) declarative.Composite {
 	return declarative.Composite{
 		Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 		Children: []declarative.Widget{
-			// ✅ 外层 HSpacer：将整个固定宽容器推到 Grid 第二列的右侧
 			declarative.HSpacer{},
-			// ✅ 固定宽容器：宽度与其他控件一致，内部内容自然左对齐
 			declarative.Composite{
 				Layout:  declarative.HBox{Spacing: 4, MarginsZero: true},
 				MinSize: declarative.Size{Width: settingControlWidth, Height: 0},

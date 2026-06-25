@@ -1,14 +1,12 @@
-// Package utils 提供项目内部使用的通用工具函数.
 package utils
 
 import (
 	"image"
 )
 
-// HasAlphaChannel 检查图像是否可能包含透明通道.
-// 仅判断图像底层类型是否带有 alpha 通道(不遍历像素),
-// 凡是 *image.Alpha/*image.Alpha16 以及 *image.NRGBA/*image.NRGBA64/*image.RGBA/*image.RGBA64
-// 这些类型的图像均视为含有透明通道, 直接返回 true.
+// HasAlphaChannel 通过图像类型判断是否包含透明通道。
+// 仅根据底层类型判断，不遍历像素。*image.NRGBA 视为含透明通道，
+// *image.RGBA 和 *image.YCbCr 视为不含透明通道，其他类型 panic。
 func HasAlphaChannel(img image.Image) bool {
 	switch img.(type) {
 	case *image.NRGBA:

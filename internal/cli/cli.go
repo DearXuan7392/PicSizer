@@ -1,8 +1,5 @@
-// Package cli 提供 PicSizer 的命令行模式入口.
-//
-// 本包负责解析文档 CLI.md 中声明的全部命令行参数, 将参数映射到 core.Setting,
-// 并复用现有的 compress、fileio、server 等模块完成单文件或批量目录压缩.
-// 不引入任何 GUI 依赖, 适合在脚本、右键菜单等纯控制台场景使用.
+// Package cli 提供 PicSizer 的命令行模式入口。
+// 负责解析命令行参数、映射到 core.Setting 并复用现有模块完成单文件或批量目录压缩。
 package cli
 
 import (
@@ -23,17 +20,15 @@ import (
 	"github.com/schollz/progressbar/v3"
 )
 
-// Mode 是否启用命令行模式, 由 -cli / -c 参数设置.
+// Mode 表示是否启用命令行模式，由 -cli / -c 参数设置。
 var Mode bool
 
-// 命令行参数变量, 与 CLI.md 文档中的参数表一一对应.
 var (
 	inputPath    string
 	outputPath   string
 	threads      int
 	showProgress bool
 	compressType string
-	// quality 画质等级字符串: best/clear/normal/poor 或 最佳/清晰/一般/较差
 	quality      string
 	limitStr     string
 	acceptExceed bool
@@ -48,7 +43,7 @@ var (
 )
 
 func init() {
-	// 1. 运行模式与全局控制
+	// 运行模式与全局控制
 	flag.BoolVar(&Mode, "cli", false, "启用命令行模式")
 	flag.BoolVar(&Mode, "c", false, "启用命令行模式")
 	flag.StringVar(&inputPath, "input", "", "输入文件或目录路径")
@@ -60,10 +55,10 @@ func init() {
 	flag.BoolVar(&showProgress, "progress", true, "是否在控制台显示进度条")
 	flag.BoolVar(&showProgress, "p", true, "是否在控制台显示进度条")
 
-	// 2. 压缩模式设置
+	// 压缩模式设置
 	flag.StringVar(&compressType, "comp-type", "quality", "压缩模式: quality 或 size")
 	flag.StringVar(&compressType, "ct", "quality", "压缩模式: quality 或 size")
-	// 画质等级: best/clear/normal/poor 或 最佳/清晰/一般/较差, 默认清晰 (80)
+	// 画质等级: best/clear/normal/poor 默认清晰 (80)
 	flag.StringVar(&quality, "quality", "clear", "画质等级: best/clear/normal/poor (最佳/清晰/一般/较差), 默认 clear")
 	flag.StringVar(&quality, "q", "clear", "画质等级: best/clear/normal/poor (最佳/清晰/一般/较差), 默认 clear")
 	flag.StringVar(&limitStr, "limit", "200kb", "限制文件大小, 例如 200kb、2mb、500")
@@ -71,7 +66,7 @@ func init() {
 	flag.BoolVar(&acceptExceed, "exceed", false, "是否接受超出限制的输出")
 	flag.BoolVar(&acceptExceed, "e", false, "是否接受超出限制的输出")
 
-	// 3. 输出与命名模板
+	// 输出与命名模板
 	flag.StringVar(&outType, "out-type", "dir", "输出方式: dir / cover / struct")
 	flag.StringVar(&outType, "ot", "dir", "输出方式: dir / cover / struct")
 	flag.StringVar(&format, "format", "jpeg", "输出图像格式: jpeg / jpg / png / webp / origin")
@@ -81,7 +76,7 @@ func init() {
 	flag.IntVar(&startIdx, "start-idx", 1, "命名模板中 {id} 的起始序号")
 	flag.IntVar(&startIdx, "si", 1, "命名模板中 {id} 的起始序号")
 
-	// 4. 高级图像预处理
+	// 高级图像预处理
 	flag.StringVar(&alpha, "alpha", "keep", "透明通道处理: keep / smart / remove")
 	flag.StringVar(&alpha, "a", "keep", "透明通道处理: keep / smart / remove")
 	flag.StringVar(&scale, "scale", "none", "图像缩放模式: none / stretch / cover / contain / crop / lock")
@@ -92,16 +87,11 @@ func init() {
 	flag.IntVar(&height, "hg", 0, "缩放目标高度 (像素), 0 表示不限制")
 }
 
-// Run 执行命令行模式入口.
-//
-// 流程:
-//  1. 校验输入路径
-//  2. 将 CLI 参数转换为 core.Setting
-//  3. 判断输入是文件还是目录, 分别调用单文件或批量压缩
+// Run 执行命令行模式入口。
+// 解析命令行参数、校验输入路径、将参数映射到 Setting 后执行单文件或批量压缩。
 func Run() {
 	flag.Parse()
 
-	// 初始化配置
 	setting.InitSetting()
 
 	if inputPath == "" {
@@ -129,10 +119,8 @@ func Run() {
 	}
 }
 
-// applySettings 将解析后的 CLI 参数写入 core.CurrentSetting.
-//
-// 包含参数合法性校验, 例如质量值范围、缩放锁定单边条件等.
-// 校验失败时返回错误, 由 Run 决定退出程序.
+// applySettings 将解析后的 CLI 参数写入全局配置，包含参数合法性校验。
+// 校验失败时返回错误，由 Run 决定是否退出程序。
 func applySettings() error {
 	set := setting.GetSetting()
 
@@ -256,13 +244,7 @@ func applySettings() error {
 	return nil
 }
 
-// parseLimit 解析限制大小字符串.
-//
-// 支持以下写法:
-//   - "200kb" / "200KB" / "2mb" / "2MB"
-//   - "500" (默认单位为 KB)
-//
-// 仅作为按大小压缩模式下的合法大小解析, 不再支持额外的单位参数.
+// parseLimit 解析限制大小字符串，支持 "200kb"、"2mb" 或纯数字（默认 KB）格式。
 func parseLimit(limitStr string) (int64, setting.SizeUnit, error) {
 	s := strings.TrimSpace(limitStr)
 	s = strings.ToLower(s)
@@ -270,7 +252,6 @@ func parseLimit(limitStr string) (int64, setting.SizeUnit, error) {
 	numeric := s
 	var parsedUnit setting.SizeUnit = setting.UnitKB
 
-	// 从 limit 字符串尾部提取单位
 	if strings.HasSuffix(s, "mb") {
 		parsedUnit = setting.UnitMB
 		numeric = strings.TrimSuffix(s, "mb")
@@ -290,9 +271,8 @@ func parseLimit(limitStr string) (int64, setting.SizeUnit, error) {
 	return value, parsedUnit, nil
 }
 
-// compressFile 压缩单个文件.
-//
-// 根据输出方式构造最终输出路径, 然后调用 compress.Compress.
+// compressFile 压缩单个文件，根据输出方式构造输出路径后调用 compress.Compress。
+// 压缩完成后在控制台输出结果信息。
 func compressFile(input, output string) {
 	finalOutput := buildSingleOutputPath(input, output)
 
@@ -316,11 +296,8 @@ func compressFile(input, output string) {
 	}
 }
 
-// buildSingleOutputPath 根据全局输出方式为单文件构造最终输出路径.
-//
-//   - cover  : 覆盖源文件, 按输出格式修改扩展名
-//   - dir    : 输出到统一目录, 使用模板生成文件名
-//   - struct : 保留源文件所在目录结构, 使用模板生成文件名
+// buildSingleOutputPath 根据输出方式为单文件构造最终输出路径。
+// cover 模式覆盖源文件并修改扩展名；dir 和 struct 模式使用模板生成文件名。
 func buildSingleOutputPath(input, output string) string {
 	set := setting.GetSetting()
 
@@ -353,10 +330,8 @@ func buildSingleOutputPath(input, output string) string {
 	return ""
 }
 
-// compressDirectory 批量压缩目录.
-//
-// 收集目录下所有图片文件, 创建线程池并发压缩.
-// 根据 -p / --progress 参数决定是否在控制台显示进度条, 压缩结束后在控制台打印汇总结果.
+// compressDirectory 批量压缩目录中的所有图片文件。
+// 使用线程池并发压缩，通过 progressbar 在控制台显示进度，压缩结束后打印汇总结果。
 func compressDirectory(inputDir, outputDir string) {
 	files, err := fileio.CollectImageFiles(inputDir)
 	if err != nil {
@@ -400,9 +375,7 @@ func compressDirectory(inputDir, outputDir string) {
 		})
 	}
 
-	// 创建进度条 (仅在 showProgress 为 true 时使用)
-	// Description 包含: 待压缩数量, 已完成, 剩余, 已用时间, 预计剩余时间
-	// 关闭 progressbar 默认的 ETA / Elapsed 显示, 改为在描述中由我们统一输出
+	// 创建进度条
 	var bar *progressbar.ProgressBar
 	startTime := time.Now()
 	if showProgress {
@@ -462,12 +435,6 @@ func compressDirectory(inputDir, outputDir string) {
 	)
 
 	pool.Start()
-
-	// 阻塞等待所有 worker 完成, 由 Wait 内部统一触发 onComplete 回调
-	// (进度条结束 + 控制台打印汇总结果).
-	// Start 与 Wait 分离的好处: 调用方可在 Start 与 Wait 之间插入其他逻辑
-	// (例如: 注册信号处理、轮询状态、定时汇报), 同时也避免 Start 内嵌 wg.Wait()
-	// 导致调用方无法在该线程中做其它事.
 	pool.Wait()
 	errCount := getErrorCount(pool)
 
@@ -478,7 +445,7 @@ func compressDirectory(inputDir, outputDir string) {
 	}
 }
 
-// formatDuration 格式化时间为简短的 hh:mm:ss / mm:ss 字符串.
+// formatDuration 将时间间隔格式化为 hh:mm:ss 或 mm:ss 字符串。
 func formatDuration(d time.Duration) string {
 	if d < 0 {
 		d = 0
@@ -493,9 +460,7 @@ func formatDuration(d time.Duration) string {
 	return fmt.Sprintf("%02d:%02d", m, s)
 }
 
-// getErrorCount 从线程池获取当前错误数量.
-//
-// 用于批量压缩结束后判断是否以非零状态码退出.
+// getErrorCount 从线程池获取当前错误数量，用于判断是否以非零状态码退出。
 func getErrorCount(pool *server.ThreadPool) int {
 	_, errCount, _ := pool.GetStats()
 	return errCount

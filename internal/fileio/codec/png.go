@@ -12,24 +12,20 @@ import (
 	"github.com/ericpauley/go-quantize/quantize"
 )
 
-// pngCodec PNG 格式编解码器
+// pngCodec PNG 格式编解码器。
 type pngCodec struct{}
 
-// Name 返回编解码器名称
+// Name 返回编解码器名称。
 func (c *pngCodec) Name() string { return "png" }
 
-// IsType 判断数据是否为 PNG 格式 (通过 8 字节文件签名识别)
+// IsType 通过 PNG 文件头签名（8 字节）判断数据是否为 PNG 格式。
 func (c *pngCodec) IsType(data []byte) bool {
 	pngSignature := []byte{0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A}
 	return len(data) >= 8 && bytes.Equal(data[:8], pngSignature)
 }
 
-// Decode 解码 PNG 图像数据
-// 解码后会对图像类型进行标准化处理:
-//   - 64 位图像 (RGBA64/NRGBA64) 强制降为 32 位 (RGBA/NRGBA)
-//   - 调色板图像: 含透明通道则转为 NRGBA, 否则转为 RGBA
-//   - Gray 格式 (Gray/Gray16) 转为 RGBA
-//   - 其他格式保持不变
+// Decode 将 PNG 数据解码为 image.Image。
+// 解码后会对图像类型进行标准化处理，降为 32 位图像。
 func (c *pngCodec) Decode(data []byte) (image.Image, error) {
 	img, err := png.Decode(bytes.NewReader(data))
 	if err != nil {
@@ -39,12 +35,10 @@ func (c *pngCodec) Decode(data []byte) (image.Image, error) {
 	return normalizePNGImage(img, hasAlphaChannel), nil
 }
 
-// normalizePNGImage 将 PNG 解码后的图像标准化为 32 位图像
-//   - 64 位 RGBA64 -> 32 位 RGBA (预乘 alpha)
-//   - 64 位 NRGBA64 -> 32 位 NRGBA (非预乘 alpha)
-//   - 调色板图像: 含透明通道 -> NRGBA, 不含透明通道 -> RGBA
-//   - Gray / Gray16 灰度图像 -> RGBA
-//   - 其他类型 (如 NRGBA, RGBA) 保持原样返回
+// normalizePNGImage 将 PNG 解码后的图像标准化为 32 位图像。
+// 64 位图像（RGBA64/NRGBA64）强制降为 32 位；
+// 调色板图像根据是否含透明通道转为 NRGBA 或 RGBA；
+// Gray 格式转为 RGBA。
 func normalizePNGImage(src image.Image, hasAlphaChannel bool) image.Image {
 	if src == nil {
 		return nil
@@ -52,18 +46,15 @@ func normalizePNGImage(src image.Image, hasAlphaChannel bool) image.Image {
 
 	bounds := src.Bounds()
 
-	// 有 A 通道, 强制转为 NRGBA
 	if hasAlphaChannel {
 		if _, ok := src.(*image.NRGBA); ok {
 			return src
 		}
-
 		dst := image.NewNRGBA(bounds)
 		draw.Draw(dst, bounds, src, bounds.Min, draw.Src)
 		return dst
 	}
 
-	// 没有 A 通道, 强制转为 RGBA
 	if _, ok := src.(*image.RGBA); ok {
 		return src
 	}
@@ -112,24 +103,18 @@ func EncodePNG(img image.Image, qualityLevel int, keepIndexedAlpha bool) ([]byte
 		return nil, errors.New("invalid quality level: must be 1, 2, 3, or 4")
 	}
 
-	// 1. 初始化 go-quantize 均值聚合的中位切分算法
 	quantizer := quantize.MedianCutQuantizer{
-		Aggregation:    quantize.Mean,    // 使用均值聚合, 获得更平滑的颜色过渡
+		Aggregation:    quantize.Mean,    // 使用均值聚合
 		AddTransparent: keepIndexedAlpha, // 自动保护和预留纯透明通道，防止透明背景变色或产生毛边
 	}
 
-	// 2. 零内存分配量化图像，生成指定颜色数量的调色板
 	p := make([]color.Color, 0, maxColors)
 	palette := quantizer.Quantize(p, img)
 
-	// 3. 创建对应的索引色图像 (Paletted Image)
 	palettedImg := image.NewPaletted(bounds, palette)
 
-	// 4. 将原图像素映射到调色板
-	// 修正：显式使用 FloydSteinberg 误差扩散抖动算法，极大缓解 128色/64色 下的色带断层现象
 	draw.FloydSteinberg.Draw(palettedImg, bounds, img, image.Point{})
 
-	// 5. 使用 PNG 编码器输出体积优化后的数据
 	err := encoder.Encode(&buf, palettedImg)
 	if err != nil {
 		return nil, err
@@ -138,7 +123,8 @@ func EncodePNG(img image.Image, qualityLevel int, keepIndexedAlpha bool) ([]byte
 	return buf.Bytes(), nil
 }
 
-// HasAlphaChannel 100% 精准判定 PNG 原图在硬盘上是否物理携带 A 通道
+// HasAlphaChannel 通过解析 PNG 文件头判断原图是否物理携带 Alpha 通道。
+// 对于调色板图像，通过检查 tRNS chunk 判断是否包含透明信息。
 func (c *pngCodec) HasAlphaChannel(data []byte) bool {
 	conf, err := png.DecodeConfig(bytes.NewReader(data))
 	if err != nil {
@@ -155,8 +141,8 @@ func (c *pngCodec) HasAlphaChannel(data []byte) bool {
 	}
 }
 
+// hasTRNSChunk 遍历 PNG 数据块，查找 tRNS 块来判断调色板图像是否包含透明信息。
 func hasTRNSChunk(data []byte) bool {
-	// PNG 签名: 137 80 78 71 13 10 26 10
 	if len(data) < 8 || !bytes.Equal(data[:8], []byte{137, 80, 78, 71, 13, 10, 26, 10}) {
 		return false
 	}
@@ -167,11 +153,9 @@ func hasTRNSChunk(data []byte) bool {
 			break
 		}
 
-		// 读取块长度 (4 bytes)
 		length := binary.BigEndian.Uint32(data[offset : offset+4])
 		offset += 4
 
-		// 读取块类型 (4 bytes)
 		chunkType := string(data[offset : offset+4])
 		offset += 4
 
@@ -179,7 +163,6 @@ func hasTRNSChunk(data []byte) bool {
 			return true
 		}
 
-		// 跳过块数据和 CRC (4 bytes)
 		offset += int(length) + 4
 
 		if chunkType == "IEND" {

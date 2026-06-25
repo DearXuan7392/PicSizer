@@ -1,6 +1,6 @@
 package setting
 
-// 输出类型
+// OutputType 表示输出方式的枚举类型。
 type OutputType int
 
 const (

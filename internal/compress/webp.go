@@ -8,13 +8,12 @@ import (
 	"PicSizer/internal/fileio/codec"
 )
 
-// webpCompressor WebP 压缩器
 type webpCompressor struct {
 	baseCompressor
 	outputPath string
 }
 
-// NewWebPCompressor 创建 WebP 压缩器
+// NewWebPCompressor 创建一个 WebP 压缩器。
 func NewWebPCompressor(img image.Image, outputPath string) Compressor {
 	return &webpCompressor{
 		baseCompressor: baseCompressor{
@@ -25,7 +24,8 @@ func NewWebPCompressor(img image.Image, outputPath string) Compressor {
 	}
 }
 
-// CompressByQuality 按质量压缩 WebP
+// CompressByQuality 按指定的画质等级压缩 WebP 图像。
+// 若配置中设置了 WebP 精细化画质（WebPQuality 非0），则优先使用该精细画质值。
 func (c *webpCompressor) CompressByQuality(quality setting.QualityLevel) *core.PicResult {
 	qualityValue := setting.QualityLevelValue(quality)
 	if setting.GetSetting().JpegQuality != 0 {
@@ -37,7 +37,7 @@ func (c *webpCompressor) CompressByQuality(quality setting.QualityLevel) *core.P
 	return c.compressByQuality(qualityValue, encode, c.outputPath)
 }
 
-// CompressByFileSize 按文件大小压缩 WebP
+// CompressByFileSize 按指定的文件大小限制压缩 WebP 图像。
 func (c *webpCompressor) CompressByFileSize(limitKB int64) *core.PicResult {
 	encode := func(q int) ([]byte, error) {
 		return codec.EncodeWebP(c.img, q)

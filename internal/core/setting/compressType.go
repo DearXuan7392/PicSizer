@@ -1,6 +1,6 @@
 package setting
 
-// 压缩类型
+// CompressType 表示压缩模式的枚举类型。
 type CompressType int
 
 const (
