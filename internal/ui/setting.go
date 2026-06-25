@@ -1,8 +1,8 @@
 package ui
 
 import (
-	"PicSizer/internal/core"
 	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/strings"
 	"PicSizer/internal/dialog"
 	"runtime"
 	"strconv"
@@ -17,7 +17,7 @@ const settingControlWidth = 200
 
 const groupVerticalSpacing = 8
 
-// SettingForm 表示设置窗口，包含三个选项卡页面：常规设置、图像预处理和高级设置。
+// SettingForm 表示设置窗口, 包含三个选项卡页面: 常规设置、图像预处理和高级设置.
 type SettingForm struct {
 	*walk.Dialog
 
@@ -54,22 +54,22 @@ type SettingForm struct {
 	onOutputTypeChanged func(setting.OutputType)
 }
 
-// NewSettingForm 创建设置窗口实例。
+// NewSettingForm 创建设置窗口实例.
 func NewSettingForm() *SettingForm {
 	return &SettingForm{}
 }
 
-// SetOnTopMostChanged 设置置顶变更回调，由主窗口在创建后注入。
+// SetOnTopMostChanged 设置置顶变更回调, 由主窗口在创建后注入.
 func (sf *SettingForm) SetOnTopMostChanged(fn func(bool)) {
 	sf.onTopMostChanged = fn
 }
 
-// SetOnOutputTypeChanged 设置输出方式变更回调，由主窗口在创建后注入。
+// SetOnOutputTypeChanged 设置输出方式变更回调, 由主窗口在创建后注入.
 func (sf *SettingForm) SetOnOutputTypeChanged(fn func(setting.OutputType)) {
 	sf.onOutputTypeChanged = fn
 }
 
-// Show 显示设置窗口。窗口包含三个选项卡页面，关闭后调用方可通过回调获取用户修改的设置。
+// Show 显示设置窗口. 窗口包含三个选项卡页面, 关闭后调用方可通过回调获取用户修改的设置.
 func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 	set := setting.GetSetting()
 	// 获取 CPU 逻辑核心数
@@ -81,7 +81,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 	var err error
 	err = declarative.Dialog{
 		AssignTo:  &sf.Dialog,
-		Title:     core.TitleSetting,
+		Title:     strs.TitleSetting,
 		Icon:      appIcon,
 		FixedSize: true,
 		MinSize:   declarative.Size{Width: 380, Height: 600},
@@ -93,15 +93,15 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 				Pages: []declarative.TabPage{
 					// 第一页: 常规设置
 					declarative.TabPage{
-						Title:  core.TextGeneralSetting,
+						Title:  strs.TextGeneralSetting,
 						Layout: declarative.VBox{Margins: declarative.Margins{Left: 5, Top: 10, Right: 5, Bottom: 5}, Spacing: groupVerticalSpacing},
 						Children: []declarative.Widget{
 							// 压缩设置组
 							declarative.GroupBox{
-								Title:  core.TextCompressSetting,
+								Title:  strs.TextCompressSetting,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
-									sf.makeLabelWithTip(core.TextCompressMode, core.TipCompressMode),
+									sf.makeLabelWithTip(strs.TextCompressMode, strs.TipCompressMode),
 									declarative.Composite{
 										Layout:  declarative.HBox{Spacing: 20, MarginsZero: true},
 										MinSize: declarative.Size{Width: settingControlWidth, Height: 0},
@@ -110,19 +110,19 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 											declarative.HSpacer{},
 											declarative.RadioButton{
 												AssignTo:  &sf.qualityRadio,
-												Text:      core.TextQualityMode,
+												Text:      strs.TextQualityMode,
 												Value:     isQualityMode,
 												OnClicked: sf.onCompressModeChange,
 											},
 											declarative.RadioButton{
 												AssignTo:  &sf.fileSizeRadio,
-												Text:      core.TextFileSizeMode,
+												Text:      strs.TextFileSizeMode,
 												Value:     !isQualityMode,
 												OnClicked: sf.onCompressModeChange,
 											},
 										},
 									},
-									sf.makeLabelWithTip(core.TextQuality, core.TipQuality),
+									sf.makeLabelWithTip(strs.TextQuality, strs.TipQuality),
 									// 画质滑块组合
 									declarative.Composite{
 										Layout: declarative.HBox{Spacing: 5, MarginsZero: true},
@@ -147,7 +147,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 											},
 										},
 									},
-									sf.makeLabelWithTip(core.TextLimitSize, core.TipLimitSize),
+									sf.makeLabelWithTip(strs.TextLimitSize, strs.TipLimitSize),
 									declarative.Composite{
 										Layout: declarative.HBox{Spacing: 5, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -167,7 +167,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 												AssignTo: &sf.sizeUnitCombo,
 												Value:    sizeUnitToString(set.SizeUnit),
 												Editable: false,
-												Model:    []string{"KB", "MB"},
+												Model:    []string{strs.TextUnitKB, strs.TextUnitMB},
 												Enabled:  !isQualityMode,
 												MinSize:  declarative.Size{Width: 40, Height: 0},
 												MaxSize:  declarative.Size{Width: 40, Height: 0},
@@ -175,15 +175,15 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 										},
 									},
 									declarative.Label{Text: " "},
-									sf.makeCheckBoxWithTip(&sf.acceptExceedCheck, core.TextAcceptExceed, set.AcceptExceed, core.TipAcceptExceed),
+									sf.makeCheckBoxWithTip(&sf.acceptExceedCheck, strs.TextAcceptExceed, set.AcceptExceed, strs.TipAcceptExceed),
 								},
 							},
 							// 输出设置组
 							declarative.GroupBox{
-								Title:  core.TextOutputFormat,
+								Title:  strs.TextOutputFormat,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
-									sf.makeLabelWithTip(core.TextOutputMode, core.TipOutputType),
+									sf.makeLabelWithTip(strs.TextOutputMode, strs.TipOutputType),
 									declarative.Composite{
 										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -192,14 +192,14 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 												AssignTo:              &sf.outputTypeCombo,
 												Value:                 outputTypeToString(set.OutputType),
 												Editable:              false,
-												Model:                 []string{core.TextOutputDir, core.TextCoverOrigin, core.TextOutputStruct},
+												Model:                 []string{strs.TextOutputDir, strs.TextCoverOrigin, strs.TextOutputStruct},
 												OnCurrentIndexChanged: func() { sf.onOutputTypeChange() },
 												MinSize:               declarative.Size{Width: settingControlWidth, Height: 0},
 												MaxSize:               declarative.Size{Width: settingControlWidth, Height: 0},
 											},
 										},
 									},
-									sf.makeLabelWithTip(core.TextOutputFormat, core.TipExtension),
+									sf.makeLabelWithTip(strs.TextOutputFormat, strs.TipExtension),
 									declarative.Composite{
 										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -208,13 +208,13 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 												AssignTo: &sf.extensionCombo,
 												Value:    extensionToString(set.Extension),
 												Editable: false,
-												Model:    []string{core.TextFormatJPEG, core.TextFormatPNG, core.TextFormatWebP, core.TextFormatOrigin},
+												Model:    []string{strs.TextFormatJPEG, strs.TextFormatPNG, strs.TextFormatWebP, strs.TextFormatOrigin},
 												MinSize:  declarative.Size{Width: settingControlWidth, Height: 0},
 												MaxSize:  declarative.Size{Width: settingControlWidth, Height: 0},
 											},
 										},
 									},
-									sf.makeLabelWithTip(core.TextFilenameTpl, core.TipFilenameTpl),
+									sf.makeLabelWithTip(strs.TextFilenameTpl, strs.TipFilenameTpl),
 									declarative.Composite{
 										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -227,7 +227,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 											},
 										},
 									},
-									sf.makeLabelWithTip(core.TextStartIndex, core.TipStartIndex),
+									sf.makeLabelWithTip(strs.TextStartIndex, strs.TipStartIndex),
 									declarative.Composite{
 										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -247,10 +247,10 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 							},
 							// 系统设置组
 							declarative.GroupBox{
-								Title:  "系统设置",
+								Title:  strs.TextSystemSetting,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
-									sf.makeLabelWithTip(core.TextMaxThreads, core.TipMaxThreads),
+									sf.makeLabelWithTip(strs.TextMaxThreads, strs.TipMaxThreads),
 									declarative.Composite{
 										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -274,7 +274,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 														MaxValue:       sf.maxThreads,
 														Value:          set.MaxThreads,
 														Tracking:       true,
-														ToolTipText:    core.TipThreadSlider,
+														ToolTipText:    strs.TipThreadSlider,
 														OnValueChanged: func() { sf.onThreadSliderChange() },
 													},
 												},
@@ -282,7 +282,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 										},
 									},
 									declarative.Label{Text: " "},
-									sf.makeCheckBoxWithTip(&sf.topMostCheck, core.TextTopMost, set.TopMost, core.TipTopMost),
+									sf.makeCheckBoxWithTip(&sf.topMostCheck, strs.TextTopMost, set.TopMost, strs.TipTopMost),
 								},
 							},
 							declarative.VSpacer{},
@@ -290,15 +290,15 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 					},
 					// 第二页: 图像预处理
 					declarative.TabPage{
-						Title:  core.TextPreprocessSetting,
+						Title:  strs.TextPreprocessSetting,
 						Layout: declarative.VBox{Margins: declarative.Margins{Left: 5, Top: 10, Right: 5, Bottom: 5}, Spacing: groupVerticalSpacing},
 						Children: []declarative.Widget{
 							// 缩放方式组
 							declarative.GroupBox{
-								Title:  core.TextScale,
+								Title:  strs.TextScale,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
-									sf.makeLabelWithTip(core.TextScale, core.TipScale),
+									sf.makeLabelWithTip(strs.TextScale, strs.TipScale),
 									declarative.Composite{
 										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -308,12 +308,12 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 												Value:    scaleToString(set.Scale),
 												Editable: false,
 												Model: []string{
-													core.ScaleNoneText,
-													core.ScaleStretchText,
-													core.ScaleFitOutText,
-													core.ScaleFitInText,
-													core.ScaleFitOutCrop,
-													core.ScaleLockSideText,
+													strs.ScaleNoneText,
+													strs.ScaleStretchText,
+													strs.ScaleFitOutText,
+													strs.ScaleFitInText,
+													strs.ScaleFitOutCrop,
+													strs.ScaleLockSideText,
 												},
 												OnCurrentIndexChanged: func() { sf.onScaleModeChange() },
 												MinSize:               declarative.Size{Width: settingControlWidth, Height: 0},
@@ -321,7 +321,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 											},
 										},
 									},
-									sf.makeLabelWithTip(core.TextScaleWidth, core.TipScaleWidth),
+									sf.makeLabelWithTip(strs.TextScaleWidth, strs.TipScaleWidth),
 									declarative.Composite{
 										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -338,7 +338,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 											},
 										},
 									},
-									sf.makeLabelWithTip(core.TextScaleHeight, core.TipScaleHeight),
+									sf.makeLabelWithTip(strs.TextScaleHeight, strs.TipScaleHeight),
 									declarative.Composite{
 										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -359,10 +359,10 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 							},
 							// 透明度处理组
 							declarative.GroupBox{
-								Title:  core.TextAlphaHandle,
+								Title:  strs.TextAlphaHandle,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
-									sf.makeLabelWithTip(core.TextAlphaHandle, core.TipAlphaHandle),
+									sf.makeLabelWithTip(strs.TextAlphaHandle, strs.TipAlphaHandle),
 									declarative.Composite{
 										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -372,9 +372,9 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 												Value:    alphaHandleToString(set.AlphaHandle),
 												Editable: false,
 												Model: []string{
-													core.AlphaKeepText,
-													core.AlphaSmartRemoveText,
-													core.AlphaRemoveText,
+													strs.AlphaKeepText,
+													strs.AlphaSmartRemoveText,
+													strs.AlphaRemoveText,
 												},
 												MinSize: declarative.Size{Width: settingControlWidth, Height: 0},
 												MaxSize: declarative.Size{Width: settingControlWidth, Height: 0},
@@ -388,15 +388,15 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 					},
 					// 第三页: 高级设置
 					declarative.TabPage{
-						Title:  core.TextAdvancedSetting,
+						Title:  strs.TextAdvancedSetting,
 						Layout: declarative.VBox{Margins: declarative.Margins{Left: 5, Top: 10, Right: 5, Bottom: 5}, Spacing: groupVerticalSpacing},
 						Children: []declarative.Widget{
 							// JPEG 设置容器
 							declarative.GroupBox{
-								Title:  core.TextAdvJPEGSettings,
+								Title:  strs.TextAdvJPEGSettings,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
-									sf.makeLabelWithTip(core.TextAdvFineQuality, core.TipAdvFineQuality),
+									sf.makeLabelWithTip(strs.TextAdvFineQuality, strs.TipAdvFineQuality),
 									declarative.Composite{
 										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -407,7 +407,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 												MinValue:    0,
 												MaxValue:    100,
 												Decimals:    0,
-												ToolTipText: core.TipAdvFineQuality,
+												ToolTipText: strs.TipAdvFineQuality,
 												MinSize:     declarative.Size{Width: settingControlWidth, Height: 0},
 												MaxSize:     declarative.Size{Width: settingControlWidth, Height: 0},
 											},
@@ -417,22 +417,22 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 							},
 							// PNG 设置容器
 							declarative.GroupBox{
-								Title:  core.TextAdvPNGSettings,
+								Title:  strs.TextAdvPNGSettings,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
 									declarative.Label{
 										Text:    " ",
 										MinSize: declarative.Size{Width: 150, Height: 0},
 									},
-									sf.makeCheckBoxWithTip(&sf.pngKeepAlphaCheckBox, core.TextPngKeepIndexedAlpha, set.PngKeepIndexedAlpha, core.TipPngKeepIndexedAlpha),
+									sf.makeCheckBoxWithTip(&sf.pngKeepAlphaCheckBox, strs.TextPngKeepIndexedAlpha, set.PngKeepIndexedAlpha, strs.TipPngKeepIndexedAlpha),
 								},
 							},
 							// WebP 设置容器
 							declarative.GroupBox{
-								Title:  core.TextAdvWebPSettings,
+								Title:  strs.TextAdvWebPSettings,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
-									sf.makeLabelWithTip(core.TextAdvFineQuality, core.TipAdvFineQualityWebP),
+									sf.makeLabelWithTip(strs.TextAdvFineQuality, strs.TipAdvFineQualityWebP),
 									declarative.Composite{
 										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -443,7 +443,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 												MinValue:    0,
 												MaxValue:    100,
 												Decimals:    0,
-												ToolTipText: core.TipAdvFineQualityWebP,
+												ToolTipText: strs.TipAdvFineQualityWebP,
 												MinSize:     declarative.Size{Width: settingControlWidth, Height: 0},
 												MaxSize:     declarative.Size{Width: settingControlWidth, Height: 0},
 											},
@@ -465,11 +465,11 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 				Children: []declarative.Widget{
 					declarative.HSpacer{},
 					declarative.PushButton{
-						Text:      core.TextCancel,
+						Text:      strs.TextCancel,
 						OnClicked: func() { sf.Cancel() },
 					},
 					declarative.PushButton{
-						Text: core.TextOK,
+						Text: strs.TextOK,
 						OnClicked: func() {
 							if sf.saveSetting() {
 								sf.Accept()
@@ -500,7 +500,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 	return nil
 }
 
-// onCompressModeChange 响应压缩模式切换，启用或禁用相关控件。
+// onCompressModeChange 响应压缩模式切换, 启用或禁用相关控件.
 func (sf *SettingForm) onCompressModeChange() {
 	if sf.qualityRadio == nil || sf.fileSizeRadio == nil {
 		return
@@ -523,7 +523,7 @@ func (sf *SettingForm) onCompressModeChange() {
 	}
 }
 
-// onQualitySliderChange 响应画质滑块值变化，更新画质等级标签文字。
+// onQualitySliderChange 响应画质滑块值变化, 更新画质等级标签文字.
 func (sf *SettingForm) onQualitySliderChange() {
 	if sf.qualitySlider == nil || sf.qualityLabel == nil {
 		return
@@ -533,7 +533,7 @@ func (sf *SettingForm) onQualitySliderChange() {
 	sf.qualityLabel.SetText(qualityLevelToString(level))
 }
 
-// onOutputTypeChange 响应输出方式切换，启用或禁用输出格式相关控件。
+// onOutputTypeChange 响应输出方式切换, 启用或禁用输出格式相关控件.
 func (sf *SettingForm) onOutputTypeChange() {
 	if sf.outputTypeCombo == nil {
 		return
@@ -551,21 +551,21 @@ func (sf *SettingForm) onOutputTypeChange() {
 	}
 }
 
-// onThreadEditChange 响应线程数输入框变化，同步更新滑块位置。
+// onThreadEditChange 响应线程数输入框变化, 同步更新滑块位置.
 func (sf *SettingForm) onThreadEditChange() {
 	if sf.maxThreadsEdit != nil && sf.threadSlider != nil {
 		sf.threadSlider.SetValue(int(sf.maxThreadsEdit.Value()))
 	}
 }
 
-// onThreadSliderChange 响应线程数滑块变化，同步更新输入框数值。
+// onThreadSliderChange 响应线程数滑块变化, 同步更新输入框数值.
 func (sf *SettingForm) onThreadSliderChange() {
 	if sf.threadSlider != nil && sf.maxThreadsEdit != nil {
 		sf.maxThreadsEdit.SetValue(float64(sf.threadSlider.Value()))
 	}
 }
 
-// onScaleModeChange 响应缩放方式切换，启用或禁用缩放宽高输入框。
+// onScaleModeChange 响应缩放方式切换, 启用或禁用缩放宽高输入框.
 func (sf *SettingForm) onScaleModeChange() {
 	if sf.scaleCombo == nil {
 		return
@@ -579,8 +579,8 @@ func (sf *SettingForm) onScaleModeChange() {
 	}
 }
 
-// saveSetting 从 UI 控件读取所有值，进行校验后写入全局配置。
-// 返回 false 表示用户取消保存（校验失败或用户取消了警告弹窗）。
+// saveSetting 从 UI 控件读取所有值, 进行校验后写入全局配置.
+// 返回 false 表示用户取消保存（校验失败或用户取消了警告弹窗）.
 func (sf *SettingForm) saveSetting() bool {
 	set := setting.GetSetting()
 	oldTopMost := set.TopMost
@@ -726,7 +726,7 @@ func (sf *SettingForm) saveSetting() bool {
 		w0 := newScaleWidth == 0
 		h0 := newScaleHeight == 0
 		if (w0 && h0) || (!w0 && !h0) {
-			dialog.ShowErrorWithParent(parentHwnd, core.ErrScaleLockSideInvalid)
+			dialog.ShowErrorWithParent(parentHwnd, strs.ErrScaleLockSideInvalid)
 			return false
 		}
 	}
@@ -738,7 +738,7 @@ func (sf *SettingForm) saveSetting() bool {
 		hasID := strings.Contains(newOutputFilename, "{id}")
 		hasName := strings.Contains(newOutputFilename, "{name}")
 		if !hasID && !hasName {
-			if !dialog.ShowConfirmWithParent(parentHwnd, core.WarnFilenameTplMissing) {
+			if !dialog.ShowConfirmWithParent(parentHwnd, strs.WarnFilenameTplMissing) {
 				return false
 			}
 		}
@@ -782,13 +782,13 @@ func (sf *SettingForm) saveSetting() bool {
 func outputTypeToString(t setting.OutputType) string {
 	switch t {
 	case setting.OutputCoverOrigin:
-		return core.TextCoverOrigin
+		return strs.TextCoverOrigin
 	case setting.OutputDirection:
-		return core.TextOutputDir
+		return strs.TextOutputDir
 	case setting.OutputStructure:
-		return core.TextOutputStruct
+		return strs.TextOutputStruct
 	default:
-		return core.TextOutputDir
+		return strs.TextOutputDir
 	}
 }
 
@@ -796,15 +796,15 @@ func outputTypeToString(t setting.OutputType) string {
 func extensionToString(t setting.ExtensionType) string {
 	switch t {
 	case setting.ExtJPEG:
-		return core.TextFormatJPEG
+		return strs.TextFormatJPEG
 	case setting.ExtPNG:
-		return core.TextFormatPNG
+		return strs.TextFormatPNG
 	case setting.ExtWebP:
-		return core.TextFormatWebP
+		return strs.TextFormatWebP
 	case setting.ExtOrigin:
-		return core.TextFormatOrigin
+		return strs.TextFormatOrigin
 	default:
-		return core.TextFormatJPEG
+		return strs.TextFormatJPEG
 	}
 }
 
@@ -812,13 +812,13 @@ func extensionToString(t setting.ExtensionType) string {
 func alphaHandleToString(t setting.AlphaHandleType) string {
 	switch t {
 	case setting.AlphaKeep:
-		return core.AlphaKeepText
+		return strs.AlphaKeepText
 	case setting.AlphaSmartRemove:
-		return core.AlphaSmartRemoveText
+		return strs.AlphaSmartRemoveText
 	case setting.AlphaRemove:
-		return core.AlphaRemoveText
+		return strs.AlphaRemoveText
 	default:
-		return core.AlphaKeepText
+		return strs.AlphaKeepText
 	}
 }
 
@@ -826,19 +826,19 @@ func alphaHandleToString(t setting.AlphaHandleType) string {
 func scaleToString(t setting.ScaleType) string {
 	switch t {
 	case setting.ScaleNone:
-		return core.ScaleNoneText
+		return strs.ScaleNoneText
 	case setting.ScaleStretch:
-		return core.ScaleStretchText
+		return strs.ScaleStretchText
 	case setting.ScaleFitOutside:
-		return core.ScaleFitOutText
+		return strs.ScaleFitOutText
 	case setting.ScaleFitInside:
-		return core.ScaleFitInText
+		return strs.ScaleFitInText
 	case setting.ScaleFitOutsideCrop:
-		return core.ScaleFitOutCrop
+		return strs.ScaleFitOutCrop
 	case setting.ScaleLockSide:
-		return core.ScaleLockSideText
+		return strs.ScaleLockSideText
 	default:
-		return core.ScaleNoneText
+		return strs.ScaleNoneText
 	}
 }
 
@@ -852,11 +852,11 @@ func atoi(s string) int {
 func sizeUnitToString(unit setting.SizeUnit) string {
 	switch unit {
 	case setting.UnitKB:
-		return "KB"
+		return strs.TextUnitKB
 	case setting.UnitMB:
-		return "MB"
+		return strs.TextUnitMB
 	default:
-		return "KB"
+		return strs.TextUnitKB
 	}
 }
 
@@ -864,19 +864,19 @@ func sizeUnitToString(unit setting.SizeUnit) string {
 func qualityLevelToString(level setting.QualityLevel) string {
 	switch level {
 	case setting.QualityLevelBest:
-		return core.TextQualityBest
+		return strs.TextQualityBest
 	case setting.QualityLevelClear:
-		return core.TextQualityClear
+		return strs.TextQualityClear
 	case setting.QualityLevelNormal:
-		return core.TextQualityNormal
+		return strs.TextQualityNormal
 	case setting.QualityLevelPoor:
-		return core.TextQualityPoor
+		return strs.TextQualityPoor
 	default:
-		return core.TextQualityClear
+		return strs.TextQualityClear
 	}
 }
 
-// 辅助函数：将 core.QualityLevel 转换为滑块刻度值 (0-3)
+// 辅助函数: 将 core.QualityLevel 转换为滑块刻度值 (0-3)
 func qualityLevelToSliderValue(level setting.QualityLevel) int {
 	switch level {
 	case setting.QualityLevelPoor:
@@ -892,7 +892,7 @@ func qualityLevelToSliderValue(level setting.QualityLevel) int {
 	}
 }
 
-// 辅助函数：将滑块刻度值 (0-3) 转换为 core.QualityLevel
+// 辅助函数: 将滑块刻度值 (0-3) 转换为 core.QualityLevel
 func sliderValueToQualityLevel(val int) setting.QualityLevel {
 	switch val {
 	case 0:
@@ -908,7 +908,7 @@ func sliderValueToQualityLevel(val int) setting.QualityLevel {
 	}
 }
 
-// makeLabelWithTip 构造"文本标签 + (?) 提示链接"组合控件。
+// makeLabelWithTip 构造"文本标签 + (?) 提示链接"组合控件.
 func (sf *SettingForm) makeLabelWithTip(label, tip string) declarative.Composite {
 	return declarative.Composite{
 		Layout: declarative.HBox{Spacing: 4, MarginsZero: true},
@@ -931,7 +931,7 @@ func (sf *SettingForm) makeLabelWithTip(label, tip string) declarative.Composite
 	}
 }
 
-// makeCheckBoxWithTip 构造"复选框 + (?) 提示链接"组合控件。
+// makeCheckBoxWithTip 构造"复选框 + (?) 提示链接"组合控件.
 func (sf *SettingForm) makeCheckBoxWithTip(assignTo **walk.CheckBox, text string, checked bool, tip string) declarative.Composite {
 	return declarative.Composite{
 		Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},

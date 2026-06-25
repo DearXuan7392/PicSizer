@@ -3,6 +3,7 @@ package ui
 import (
 	"PicSizer/internal/core"
 	"PicSizer/internal/core/setting"
+	strs "PicSizer/internal/core/strings"
 	"PicSizer/internal/dialog"
 	"PicSizer/internal/fileio"
 	"PicSizer/internal/server"
@@ -14,7 +15,7 @@ import (
 	"github.com/lxn/win"
 )
 
-// MainForm 表示程序的主窗口，包含图片列表、输出选项和压缩控制等核心交互区域。
+// MainForm 表示程序的主窗口, 包含图片列表、输出选项和压缩控制等核心交互区域.
 type MainForm struct {
 	*walk.MainWindow
 	picListView   *PicListView
@@ -34,7 +35,7 @@ type MainForm struct {
 	pool          *server.ThreadPool
 }
 
-// NewMainForm 创建主窗口实例，注入子窗体回调。
+// NewMainForm 创建主窗口实例, 注入子窗体回调.
 func NewMainForm() *MainForm {
 	mf := &MainForm{
 		progressForm: NewProgressForm(),
@@ -46,7 +47,7 @@ func NewMainForm() *MainForm {
 	return mf
 }
 
-// Run 创建并运行主窗口，完成后进入 Windows 消息循环。
+// Run 创建并运行主窗口, 完成后进入 Windows 消息循环.
 func (mf *MainForm) Run(appIcon *walk.Icon) error {
 	mf.appIcon = appIcon
 	mf.picListView = NewPicListView()
@@ -54,7 +55,7 @@ func (mf *MainForm) Run(appIcon *walk.Icon) error {
 	var err error
 	err = declarative.MainWindow{
 		AssignTo: &mf.MainWindow,
-		Title:    core.TitleMain,
+		Title:    strs.TitleMain,
 		Icon:     appIcon,
 		MinSize:  declarative.Size{Width: 600, Height: 500},
 		Size:     declarative.Size{Width: 600, Height: 500},
@@ -67,39 +68,39 @@ func (mf *MainForm) Run(appIcon *walk.Icon) error {
 		},
 		MenuItems: []declarative.MenuItem{
 			declarative.Menu{
-				Text: core.TextFile,
+				Text: strs.TextFile,
 				Items: []declarative.MenuItem{
-					declarative.Action{Text: core.TextAddFiles, OnTriggered: mf.onAddFiles},
-					declarative.Action{Text: core.TextAddFolder, OnTriggered: mf.onAddFolder},
+					declarative.Action{Text: strs.TextAddFiles, OnTriggered: mf.onAddFiles},
+					declarative.Action{Text: strs.TextAddFolder, OnTriggered: mf.onAddFolder},
 					declarative.Separator{},
-					declarative.Action{Text: core.TextExit, OnTriggered: mf.onExit},
+					declarative.Action{Text: strs.TextExit, OnTriggered: mf.onExit},
 				},
 			},
 			declarative.Menu{
-				Text: core.TextEdit,
+				Text: strs.TextEdit,
 				Items: []declarative.MenuItem{
 					declarative.Menu{
-						Text: core.TextRemove,
+						Text: strs.TextRemove,
 						Items: []declarative.MenuItem{
-							declarative.Action{Text: core.TextRemoveSelect, OnTriggered: mf.onRemoveSelected},
-							declarative.Action{Text: core.TextRemoveDone, OnTriggered: mf.onRemoveDone},
-							declarative.Action{Text: core.TextRemoveError, OnTriggered: mf.onRemoveError},
-							declarative.Action{Text: core.TextRemoveAll, OnTriggered: mf.onRemoveAll},
+							declarative.Action{Text: strs.TextRemoveSelect, OnTriggered: mf.onRemoveSelected},
+							declarative.Action{Text: strs.TextRemoveDone, OnTriggered: mf.onRemoveDone},
+							declarative.Action{Text: strs.TextRemoveError, OnTriggered: mf.onRemoveError},
+							declarative.Action{Text: strs.TextRemoveAll, OnTriggered: mf.onRemoveAll},
 						},
 					},
 					declarative.Menu{
-						Text: core.TextSelect,
+						Text: strs.TextSelect,
 						Items: []declarative.MenuItem{
-							declarative.Action{Text: core.TextSelectAll, OnTriggered: mf.onSelectAll},
-							declarative.Action{Text: core.TextSelectReverse, OnTriggered: mf.onSelectReverse},
+							declarative.Action{Text: strs.TextSelectAll, OnTriggered: mf.onSelectAll},
+							declarative.Action{Text: strs.TextSelectReverse, OnTriggered: mf.onSelectReverse},
 						},
 					},
 				},
 			},
 			declarative.Menu{
-				Text: core.TextHelp,
+				Text: strs.TextHelp,
 				Items: []declarative.MenuItem{
-					declarative.Action{Text: core.TextAbout, OnTriggered: mf.onAbout},
+					declarative.Action{Text: strs.TextAbout, OnTriggered: mf.onAbout},
 				},
 			},
 		},
@@ -117,17 +118,17 @@ func (mf *MainForm) Run(appIcon *walk.Icon) error {
 								Children: []declarative.Widget{
 									declarative.RadioButton{
 										AssignTo:  &mf.dirRadio,
-										Text:      core.TextOutputDir,
+										Text:      strs.TextOutputDir,
 										OnClicked: mf.onRadioChange,
 									},
 									declarative.RadioButton{
 										AssignTo:  &mf.coverRadio,
-										Text:      core.TextCoverOrigin,
+										Text:      strs.TextCoverOrigin,
 										OnClicked: mf.onRadioChange,
 									},
 									declarative.RadioButton{
 										AssignTo:  &mf.structRadio,
-										Text:      core.TextOutputStruct,
+										Text:      strs.TextOutputStruct,
 										OnClicked: mf.onRadioChange,
 									},
 									declarative.HSpacer{},
@@ -136,13 +137,13 @@ func (mf *MainForm) Run(appIcon *walk.Icon) error {
 							declarative.Composite{
 								Layout: declarative.HBox{MarginsZero: true, Spacing: 5},
 								Children: []declarative.Widget{
-									declarative.Label{Text: core.TextOutputPath},
+									declarative.Label{Text: strs.TextOutputPath},
 									declarative.LineEdit{
 										AssignTo: &mf.outputDirEdit,
 									},
 									declarative.PushButton{
 										AssignTo:  &mf.outputDirBtn,
-										Text:      core.TextBrowse,
+										Text:      strs.TextBrowse,
 										OnClicked: mf.onBrowseDir,
 									},
 								},
@@ -154,13 +155,13 @@ func (mf *MainForm) Run(appIcon *walk.Icon) error {
 						Children: []declarative.Widget{
 							declarative.PushButton{
 								AssignTo:  &mf.settingBtn,
-								Text:      core.TextSetting,
+								Text:      strs.TextSetting,
 								MinSize:   declarative.Size{Width: 95, Height: 0},
 								OnClicked: mf.onSetting,
 							},
 							declarative.PushButton{
 								AssignTo:  &mf.startBtn,
-								Text:      core.TextStart,
+								Text:      strs.TextStart,
 								MinSize:   declarative.Size{Width: 95, Height: 0},
 								OnClicked: mf.onStartCompress,
 							},
@@ -176,7 +177,7 @@ func (mf *MainForm) Run(appIcon *walk.Icon) error {
 						Text:     "0/0",
 					},
 					declarative.HSpacer{},
-					declarative.Label{Text: core.AppName + " " + core.AppVersion},
+					declarative.Label{Text: strs.AppName + " " + strs.AppVersion},
 				},
 			},
 		},
@@ -201,12 +202,12 @@ func (mf *MainForm) Run(appIcon *walk.Icon) error {
 	return nil
 }
 
-// applyTopMost 通过 Windows API 设置或取消主窗口的置顶状态。
+// applyTopMost 通过 Windows API 设置或取消主窗口的置顶状态.
 func (mf *MainForm) applyTopMost(topMost bool) {
 	ApplyTopMostToWindow(mf.MainWindow, topMost)
 }
 
-// onAddFiles 打开文件选择对话框，将选中的图片添加到列表中。
+// onAddFiles 打开文件选择对话框, 将选中的图片添加到列表中.
 func (mf *MainForm) onAddFiles() {
 	paths := ShowOpenImageDialog(mf.MainWindow)
 	if len(paths) > 0 {
@@ -215,17 +216,17 @@ func (mf *MainForm) onAddFiles() {
 	}
 }
 
-// onAddFolder 打开文件夹选择对话框，将文件夹中的所有图片添加到列表中。
+// onAddFolder 打开文件夹选择对话框, 将文件夹中的所有图片添加到列表中.
 func (mf *MainForm) onAddFolder() {
-	dir := ShowBrowseFolderDialog(mf.MainWindow, core.TextAddFolder)
+	dir := ShowBrowseFolderDialog(mf.MainWindow, strs.TextAddFolder)
 	if dir != "" {
 		mf.picListView.AddPicturesFromDirectory(dir)
 		mf.updateSelectLabel()
 	}
 }
 
-// onDropFiles 处理拖放到主窗口的文件。
-// 拖放到输出目录输入框区域时，若为单个目录则设置为输出路径；否则作为图片添加到列表。
+// onDropFiles 处理拖放到主窗口的文件.
+// 拖放到输出目录输入框区域时, 若为单个目录则设置为输出路径；否则作为图片添加到列表.
 func (mf *MainForm) onDropFiles(files []string) {
 	var cursorPos win.POINT
 	win.GetCursorPos(&cursorPos)
@@ -265,15 +266,15 @@ func (mf *MainForm) onDropFiles(files []string) {
 	mf.updateSelectLabel()
 }
 
-// onBrowseDir 打开浏览文件夹对话框，设置输出目录路径。
+// onBrowseDir 打开浏览文件夹对话框, 设置输出目录路径.
 func (mf *MainForm) onBrowseDir() {
-	dir := ShowBrowseFolderDialog(mf.MainWindow, core.TextOutputDir)
+	dir := ShowBrowseFolderDialog(mf.MainWindow, strs.TextOutputDir)
 	if dir != "" {
 		mf.outputDirEdit.SetText(dir)
 	}
 }
 
-// onRadioChange 响应输出方式单选按钮切换，同步更新设置并切换输出目录控件的启用状态。
+// onRadioChange 响应输出方式单选按钮切换, 同步更新设置并切换输出目录控件的启用状态.
 func (mf *MainForm) onRadioChange() {
 	if mf.coverRadio != nil && mf.dirRadio != nil && mf.structRadio != nil {
 		if mf.coverRadio.Checked() {
@@ -289,7 +290,7 @@ func (mf *MainForm) onRadioChange() {
 	mf.outputDirBtn.SetEnabled(enabled)
 }
 
-// applyRadioToOutputType 根据 OutputType 同步主窗口的无线电按钮选中状态。
+// applyRadioToOutputType 根据 OutputType 同步主窗口的无线电按钮选中状态.
 func (mf *MainForm) applyRadioToOutputType(ot setting.OutputType) {
 	if mf.coverRadio == nil || mf.dirRadio == nil || mf.structRadio == nil {
 		return
@@ -307,32 +308,32 @@ func (mf *MainForm) applyRadioToOutputType(ot setting.OutputType) {
 	}
 }
 
-// onOutputTypeFromSetting 接收设置窗口的输出方式变更通知，同步主窗口的单选按钮状态。
+// onOutputTypeFromSetting 接收设置窗口的输出方式变更通知, 同步主窗口的单选按钮状态.
 func (mf *MainForm) onOutputTypeFromSetting(ot setting.OutputType) {
 	mf.applyRadioToOutputType(ot)
 	mf.onRadioChange()
 }
 
-// onStartCompress 启动压缩流程。
-// 执行校验、重置状态、创建线程池等步骤，在独立 goroutine 中异步执行压缩。
+// onStartCompress 启动压缩流程.
+// 执行校验、重置状态、创建线程池等步骤, 在独立 goroutine 中异步执行压缩.
 func (mf *MainForm) onStartCompress() {
 	mf.poolMu.Lock()
 	if mf.pool != nil || mf.progressForm.IsVisible() {
 		mf.poolMu.Unlock()
-		dialog.ShowWarning(core.WarnCompressRunning)
+		dialog.ShowWarning(strs.WarnCompressRunning)
 		return
 	}
 	mf.poolMu.Unlock()
 
 	allItems := mf.picListView.GetModel().GetItems()
 	if len(allItems) == 0 {
-		dialog.ShowWarning(core.ErrNoPictures)
+		dialog.ShowWarning(strs.ErrNoPictures)
 		return
 	}
 
 	alreadyDone := mf.picListView.GetModel().CountByState(setting.StateSuccess)
 	if alreadyDone > 0 {
-		if !dialog.ShowConfirm(fmt.Sprintf(core.WarnOverwriteDoneFmt, alreadyDone)) {
+		if !dialog.ShowConfirm(fmt.Sprintf(strs.WarnOverwriteDoneFmt, alreadyDone)) {
 			return
 		}
 	}
@@ -340,7 +341,7 @@ func (mf *MainForm) onStartCompress() {
 	if !mf.coverRadio.Checked() {
 		core.OutputDirPath = mf.outputDirEdit.Text()
 		if core.OutputDirPath == "" {
-			dialog.ShowWarning(core.ErrOutputDirInvalid)
+			dialog.ShowWarning(strs.ErrOutputDirInvalid)
 			return
 		}
 	}
@@ -349,7 +350,7 @@ func (mf *MainForm) onStartCompress() {
 	} else if mf.dirRadio.Checked() {
 		core.OutputDirPath = mf.outputDirEdit.Text()
 		if core.OutputDirPath == "" {
-			dialog.ShowWarning(core.ErrOutputDirInvalid)
+			dialog.ShowWarning(strs.ErrOutputDirInvalid)
 			return
 		}
 	} else {
@@ -359,7 +360,7 @@ func (mf *MainForm) onStartCompress() {
 		}
 		prefix, ok := fileio.GetCommonPrefix(paths)
 		if !ok {
-			dialog.ShowWarning(core.ErrNoCommonPrefix)
+			dialog.ShowWarning(strs.ErrNoCommonPrefix)
 			return
 		}
 		core.PublicDirPath = prefix
@@ -416,63 +417,63 @@ func (mf *MainForm) onStartCompress() {
 	}()
 }
 
-// onSetting 打开设置窗口，关闭后重新应用置顶状态。
+// onSetting 打开设置窗口, 关闭后重新应用置顶状态.
 func (mf *MainForm) onSetting() {
 	mf.settingForm.Show(mf.MainWindow, mf.appIcon)
 	setting := setting.GetSetting()
 	mf.applyTopMost(setting.TopMost)
 }
 
-// onAbout 打开关于窗口。
+// onAbout 打开关于窗口.
 func (mf *MainForm) onAbout() {
 	mf.aboutForm.Show(mf.MainWindow, mf.appIcon)
 }
 
-// onRemoveSelected 移除列表中当前选中的项目。
+// onRemoveSelected 移除列表中当前选中的项目.
 func (mf *MainForm) onRemoveSelected() {
 	mf.picListView.GetModel().RemoveSelected(mf.picListView.TableView)
 	mf.updateSelectLabel()
 }
 
-// onRemoveDone 移除列表中所有已成功完成的项目。
+// onRemoveDone 移除列表中所有已成功完成的项目.
 func (mf *MainForm) onRemoveDone() {
 	mf.picListView.GetModel().RemoveByState(setting.StateSuccess)
 	mf.updateSelectLabel()
 }
 
-// onRemoveError 移除列表中所有错误和超出限制的项目。
+// onRemoveError 移除列表中所有错误和超出限制的项目.
 func (mf *MainForm) onRemoveError() {
 	mf.picListView.GetModel().RemoveByState(setting.StateError)
 	mf.picListView.GetModel().RemoveByState(setting.StateOutOfLimit)
 	mf.updateSelectLabel()
 }
 
-// onRemoveAll 清空列表中的所有项目（需用户确认）。
+// onRemoveAll 清空列表中的所有项目（需用户确认）.
 func (mf *MainForm) onRemoveAll() {
-	if dialog.ShowConfirm(core.MsgClearList) {
+	if dialog.ShowConfirm(strs.MsgClearList) {
 		mf.picListView.GetModel().Clear()
 		mf.updateSelectLabel()
 	}
 }
 
-// onSelectAll 全选列表中的所有项目。
+// onSelectAll 全选列表中的所有项目.
 func (mf *MainForm) onSelectAll() {
 	mf.picListView.GetModel().SelectAll(mf.picListView.TableView)
 	mf.updateSelectLabel()
 }
 
-// onSelectReverse 反选列表中的项目。
+// onSelectReverse 反选列表中的项目.
 func (mf *MainForm) onSelectReverse() {
 	mf.picListView.GetModel().SelectReverse(mf.picListView.TableView)
 	mf.updateSelectLabel()
 }
 
-// onExit 退出程序。
+// onExit 退出程序.
 func (mf *MainForm) onExit() {
 	mf.MainWindow.Close()
 }
 
-// updateSelectLabel 更新底部状态栏的选中/总数标签。
+// updateSelectLabel 更新底部状态栏的选中/总数标签.
 func (mf *MainForm) updateSelectLabel() {
 	if mf.selectLabel != nil {
 		selected := 0

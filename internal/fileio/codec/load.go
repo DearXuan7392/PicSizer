@@ -5,6 +5,8 @@ import (
 	"image"
 	"os"
 	"sync"
+
+	"PicSizer/internal/core/strings"
 )
 
 var (
@@ -12,16 +14,16 @@ var (
 	registryMu sync.RWMutex
 )
 
-// RegisterCodec 注册一个图片编解码器到全局注册表。
-// 编解码器按注册顺序进行类型匹配，先注册的优先匹配。
+// RegisterCodec 注册一个图片编解码器到全局注册表.
+// 编解码器按注册顺序进行类型匹配, 先注册的优先匹配.
 func RegisterCodec(codec ImageCodec) {
 	registryMu.Lock()
 	defer registryMu.Unlock()
 	registry = append(registry, codec)
 }
 
-// GetCodec 根据图片数据的文件头特征获取匹配的编解码器。
-// 遍历注册表，返回第一个能识别该数据格式的编解码器。
+// GetCodec 根据图片数据的文件头特征获取匹配的编解码器.
+// 遍历注册表, 返回第一个能识别该数据格式的编解码器.
 func GetCodec(data []byte) ImageCodec {
 	registryMu.RLock()
 	defer registryMu.RUnlock()
@@ -41,7 +43,7 @@ func init() {
 	RegisterCodec(&jpegCodec{})
 }
 
-// LoadImage 从指定路径加载图片文件，自动检测格式并解码为 image.Image。
+// LoadImage 从指定路径加载图片文件, 自动检测格式并解码为 image.Image.
 func LoadImage(imgPath string) (image.Image, error) {
 	data, err := os.ReadFile(imgPath)
 	if err != nil {
@@ -50,7 +52,7 @@ func LoadImage(imgPath string) (image.Image, error) {
 
 	codec := GetCodec(data)
 	if codec == nil {
-		return nil, errors.New("不支持的图片格式")
+		return nil, errors.New(strs.CodecErrUnsupportedFormat)
 	}
 
 	img, err := codec.Decode(data)

@@ -1,27 +1,27 @@
 package ui
 
 import (
-	"PicSizer/internal/core"
+	"PicSizer/internal/core/strings"
 
 	"github.com/lxn/walk"
 	"github.com/lxn/walk/declarative"
 )
 
-// AboutForm 表示关于窗口，显示应用程序的图标、标题、版本和说明信息。
+// AboutForm 表示关于窗口, 显示应用程序的图标、标题、版本和说明信息.
 type AboutForm struct {
 	*walk.Dialog
 }
 
-// NewAboutForm 创建关于窗口实例。
+// NewAboutForm 创建关于窗口实例.
 func NewAboutForm() *AboutForm {
 	return &AboutForm{}
 }
 
-// Show 显示关于窗口，继承主窗体的 TopMost 属性。
+// Show 显示关于窗口, 继承主窗体的 TopMost 属性.
 func (af *AboutForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 	err := declarative.Dialog{
 		AssignTo:  &af.Dialog,
-		Title:     core.TitleAbout,
+		Title:     strs.TitleAbout,
 		Icon:      appIcon,
 		FixedSize: true,
 		MinSize:   declarative.Size{Width: 340, Height: 280},
@@ -52,18 +52,18 @@ func (af *AboutForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 				},
 				Children: []declarative.Widget{
 					declarative.Label{
-						Text:      core.AboutTitle,
+						Text:      strs.AboutTitle,
 						Alignment: declarative.AlignHCenterVCenter,
 						Font:      declarative.Font{PointSize: 16, Bold: true},
 					},
 					declarative.Label{
-						Text:      core.AboutVersion,
+						Text:      strs.AboutVersion,
 						Alignment: declarative.AlignHCenterVCenter,
 						Font:      declarative.Font{PointSize: 11},
 						TextColor: walk.RGB(100, 100, 100),
 					},
 					declarative.Label{
-						Text:      core.AboutDesc,
+						Text:      strs.AboutDesc,
 						Alignment: declarative.AlignHCenterVCenter,
 						Font:      declarative.Font{PointSize: 11},
 					},
@@ -77,7 +77,7 @@ func (af *AboutForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 				Children: []declarative.Widget{
 					declarative.HSpacer{},
 					declarative.PushButton{
-						Text: core.TextOK,
+						Text: strs.TextOK,
 						OnClicked: func() {
 							af.Accept()
 						},

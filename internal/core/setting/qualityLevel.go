@@ -3,10 +3,12 @@ package setting
 import (
 	"fmt"
 	"strings"
+
+	"PicSizer/internal/core/strings"
 )
 
-// QualityLevel 表示按质量压缩时的画质等级。
-// 程序以 4 个等级让用户选择，内部映射到具体的画质数值 95/80/40/10。
+// QualityLevel 表示按质量压缩时的画质等级.
+// 程序以 4 个等级让用户选择, 内部映射到具体的画质数值 95/80/40/10.
 type QualityLevel int
 
 const (
@@ -23,18 +25,18 @@ var qualityLevelValues = [...]int{
 	10, // QualityLevelPoor
 }
 
-// QualityLevelValue 将画质等级转换为 1-100 的具体画质数值。
-// 该数值直接传递给 JPEG/WebP 编码器。PNG 编码器内部使用另一套等级。
+// QualityLevelValue 将画质等级转换为 1-100 的具体画质数值.
+// 该数值直接传递给 JPEG/WebP 编码器. PNG 编码器内部使用另一套等级.
 func QualityLevelValue(level QualityLevel) int {
 	idx := int(level)
 	if idx < 0 || idx >= len(qualityLevelValues) {
-		panic(fmt.Sprintf("QualityLevel value out of range: %d", level))
+		panic(fmt.Sprintf(strs.CodecErrQualityRange, level))
 	}
 	return qualityLevelValues[idx]
 }
 
-// ParseQualityLevel 根据字符串解析对应的画质等级。
-// 支持 "best"/"clear"/"normal"/"poor" 以及中文 "最佳"/"清晰"/"一般"/"较差"。
+// ParseQualityLevel 根据字符串解析对应的画质等级.
+// 支持 "best"/"clear"/"normal"/"poor".
 func ParseQualityLevel(s string) (QualityLevel, error) {
 	switch strings.ToLower(strings.TrimSpace(s)) {
 	case "best", "最佳":
@@ -46,6 +48,6 @@ func ParseQualityLevel(s string) (QualityLevel, error) {
 	case "poor", "较差":
 		return QualityLevelPoor, nil
 	default:
-		return QualityLevelClear, fmt.Errorf("不支持的画质等级: %s (可选: best/clear/normal/poor 或 最佳/清晰/一般/较差)", s)
+		return QualityLevelClear, fmt.Errorf(strs.QualityParseErrFmt, s)
 	}
 }

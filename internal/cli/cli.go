@@ -1,5 +1,5 @@
-// Package cli 提供 PicSizer 的命令行模式入口。
-// 负责解析命令行参数、映射到 core.Setting 并复用现有模块完成单文件或批量目录压缩。
+// Package cli 提供 PicSizer 的命令行模式入口.
+// 负责解析命令行参数、映射到 core.Setting 并复用现有模块完成单文件或批量目录压缩.
 package cli
 
 import (
@@ -14,13 +14,14 @@ import (
 
 	"PicSizer/internal/compress"
 	"PicSizer/internal/core"
+	"PicSizer/internal/core/strings"
 	"PicSizer/internal/fileio"
 	"PicSizer/internal/server"
 
 	"github.com/schollz/progressbar/v3"
 )
 
-// Mode 表示是否启用命令行模式，由 -cli / -c 参数设置。
+// Mode 表示是否启用命令行模式, 由 -cli / -c 参数设置.
 var Mode bool
 
 var (
@@ -87,16 +88,16 @@ func init() {
 	flag.IntVar(&height, "hg", 0, "缩放目标高度 (像素), 0 表示不限制")
 }
 
-// Run 执行命令行模式入口。
-// 解析命令行参数、校验输入路径、将参数映射到 Setting 后执行单文件或批量压缩。
+// Run 执行命令行模式入口.
+// 解析命令行参数、校验输入路径、将参数映射到 Setting 后执行单文件或批量压缩.
 func Run() {
 	flag.Parse()
 
 	setting.InitSetting()
 
 	if inputPath == "" {
-		fmt.Println("错误: 请指定输入路径 (-i / --input)")
-		fmt.Println("用法: PicSizer.exe -c -i <输入路径> [选项]")
+		fmt.Println(strs.CLIErrNoInputPath)
+		fmt.Println(strs.CLIUsage)
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
@@ -108,7 +109,7 @@ func Run() {
 
 	info, err := fileio.GetFileInfo(inputPath)
 	if err != nil {
-		fmt.Printf("错误: 无法访问输入路径: %v\n", err)
+		fmt.Printf(strs.CLIErrAccessInput+"\n", err)
 		os.Exit(1)
 	}
 
@@ -119,8 +120,8 @@ func Run() {
 	}
 }
 
-// applySettings 将解析后的 CLI 参数写入全局配置，包含参数合法性校验。
-// 校验失败时返回错误，由 Run 决定是否退出程序。
+// applySettings 将解析后的 CLI 参数写入全局配置, 包含参数合法性校验.
+// 校验失败时返回错误, 由 Run 决定是否退出程序.
 func applySettings() error {
 	set := setting.GetSetting()
 
@@ -131,7 +132,7 @@ func applySettings() error {
 	case "size":
 		set.CompressType = setting.CompressFileSize
 	default:
-		return fmt.Errorf("不支持的压缩模式: %s (可选: quality / size)", compressType)
+		return fmt.Errorf(strs.CLIErrCompressType, compressType)
 	}
 
 	// 画质等级
@@ -161,7 +162,7 @@ func applySettings() error {
 	case "struct":
 		set.OutputType = setting.OutputStructure
 	default:
-		return fmt.Errorf("不支持的输出方式: %s (可选: dir / cover / struct)", outType)
+		return fmt.Errorf(strs.CLIErrOutputType, outType)
 	}
 
 	// 输出格式
@@ -175,7 +176,7 @@ func applySettings() error {
 	case "origin":
 		set.Extension = setting.ExtOrigin
 	default:
-		return fmt.Errorf("不支持的输出格式: %s (可选: jpeg / jpg / png / webp / origin)", format)
+		return fmt.Errorf(strs.CLIErrFormat, format)
 	}
 
 	// 文件名模板与起始序号
@@ -197,7 +198,7 @@ func applySettings() error {
 	case "remove":
 		set.AlphaHandle = setting.AlphaRemove
 	default:
-		return fmt.Errorf("不支持的透明通道处理方式: %s (可选: keep / smart / remove)", alpha)
+		return fmt.Errorf(strs.CLIErrAlpha, alpha)
 	}
 
 	// 缩放模式
@@ -215,7 +216,7 @@ func applySettings() error {
 	case "lock":
 		set.Scale = setting.ScaleLockSide
 	default:
-		return fmt.Errorf("不支持的缩放模式: %s (可选: none / stretch / cover / contain / crop / lock)", scale)
+		return fmt.Errorf(strs.CLIErrScale, scale)
 	}
 
 	// 缩放目标尺寸
@@ -227,7 +228,7 @@ func applySettings() error {
 		w0 := set.ScaleWidth == 0
 		h0 := set.ScaleHeight == 0
 		if (w0 && h0) || (!w0 && !h0) {
-			return fmt.Errorf(core.ErrScaleLockSideInvalid)
+			return fmt.Errorf(strs.ErrScaleLockSideInvalid)
 		}
 	}
 
@@ -236,7 +237,7 @@ func applySettings() error {
 		hasID := strings.Contains(set.OutputFilename, "{id}")
 		hasName := strings.Contains(set.OutputFilename, "{name}")
 		if !hasID && !hasName {
-			fmt.Println("警告: 文件名模板未包含 {id} 或 {name}, 多张图片可能因重名而被覆盖")
+			fmt.Println(strs.CLIWarnFilenameTplMissing)
 		}
 	}
 
@@ -244,7 +245,7 @@ func applySettings() error {
 	return nil
 }
 
-// parseLimit 解析限制大小字符串，支持 "200kb"、"2mb" 或纯数字（默认 KB）格式。
+// parseLimit 解析限制大小字符串, 支持 "200kb"、"2mb" 或纯数字（默认 KB）格式.
 func parseLimit(limitStr string) (int64, setting.SizeUnit, error) {
 	s := strings.TrimSpace(limitStr)
 	s = strings.ToLower(s)
@@ -262,42 +263,42 @@ func parseLimit(limitStr string) (int64, setting.SizeUnit, error) {
 
 	value, err := strconv.ParseInt(strings.TrimSpace(numeric), 10, 64)
 	if err != nil {
-		return 0, 0, fmt.Errorf("无法解析限制大小: %s", limitStr)
+		return 0, 0, fmt.Errorf(strs.CLIErrParseLimit, limitStr)
 	}
 	if value <= 0 {
-		return 0, 0, fmt.Errorf("限制大小必须大于 0: %d", value)
+		return 0, 0, fmt.Errorf(strs.CLIErrLimitMustPositive, value)
 	}
 
 	return value, parsedUnit, nil
 }
 
-// compressFile 压缩单个文件，根据输出方式构造输出路径后调用 compress.Compress。
-// 压缩完成后在控制台输出结果信息。
+// compressFile 压缩单个文件, 根据输出方式构造输出路径后调用 compress.Compress.
+// 压缩完成后在控制台输出结果信息.
 func compressFile(input, output string) {
 	finalOutput := buildSingleOutputPath(input, output)
 
-	fmt.Printf("压缩: %s -> %s\n", input, finalOutput)
+	fmt.Printf(strs.CLICompressFromTo+"\n", input, finalOutput)
 
 	result := compress.Compress(input, finalOutput)
 	switch result.CompressResult {
 	case core.ResultOk:
 		outInfo, err := fileio.GetFileInfo(finalOutput)
 		if err == nil {
-			fmt.Printf("成功! 输出大小: %s\n", core.FormatFileSize(outInfo.Size()))
+			fmt.Printf(strs.CLICompressSuccessFmt+"\n", core.FormatFileSize(outInfo.Size()))
 		} else {
-			fmt.Println("成功!")
+			fmt.Println(strs.CLICompressSuccess)
 		}
 	case core.ResultOutOfLimit:
-		fmt.Printf("失败: %s\n", result.Message)
+		fmt.Printf(strs.CLICompressFailedFmt+"\n", result.Message)
 		os.Exit(1)
 	default:
-		fmt.Printf("失败: %s\n", result.Message)
+		fmt.Printf(strs.CLICompressFailedFmt+"\n", result.Message)
 		os.Exit(1)
 	}
 }
 
-// buildSingleOutputPath 根据输出方式为单文件构造最终输出路径。
-// cover 模式覆盖源文件并修改扩展名；dir 和 struct 模式使用模板生成文件名。
+// buildSingleOutputPath 根据输出方式为单文件构造最终输出路径.
+// cover 模式覆盖源文件并修改扩展名；dir 和 struct 模式使用模板生成文件名.
 func buildSingleOutputPath(input, output string) string {
 	set := setting.GetSetting()
 
@@ -311,7 +312,7 @@ func buildSingleOutputPath(input, output string) string {
 
 	case setting.OutputDirection:
 		if output == "" {
-			fmt.Println("错误: 输出到目录模式 (-ot dir) 必须指定输出路径 (-o / --output)")
+			fmt.Println(strs.CLIErrDirModeNeedOutput)
 			os.Exit(1)
 		}
 		core.OutputDirPath = output
@@ -319,7 +320,7 @@ func buildSingleOutputPath(input, output string) string {
 
 	case setting.OutputStructure:
 		if output == "" {
-			fmt.Println("错误: 保留目录结构模式 (-ot struct) 必须指定输出路径 (-o / --output)")
+			fmt.Println(strs.CLIErrStructModeNeedOutput)
 			os.Exit(1)
 		}
 		core.OutputDirPath = output
@@ -330,21 +331,21 @@ func buildSingleOutputPath(input, output string) string {
 	return ""
 }
 
-// compressDirectory 批量压缩目录中的所有图片文件。
-// 使用线程池并发压缩，通过 progressbar 在控制台显示进度，压缩结束后打印汇总结果。
+// compressDirectory 批量压缩目录中的所有图片文件.
+// 使用线程池并发压缩, 通过 progressbar 在控制台显示进度, 压缩结束后打印汇总结果.
 func compressDirectory(inputDir, outputDir string) {
 	files, err := fileio.CollectImageFiles(inputDir)
 	if err != nil {
-		fmt.Printf("错误: 无法读取目录: %v\n", err)
+		fmt.Printf(strs.CLIErrReadDir+"\n", err)
 		os.Exit(1)
 	}
 
 	if len(files) == 0 {
-		fmt.Println("没有找到图片文件")
+		fmt.Println(strs.CLIErrNoImageFiles)
 		os.Exit(1)
 	}
 
-	fmt.Printf("找到 %d 个图片文件\n", len(files))
+	fmt.Printf(strs.CLIFoundImageFiles+"\n", len(files))
 
 	set := setting.GetSetting()
 
@@ -354,7 +355,7 @@ func compressDirectory(inputDir, outputDir string) {
 		// 覆盖源文件, 无需输出目录
 	case setting.OutputDirection, setting.OutputStructure:
 		if outputDir == "" {
-			fmt.Println("错误: 当前输出方式必须指定输出路径 (-o / --output)")
+			fmt.Println(strs.CLIErrNeedOutputPath)
 			os.Exit(1)
 		}
 		core.OutputDirPath = outputDir
@@ -380,7 +381,7 @@ func compressDirectory(inputDir, outputDir string) {
 	startTime := time.Now()
 	if showProgress {
 		bar = progressbar.NewOptions(len(items),
-			progressbar.OptionSetDescription(fmt.Sprintf("压缩中 (共 %d 张)", len(items))),
+			progressbar.OptionSetDescription(fmt.Sprintf(strs.CLICompressing, len(items))),
 			progressbar.OptionSetWidth(40),
 			progressbar.OptionShowCount(),
 			progressbar.OptionShowIts(),
@@ -414,7 +415,7 @@ func compressDirectory(inputDir, outputDir string) {
 			}
 			eta := avgPerItem * time.Duration(remaining)
 			bar.Describe(fmt.Sprintf(
-				"压缩中 | 总数 %d | 已完成 %d | 剩余 %d | 用时 %s | 预计剩余 %s",
+				strs.CLIProgressFormat,
 				total, done, remaining, formatDuration(elapsed), formatDuration(eta),
 			))
 		},
@@ -425,12 +426,12 @@ func compressDirectory(inputDir, outputDir string) {
 			}
 			// 压缩完成后在控制台打印汇总结果
 			fmt.Println()
-			fmt.Println("========== 压缩结果 ==========")
-			fmt.Printf("总计:      %d 张\n", total)
-			fmt.Printf("成功:      %d 张\n", success)
-			fmt.Printf("失败/超限: %d 张\n", errCount)
-			fmt.Printf("总用时:    %s\n", formatDuration(time.Since(startTime)))
-			fmt.Println("==============================")
+			fmt.Println(strs.CLIResultHeader)
+			fmt.Printf(strs.CLIResultTotal+"\n", total)
+			fmt.Printf(strs.CLIResultSuccess+"\n", success)
+			fmt.Printf(strs.CLIResultFailed+"\n", errCount)
+			fmt.Printf(strs.CLIResultDuration+"\n", formatDuration(time.Since(startTime)))
+			fmt.Println(strs.CLIResultFooter)
 		},
 	)
 
@@ -439,13 +440,13 @@ func compressDirectory(inputDir, outputDir string) {
 	errCount := getErrorCount(pool)
 
 	if errCount == 0 {
-		fmt.Println("Success")
+		fmt.Println(strs.CLISuccess)
 	} else {
-		fmt.Println("Failed")
+		fmt.Println(strs.CLIFailed)
 	}
 }
 
-// formatDuration 将时间间隔格式化为 hh:mm:ss 或 mm:ss 字符串。
+// formatDuration 将时间间隔格式化为 hh:mm:ss 或 mm:ss 字符串.
 func formatDuration(d time.Duration) string {
 	if d < 0 {
 		d = 0
@@ -460,7 +461,7 @@ func formatDuration(d time.Duration) string {
 	return fmt.Sprintf("%02d:%02d", m, s)
 }
 
-// getErrorCount 从线程池获取当前错误数量，用于判断是否以非零状态码退出。
+// getErrorCount 从线程池获取当前错误数量, 用于判断是否以非零状态码退出.
 func getErrorCount(pool *server.ThreadPool) int {
 	_, errCount, _ := pool.GetStats()
 	return errCount

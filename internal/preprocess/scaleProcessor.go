@@ -8,29 +8,29 @@ import (
 	xdraw "golang.org/x/image/draw"
 )
 
-// ScaleProcessor 缩放预处理器，根据 mode 选择不同的缩放策略。
+// ScaleProcessor 缩放预处理器, 根据 mode 选择不同的缩放策略.
 type ScaleProcessor struct {
 	mode   setting.ScaleType
 	width  int
 	height int
 }
 
-// newScaleProcessor 创建缩放预处理器实例。
+// newScaleProcessor 创建缩放预处理器实例.
 func newScaleProcessor(mode setting.ScaleType, width, height int) *ScaleProcessor {
 	return &ScaleProcessor{mode: mode, width: width, height: height}
 }
 
-// Name 返回预处理器名称。
+// Name 返回预处理器名称.
 func (s *ScaleProcessor) Name() string {
 	return "ScaleProcessor"
 }
 
-// Enabled 判断是否需要执行缩放处理，仅当 mode 不为 ScaleNone 时启用。
+// Enabled 判断是否需要执行缩放处理, 仅当 mode 不为 ScaleNone 时启用.
 func (s *ScaleProcessor) Enabled() bool {
 	return s.mode != setting.ScaleNone
 }
 
-// Process 执行缩放处理，根据 mode 分发到具体的缩放算法。
+// Process 执行缩放处理, 根据 mode 分发到具体的缩放算法.
 func (s *ScaleProcessor) Process(img image.Image) image.Image {
 	if img == nil {
 		return img
@@ -59,7 +59,7 @@ func (s *ScaleProcessor) Process(img image.Image) image.Image {
 	}
 }
 
-// stretch 强制拉伸，无视宽高比直接缩放到指定尺寸。
+// stretch 强制拉伸, 无视宽高比直接缩放到指定尺寸.
 func (s *ScaleProcessor) stretch(srcW, srcH int, img image.Image) image.Image {
 	dstW, dstH := s.validSize(srcW, srcH)
 	if dstW == srcW && dstH == srcH {
@@ -68,7 +68,7 @@ func (s *ScaleProcessor) stretch(srcW, srcH int, img image.Image) image.Image {
 	return resize(img, dstW, dstH)
 }
 
-// fitOutside 等比外接（cover），缩放后宽和高均不小于目标尺寸。
+// fitOutside 等比外接（cover）, 缩放后宽和高均不小于目标尺寸.
 func (s *ScaleProcessor) fitOutside(srcW, srcH int, img image.Image) image.Image {
 	dstW, dstH := s.validSize(srcW, srcH)
 	ratio := math.Max(float64(dstW)/float64(srcW), float64(dstH)/float64(srcH))
@@ -80,7 +80,7 @@ func (s *ScaleProcessor) fitOutside(srcW, srcH int, img image.Image) image.Image
 	return resize(img, newW, newH)
 }
 
-// fitInside 等比内接（contain），缩放后宽和高均不超过目标尺寸。原图已小于目标时不放大。
+// fitInside 等比内接（contain）, 缩放后宽和高均不超过目标尺寸. 原图已小于目标时不放大.
 func (s *ScaleProcessor) fitInside(srcW, srcH int, img image.Image) image.Image {
 	dstW, dstH := s.validSize(srcW, srcH)
 	ratio := math.Min(float64(dstW)/float64(srcW), float64(dstH)/float64(srcH))
@@ -92,7 +92,7 @@ func (s *ScaleProcessor) fitInside(srcW, srcH int, img image.Image) image.Image 
 	return resize(img, newW, newH)
 }
 
-// fitOutsideCrop 等比外接后居中裁剪到目标尺寸。
+// fitOutsideCrop 等比外接后居中裁剪到目标尺寸.
 func (s *ScaleProcessor) fitOutsideCrop(srcW, srcH int, img image.Image) image.Image {
 	dstW, dstH := s.validSize(srcW, srcH)
 	ratio := math.Max(float64(dstW)/float64(srcW), float64(dstH)/float64(srcH))
@@ -114,7 +114,7 @@ func (s *ScaleProcessor) fitOutsideCrop(srcW, srcH int, img image.Image) image.I
 	return crop(scaled, cropRect)
 }
 
-// lockSide 等比锁定单边，宽或高必须有一个为 0，按另一条边等比缩放。
+// lockSide 等比锁定单边, 宽或高必须有一个为 0, 按另一条边等比缩放.
 func (s *ScaleProcessor) lockSide(srcW, srcH int, img image.Image) image.Image {
 	switch {
 	case s.width == 0 && s.height == 0:
@@ -132,7 +132,7 @@ func (s *ScaleProcessor) lockSide(srcW, srcH int, img image.Image) image.Image {
 	}
 }
 
-// validSize 校验目标宽高合法性，小于等于 0 时退化为源图尺寸。
+// validSize 校验目标宽高合法性, 小于等于 0 时退化为源图尺寸.
 func (s *ScaleProcessor) validSize(srcW, srcH int) (int, int) {
 	w := s.width
 	h := s.height
@@ -145,7 +145,7 @@ func (s *ScaleProcessor) validSize(srcW, srcH int) (int, int) {
 	return w, h
 }
 
-// resize 使用 CatmullRom 算法进行高质量缩放，输出 *image.NRGBA。
+// resize 使用 CatmullRom 算法进行高质量缩放, 输出 *image.NRGBA.
 func resize(src image.Image, dstW, dstH int) *image.NRGBA {
 	if dstW <= 0 || dstH <= 0 {
 		bounds := src.Bounds()
@@ -158,7 +158,7 @@ func resize(src image.Image, dstW, dstH int) *image.NRGBA {
 	return dst
 }
 
-// crop 按指定矩形区域裁剪图像，输出 *image.NRGBA。
+// crop 按指定矩形区域裁剪图像, 输出 *image.NRGBA.
 func crop(src image.Image, rect image.Rectangle) *image.NRGBA {
 	w, h := rect.Dx(), rect.Dy()
 	out := image.NewNRGBA(image.Rect(0, 0, w, h))

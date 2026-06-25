@@ -6,7 +6,7 @@ import (
 	"github.com/lxn/walk"
 )
 
-// Run 启动图形界面模式，创建主窗口并进入事件循环。
+// Run 启动图形界面模式, 创建主窗口并进入事件循环.
 func Run() {
 	appIcon, _ := walk.NewIconFromResourceId(2)
 	if appIcon == nil {

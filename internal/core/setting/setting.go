@@ -1,7 +1,7 @@
 package setting
 
-// Setting 表示程序的所有配置项。
-// 配置存储在全局变量 CurrentSetting 中，程序启动时初始化为默认值。
+// Setting 表示程序的所有配置项.
+// 配置存储在全局变量 CurrentSetting 中, 程序启动时初始化为默认值.
 type Setting struct {
 	// 压缩设置
 	CompressType CompressType // 压缩类型
@@ -41,7 +41,7 @@ var (
 	CurrentSetting Setting
 )
 
-// DefaultSetting 表示配置的默认值。
+// DefaultSetting 表示配置的默认值.
 var DefaultSetting = Setting{
 	CompressType:        CompressQuality,
 	Quality:             QualityLevelClear,
@@ -63,28 +63,28 @@ var DefaultSetting = Setting{
 	PngKeepIndexedAlpha: true,
 }
 
-// InitSetting 将 CurrentSetting 重置为默认值。
+// InitSetting 将 CurrentSetting 重置为默认值.
 func InitSetting() {
 	CurrentSetting = DefaultSetting
 }
 
-// GetSetting 返回当前配置的副本。
+// GetSetting 返回当前配置的副本.
 func GetSetting() Setting {
 	return CurrentSetting
 }
 
-// UpdateSetting 用指定配置更新 CurrentSetting。
+// UpdateSetting 用指定配置更新 CurrentSetting.
 func UpdateSetting(s Setting) {
 	CurrentSetting = s
 }
 
-// UpdateSettingWithOutputType 仅更新当前配置的输出方式字段。
+// UpdateSettingWithOutputType 仅更新当前配置的输出方式字段.
 func UpdateSettingWithOutputType(ot OutputType) {
 	CurrentSetting.OutputType = ot
 }
 
-// GetExtensionString 根据扩展名类型返回对应的文件后缀字符串。
-// 若传入未知类型，返回空字符串。
+// GetExtensionString 根据扩展名类型返回对应的文件后缀字符串.
+// 若传入未知类型, 返回空字符串.
 func GetExtensionString(ext ExtensionType) string {
 	switch ext {
 	case ExtJPEG:

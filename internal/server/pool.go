@@ -9,15 +9,15 @@ import (
 	"PicSizer/internal/fileio"
 )
 
-// ProgressCallback 定义压缩进度回调函数类型。
-// current 为成功数，errCount 为失败数，total 为总数。
+// ProgressCallback 定义压缩进度回调函数类型.
+// current 为成功数, errCount 为失败数, total 为总数.
 type ProgressCallback func(current, errCount, total int)
 
-// ItemChangedCallback 定义单项状态变更回调函数类型，用于通知 UI 刷新行颜色。
+// ItemChangedCallback 定义单项状态变更回调函数类型, 用于通知 UI 刷新行颜色.
 type ItemChangedCallback func(item *core.PicItem)
 
-// ThreadPool 管理一组 worker goroutine，实现并发图片压缩。
-// 支持 Start/Wait/Stop 生命周期控制，Start 非阻塞，Wait 阻塞等待完成。
+// ThreadPool 管理一组 worker goroutine, 实现并发图片压缩.
+// 支持 Start/Wait/Stop 生命周期控制, Start 非阻塞, Wait 阻塞等待完成.
 type ThreadPool struct {
 	totalNum      int
 	currentNum    int
@@ -32,7 +32,7 @@ type ThreadPool struct {
 	onComplete    func(success, errCount, total int)
 }
 
-// NewThreadPool 创建一个线程池实例。
+// NewThreadPool 创建一个线程池实例.
 func NewThreadPool(items []*core.PicItem, onProgress ProgressCallback, onItemChanged ItemChangedCallback, onComplete func(success, errCount, total int)) *ThreadPool {
 	return &ThreadPool{
 		items:         items,
@@ -42,9 +42,9 @@ func NewThreadPool(items []*core.PicItem, onProgress ProgressCallback, onItemCha
 	}
 }
 
-// Start 启动多线程压缩（非阻塞）。
-// 根据配置的 MaxThreads 创建对应数量的 worker goroutine。
-// 调用方需在 Start 之后调用 Wait 阻塞等待所有任务完成。
+// Start 启动多线程压缩（非阻塞）.
+// 根据配置的 MaxThreads 创建对应数量的 worker goroutine.
+// 调用方需在 Start 之后调用 Wait 阻塞等待所有任务完成.
 func (tp *ThreadPool) Start() {
 	setting := setting.GetSetting()
 
@@ -71,8 +71,8 @@ func (tp *ThreadPool) Start() {
 	}
 }
 
-// Wait 阻塞等待所有 worker 完成，然后触发 onComplete 回调。
-// 必须与 Start 配对使用。
+// Wait 阻塞等待所有 worker 完成, 然后触发 onComplete 回调.
+// 必须与 Start 配对使用.
 func (tp *ThreadPool) Wait() {
 	tp.wg.Wait()
 
@@ -86,8 +86,8 @@ func (tp *ThreadPool) Wait() {
 	}
 }
 
-// popTask 从任务队列中取出下一个待处理的项目。
-// 若队列为空、已处理完或触发了退出标志，返回 nil。
+// popTask 从任务队列中取出下一个待处理的项目.
+// 若队列为空、已处理完或触发了退出标志, 返回 nil.
 func (tp *ThreadPool) popTask() (item *core.PicItem, input string, output string) {
 	tp.mu.Lock()
 
@@ -111,13 +111,13 @@ func (tp *ThreadPool) popTask() (item *core.PicItem, input string, output string
 	return item, input, output
 }
 
-// worker 工作线程的循环体，持续从队列取出任务并执行压缩。
+// worker 工作线程的循环体, 持续从队列取出任务并执行压缩.
 func (tp *ThreadPool) worker() {
 	for {
 		// 从队列中取出任务
 		item, input, output := tp.popTask()
 		if item == nil {
-			// 队列为空或收到停止信号，线程退出
+			// 队列为空或收到停止信号, 线程退出
 			return
 		}
 
@@ -134,7 +134,7 @@ func (tp *ThreadPool) worker() {
 	}
 }
 
-// notifyItemChanged 安全地触发单项状态变更回调（用于 UI 行重绘）。
+// notifyItemChanged 安全地触发单项状态变更回调（用于 UI 行重绘）.
 func (tp *ThreadPool) notifyItemChanged(item *core.PicItem) {
 	tp.mu.Lock()
 	cb := tp.onItemChanged
@@ -145,7 +145,7 @@ func (tp *ThreadPool) notifyItemChanged(item *core.PicItem) {
 	}
 }
 
-// updateResult 更新压缩结果并通知进度回调。
+// updateResult 更新压缩结果并通知进度回调.
 func (tp *ThreadPool) updateResult(item *core.PicItem, result *core.PicResult, outputPath string) {
 	tp.mu.Lock()
 	if result.CompressResult == core.ResultOk {
@@ -177,8 +177,8 @@ func (tp *ThreadPool) updateResult(item *core.PicItem, result *core.PicResult, o
 	tp.notifyItemChanged(item)
 }
 
-// Stop 停止压缩流程。
-// 设置退出标志并清空任务队列，正在压缩的任务会自然完成，后续未启动的任务不再执行。
+// Stop 停止压缩流程.
+// 设置退出标志并清空任务队列, 正在压缩的任务会自然完成, 后续未启动的任务不再执行.
 func (tp *ThreadPool) Stop() {
 	tp.mu.Lock()
 	defer tp.mu.Unlock()
@@ -188,7 +188,7 @@ func (tp *ThreadPool) Stop() {
 	tp.items = nil
 }
 
-// GetStats 获取当前的实时统计数据。
+// GetStats 获取当前的实时统计数据.
 func (tp *ThreadPool) GetStats() (current, errCount, total int) {
 	tp.mu.Lock()
 	defer tp.mu.Unlock()

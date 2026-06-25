@@ -7,24 +7,25 @@ import (
 	"path/filepath"
 
 	"PicSizer/internal/core"
+	"PicSizer/internal/core/strings"
 	"PicSizer/internal/fileio"
 	"PicSizer/internal/fileio/codec"
 	"PicSizer/internal/preprocess"
 )
 
-// Compressor 定义统一的压缩器接口。
-// 各图片格式（JPEG/PNG/WebP）需实现该接口。
+// Compressor 定义统一的压缩器接口.
+// 各图片格式（JPEG/PNG/WebP）需实现该接口.
 type Compressor interface {
 	CompressByQuality(quality setting.QualityLevel) *core.PicResult
 	CompressByFileSize(limitBytes int64) *core.PicResult
 }
 
-// Compress 是统一压缩入口，根据输入路径和输出路径执行完整压缩流程。
-// 流程包括：加载图片 -> 预处理 -> 选择压缩器 -> 执行压缩。
+// Compress 是统一压缩入口, 根据输入路径和输出路径执行完整压缩流程.
+// 流程包括: 加载图片 -> 预处理 -> 选择压缩器 -> 执行压缩.
 func Compress(inputPath, outputPath string) *core.PicResult {
 	imgData, err := codec.LoadImage(inputPath)
 	if err != nil {
-		return core.GetErrorf("加载图片失败: %v", err)
+		return core.GetErrorf(strs.ErrLoadImageFailed, err)
 	}
 
 	imgData = preprocess.Process(imgData)
@@ -40,7 +41,7 @@ func Compress(inputPath, outputPath string) *core.PicResult {
 	case ".webp":
 		compressor = NewWebPCompressor(imgData, outputPath)
 	default:
-		return core.GetErrorf("\"%s\"格式不受支持", ext)
+		return core.GetErrorf(strs.ErrFormatNotSupport, ext)
 	}
 
 	set := setting.GetSetting()
@@ -61,7 +62,7 @@ func Compress(inputPath, outputPath string) *core.PicResult {
 		}
 		result = compressor.CompressByFileSize(limitBytes)
 	default:
-		return core.GetError(core.ErrNotImplemented)
+		return core.GetError(strs.ErrNotImplemented)
 	}
 
 	return result
@@ -72,33 +73,33 @@ type baseCompressor struct {
 	maxQuality int
 }
 
-// compressByQuality 是各格式压缩器共享的质量压缩通用实现。
-// encode 参数由具体格式压缩器提供，用于执行实际的编码操作。
+// compressByQuality 是各格式压缩器共享的质量压缩通用实现.
+// encode 参数由具体格式压缩器提供, 用于执行实际的编码操作.
 func (c *baseCompressor) compressByQuality(quality int, encode func(int) ([]byte, error), outputPath string) *core.PicResult {
 	if quality < 1 || quality > c.maxQuality {
-		return core.GetError(core.ErrArgOutOfRange)
+		return core.GetError(strs.ErrArgOutOfRange)
 	}
 
 	data, err := encode(quality)
 	if err != nil {
-		return core.GetErrorf("编码失败: %v", err)
+		return core.GetErrorf(strs.ErrEncodeFailed, err)
 	}
 
 	dir := filepath.Dir(outputPath)
 	if err := fileio.EnsureDir(dir); err != nil {
-		return core.GetErrorf("创建目录失败: %v", err)
+		return core.GetErrorf(strs.ErrMkdirFailed, err)
 	}
 
 	err = os.WriteFile(outputPath, data, 0644)
 	if err != nil {
-		return core.GetErrorf("写入文件失败: %v", err)
+		return core.GetErrorf(strs.ErrWriteFileFailed, err)
 	}
 
 	return core.GetOk()
 }
 
-// compressByFileSize 是各格式压缩器共享的二分查找大小压缩通用实现。
-// 通过二分查找在 1 到 maxQuality 之间寻找不超过 limitBytes 的最高质量。
+// compressByFileSize 是各格式压缩器共享的二分查找大小压缩通用实现.
+// 通过二分查找在 1 到 maxQuality 之间寻找不超过 limitBytes 的最高质量.
 func (c *baseCompressor) compressByFileSize(limitBytes int64, encode func(int) ([]byte, error), outputPath string) *core.PicResult {
 	left, right := 1, c.maxQuality
 
@@ -111,7 +112,7 @@ func (c *baseCompressor) compressByFileSize(limitBytes int64, encode func(int) (
 		if !ok {
 			data, err := encode(mid)
 			if err != nil {
-				return core.GetErrorf("编码失败: %v", err)
+				return core.GetErrorf(strs.ErrEncodeFailed, err)
 			}
 			size = int64(len(data))
 			sizeCache[mid] = size
@@ -127,7 +128,7 @@ func (c *baseCompressor) compressByFileSize(limitBytes int64, encode func(int) (
 	if _, ok := sizeCache[left]; !ok {
 		data, err := encode(left)
 		if err != nil {
-			return core.GetErrorf("编码失败: %v", err)
+			return core.GetErrorf(strs.ErrEncodeFailed, err)
 		}
 		sizeCache[left] = int64(len(data))
 	}
@@ -135,17 +136,17 @@ func (c *baseCompressor) compressByFileSize(limitBytes int64, encode func(int) (
 	if sizeCache[left] <= limitBytes || setting.GetSetting().AcceptExceed {
 		data, err := encode(left)
 		if err != nil {
-			return core.GetErrorf("编码失败: %v", err)
+			return core.GetErrorf(strs.ErrEncodeFailed, err)
 		}
 
 		dir := filepath.Dir(outputPath)
 		if err := fileio.EnsureDir(dir); err != nil {
-			return core.GetErrorf("创建目录失败: %v", err)
+			return core.GetErrorf(strs.ErrMkdirFailed, err)
 		}
 
 		err = os.WriteFile(outputPath, data, 0644)
 		if err != nil {
-			return core.GetErrorf("写入文件失败: %v", err)
+			return core.GetErrorf(strs.ErrWriteFileFailed, err)
 		}
 
 		return core.GetOk()

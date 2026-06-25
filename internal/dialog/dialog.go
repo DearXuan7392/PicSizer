@@ -6,7 +6,7 @@ import (
 	"syscall"
 	"unsafe"
 
-	"PicSizer/internal/core"
+	"PicSizer/internal/core/strings"
 )
 
 // Windows MessageBox 标志位常量
@@ -27,30 +27,30 @@ const dialogBaseFlags uint = MB_TASKMODAL | MB_TOPMOST | MB_SETFOREGROUND
 // 仅作为未显式指定父窗口时的回退, 大多数场景下调用方应显式传入
 var globalParentHwnd uintptr
 
-// SetParentHwnd 设置默认弹窗的父窗口句柄。
-// 通常在主窗口创建完成后调用一次。
+// SetParentHwnd 设置默认弹窗的父窗口句柄.
+// 通常在主窗口创建完成后调用一次.
 func SetParentHwnd(hwnd uintptr) {
 	atomic.StoreUintptr(&globalParentHwnd, hwnd)
 }
 
-// ShowInfo 显示信息弹窗，标题使用默认主窗口标题。
+// ShowInfo 显示信息弹窗, 标题使用默认主窗口标题.
 func ShowInfo(message string) {
-	showMessageBox(message, core.TitleMain, 0x40)
+	showMessageBox(message, strs.TitleMain, 0x40)
 }
 
-// ShowInfoWithTitle 显示信息弹窗，可指定自定义标题。
+// ShowInfoWithTitle 显示信息弹窗, 可指定自定义标题.
 func ShowInfoWithTitle(title, message string) {
 	if title == "" {
-		title = core.TitleMain
+		title = strs.TitleMain
 	}
 	showMessageBox(message, title, 0x40)
 }
 
-// ShowInfoWithTitleAndParent 显示信息弹窗，可同时指定自定义标题和父窗口句柄。
-// 父窗口为 0 时回退到 SetParentHwnd 设置的全局父窗口句柄。
+// ShowInfoWithTitleAndParent 显示信息弹窗, 可同时指定自定义标题和父窗口句柄.
+// 父窗口为 0 时回退到 SetParentHwnd 设置的全局父窗口句柄.
 func ShowInfoWithTitleAndParent(parentHwnd uintptr, title, message string) {
 	if title == "" {
-		title = core.TitleMain
+		title = strs.TitleMain
 	}
 	if parentHwnd == 0 {
 		parentHwnd = atomic.LoadUintptr(&globalParentHwnd)
@@ -58,54 +58,54 @@ func ShowInfoWithTitleAndParent(parentHwnd uintptr, title, message string) {
 	showMessageBoxWithParent(parentHwnd, message, title, 0x40)
 }
 
-// ShowWarning 显示警告弹窗。
+// ShowWarning 显示警告弹窗.
 func ShowWarning(message string) {
-	showMessageBox(message, core.TitleMain, 0x30)
+	showMessageBox(message, strs.TitleMain, 0x30)
 }
 
-// ShowError 显示错误弹窗。
+// ShowError 显示错误弹窗.
 func ShowError(message string) {
-	showMessageBox(message, "错误", 0x10)
+	showMessageBox(message, strs.DialogTitleError, 0x10)
 }
 
-// ShowErrorWithParent 显示错误弹窗，并指定父窗口句柄。
-// 父窗口为 0 时回退到 SetParentHwnd 设置的全局父窗口句柄。
+// ShowErrorWithParent 显示错误弹窗, 并指定父窗口句柄.
+// 父窗口为 0 时回退到 SetParentHwnd 设置的全局父窗口句柄.
 func ShowErrorWithParent(parentHwnd uintptr, message string) {
-	showMessageBoxWithParent(parentHwnd, message, "错误", 0x10)
+	showMessageBoxWithParent(parentHwnd, message, strs.DialogTitleError, 0x10)
 }
 
-// ShowWarningWithParent 显示警告弹窗，并指定父窗口句柄。
-// 父窗口为 0 时回退到 SetParentHwnd 设置的全局父窗口句柄。
+// ShowWarningWithParent 显示警告弹窗, 并指定父窗口句柄.
+// 父窗口为 0 时回退到 SetParentHwnd 设置的全局父窗口句柄.
 func ShowWarningWithParent(parentHwnd uintptr, message string) {
-	showMessageBoxWithParent(parentHwnd, message, core.TitleMain, 0x30)
+	showMessageBoxWithParent(parentHwnd, message, strs.TitleMain, 0x30)
 }
 
-// ShowConfirm 显示确认弹窗，返回用户是否点击"确定"。
+// ShowConfirm 显示确认弹窗, 返回用户是否点击"确定".
 func ShowConfirm(message string) bool {
-	ret := showMessageBox(message, core.TitleMain, 0x1|0x20)
+	ret := showMessageBox(message, strs.TitleMain, 0x1|0x20)
 	return ret == 1
 }
 
-// ShowConfirmWithParent 显示确认弹窗，并指定父窗口句柄，返回用户是否点击"确定"。
-// 父窗口为 0 时回退到 SetParentHwnd 设置的全局父窗口句柄。
+// ShowConfirmWithParent 显示确认弹窗, 并指定父窗口句柄, 返回用户是否点击"确定".
+// 父窗口为 0 时回退到 SetParentHwnd 设置的全局父窗口句柄.
 func ShowConfirmWithParent(parentHwnd uintptr, message string) bool {
-	ret := showMessageBoxWithParent(parentHwnd, message, core.TitleMain, 0x1|0x20)
+	ret := showMessageBoxWithParent(parentHwnd, message, strs.TitleMain, 0x1|0x20)
 	return ret == 1
 }
 
-// ShowCompressResult 显示压缩完成结果信息弹窗。
+// ShowCompressResult 显示压缩完成结果信息弹窗.
 func ShowCompressResult(total, success int) {
-	message := fmt.Sprintf(core.MsgCompressResult, total, success, total-success)
-	showMessageBox(message, core.MsgCompressFinish, 0x40)
+	message := fmt.Sprintf(strs.MsgCompressResult, total, success, total-success)
+	showMessageBox(message, strs.MsgCompressFinish, 0x40)
 }
 
-// showMessageBox 使用 SetParentHwnd 设置的默认父窗口句柄显示弹窗。
+// showMessageBox 使用 SetParentHwnd 设置的默认父窗口句柄显示弹窗.
 func showMessageBox(message, title string, flags uint) int {
 	return showMessageBoxWithParent(atomic.LoadUintptr(&globalParentHwnd), message, title, flags)
 }
 
-// showMessageBoxWithParent 调用 Windows MessageBoxW API 显示弹窗。
-// 叠加 MB_TASKMODAL | MB_TOPMOST | MB_SETFOREGROUND 标志位。
+// showMessageBoxWithParent 调用 Windows MessageBoxW API 显示弹窗.
+// 叠加 MB_TASKMODAL | MB_TOPMOST | MB_SETFOREGROUND 标志位.
 func showMessageBoxWithParent(hwnd uintptr, message, title string, flags uint) int {
 	user32 := syscall.NewLazyDLL("user32.dll")
 	msgBoxW := user32.NewProc("MessageBoxW")
