@@ -53,7 +53,7 @@ var DefaultSetting = Setting{
 	OutputFilename:      "{id}",
 	StartIndex:          1,
 	MaxThreads:          2,
-	TopMost:             true,
+	TopMost:             false,
 	AlphaHandle:         AlphaKeep,
 	Scale:               ScaleNone,
 	ScaleWidth:          1920,
