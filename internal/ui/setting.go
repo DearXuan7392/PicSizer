@@ -2,7 +2,7 @@ package ui
 
 import (
 	"PicSizer/internal/core/setting"
-	"PicSizer/internal/core/strings"
+	strs "PicSizer/internal/core/strings"
 	"PicSizer/internal/dialog"
 	"runtime"
 	"strconv"
@@ -46,7 +46,9 @@ type SettingForm struct {
 	// 高级设置
 	jpegQualityEdit      *walk.NumberEdit
 	webpQualityEdit      *walk.NumberEdit
+	pngPaletteAlgoCombo  *walk.ComboBox
 	pngKeepAlphaCheckBox *walk.CheckBox
+	pngDitheringCheckBox *walk.CheckBox
 
 	maxThreads int
 
@@ -403,7 +405,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 											declarative.HSpacer{},
 											declarative.NumberEdit{
 												AssignTo:    &sf.jpegQualityEdit,
-												Value:       float64(set.JpegQuality),
+												Value:       float64(set.AdvancedJpegQuality),
 												MinValue:    0,
 												MaxValue:    100,
 												Decimals:    0,
@@ -420,11 +422,31 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 								Title:  strs.TextAdvPNGSettings,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
+									sf.makeLabelWithTip(strs.TextPngPaletteAlgo, strs.TipPngPaletteAlgo),
+									declarative.Composite{
+										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
+										Children: []declarative.Widget{
+											declarative.HSpacer{},
+											declarative.ComboBox{
+												AssignTo: &sf.pngPaletteAlgoCombo,
+												Value:    paletteAlgoToString(set.AdvancedPngPaletteAlgo),
+												Editable: false,
+												Model:    []string{strs.TextPaletteMedianCut, strs.TextPaletteKMeans},
+												MinSize:  declarative.Size{Width: settingControlWidth, Height: 0},
+												MaxSize:  declarative.Size{Width: settingControlWidth, Height: 0},
+											},
+										},
+									},
 									declarative.Label{
 										Text:    " ",
 										MinSize: declarative.Size{Width: 150, Height: 0},
 									},
-									sf.makeCheckBoxWithTip(&sf.pngKeepAlphaCheckBox, strs.TextPngKeepIndexedAlpha, set.PngKeepIndexedAlpha, strs.TipPngKeepIndexedAlpha),
+									sf.makeCheckBoxWithTip(&sf.pngKeepAlphaCheckBox, strs.TextPngKeepIndexedAlpha, set.AdvancedPngKeepIndexedAlpha, strs.TipPngKeepIndexedAlpha),
+									declarative.Label{
+										Text:    " ",
+										MinSize: declarative.Size{Width: 150, Height: 0},
+									},
+									sf.makeCheckBoxWithTip(&sf.pngDitheringCheckBox, strs.TextPngEnableDithering, set.AdvancedPngEnableDithering, strs.TipPngEnableDithering),
 								},
 							},
 							// WebP 设置容器
@@ -439,7 +461,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 											declarative.HSpacer{},
 											declarative.NumberEdit{
 												AssignTo:    &sf.webpQualityEdit,
-												Value:       float64(set.WebPQuality),
+												Value:       float64(set.AdvancedWebPQuality),
 												MinValue:    0,
 												MaxValue:    100,
 												Decimals:    0,
@@ -719,6 +741,21 @@ func (sf *SettingForm) saveSetting() bool {
 		newPngKeepIndexedAlpha = sf.pngKeepAlphaCheckBox.Checked()
 	}
 
+	var newPngPaletteAlgo setting.PaletteAlgoType
+	if sf.pngPaletteAlgoCombo != nil {
+		switch sf.pngPaletteAlgoCombo.CurrentIndex() {
+		case 0:
+			newPngPaletteAlgo = setting.PaletteMedianCut
+		case 1:
+			newPngPaletteAlgo = setting.PaletteKMeans
+		}
+	}
+
+	var newPngEnableDithering bool
+	if sf.pngDitheringCheckBox != nil {
+		newPngEnableDithering = sf.pngDitheringCheckBox.Checked()
+	}
+
 	// ============================================================
 	// 第二阶段: 错误检测
 	// ============================================================
@@ -762,9 +799,11 @@ func (sf *SettingForm) saveSetting() bool {
 	set.Scale = newScale
 	set.ScaleWidth = newScaleWidth
 	set.ScaleHeight = newScaleHeight
-	set.JpegQuality = newJpegQuality
-	set.WebPQuality = newWebPQuality
-	set.PngKeepIndexedAlpha = newPngKeepIndexedAlpha
+	set.AdvancedJpegQuality = newJpegQuality
+	set.AdvancedWebPQuality = newWebPQuality
+	set.AdvancedPngKeepIndexedAlpha = newPngKeepIndexedAlpha
+	set.AdvancedPngPaletteAlgo = newPngPaletteAlgo
+	set.AdvancedPngEnableDithering = newPngEnableDithering
 
 	setting.UpdateSetting(set)
 
@@ -839,6 +878,18 @@ func scaleToString(t setting.ScaleType) string {
 		return strs.ScaleLockSideText
 	default:
 		return strs.ScaleNoneText
+	}
+}
+
+// 辅助函数: 调色盘生成算法转字符串
+func paletteAlgoToString(t setting.PaletteAlgoType) string {
+	switch t {
+	case setting.PaletteMedianCut:
+		return strs.TextPaletteMedianCut
+	case setting.PaletteKMeans:
+		return strs.TextPaletteKMeans
+	default:
+		return strs.TextPaletteMedianCut
 	}
 }
 

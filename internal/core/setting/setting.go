@@ -29,12 +29,17 @@ type Setting struct {
 	// 按画质压缩时, 各格式的精细化画质覆盖.
 	// 取值范围 0-100: 0 表示不启用 (按全局 QualityLevel 处理);
 	// 非 0 表示覆盖对应格式的画质值, 由压缩代码自行读取使用.
-	JpegQuality int // JPEG 精细化画质 (0-100, 0 表示未启用)
-	WebPQuality int // WebP 精细化画质 (0-100, 0 表示未启用)
+	AdvancedJpegQuality int // JPEG 精细化画质 (0-100, 0 表示未启用)
+	AdvancedWebPQuality int // WebP 精细化画质 (0-100, 0 表示未启用)
+
+	// PNG 有损压缩时, 调色盘生成算法.
+	AdvancedPngPaletteAlgo PaletteAlgoType
 
 	// PNG 有损压缩时, 是否在量化过程中为索引格式预留透明像素.
-	// 该字段由用户在高级设置中勾选, 由 PNG 压缩代码自行读取使用.
-	PngKeepIndexedAlpha bool
+	AdvancedPngKeepIndexedAlpha bool
+
+	// PNG 有损压缩时, 是否启用 Floyd-Steinberg 抖动算法.
+	AdvancedPngEnableDithering bool
 }
 
 var (
@@ -43,24 +48,26 @@ var (
 
 // DefaultSetting 表示配置的默认值.
 var DefaultSetting = Setting{
-	CompressType:        CompressQuality,
-	Quality:             QualityLevelClear,
-	LimitSize:           400,
-	SizeUnit:            UnitKB,
-	AcceptExceed:        false,
-	OutputType:          OutputDirection,
-	Extension:           ExtJPEG,
-	OutputFilename:      "{id}",
-	StartIndex:          1,
-	MaxThreads:          2,
-	TopMost:             false,
-	AlphaHandle:         AlphaKeep,
-	Scale:               ScaleNone,
-	ScaleWidth:          1920,
-	ScaleHeight:         1080,
-	JpegQuality:         0,
-	WebPQuality:         0,
-	PngKeepIndexedAlpha: true,
+	CompressType:                CompressQuality,
+	Quality:                     QualityLevelClear,
+	LimitSize:                   400,
+	SizeUnit:                    UnitKB,
+	AcceptExceed:                false,
+	OutputType:                  OutputDirection,
+	Extension:                   ExtJPEG,
+	OutputFilename:              "{name}",
+	StartIndex:                  1,
+	MaxThreads:                  2,
+	TopMost:                     false,
+	AlphaHandle:                 AlphaKeep,
+	Scale:                       ScaleNone,
+	ScaleWidth:                  1920,
+	ScaleHeight:                 1080,
+	AdvancedJpegQuality:         0,
+	AdvancedWebPQuality:         0,
+	AdvancedPngPaletteAlgo:      PaletteMedianCut,
+	AdvancedPngKeepIndexedAlpha: true,
+	AdvancedPngEnableDithering:  true,
 }
 
 // InitSetting 将 CurrentSetting 重置为默认值.

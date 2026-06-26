@@ -1,6 +1,7 @@
 package codec
 
 import (
+	"PicSizer/internal/core/setting"
 	"bytes"
 	"encoding/binary"
 	"errors"
@@ -12,10 +13,23 @@ import (
 	"PicSizer/internal/core/strings"
 
 	"github.com/ericpauley/go-quantize/quantize"
+	"github.com/soniakeys/quant/mean"
 )
 
 // pngCodec PNG 格式编解码器.
 type pngCodec struct{}
+
+var (
+	advancedPngPaletteAlgo      = setting.PaletteMedianCut
+	advancedPngKeepIndexedAlpha = true
+	advancedPngEnableDithering  = true
+)
+
+func (c *pngCodec) InitSetting(set setting.Setting) {
+	advancedPngPaletteAlgo = set.AdvancedPngPaletteAlgo
+	advancedPngKeepIndexedAlpha = set.AdvancedPngKeepIndexedAlpha
+	advancedPngEnableDithering = set.AdvancedPngEnableDithering
+}
 
 // Name 返回编解码器名称.
 func (c *pngCodec) Name() string { return "png" }
@@ -73,12 +87,11 @@ const (
 	QualityQuantize64  = 1 // 等级 1: go-quantize 中位切分 64 色 (体积最小)
 )
 
-func EncodePNG(img image.Image, qualityLevel int, keepIndexedAlpha bool) ([]byte, error) {
+func EncodePNG(img image.Image, qualityLevel int) ([]byte, error) {
 	var buf bytes.Buffer
 	bounds := img.Bounds()
 
 	// 初始化默认的 PNG 编码器
-	// 无损和有损量化均采用 BestCompression 极限压缩, 以在对应等级下获得最小体积
 	encoder := &png.Encoder{
 		CompressionLevel: png.BestCompression,
 	}
@@ -105,17 +118,48 @@ func EncodePNG(img image.Image, qualityLevel int, keepIndexedAlpha bool) ([]byte
 		return nil, errors.New(strs.CodecErrInvalidPNGQuality)
 	}
 
-	quantizer := quantize.MedianCutQuantizer{
-		Aggregation:    quantize.Mean,    // 使用均值聚合
-		AddTransparent: keepIndexedAlpha, // 自动保护和预留纯透明通道, 防止透明背景变色或产生毛边
-	}
+	var palette color.Palette
 
-	p := make([]color.Color, 0, maxColors)
-	palette := quantizer.Quantize(p, img)
+	// 保护高对比度图像
+	switch advancedPngPaletteAlgo {
+	case setting.PaletteMedianCut:
+		// 原始 go-quantize 中位切割算法
+		quantizer := quantize.MedianCutQuantizer{
+			Aggregation:    quantize.Mean,
+			AddTransparent: advancedPngKeepIndexedAlpha,
+		}
+		p := make([]color.Color, 0, maxColors)
+		palette = quantizer.Quantize(p, img)
+	case setting.PaletteKMeans:
+		targetColors := maxColors
+		if advancedPngKeepIndexedAlpha {
+			targetColors--
+			if targetColors <= 0 {
+				targetColors = 1
+			}
+		}
+
+		q := mean.Quantizer(targetColors)
+		palette = q.Quantize(make(color.Palette, 0, maxColors), img)
+
+		// 透明通道支持
+		if advancedPngKeepIndexedAlpha {
+			palette = append(palette, color.RGBA{0, 0, 0, 0})
+		}
+	default:
+		// 永远不可能达到这里
+		return nil, nil
+	}
 
 	palettedImg := image.NewPaletted(bounds, palette)
 
-	draw.FloydSteinberg.Draw(palettedImg, bounds, img, image.Point{})
+	if advancedPngEnableDithering {
+		// 启用抖动
+		draw.FloydSteinberg.Draw(palettedImg, bounds, img, image.Point{})
+	} else {
+		// 关闭抖动
+		draw.Draw(palettedImg, bounds, img, image.Point{}, draw.Src)
+	}
 
 	err := encoder.Encode(&buf, palettedImg)
 	if err != nil {

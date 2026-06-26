@@ -1,6 +1,7 @@
 package codec
 
 import (
+	"PicSizer/internal/core/setting"
 	"errors"
 	"image"
 	"os"
@@ -41,6 +42,12 @@ func init() {
 	RegisterCodec(&webpCodec{})
 	RegisterCodec(&pngCodec{})
 	RegisterCodec(&jpegCodec{})
+}
+
+func InitSetting(set setting.Setting) {
+	for _, codec := range registry {
+		codec.InitSetting(set)
+	}
 }
 
 // LoadImage 从指定路径加载图片文件, 自动检测格式并解码为 image.Image.

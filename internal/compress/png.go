@@ -27,7 +27,7 @@ func NewPNGCompressor(img image.Image, outputPath string) Compressor {
 // PNG 的 quality 参数映射到 1-4, 分别对应不同的量化等级.
 func (c *pngCompressor) CompressByQuality(quality setting.QualityLevel) *core.PicResult {
 	encode := func(q int) ([]byte, error) {
-		return codec.EncodePNG(c.img, q, setting.GetSetting().PngKeepIndexedAlpha)
+		return codec.EncodePNG(c.img, q)
 	}
 	return c.compressByQuality(qualityToInt(quality), encode, c.outputPath)
 }
@@ -35,7 +35,7 @@ func (c *pngCompressor) CompressByQuality(quality setting.QualityLevel) *core.Pi
 // CompressByFileSize 按指定的文件大小限制压缩 PNG 图像.
 func (c *pngCompressor) CompressByFileSize(limitKB int64) *core.PicResult {
 	encode := func(q int) ([]byte, error) {
-		return codec.EncodePNG(c.img, q, setting.GetSetting().PngKeepIndexedAlpha)
+		return codec.EncodePNG(c.img, q)
 	}
 	return c.compressByFileSize(limitKB, encode, c.outputPath)
 }

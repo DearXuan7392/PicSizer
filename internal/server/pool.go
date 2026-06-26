@@ -2,6 +2,7 @@ package server
 
 import (
 	"PicSizer/internal/core/setting"
+	"PicSizer/internal/fileio/codec"
 	"sync"
 
 	"PicSizer/internal/compress"
@@ -46,18 +47,19 @@ func NewThreadPool(items []*core.PicItem, onProgress ProgressCallback, onItemCha
 // 根据配置的 MaxThreads 创建对应数量的 worker goroutine.
 // 调用方需在 Start 之后调用 Wait 阻塞等待所有任务完成.
 func (tp *ThreadPool) Start() {
-	setting := setting.GetSetting()
+	set := setting.GetSetting()
+	codec.InitSetting(set)
 
 	tp.mu.Lock()
 	tp.totalNum = len(tp.items)
 	tp.currentNum = 0
 	tp.errorNum = 0
 	tp.indexOfPic = 0
-	tp.indexOfOut = setting.StartIndex
+	tp.indexOfOut = set.StartIndex
 	core.ExitFlag = false
 	tp.mu.Unlock()
 
-	threadCount := setting.MaxThreads
+	threadCount := set.MaxThreads
 	if threadCount <= 0 {
 		threadCount = 1
 	}
