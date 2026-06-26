@@ -7,14 +7,14 @@ import (
 	"path/filepath"
 
 	"PicSizer/internal/core"
-	"PicSizer/internal/core/strings"
+	strs "PicSizer/internal/core/strings"
 	"PicSizer/internal/fileio"
 	"PicSizer/internal/fileio/codec"
 	"PicSizer/internal/preprocess"
 )
 
 // Compressor 定义统一的压缩器接口.
-// 各图片格式（JPEG/PNG/WebP）需实现该接口.
+// 各图片格式 (JPEG/PNG/WebP) 需实现该接口.
 type Compressor interface {
 	CompressByQuality(quality settingLoader.QualityLevel) *core.PicResult
 	CompressByFileSize(limitBytes int64) *core.PicResult

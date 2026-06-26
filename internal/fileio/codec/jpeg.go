@@ -20,7 +20,7 @@ func (c *jpegCodec) InitSetting(set settingLoader.Setting) {
 // Name 返回编解码器名称.
 func (c *jpegCodec) Name() string { return "jpeg" }
 
-// IsType 通过 JPEG 文件头的 SOI 标记（FF D8 FF）判断数据是否为 JPEG 格式.
+// IsType 通过 JPEG 文件头的 SOI 标记 (FF D8 FF) 判断数据是否为 JPEG 格式.
 func (c *jpegCodec) IsType(data []byte) bool {
 	return len(data) >= 3 && data[0] == 0xFF && data[1] == 0xD8 && data[2] == 0xFF
 }

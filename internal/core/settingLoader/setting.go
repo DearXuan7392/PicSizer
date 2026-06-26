@@ -6,8 +6,8 @@ type Setting struct {
 	// 压缩设置
 	CompressType CompressType // 压缩类型
 	Quality      QualityLevel // 画质等级 (最佳/清晰/一般/较差), 内部映射到具体画质值
-	LimitSize    int64        // 限制大小（数值）
-	SizeUnit     SizeUnit     // 限制大小单位（KB/MB）
+	LimitSize    int64        // 限制大小 (数值)
+	SizeUnit     SizeUnit     // 限制大小单位 (KB/MB)
 	AcceptExceed bool         // 是否接受超出大小的图片
 
 	// 输出设置

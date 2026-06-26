@@ -21,3 +21,14 @@ var (
 	TextHelp  = "帮助"
 	TextAbout = "关于"
 )
+
+// 右键菜单 (图片列表)
+var (
+	CtxOpenOriginal       = "打开原图"
+	CtxShowInExplorer     = "在资源管理器显示原图"
+	CtxOpenCompressed     = "打开压缩后图片"
+	CtxShowCompInExplorer = "在资源管理器显示压缩后"
+	CtxViewError          = "查看错误信息"
+	CtxCopyError          = "复制错误信息"
+	CtxErrorDetailTitle   = "错误详情"
+)

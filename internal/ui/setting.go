@@ -602,7 +602,7 @@ func (sf *SettingForm) onScaleModeChange() {
 }
 
 // saveSetting 从 UI 控件读取所有值, 进行校验后写入全局配置.
-// 返回 false 表示用户取消保存（校验失败或用户取消了警告弹窗）.
+// 返回 false 表示用户取消保存 (校验失败或用户取消了警告弹窗).
 func (sf *SettingForm) saveSetting() bool {
 	set := settingLoader.GetSetting()
 	oldTopMost := set.TopMost

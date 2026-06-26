@@ -14,7 +14,7 @@ import (
 
 	"PicSizer/internal/compress"
 	"PicSizer/internal/core"
-	"PicSizer/internal/core/strings"
+	strs "PicSizer/internal/core/strings"
 	"PicSizer/internal/fileio"
 	"PicSizer/internal/server"
 
@@ -245,7 +245,7 @@ func applySettings() error {
 	return nil
 }
 
-// parseLimit 解析限制大小字符串, 支持 "200kb"、"2mb" 或纯数字（默认 KB）格式.
+// parseLimit 解析限制大小字符串, 支持 "200kb"、"2mb" 或纯数字 (默认 KB) 格式.
 func parseLimit(limitStr string) (int64, settingLoader.SizeUnit, error) {
 	s := strings.TrimSpace(limitStr)
 	s = strings.ToLower(s)

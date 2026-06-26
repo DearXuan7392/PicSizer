@@ -68,7 +68,7 @@ func (s *ScaleProcessor) stretch(srcW, srcH int, img image.Image) image.Image {
 	return resize(img, dstW, dstH)
 }
 
-// fitOutside 等比外接（cover）, 缩放后宽和高均不小于目标尺寸.
+// fitOutside 等比外接 (cover), 缩放后宽和高均不小于目标尺寸.
 func (s *ScaleProcessor) fitOutside(srcW, srcH int, img image.Image) image.Image {
 	dstW, dstH := s.validSize(srcW, srcH)
 	ratio := math.Max(float64(dstW)/float64(srcW), float64(dstH)/float64(srcH))
@@ -80,7 +80,7 @@ func (s *ScaleProcessor) fitOutside(srcW, srcH int, img image.Image) image.Image
 	return resize(img, newW, newH)
 }
 
-// fitInside 等比内接（contain）, 缩放后宽和高均不超过目标尺寸. 原图已小于目标时不放大.
+// fitInside 等比内接 (contain), 缩放后宽和高均不超过目标尺寸. 原图已小于目标时不放大.
 func (s *ScaleProcessor) fitInside(srcW, srcH int, img image.Image) image.Image {
 	dstW, dstH := s.validSize(srcW, srcH)
 	ratio := math.Min(float64(dstW)/float64(srcW), float64(dstH)/float64(srcH))

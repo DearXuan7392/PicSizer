@@ -24,13 +24,13 @@ func (a *AlphaProcessor) Name() string {
 }
 
 // Enabled 判断是否需要执行透明通道处理.
-// 保留模式（AlphaKeep）不做处理, 其他模式均视为启用.
+// 保留模式 (AlphaKeep) 不做处理, 其他模式均视为启用.
 func (a *AlphaProcessor) Enabled() bool {
 	return a.mode != settingLoader.AlphaKeep
 }
 
 // Process 执行透明通道处理.
-// 智能移除模式: 仅当透明通道冗余（无任何非255像素）时按白色背景合成移除通道.
+// 智能移除模式: 仅当透明通道冗余 (无任何非255像素) 时按白色背景合成移除通道.
 // 全部移除模式: 不做检查, 直接按白色背景合成.
 func (a *AlphaProcessor) Process(img image.Image) image.Image {
 	if img == nil {

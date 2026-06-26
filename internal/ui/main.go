@@ -50,7 +50,7 @@ func NewMainForm() *MainForm {
 // Run 创建并运行主窗口, 完成后进入 Windows 消息循环.
 func (mf *MainForm) Run(appIcon *walk.Icon) error {
 	mf.appIcon = appIcon
-	mf.picListView = NewPicListView()
+	mf.picListView = NewPicListView(appIcon)
 
 	var err error
 	err = declarative.MainWindow{
@@ -64,6 +64,7 @@ func (mf *MainForm) Run(appIcon *walk.Icon) error {
 			if mf.picListView.TableView != nil && mf.picListView.onSelChanged == nil {
 				mf.picListView.SetGridlines(true)
 				mf.picListView.onSelChanged = mf.updateSelectLabel
+				mf.picListView.updateContextMenuState()
 			}
 		},
 		MenuItems: []declarative.MenuItem{
@@ -448,7 +449,7 @@ func (mf *MainForm) onRemoveError() {
 	mf.updateSelectLabel()
 }
 
-// onRemoveAll 清空列表中的所有项目（需用户确认）.
+// onRemoveAll 清空列表中的所有项目 (需用户确认).
 func (mf *MainForm) onRemoveAll() {
 	if dialog.ShowConfirm(strs.MsgClearList) {
 		mf.picListView.GetModel().Clear()

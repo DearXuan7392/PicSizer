@@ -6,7 +6,7 @@ import (
 )
 
 // Preprocessor 定义预处理器接口.
-// 不同的预处理策略（透明度处理、缩放等）均可实现该接口,
+// 不同的预处理策略 (透明度处理、缩放等) 均可实现该接口,
 // 入口 Process 会按注册顺序依次执行所有已启用的处理器.
 type Preprocessor interface {
 	Name() string

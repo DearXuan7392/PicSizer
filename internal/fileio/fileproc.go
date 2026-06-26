@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// GetExtension 获取文件的后缀名（含点号, 小写字母）.
+// GetExtension 获取文件的后缀名 (含点号, 小写字母).
 func GetExtension(path string) string {
 	ext := filepath.Ext(path)
 	return strings.ToLower(ext)

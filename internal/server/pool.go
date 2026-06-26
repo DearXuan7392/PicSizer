@@ -43,7 +43,7 @@ func NewThreadPool(items []*core.PicItem, onProgress ProgressCallback, onItemCha
 	}
 }
 
-// Start 启动多线程压缩（非阻塞）.
+// Start 启动多线程压缩 (非阻塞).
 // 根据配置的 MaxThreads 创建对应数量的 worker goroutine.
 // 调用方需在 Start 之后调用 Wait 阻塞等待所有任务完成.
 func (tp *ThreadPool) Start() {
@@ -136,7 +136,7 @@ func (tp *ThreadPool) worker() {
 	}
 }
 
-// notifyItemChanged 安全地触发单项状态变更回调（用于 UI 行重绘）.
+// notifyItemChanged 安全地触发单项状态变更回调 (用于 UI 行重绘).
 func (tp *ThreadPool) notifyItemChanged(item *core.PicItem) {
 	tp.mu.Lock()
 	cb := tp.onItemChanged

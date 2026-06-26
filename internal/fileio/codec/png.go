@@ -10,7 +10,7 @@ import (
 	"image/draw"
 	"image/png"
 
-	"PicSizer/internal/core/strings"
+	strs "PicSizer/internal/core/strings"
 
 	"github.com/ericpauley/go-quantize/quantize"
 	"github.com/soniakeys/quant/mean"
@@ -34,7 +34,7 @@ func (c *pngCodec) InitSetting(set settingLoader.Setting) {
 // Name 返回编解码器名称.
 func (c *pngCodec) Name() string { return "png" }
 
-// IsType 通过 PNG 文件头签名（8 字节）判断数据是否为 PNG 格式.
+// IsType 通过 PNG 文件头签名 (8 字节) 判断数据是否为 PNG 格式.
 func (c *pngCodec) IsType(data []byte) bool {
 	pngSignature := []byte{0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A}
 	return len(data) >= 8 && bytes.Equal(data[:8], pngSignature)
@@ -52,7 +52,7 @@ func (c *pngCodec) Decode(data []byte) (image.Image, error) {
 }
 
 // normalizePNGImage 将 PNG 解码后的图像标准化为 32 位图像.
-// 64 位图像（RGBA64/NRGBA64）强制降为 32 位；
+// 64 位图像 (RGBA64/NRGBA64) 强制降为 32 位；
 // 调色板图像根据是否含透明通道转为 NRGBA 或 RGBA；
 // Gray 格式转为 RGBA.
 func normalizePNGImage(src image.Image, hasAlphaChannel bool) image.Image {

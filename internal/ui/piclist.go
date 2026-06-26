@@ -3,13 +3,15 @@ package ui
 import (
 	"PicSizer/internal/core/settingLoader"
 	"sort"
+	"syscall"
 
 	"PicSizer/internal/core"
-	"PicSizer/internal/core/strings"
+	strs "PicSizer/internal/core/strings"
 	"PicSizer/internal/fileio"
 
 	"github.com/lxn/walk"
 	"github.com/lxn/walk/declarative"
+	"github.com/lxn/win"
 )
 
 type dragSelectState struct {
@@ -243,15 +245,24 @@ type PicListView struct {
 	onSelChanged       func()
 	autoScrollDown     bool
 	maxAutoScrolledRow int
+	appIcon            *walk.Icon
+
+	// 右键菜单项 (用于动态启用/禁用)
+	actionOpenOrig     *walk.Action
+	actionShowExplorer *walk.Action
+	actionOpenComp     *walk.Action
+	actionShowComp     *walk.Action
+	actionViewError    *walk.Action
 }
 
 // NewPicListView 创建 PicListView 实例.
-func NewPicListView() *PicListView {
+func NewPicListView(appIcon *walk.Icon) *PicListView {
 	model := NewPicItemModel()
 	p := &PicListView{
 		model:              model,
 		dragState:          &dragSelectState{},
 		maxAutoScrolledRow: -1,
+		appIcon:            appIcon,
 	}
 	model.SetOnRowChanged(p.onModelRowChanged)
 	return p
@@ -303,7 +314,37 @@ func (p *PicListView) PicListViewWidget() declarative.TableView {
 		},
 		StyleCell:                p.model.StyleCell,
 		OnKeyDown:                p.onKeyDown,
+		OnMouseDown:              p.onMouseDown,
 		OnSelectedIndexesChanged: p.onSelectionChanged,
+		ContextMenuItems: []declarative.MenuItem{
+			declarative.Action{
+				AssignTo:    &p.actionOpenOrig,
+				Text:        strs.CtxOpenOriginal,
+				OnTriggered: p.onOpenOriginal,
+			},
+			declarative.Action{
+				AssignTo:    &p.actionShowExplorer,
+				Text:        strs.CtxShowInExplorer,
+				OnTriggered: p.onShowInExplorer,
+			},
+			declarative.Separator{},
+			declarative.Action{
+				AssignTo:    &p.actionOpenComp,
+				Text:        strs.CtxOpenCompressed,
+				OnTriggered: p.onOpenCompressed,
+			},
+			declarative.Action{
+				AssignTo:    &p.actionShowComp,
+				Text:        strs.CtxShowCompInExplorer,
+				OnTriggered: p.onShowCompInExplorer,
+			},
+			declarative.Separator{},
+			declarative.Action{
+				AssignTo:    &p.actionViewError,
+				Text:        strs.CtxViewError,
+				OnTriggered: p.onViewError,
+			},
+		},
 	}
 }
 
@@ -312,7 +353,7 @@ func (p *PicListView) GetModel() *PicItemModel {
 	return p.model
 }
 
-// AddPicturesFromPaths 从文件路径列表添加图片（自动去重）.
+// AddPicturesFromPaths 从文件路径列表添加图片 (自动去重).
 func (p *PicListView) AddPicturesFromPaths(paths []string) {
 	existingPaths := make(map[string]bool)
 	for _, item := range p.model.items {
@@ -353,6 +394,26 @@ func (p *PicListView) AddPicturesFromDirectory(dir string) {
 	p.AddPicturesFromPaths(files)
 }
 
+// onMouseDown 处理鼠标按下事件, 右键时尝试选中鼠标所在位置的项目.
+func (p *PicListView) onMouseDown(x, y int, button walk.MouseButton) {
+	if p.TableView == nil {
+		return
+	}
+	if button != walk.RightButton {
+		return
+	}
+
+	// 获取鼠标位置对应的行索引
+	row := p.TableView.IndexAt(x, y)
+	if row >= 0 && row < p.model.ItemCount() {
+		// 选中该行 (单选)
+		p.TableView.SetSelectedIndexes([]int{row})
+	} else {
+		// 点击空白区域, 清空选中
+		p.TableView.SetSelectedIndexes(nil)
+	}
+}
+
 // onKeyDown 处理键盘事件, 支持 Ctrl+A 全选和 Delete 删除.
 func (p *PicListView) onKeyDown(key walk.Key) {
 	if p.TableView == nil {
@@ -369,12 +430,216 @@ func (p *PicListView) onKeyDown(key walk.Key) {
 		if p.onSelChanged != nil {
 			p.onSelChanged()
 		}
+		// 删除后更新右键菜单状态
+		p.updateContextMenuState()
 	}
 }
 
-// onSelectionChanged 响应选择变化事件.
+// onSelectionChanged 响应选择变化事件, 同时更新右键菜单项的启用状态.
 func (p *PicListView) onSelectionChanged() {
 	if p.onSelChanged != nil {
 		p.onSelChanged()
 	}
+	p.updateContextMenuState()
+}
+
+// updateContextMenuState 根据当前选中项的属性, 更新右键菜单项的启用/禁用状态.
+func (p *PicListView) updateContextMenuState() {
+	if p.TableView == nil {
+		return
+	}
+	selected := p.model.GetSelectedItems(p.TableView)
+
+	// 未选中任何项目时, 所有菜单项禁用
+	hasSelection := len(selected) > 0
+	hasCompressed := false
+	hasError := false
+
+	for _, item := range selected {
+		if item.State == settingLoader.StateSuccess && item.OutputPath != "" {
+			hasCompressed = true
+		}
+		if item.State == settingLoader.StateError || item.State == settingLoader.StateOutOfLimit {
+			if item.Message != "" {
+				hasError = true
+			}
+		}
+	}
+
+	if p.actionOpenOrig != nil {
+		p.actionOpenOrig.SetEnabled(hasSelection)
+	}
+	if p.actionShowExplorer != nil {
+		p.actionShowExplorer.SetEnabled(hasSelection)
+	}
+	if p.actionOpenComp != nil {
+		p.actionOpenComp.SetEnabled(hasCompressed)
+	}
+	if p.actionShowComp != nil {
+		p.actionShowComp.SetEnabled(hasCompressed)
+	}
+	if p.actionViewError != nil {
+		p.actionViewError.SetEnabled(hasError)
+	}
+}
+
+// getSingleSelectedItem 获取当前选中的唯一项目, 如果未选中或选中多个则返回 nil.
+func (p *PicListView) getSingleSelectedItem() *core.PicItem {
+	if p.TableView == nil {
+		return nil
+	}
+	selected := p.model.GetSelectedItems(p.TableView)
+	if len(selected) != 1 {
+		return nil
+	}
+	return selected[0]
+}
+
+// shellOpen 调用 Windows ShellExecute 打开文件或执行操作.
+func shellOpen(operation, file string) {
+	verbPtr, _ := syscall.UTF16PtrFromString(operation)
+	filePtr, _ := syscall.UTF16PtrFromString(file)
+	win.ShellExecute(0, verbPtr, filePtr, nil, nil, win.SW_SHOWNORMAL)
+}
+
+// shellOpenFolderAndSelect 在资源管理器中打开文件夹并选中指定文件.
+func shellOpenFolderAndSelect(filePath string) {
+	// 使用 explorer /select 命令
+	verbPtr, _ := syscall.UTF16PtrFromString("open")
+	filePtr, _ := syscall.UTF16PtrFromString("explorer")
+	argsPtr, _ := syscall.UTF16PtrFromString("/select,\"" + filePath + "\"")
+	win.ShellExecute(0, verbPtr, filePtr, argsPtr, nil, win.SW_SHOWNORMAL)
+}
+
+// onOpenOriginal 右键菜单: 打开原图.
+func (p *PicListView) onOpenOriginal() {
+	item := p.getSingleSelectedItem()
+	if item == nil {
+		return
+	}
+	shellOpen("open", item.FullPath)
+}
+
+// onShowInExplorer 右键菜单: 在资源管理器中显示原图.
+func (p *PicListView) onShowInExplorer() {
+	item := p.getSingleSelectedItem()
+	if item == nil {
+		return
+	}
+	shellOpenFolderAndSelect(item.FullPath)
+}
+
+// onOpenCompressed 右键菜单: 打开压缩后图片.
+func (p *PicListView) onOpenCompressed() {
+	item := p.getSingleSelectedItem()
+	if item == nil || item.OutputPath == "" {
+		return
+	}
+	shellOpen("open", item.OutputPath)
+}
+
+// onShowCompInExplorer 右键菜单: 在资源管理器中显示压缩后图片.
+func (p *PicListView) onShowCompInExplorer() {
+	item := p.getSingleSelectedItem()
+	if item == nil || item.OutputPath == "" {
+		return
+	}
+	shellOpenFolderAndSelect(item.OutputPath)
+}
+
+// getParentForm 向上遍历控件树, 找到所属的 Form 窗口.
+func getParentForm(w walk.Widget) walk.Form {
+	for w != nil {
+		if f, ok := w.(walk.Form); ok {
+			return f
+		}
+		c := w.Parent()
+		if c == nil {
+			return nil
+		}
+		if f, ok := c.(walk.Form); ok {
+			return f
+		}
+		// 尝试将 Container 转为 Widget 继续向上遍历
+		if w2, ok := c.(walk.Widget); ok {
+			w = w2
+		} else {
+			return nil
+		}
+	}
+	return nil
+}
+
+// onViewError 右键菜单: 查看错误信息, 弹窗显示错误详情并支持复制.
+func (p *PicListView) onViewError() {
+	item := p.getSingleSelectedItem()
+	if item == nil || item.Message == "" {
+		return
+	}
+
+	parentForm := getParentForm(p.TableView)
+	if parentForm == nil {
+		return
+	}
+
+	// 创建自定义错误详情对话框
+	var dlg *walk.Dialog
+	var textEdit *walk.TextEdit
+	var btnCopy *walk.PushButton
+	var btnClose *walk.PushButton
+
+	err := declarative.Dialog{
+		AssignTo:  &dlg,
+		Title:     strs.CtxErrorDetailTitle,
+		Icon:      p.appIcon,
+		FixedSize: true,
+		MinSize:   declarative.Size{Width: 480, Height: 260},
+		MaxSize:   declarative.Size{Width: 480, Height: 260},
+		Size:      declarative.Size{Width: 480, Height: 260},
+		Layout:    declarative.VBox{Spacing: 10, Margins: declarative.Margins{Left: 15, Top: 15, Right: 15, Bottom: 15}},
+		Children: []declarative.Widget{
+			declarative.Label{
+				Text: item.FileName,
+				Font: declarative.Font{PointSize: 10, Bold: true},
+			},
+			declarative.TextEdit{
+				AssignTo: &textEdit,
+				Text:     item.Message,
+				ReadOnly: true,
+				MinSize:  declarative.Size{Width: 0, Height: 120},
+				MaxSize:  declarative.Size{Width: 0, Height: 120},
+			},
+			declarative.Composite{
+				Layout: declarative.HBox{Spacing: 10, MarginsZero: true},
+				Children: []declarative.Widget{
+					declarative.HSpacer{},
+					declarative.PushButton{
+						AssignTo: &btnCopy,
+						Text:     strs.CtxCopyError,
+						OnClicked: func() {
+							if err := walk.Clipboard().SetText(item.Message); err == nil {
+								btnCopy.SetText(strs.TextOK)
+							}
+						},
+					},
+					declarative.PushButton{
+						AssignTo: &btnClose,
+						Text:     strs.TextClose,
+						OnClicked: func() {
+							dlg.Close(0)
+						},
+					},
+				},
+			},
+		},
+	}.Create(parentForm)
+
+	if err != nil {
+		return
+	}
+
+	// 居中显示
+	CenterWindowToOwner(dlg, parentForm)
+	ApplyInheritedTopMost(dlg)
+	dlg.Show()
 }
