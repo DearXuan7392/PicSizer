@@ -1,7 +1,7 @@
 package ui
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	"PicSizer/internal/fileio"
 
 	"github.com/lxn/walk"
@@ -93,5 +93,5 @@ func ApplyTopMostToWindow(w walk.Form, topMost bool) {
 
 // ApplyInheritedTopMost 让指定窗体继承主窗体的 TopMost 状态.
 func ApplyInheritedTopMost(w walk.Form) {
-	ApplyTopMostToWindow(w, setting.GetSetting().TopMost)
+	ApplyTopMostToWindow(w, settingLoader.GetSetting().TopMost)
 }

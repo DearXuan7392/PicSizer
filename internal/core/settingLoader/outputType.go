@@ -1,4 +1,4 @@
-package setting
+package settingLoader
 
 // OutputType 表示输出方式的枚举类型。
 type OutputType int

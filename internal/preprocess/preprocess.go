@@ -1,7 +1,7 @@
 package preprocess
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	"image"
 )
 
@@ -16,7 +16,7 @@ type Preprocessor interface {
 
 // newPreprocessors 根据当前全局配置构造所有预处理器实例.
 // 顺序即为执行顺序, 新增预处理器只需在此函数内追加即可.
-func newPreprocessors(setting setting.Setting) []Preprocessor {
+func newPreprocessors(setting settingLoader.Setting) []Preprocessor {
 	return []Preprocessor{
 		newAlphaProcessor(setting.AlphaHandle),
 		newScaleProcessor(setting.Scale, setting.ScaleWidth, setting.ScaleHeight),
@@ -29,7 +29,7 @@ func Process(img image.Image) image.Image {
 	if img == nil {
 		return img
 	}
-	setting := setting.GetSetting()
+	setting := settingLoader.GetSetting()
 	processors := newPreprocessors(setting)
 	for _, p := range processors {
 		if p == nil || !p.Enabled() {

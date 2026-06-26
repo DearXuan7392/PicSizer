@@ -1,7 +1,7 @@
 package fileio
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	"path/filepath"
 	"strings"
 
@@ -12,22 +12,22 @@ import (
 // 支持三种输出方式: 目录模式、覆盖模式、保留结构模式.
 // 文件名模板支持 {id}（序号）和 {name}（原始文件名）两种变量.
 func GetOutputPath(input string, index int) string {
-	set := setting.GetSetting()
+	set := settingLoader.GetSetting()
 
 	switch set.OutputType {
-	case setting.OutputDirection:
+	case settingLoader.OutputDirection:
 		output := applyFilenameTemplate(set.OutputFilename, input, index)
 		output += getOutputExtension(input, set.Extension)
 		return filepath.Join(core.OutputDirPath, output)
 
-	case setting.OutputCoverOrigin:
-		if set.Extension != setting.ExtOrigin {
-			ext := setting.GetExtensionString(set.Extension)
+	case settingLoader.OutputCoverOrigin:
+		if set.Extension != settingLoader.ExtOrigin {
+			ext := settingLoader.GetExtensionString(set.Extension)
 			return input[:len(input)-len(filepath.Ext(input))] + ext
 		}
 		return input
 
-	case setting.OutputStructure:
+	case settingLoader.OutputStructure:
 		relativePath := strings.TrimPrefix(input, core.PublicDirPath+string(filepath.Separator))
 		relDir := filepath.Dir(relativePath)
 		fileName := applyFilenameTemplate(set.OutputFilename, input, index)
@@ -53,15 +53,15 @@ func applyFilenameTemplate(tpl, input string, index int) string {
 
 // getOutputExtension 根据输出格式类型返回文件后缀（含点号）.
 // ExtOrigin 时返回源文件后缀, 其他格式返回对应格式的固定后缀.
-func getOutputExtension(input string, extType setting.ExtensionType) string {
-	if extType == setting.ExtOrigin {
+func getOutputExtension(input string, extType settingLoader.ExtensionType) string {
+	if extType == settingLoader.ExtOrigin {
 		ext := filepath.Ext(input)
 		if ext == "" {
-			return setting.GetExtensionString(setting.ExtJPEG)
+			return settingLoader.GetExtensionString(settingLoader.ExtJPEG)
 		}
 		return ext
 	}
-	return setting.GetExtensionString(extType)
+	return settingLoader.GetExtensionString(extType)
 }
 
 // itoa 将整数转换为字符串的简单实现.

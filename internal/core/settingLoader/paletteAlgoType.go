@@ -1,4 +1,4 @@
-package setting
+package settingLoader
 
 // PaletteAlgoType 表示 PNG 调色盘生成算法的枚举类型.
 type PaletteAlgoType int

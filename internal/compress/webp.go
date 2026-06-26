@@ -1,7 +1,7 @@
 package compress
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	"image"
 
 	"PicSizer/internal/core"
@@ -26,8 +26,8 @@ func NewWebPCompressor(img image.Image, outputPath string) Compressor {
 
 // CompressByQuality 按指定的画质等级压缩 WebP 图像.
 // 若配置中设置了 WebP 精细化画质（WebPQuality 非0）, 则优先使用该精细画质值.
-func (c *webpCompressor) CompressByQuality(quality setting.QualityLevel) *core.PicResult {
-	qualityValue := setting.QualityLevelValue(quality)
+func (c *webpCompressor) CompressByQuality(quality settingLoader.QualityLevel) *core.PicResult {
+	qualityValue := settingLoader.QualityLevelValue(quality)
 	encode := func(q int) ([]byte, error) {
 		return codec.EncodeWebP(c.img, q)
 	}

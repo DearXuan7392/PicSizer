@@ -1,7 +1,7 @@
 package preprocess
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	"image"
 
 	"PicSizer/internal/utils"
@@ -10,11 +10,11 @@ import (
 // AlphaProcessor 透明通道预处理器.
 // 根据 mode 字段区分处理策略: 保留、智能移除或全部移除.
 type AlphaProcessor struct {
-	mode setting.AlphaHandleType
+	mode settingLoader.AlphaHandleType
 }
 
 // newAlphaProcessor 创建透明通道预处理器实例.
-func newAlphaProcessor(mode setting.AlphaHandleType) *AlphaProcessor {
+func newAlphaProcessor(mode settingLoader.AlphaHandleType) *AlphaProcessor {
 	return &AlphaProcessor{mode: mode}
 }
 
@@ -26,7 +26,7 @@ func (a *AlphaProcessor) Name() string {
 // Enabled 判断是否需要执行透明通道处理.
 // 保留模式（AlphaKeep）不做处理, 其他模式均视为启用.
 func (a *AlphaProcessor) Enabled() bool {
-	return a.mode != setting.AlphaKeep
+	return a.mode != settingLoader.AlphaKeep
 }
 
 // Process 执行透明通道处理.
@@ -47,12 +47,12 @@ func (a *AlphaProcessor) Process(img image.Image) image.Image {
 	bounds := img.Bounds()
 
 	switch a.mode {
-	case setting.AlphaSmartRemove:
+	case settingLoader.AlphaSmartRemove:
 		if utils.HasAlphaPixel(img) {
 			return img
 		}
 		return utils.CompositeOnWhite(img, bounds)
-	case setting.AlphaRemove:
+	case settingLoader.AlphaRemove:
 		return utils.CompositeOnWhite(img, bounds)
 	default:
 		return img

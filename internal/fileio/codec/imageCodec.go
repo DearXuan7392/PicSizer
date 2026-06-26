@@ -1,7 +1,7 @@
 package codec
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	"image"
 )
 
@@ -10,6 +10,6 @@ import (
 type ImageCodec interface {
 	Name() string
 	IsType(data []byte) bool
-	InitSetting(set setting.Setting)
+	InitSetting(set settingLoader.Setting)
 	Decode(data []byte) (image.Image, error)
 }

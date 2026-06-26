@@ -1,4 +1,4 @@
-package setting
+package settingLoader
 
 // Setting 表示程序的所有配置项.
 // 配置存储在全局变量 CurrentSetting 中, 程序启动时初始化为默认值.

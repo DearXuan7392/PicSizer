@@ -1,7 +1,7 @@
 package codec
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	"bytes"
 	"encoding/binary"
 	"errors"
@@ -20,12 +20,12 @@ import (
 type pngCodec struct{}
 
 var (
-	advancedPngPaletteAlgo      = setting.PaletteMedianCut
+	advancedPngPaletteAlgo      = settingLoader.PaletteMedianCut
 	advancedPngKeepIndexedAlpha = true
 	advancedPngEnableDithering  = true
 )
 
-func (c *pngCodec) InitSetting(set setting.Setting) {
+func (c *pngCodec) InitSetting(set settingLoader.Setting) {
 	advancedPngPaletteAlgo = set.AdvancedPngPaletteAlgo
 	advancedPngKeepIndexedAlpha = set.AdvancedPngKeepIndexedAlpha
 	advancedPngEnableDithering = set.AdvancedPngEnableDithering
@@ -122,7 +122,7 @@ func EncodePNG(img image.Image, qualityLevel int) ([]byte, error) {
 
 	// 保护高对比度图像
 	switch advancedPngPaletteAlgo {
-	case setting.PaletteMedianCut:
+	case settingLoader.PaletteMedianCut:
 		// 原始 go-quantize 中位切割算法
 		quantizer := quantize.MedianCutQuantizer{
 			Aggregation:    quantize.Mean,
@@ -130,7 +130,7 @@ func EncodePNG(img image.Image, qualityLevel int) ([]byte, error) {
 		}
 		p := make([]color.Color, 0, maxColors)
 		palette = quantizer.Quantize(p, img)
-	case setting.PaletteKMeans:
+	case settingLoader.PaletteKMeans:
 		targetColors := maxColors
 		if advancedPngKeepIndexedAlpha {
 			targetColors--

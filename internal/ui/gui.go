@@ -1,7 +1,7 @@
 package ui
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 
 	"github.com/lxn/walk"
 )
@@ -13,7 +13,7 @@ func Run() {
 		appIcon = walk.IconApplication()
 	}
 
-	setting.InitSetting()
+	settingLoader.InitSetting()
 
 	mainForm := NewMainForm()
 	if err := mainForm.Run(appIcon); err != nil {

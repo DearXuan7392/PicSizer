@@ -1,7 +1,7 @@
 package ui
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	strs "PicSizer/internal/core/strings"
 	"PicSizer/internal/dialog"
 	"runtime"
@@ -53,7 +53,7 @@ type SettingForm struct {
 	maxThreads int
 
 	onTopMostChanged    func(bool)
-	onOutputTypeChanged func(setting.OutputType)
+	onOutputTypeChanged func(settingLoader.OutputType)
 }
 
 // NewSettingForm 创建设置窗口实例.
@@ -67,18 +67,18 @@ func (sf *SettingForm) SetOnTopMostChanged(fn func(bool)) {
 }
 
 // SetOnOutputTypeChanged 设置输出方式变更回调, 由主窗口在创建后注入.
-func (sf *SettingForm) SetOnOutputTypeChanged(fn func(setting.OutputType)) {
+func (sf *SettingForm) SetOnOutputTypeChanged(fn func(settingLoader.OutputType)) {
 	sf.onOutputTypeChanged = fn
 }
 
 // Show 显示设置窗口. 窗口包含三个选项卡页面, 关闭后调用方可通过回调获取用户修改的设置.
 func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
-	set := setting.GetSetting()
+	set := settingLoader.GetSetting()
 	// 获取 CPU 逻辑核心数
 	sf.maxThreads = runtime.NumCPU()
 
 	// 判断当前压缩模式, 设置输入框禁用状态
-	isQualityMode := (set.CompressType == setting.CompressQuality)
+	isQualityMode := (set.CompressType == settingLoader.CompressQuality)
 
 	var err error
 	err = declarative.Dialog{
@@ -334,7 +334,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 												MinValue: 0,
 												MaxValue: 99999,
 												Decimals: 0,
-												Enabled:  set.Scale != setting.ScaleNone,
+												Enabled:  set.Scale != settingLoader.ScaleNone,
 												MinSize:  declarative.Size{Width: settingControlWidth, Height: 0},
 												MaxSize:  declarative.Size{Width: settingControlWidth, Height: 0},
 											},
@@ -351,7 +351,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 												MinValue: 0,
 												MaxValue: 99999,
 												Decimals: 0,
-												Enabled:  set.Scale != setting.ScaleNone,
+												Enabled:  set.Scale != settingLoader.ScaleNone,
 												MinSize:  declarative.Size{Width: settingControlWidth, Height: 0},
 												MaxSize:  declarative.Size{Width: settingControlWidth, Height: 0},
 											},
@@ -510,7 +510,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 	ApplyInheritedTopMost(sf.Dialog)
 	CenterWindow(sf.Dialog)
 
-	if set.CompressType == setting.CompressQuality {
+	if set.CompressType == settingLoader.CompressQuality {
 		sf.qualityRadio.SetChecked(true)
 	} else {
 		sf.fileSizeRadio.SetChecked(true)
@@ -604,7 +604,7 @@ func (sf *SettingForm) onScaleModeChange() {
 // saveSetting 从 UI 控件读取所有值, 进行校验后写入全局配置.
 // 返回 false 表示用户取消保存（校验失败或用户取消了警告弹窗）.
 func (sf *SettingForm) saveSetting() bool {
-	set := setting.GetSetting()
+	set := settingLoader.GetSetting()
 	oldTopMost := set.TopMost
 	oldOutputType := set.OutputType
 	var parentHwnd uintptr
@@ -615,33 +615,33 @@ func (sf *SettingForm) saveSetting() bool {
 	// ============================================================
 	// 第一阶段: 从 UI 控件读取所有值到本地变量
 	// ============================================================
-	var newCompressType setting.CompressType
+	var newCompressType settingLoader.CompressType
 	if sf.qualityRadio != nil {
 		if sf.qualityRadio.Checked() {
-			newCompressType = setting.CompressQuality
+			newCompressType = settingLoader.CompressQuality
 		} else {
-			newCompressType = setting.CompressFileSize
+			newCompressType = settingLoader.CompressFileSize
 		}
 	}
 
-	var newQuality setting.QualityLevel
+	var newQuality settingLoader.QualityLevel
 	if sf.qualitySlider != nil {
 		newQuality = sliderValueToQualityLevel(sf.qualitySlider.Value())
 	} else {
-		newQuality = setting.QualityLevelClear
+		newQuality = settingLoader.QualityLevelClear
 	}
 
 	var newLimitSize int64
 	if sf.limitSizeEdit != nil {
 		newLimitSize = int64(sf.limitSizeEdit.Value())
 	}
-	var newSizeUnit setting.SizeUnit
+	var newSizeUnit settingLoader.SizeUnit
 	if sf.sizeUnitCombo != nil {
 		switch sf.sizeUnitCombo.CurrentIndex() {
 		case 0:
-			newSizeUnit = setting.UnitKB
+			newSizeUnit = settingLoader.UnitKB
 		case 1:
-			newSizeUnit = setting.UnitMB
+			newSizeUnit = settingLoader.UnitMB
 		}
 	}
 	var newAcceptExceed bool
@@ -649,26 +649,26 @@ func (sf *SettingForm) saveSetting() bool {
 		newAcceptExceed = sf.acceptExceedCheck.Checked()
 	}
 
-	var newOutputType setting.OutputType
+	var newOutputType settingLoader.OutputType
 	switch sf.outputTypeCombo.CurrentIndex() {
 	case 0:
-		newOutputType = setting.OutputDirection
+		newOutputType = settingLoader.OutputDirection
 	case 1:
-		newOutputType = setting.OutputCoverOrigin
+		newOutputType = settingLoader.OutputCoverOrigin
 	case 2:
-		newOutputType = setting.OutputStructure
+		newOutputType = settingLoader.OutputStructure
 	}
 
-	var newExtension setting.ExtensionType
+	var newExtension settingLoader.ExtensionType
 	switch sf.extensionCombo.CurrentIndex() {
 	case 0:
-		newExtension = setting.ExtJPEG
+		newExtension = settingLoader.ExtJPEG
 	case 1:
-		newExtension = setting.ExtPNG
+		newExtension = settingLoader.ExtPNG
 	case 2:
-		newExtension = setting.ExtWebP
+		newExtension = settingLoader.ExtWebP
 	case 3:
-		newExtension = setting.ExtOrigin
+		newExtension = settingLoader.ExtOrigin
 	}
 
 	var newOutputFilename string
@@ -689,33 +689,33 @@ func (sf *SettingForm) saveSetting() bool {
 		newTopMost = sf.topMostCheck.Checked()
 	}
 
-	var newAlphaHandle setting.AlphaHandleType
+	var newAlphaHandle settingLoader.AlphaHandleType
 	if sf.alphaCombo != nil {
 		switch sf.alphaCombo.CurrentIndex() {
 		case 0:
-			newAlphaHandle = setting.AlphaKeep
+			newAlphaHandle = settingLoader.AlphaKeep
 		case 1:
-			newAlphaHandle = setting.AlphaSmartRemove
+			newAlphaHandle = settingLoader.AlphaSmartRemove
 		case 2:
-			newAlphaHandle = setting.AlphaRemove
+			newAlphaHandle = settingLoader.AlphaRemove
 		}
 	}
 
-	var newScale setting.ScaleType
+	var newScale settingLoader.ScaleType
 	if sf.scaleCombo != nil {
 		switch sf.scaleCombo.CurrentIndex() {
 		case 0:
-			newScale = setting.ScaleNone
+			newScale = settingLoader.ScaleNone
 		case 1:
-			newScale = setting.ScaleStretch
+			newScale = settingLoader.ScaleStretch
 		case 2:
-			newScale = setting.ScaleFitOutside
+			newScale = settingLoader.ScaleFitOutside
 		case 3:
-			newScale = setting.ScaleFitInside
+			newScale = settingLoader.ScaleFitInside
 		case 4:
-			newScale = setting.ScaleFitOutsideCrop
+			newScale = settingLoader.ScaleFitOutsideCrop
 		case 5:
-			newScale = setting.ScaleLockSide
+			newScale = settingLoader.ScaleLockSide
 		}
 	}
 	var newScaleWidth int
@@ -741,13 +741,13 @@ func (sf *SettingForm) saveSetting() bool {
 		newPngKeepIndexedAlpha = sf.pngKeepAlphaCheckBox.Checked()
 	}
 
-	var newPngPaletteAlgo setting.PaletteAlgoType
+	var newPngPaletteAlgo settingLoader.PaletteAlgoType
 	if sf.pngPaletteAlgoCombo != nil {
 		switch sf.pngPaletteAlgoCombo.CurrentIndex() {
 		case 0:
-			newPngPaletteAlgo = setting.PaletteMedianCut
+			newPngPaletteAlgo = settingLoader.PaletteMedianCut
 		case 1:
-			newPngPaletteAlgo = setting.PaletteKMeans
+			newPngPaletteAlgo = settingLoader.PaletteKMeans
 		}
 	}
 
@@ -759,7 +759,7 @@ func (sf *SettingForm) saveSetting() bool {
 	// ============================================================
 	// 第二阶段: 错误检测
 	// ============================================================
-	if newScale == setting.ScaleLockSide {
+	if newScale == settingLoader.ScaleLockSide {
 		w0 := newScaleWidth == 0
 		h0 := newScaleHeight == 0
 		if (w0 && h0) || (!w0 && !h0) {
@@ -771,7 +771,7 @@ func (sf *SettingForm) saveSetting() bool {
 	// ============================================================
 	// 第三阶段: 警告检测
 	// ============================================================
-	if newOutputType != setting.OutputCoverOrigin {
+	if newOutputType != settingLoader.OutputCoverOrigin {
 		hasID := strings.Contains(newOutputFilename, "{id}")
 		hasName := strings.Contains(newOutputFilename, "{name}")
 		if !hasID && !hasName {
@@ -782,7 +782,7 @@ func (sf *SettingForm) saveSetting() bool {
 	}
 
 	// ============================================================
-	// 第四阶段: 写入 setting 持久化
+	// 第四阶段: 写入 settingLoader 持久化
 	// ============================================================
 	set.CompressType = newCompressType
 	set.Quality = newQuality
@@ -805,7 +805,7 @@ func (sf *SettingForm) saveSetting() bool {
 	set.AdvancedPngPaletteAlgo = newPngPaletteAlgo
 	set.AdvancedPngEnableDithering = newPngEnableDithering
 
-	setting.UpdateSetting(set)
+	settingLoader.UpdateSetting(set)
 
 	if set.TopMost != oldTopMost && sf.onTopMostChanged != nil {
 		sf.onTopMostChanged(set.TopMost)
@@ -818,13 +818,13 @@ func (sf *SettingForm) saveSetting() bool {
 }
 
 // 辅助函数: 输出类型转字符串
-func outputTypeToString(t setting.OutputType) string {
+func outputTypeToString(t settingLoader.OutputType) string {
 	switch t {
-	case setting.OutputCoverOrigin:
+	case settingLoader.OutputCoverOrigin:
 		return strs.TextCoverOrigin
-	case setting.OutputDirection:
+	case settingLoader.OutputDirection:
 		return strs.TextOutputDir
-	case setting.OutputStructure:
+	case settingLoader.OutputStructure:
 		return strs.TextOutputStruct
 	default:
 		return strs.TextOutputDir
@@ -832,15 +832,15 @@ func outputTypeToString(t setting.OutputType) string {
 }
 
 // 辅助函数: 扩展名类型转字符串
-func extensionToString(t setting.ExtensionType) string {
+func extensionToString(t settingLoader.ExtensionType) string {
 	switch t {
-	case setting.ExtJPEG:
+	case settingLoader.ExtJPEG:
 		return strs.TextFormatJPEG
-	case setting.ExtPNG:
+	case settingLoader.ExtPNG:
 		return strs.TextFormatPNG
-	case setting.ExtWebP:
+	case settingLoader.ExtWebP:
 		return strs.TextFormatWebP
-	case setting.ExtOrigin:
+	case settingLoader.ExtOrigin:
 		return strs.TextFormatOrigin
 	default:
 		return strs.TextFormatJPEG
@@ -848,13 +848,13 @@ func extensionToString(t setting.ExtensionType) string {
 }
 
 // 辅助函数: 透明通道处理方式转字符串
-func alphaHandleToString(t setting.AlphaHandleType) string {
+func alphaHandleToString(t settingLoader.AlphaHandleType) string {
 	switch t {
-	case setting.AlphaKeep:
+	case settingLoader.AlphaKeep:
 		return strs.AlphaKeepText
-	case setting.AlphaSmartRemove:
+	case settingLoader.AlphaSmartRemove:
 		return strs.AlphaSmartRemoveText
-	case setting.AlphaRemove:
+	case settingLoader.AlphaRemove:
 		return strs.AlphaRemoveText
 	default:
 		return strs.AlphaKeepText
@@ -862,19 +862,19 @@ func alphaHandleToString(t setting.AlphaHandleType) string {
 }
 
 // 辅助函数: 缩放方式转字符串
-func scaleToString(t setting.ScaleType) string {
+func scaleToString(t settingLoader.ScaleType) string {
 	switch t {
-	case setting.ScaleNone:
+	case settingLoader.ScaleNone:
 		return strs.ScaleNoneText
-	case setting.ScaleStretch:
+	case settingLoader.ScaleStretch:
 		return strs.ScaleStretchText
-	case setting.ScaleFitOutside:
+	case settingLoader.ScaleFitOutside:
 		return strs.ScaleFitOutText
-	case setting.ScaleFitInside:
+	case settingLoader.ScaleFitInside:
 		return strs.ScaleFitInText
-	case setting.ScaleFitOutsideCrop:
+	case settingLoader.ScaleFitOutsideCrop:
 		return strs.ScaleFitOutCrop
-	case setting.ScaleLockSide:
+	case settingLoader.ScaleLockSide:
 		return strs.ScaleLockSideText
 	default:
 		return strs.ScaleNoneText
@@ -882,11 +882,11 @@ func scaleToString(t setting.ScaleType) string {
 }
 
 // 辅助函数: 调色盘生成算法转字符串
-func paletteAlgoToString(t setting.PaletteAlgoType) string {
+func paletteAlgoToString(t settingLoader.PaletteAlgoType) string {
 	switch t {
-	case setting.PaletteMedianCut:
+	case settingLoader.PaletteMedianCut:
 		return strs.TextPaletteMedianCut
-	case setting.PaletteKMeans:
+	case settingLoader.PaletteKMeans:
 		return strs.TextPaletteKMeans
 	default:
 		return strs.TextPaletteMedianCut
@@ -900,11 +900,11 @@ func atoi(s string) int {
 }
 
 // 辅助函数: 文件大小单位转字符串
-func sizeUnitToString(unit setting.SizeUnit) string {
+func sizeUnitToString(unit settingLoader.SizeUnit) string {
 	switch unit {
-	case setting.UnitKB:
+	case settingLoader.UnitKB:
 		return strs.TextUnitKB
-	case setting.UnitMB:
+	case settingLoader.UnitMB:
 		return strs.TextUnitMB
 	default:
 		return strs.TextUnitKB
@@ -912,15 +912,15 @@ func sizeUnitToString(unit setting.SizeUnit) string {
 }
 
 // 辅助函数: 画质等级转字符串
-func qualityLevelToString(level setting.QualityLevel) string {
+func qualityLevelToString(level settingLoader.QualityLevel) string {
 	switch level {
-	case setting.QualityLevelBest:
+	case settingLoader.QualityLevelBest:
 		return strs.TextQualityBest
-	case setting.QualityLevelClear:
+	case settingLoader.QualityLevelClear:
 		return strs.TextQualityClear
-	case setting.QualityLevelNormal:
+	case settingLoader.QualityLevelNormal:
 		return strs.TextQualityNormal
-	case setting.QualityLevelPoor:
+	case settingLoader.QualityLevelPoor:
 		return strs.TextQualityPoor
 	default:
 		return strs.TextQualityClear
@@ -928,15 +928,15 @@ func qualityLevelToString(level setting.QualityLevel) string {
 }
 
 // 辅助函数: 将 core.QualityLevel 转换为滑块刻度值 (0-3)
-func qualityLevelToSliderValue(level setting.QualityLevel) int {
+func qualityLevelToSliderValue(level settingLoader.QualityLevel) int {
 	switch level {
-	case setting.QualityLevelPoor:
+	case settingLoader.QualityLevelPoor:
 		return 0
-	case setting.QualityLevelNormal:
+	case settingLoader.QualityLevelNormal:
 		return 1
-	case setting.QualityLevelClear:
+	case settingLoader.QualityLevelClear:
 		return 2
-	case setting.QualityLevelBest:
+	case settingLoader.QualityLevelBest:
 		return 3
 	default:
 		return 2
@@ -944,18 +944,18 @@ func qualityLevelToSliderValue(level setting.QualityLevel) int {
 }
 
 // 辅助函数: 将滑块刻度值 (0-3) 转换为 core.QualityLevel
-func sliderValueToQualityLevel(val int) setting.QualityLevel {
+func sliderValueToQualityLevel(val int) settingLoader.QualityLevel {
 	switch val {
 	case 0:
-		return setting.QualityLevelPoor
+		return settingLoader.QualityLevelPoor
 	case 1:
-		return setting.QualityLevelNormal
+		return settingLoader.QualityLevelNormal
 	case 2:
-		return setting.QualityLevelClear
+		return settingLoader.QualityLevelClear
 	case 3:
-		return setting.QualityLevelBest
+		return settingLoader.QualityLevelBest
 	default:
-		return setting.QualityLevelClear
+		return settingLoader.QualityLevelClear
 	}
 }
 

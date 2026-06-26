@@ -1,7 +1,7 @@
 package codec
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	"bytes"
 	"image"
 	"image/jpeg"
@@ -13,7 +13,7 @@ var (
 	advancedJpegQuality = 0
 )
 
-func (c *jpegCodec) InitSetting(set setting.Setting) {
+func (c *jpegCodec) InitSetting(set settingLoader.Setting) {
 	advancedJpegQuality = set.AdvancedJpegQuality
 }
 

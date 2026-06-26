@@ -2,7 +2,7 @@ package ui
 
 import (
 	"PicSizer/internal/core"
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	strs "PicSizer/internal/core/strings"
 	"PicSizer/internal/dialog"
 	"PicSizer/internal/fileio"
@@ -191,7 +191,7 @@ func (mf *MainForm) Run(appIcon *walk.Icon) error {
 	dialog.SetParentHwnd(uintptr(mf.MainWindow.Handle()))
 	CenterWindow(mf.MainWindow)
 
-	setting := setting.GetSetting()
+	setting := settingLoader.GetSetting()
 	mf.applyRadioToOutputType(setting.OutputType)
 	mf.onRadioChange()
 
@@ -278,11 +278,11 @@ func (mf *MainForm) onBrowseDir() {
 func (mf *MainForm) onRadioChange() {
 	if mf.coverRadio != nil && mf.dirRadio != nil && mf.structRadio != nil {
 		if mf.coverRadio.Checked() {
-			setting.UpdateSettingWithOutputType(setting.OutputCoverOrigin)
+			settingLoader.UpdateSettingWithOutputType(settingLoader.OutputCoverOrigin)
 		} else if mf.dirRadio.Checked() {
-			setting.UpdateSettingWithOutputType(setting.OutputDirection)
+			settingLoader.UpdateSettingWithOutputType(settingLoader.OutputDirection)
 		} else if mf.structRadio.Checked() {
-			setting.UpdateSettingWithOutputType(setting.OutputStructure)
+			settingLoader.UpdateSettingWithOutputType(settingLoader.OutputStructure)
 		}
 	}
 	enabled := !mf.coverRadio.Checked()
@@ -291,7 +291,7 @@ func (mf *MainForm) onRadioChange() {
 }
 
 // applyRadioToOutputType 根据 OutputType 同步主窗口的无线电按钮选中状态.
-func (mf *MainForm) applyRadioToOutputType(ot setting.OutputType) {
+func (mf *MainForm) applyRadioToOutputType(ot settingLoader.OutputType) {
 	if mf.coverRadio == nil || mf.dirRadio == nil || mf.structRadio == nil {
 		return
 	}
@@ -299,17 +299,17 @@ func (mf *MainForm) applyRadioToOutputType(ot setting.OutputType) {
 	mf.coverRadio.SetChecked(false)
 	mf.structRadio.SetChecked(false)
 	switch ot {
-	case setting.OutputCoverOrigin:
+	case settingLoader.OutputCoverOrigin:
 		mf.coverRadio.SetChecked(true)
-	case setting.OutputDirection:
+	case settingLoader.OutputDirection:
 		mf.dirRadio.SetChecked(true)
-	case setting.OutputStructure:
+	case settingLoader.OutputStructure:
 		mf.structRadio.SetChecked(true)
 	}
 }
 
 // onOutputTypeFromSetting 接收设置窗口的输出方式变更通知, 同步主窗口的单选按钮状态.
-func (mf *MainForm) onOutputTypeFromSetting(ot setting.OutputType) {
+func (mf *MainForm) onOutputTypeFromSetting(ot settingLoader.OutputType) {
 	mf.applyRadioToOutputType(ot)
 	mf.onRadioChange()
 }
@@ -331,7 +331,7 @@ func (mf *MainForm) onStartCompress() {
 		return
 	}
 
-	alreadyDone := mf.picListView.GetModel().CountByState(setting.StateSuccess)
+	alreadyDone := mf.picListView.GetModel().CountByState(settingLoader.StateSuccess)
 	if alreadyDone > 0 {
 		if !dialog.ShowConfirm(fmt.Sprintf(strs.WarnOverwriteDoneFmt, alreadyDone)) {
 			return
@@ -420,7 +420,7 @@ func (mf *MainForm) onStartCompress() {
 // onSetting 打开设置窗口, 关闭后重新应用置顶状态.
 func (mf *MainForm) onSetting() {
 	mf.settingForm.Show(mf.MainWindow, mf.appIcon)
-	setting := setting.GetSetting()
+	setting := settingLoader.GetSetting()
 	mf.applyTopMost(setting.TopMost)
 }
 
@@ -437,14 +437,14 @@ func (mf *MainForm) onRemoveSelected() {
 
 // onRemoveDone 移除列表中所有已成功完成的项目.
 func (mf *MainForm) onRemoveDone() {
-	mf.picListView.GetModel().RemoveByState(setting.StateSuccess)
+	mf.picListView.GetModel().RemoveByState(settingLoader.StateSuccess)
 	mf.updateSelectLabel()
 }
 
 // onRemoveError 移除列表中所有错误和超出限制的项目.
 func (mf *MainForm) onRemoveError() {
-	mf.picListView.GetModel().RemoveByState(setting.StateError)
-	mf.picListView.GetModel().RemoveByState(setting.StateOutOfLimit)
+	mf.picListView.GetModel().RemoveByState(settingLoader.StateError)
+	mf.picListView.GetModel().RemoveByState(settingLoader.StateOutOfLimit)
 	mf.updateSelectLabel()
 }
 

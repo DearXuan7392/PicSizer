@@ -1,7 +1,7 @@
 package server
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	"PicSizer/internal/fileio/codec"
 	"sync"
 
@@ -47,7 +47,7 @@ func NewThreadPool(items []*core.PicItem, onProgress ProgressCallback, onItemCha
 // 根据配置的 MaxThreads 创建对应数量的 worker goroutine.
 // 调用方需在 Start 之后调用 Wait 阻塞等待所有任务完成.
 func (tp *ThreadPool) Start() {
-	set := setting.GetSetting()
+	set := settingLoader.GetSetting()
 	codec.InitSetting(set)
 
 	tp.mu.Lock()
@@ -124,7 +124,7 @@ func (tp *ThreadPool) worker() {
 		}
 
 		// 更新状态为压缩中
-		item.State = setting.StateCompressing
+		item.State = settingLoader.StateCompressing
 		// 通知 UI 刷新颜色 (压缩中 → 橙色)
 		tp.notifyItemChanged(item)
 
@@ -151,7 +151,7 @@ func (tp *ThreadPool) notifyItemChanged(item *core.PicItem) {
 func (tp *ThreadPool) updateResult(item *core.PicItem, result *core.PicResult, outputPath string) {
 	tp.mu.Lock()
 	if result.CompressResult == core.ResultOk {
-		item.State = setting.StateSuccess
+		item.State = settingLoader.StateSuccess
 		item.OutputPath = outputPath
 		// 获取输出文件大小
 		if info, err := fileio.GetFileInfo(outputPath); err == nil {
@@ -159,11 +159,11 @@ func (tp *ThreadPool) updateResult(item *core.PicItem, result *core.PicResult, o
 		}
 		tp.currentNum++
 	} else if result.CompressResult == core.ResultOutOfLimit {
-		item.State = setting.StateOutOfLimit
+		item.State = settingLoader.StateOutOfLimit
 		item.Message = result.Message
 		tp.errorNum++
 	} else {
-		item.State = setting.StateError
+		item.State = settingLoader.StateError
 		item.Message = result.Message
 		tp.errorNum++
 	}

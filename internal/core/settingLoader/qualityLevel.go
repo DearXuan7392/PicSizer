@@ -1,4 +1,4 @@
-package setting
+package settingLoader
 
 import (
 	"fmt"

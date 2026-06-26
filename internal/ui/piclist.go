@@ -1,7 +1,7 @@
 package ui
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	"sort"
 
 	"PicSizer/internal/core"
@@ -77,13 +77,13 @@ func (m *PicItemModel) StyleCell(style *walk.CellStyle) {
 	}
 	item := m.items[row]
 	switch item.State {
-	case setting.StateCompressing:
+	case settingLoader.StateCompressing:
 		// 橙色, 表示正在压缩
 		style.TextColor = walk.RGB(255, 140, 0)
-	case setting.StateSuccess:
+	case settingLoader.StateSuccess:
 		// 绿色, 表示压缩成功
 		style.TextColor = walk.RGB(34, 139, 34)
-	case setting.StateOutOfLimit, setting.StateError:
+	case settingLoader.StateOutOfLimit, settingLoader.StateError:
 		// 红色, 表示压缩失败
 		style.TextColor = walk.RGB(200, 0, 0)
 	}
@@ -130,7 +130,7 @@ func (m *PicItemModel) RemoveSelected(tv *walk.TableView) {
 }
 
 // RemoveByState 移除列表中指定状态的所有项目.
-func (m *PicItemModel) RemoveByState(state setting.PicItemState) {
+func (m *PicItemModel) RemoveByState(state settingLoader.PicItemState) {
 	var kept []*core.PicItem
 	for _, item := range m.items {
 		if item.State != state {
@@ -202,12 +202,12 @@ func (m *PicItemModel) ResetAllToWaiting() {
 		item.NewSize = 0
 		item.Message = ""
 		item.OutputPath = ""
-		item.State = setting.StateWaiting
+		item.State = settingLoader.StateWaiting
 	}
 }
 
 // CountByState 统计列表中指定状态的项目数量.
-func (m *PicItemModel) CountByState(state setting.PicItemState) int {
+func (m *PicItemModel) CountByState(state settingLoader.PicItemState) int {
 	count := 0
 	for _, item := range m.items {
 		if item != nil && item.State == state {
@@ -217,17 +217,17 @@ func (m *PicItemModel) CountByState(state setting.PicItemState) int {
 	return count
 }
 
-func itemStateToString(state setting.PicItemState) string {
+func itemStateToString(state settingLoader.PicItemState) string {
 	switch state {
-	case setting.StateWaiting:
+	case settingLoader.StateWaiting:
 		return strs.StrStateWaiting
-	case setting.StateCompressing:
+	case settingLoader.StateCompressing:
 		return strs.StrStateCompressing
-	case setting.StateSuccess:
+	case settingLoader.StateSuccess:
 		return strs.StrStateSuccess
-	case setting.StateOutOfLimit:
+	case settingLoader.StateOutOfLimit:
 		return strs.StrStateOutOfLimit
-	case setting.StateError:
+	case settingLoader.StateError:
 		return strs.StrStateError
 	default:
 		return ""
@@ -335,7 +335,7 @@ func (p *PicListView) AddPicturesFromPaths(paths []string) {
 			FullPath: path,
 			FileName: fileio.GetFileNameWithoutExt(path) + fileio.GetExtension(path),
 			OrigSize: info.Size(),
-			State:    setting.StateWaiting,
+			State:    settingLoader.StateWaiting,
 		})
 		existingPaths[path] = true
 	}

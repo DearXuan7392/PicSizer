@@ -1,7 +1,7 @@
 package codec
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	"bytes"
 	"image"
 
@@ -14,7 +14,7 @@ var (
 	advancedWebpQuality = 0
 )
 
-func (c *webpCodec) InitSetting(set setting.Setting) {
+func (c *webpCodec) InitSetting(set settingLoader.Setting) {
 	advancedWebpQuality = set.AdvancedWebPQuality
 }
 

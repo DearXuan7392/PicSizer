@@ -1,7 +1,7 @@
 package compress
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	"image"
 	"os"
 	"path/filepath"
@@ -16,7 +16,7 @@ import (
 // Compressor 定义统一的压缩器接口.
 // 各图片格式（JPEG/PNG/WebP）需实现该接口.
 type Compressor interface {
-	CompressByQuality(quality setting.QualityLevel) *core.PicResult
+	CompressByQuality(quality settingLoader.QualityLevel) *core.PicResult
 	CompressByFileSize(limitBytes int64) *core.PicResult
 }
 
@@ -44,18 +44,18 @@ func Compress(inputPath, outputPath string) *core.PicResult {
 		return core.GetErrorf(strs.ErrFormatNotSupport, ext)
 	}
 
-	set := setting.GetSetting()
+	set := settingLoader.GetSetting()
 	var result *core.PicResult
 
 	switch set.CompressType {
-	case setting.CompressQuality:
+	case settingLoader.CompressQuality:
 		result = compressor.CompressByQuality(set.Quality)
-	case setting.CompressFileSize:
+	case settingLoader.CompressFileSize:
 		var limitBytes int64
 		switch set.SizeUnit {
-		case setting.UnitKB:
+		case settingLoader.UnitKB:
 			limitBytes = set.LimitSize * 1024
-		case setting.UnitMB:
+		case settingLoader.UnitMB:
 			limitBytes = set.LimitSize * 1024 * 1024
 		default:
 			limitBytes = set.LimitSize * 1024
@@ -133,7 +133,7 @@ func (c *baseCompressor) compressByFileSize(limitBytes int64, encode func(int) (
 		sizeCache[left] = int64(len(data))
 	}
 
-	if sizeCache[left] <= limitBytes || setting.GetSetting().AcceptExceed {
+	if sizeCache[left] <= limitBytes || settingLoader.GetSetting().AcceptExceed {
 		data, err := encode(left)
 		if err != nil {
 			return core.GetErrorf(strs.ErrEncodeFailed, err)

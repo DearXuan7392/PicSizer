@@ -1,7 +1,7 @@
 package core
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	"PicSizer/internal/core/strings"
 	"fmt"
 )
@@ -49,7 +49,7 @@ type PicItem struct {
 	FileName   string
 	OrigSize   int64
 	NewSize    int64
-	State      setting.PicItemState
+	State      settingLoader.PicItemState
 	Message    string
 	OutputPath string
 }

@@ -3,7 +3,7 @@
 package cli
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	"flag"
 	"fmt"
 	"os"
@@ -93,7 +93,7 @@ func init() {
 func Run() {
 	flag.Parse()
 
-	setting.InitSetting()
+	settingLoader.InitSetting()
 
 	if inputPath == "" {
 		fmt.Println(strs.CLIErrNoInputPath)
@@ -123,27 +123,27 @@ func Run() {
 // applySettings 将解析后的 CLI 参数写入全局配置, 包含参数合法性校验.
 // 校验失败时返回错误, 由 Run 决定是否退出程序.
 func applySettings() error {
-	set := setting.GetSetting()
+	set := settingLoader.GetSetting()
 
 	// 压缩模式
 	switch strings.ToLower(compressType) {
 	case "quality":
-		set.CompressType = setting.CompressQuality
+		set.CompressType = settingLoader.CompressQuality
 	case "size":
-		set.CompressType = setting.CompressFileSize
+		set.CompressType = settingLoader.CompressFileSize
 	default:
 		return fmt.Errorf(strs.CLIErrCompressType, compressType)
 	}
 
 	// 画质等级
-	qualityLevel, err := setting.ParseQualityLevel(quality)
+	qualityLevel, err := settingLoader.ParseQualityLevel(quality)
 	if err != nil {
 		return err
 	}
 	set.Quality = qualityLevel
 
 	// 限制大小 (仅在按大小压缩时生效, 但仍会解析以便报错友好)
-	if set.CompressType == setting.CompressFileSize {
+	if set.CompressType == settingLoader.CompressFileSize {
 		limit, unit, err := parseLimit(limitStr)
 		if err != nil {
 			return err
@@ -156,11 +156,11 @@ func applySettings() error {
 	// 输出方式
 	switch strings.ToLower(outType) {
 	case "dir":
-		set.OutputType = setting.OutputDirection
+		set.OutputType = settingLoader.OutputDirection
 	case "cover":
-		set.OutputType = setting.OutputCoverOrigin
+		set.OutputType = settingLoader.OutputCoverOrigin
 	case "struct":
-		set.OutputType = setting.OutputStructure
+		set.OutputType = settingLoader.OutputStructure
 	default:
 		return fmt.Errorf(strs.CLIErrOutputType, outType)
 	}
@@ -168,13 +168,13 @@ func applySettings() error {
 	// 输出格式
 	switch strings.ToLower(format) {
 	case "jpeg", "jpg":
-		set.Extension = setting.ExtJPEG
+		set.Extension = settingLoader.ExtJPEG
 	case "png":
-		set.Extension = setting.ExtPNG
+		set.Extension = settingLoader.ExtPNG
 	case "webp":
-		set.Extension = setting.ExtWebP
+		set.Extension = settingLoader.ExtWebP
 	case "origin":
-		set.Extension = setting.ExtOrigin
+		set.Extension = settingLoader.ExtOrigin
 	default:
 		return fmt.Errorf(strs.CLIErrFormat, format)
 	}
@@ -192,11 +192,11 @@ func applySettings() error {
 	// 透明通道处理
 	switch strings.ToLower(alpha) {
 	case "keep":
-		set.AlphaHandle = setting.AlphaKeep
+		set.AlphaHandle = settingLoader.AlphaKeep
 	case "smart":
-		set.AlphaHandle = setting.AlphaSmartRemove
+		set.AlphaHandle = settingLoader.AlphaSmartRemove
 	case "remove":
-		set.AlphaHandle = setting.AlphaRemove
+		set.AlphaHandle = settingLoader.AlphaRemove
 	default:
 		return fmt.Errorf(strs.CLIErrAlpha, alpha)
 	}
@@ -204,17 +204,17 @@ func applySettings() error {
 	// 缩放模式
 	switch strings.ToLower(scale) {
 	case "none":
-		set.Scale = setting.ScaleNone
+		set.Scale = settingLoader.ScaleNone
 	case "stretch":
-		set.Scale = setting.ScaleStretch
+		set.Scale = settingLoader.ScaleStretch
 	case "cover":
-		set.Scale = setting.ScaleFitOutside
+		set.Scale = settingLoader.ScaleFitOutside
 	case "contain":
-		set.Scale = setting.ScaleFitInside
+		set.Scale = settingLoader.ScaleFitInside
 	case "crop":
-		set.Scale = setting.ScaleFitOutsideCrop
+		set.Scale = settingLoader.ScaleFitOutsideCrop
 	case "lock":
-		set.Scale = setting.ScaleLockSide
+		set.Scale = settingLoader.ScaleLockSide
 	default:
 		return fmt.Errorf(strs.CLIErrScale, scale)
 	}
@@ -224,7 +224,7 @@ func applySettings() error {
 	set.ScaleHeight = height
 
 	// 等比锁定单边校验
-	if set.Scale == setting.ScaleLockSide {
+	if set.Scale == settingLoader.ScaleLockSide {
 		w0 := set.ScaleWidth == 0
 		h0 := set.ScaleHeight == 0
 		if (w0 && h0) || (!w0 && !h0) {
@@ -233,7 +233,7 @@ func applySettings() error {
 	}
 
 	// 文件名模板重名保护 (非覆盖模式下给出警告, 但不阻止执行)
-	if set.OutputType != setting.OutputCoverOrigin {
+	if set.OutputType != settingLoader.OutputCoverOrigin {
 		hasID := strings.Contains(set.OutputFilename, "{id}")
 		hasName := strings.Contains(set.OutputFilename, "{name}")
 		if !hasID && !hasName {
@@ -241,23 +241,23 @@ func applySettings() error {
 		}
 	}
 
-	setting.UpdateSetting(set)
+	settingLoader.UpdateSetting(set)
 	return nil
 }
 
 // parseLimit 解析限制大小字符串, 支持 "200kb"、"2mb" 或纯数字（默认 KB）格式.
-func parseLimit(limitStr string) (int64, setting.SizeUnit, error) {
+func parseLimit(limitStr string) (int64, settingLoader.SizeUnit, error) {
 	s := strings.TrimSpace(limitStr)
 	s = strings.ToLower(s)
 
 	numeric := s
-	var parsedUnit setting.SizeUnit = setting.UnitKB
+	var parsedUnit settingLoader.SizeUnit = settingLoader.UnitKB
 
 	if strings.HasSuffix(s, "mb") {
-		parsedUnit = setting.UnitMB
+		parsedUnit = settingLoader.UnitMB
 		numeric = strings.TrimSuffix(s, "mb")
 	} else if strings.HasSuffix(s, "kb") {
-		parsedUnit = setting.UnitKB
+		parsedUnit = settingLoader.UnitKB
 		numeric = strings.TrimSuffix(s, "kb")
 	}
 
@@ -300,17 +300,17 @@ func compressFile(input, output string) {
 // buildSingleOutputPath 根据输出方式为单文件构造最终输出路径.
 // cover 模式覆盖源文件并修改扩展名；dir 和 struct 模式使用模板生成文件名.
 func buildSingleOutputPath(input, output string) string {
-	set := setting.GetSetting()
+	set := settingLoader.GetSetting()
 
 	switch set.OutputType {
-	case setting.OutputCoverOrigin:
-		if set.Extension != setting.ExtOrigin {
-			ext := setting.GetExtensionString(set.Extension)
+	case settingLoader.OutputCoverOrigin:
+		if set.Extension != settingLoader.ExtOrigin {
+			ext := settingLoader.GetExtensionString(set.Extension)
 			return input[:len(input)-len(filepath.Ext(input))] + ext
 		}
 		return input
 
-	case setting.OutputDirection:
+	case settingLoader.OutputDirection:
 		if output == "" {
 			fmt.Println(strs.CLIErrDirModeNeedOutput)
 			os.Exit(1)
@@ -318,7 +318,7 @@ func buildSingleOutputPath(input, output string) string {
 		core.OutputDirPath = output
 		return fileio.GetOutputPath(input, set.StartIndex)
 
-	case setting.OutputStructure:
+	case settingLoader.OutputStructure:
 		if output == "" {
 			fmt.Println(strs.CLIErrStructModeNeedOutput)
 			os.Exit(1)
@@ -347,19 +347,19 @@ func compressDirectory(inputDir, outputDir string) {
 
 	fmt.Printf(strs.CLIFoundImageFiles+"\n", len(files))
 
-	set := setting.GetSetting()
+	set := settingLoader.GetSetting()
 
 	// 设置输出相关全局变量, 供 fileio.GetOutputPath 使用
 	switch set.OutputType {
-	case setting.OutputCoverOrigin:
+	case settingLoader.OutputCoverOrigin:
 		// 覆盖源文件, 无需输出目录
-	case setting.OutputDirection, setting.OutputStructure:
+	case settingLoader.OutputDirection, settingLoader.OutputStructure:
 		if outputDir == "" {
 			fmt.Println(strs.CLIErrNeedOutputPath)
 			os.Exit(1)
 		}
 		core.OutputDirPath = outputDir
-		if set.OutputType == setting.OutputStructure {
+		if set.OutputType == settingLoader.OutputStructure {
 			core.PublicDirPath = inputDir
 		}
 	}
@@ -372,7 +372,7 @@ func compressDirectory(inputDir, outputDir string) {
 			FullPath: f,
 			FileName: filepath.Base(f),
 			OrigSize: info.Size(),
-			State:    setting.StateWaiting,
+			State:    settingLoader.StateWaiting,
 		})
 	}
 

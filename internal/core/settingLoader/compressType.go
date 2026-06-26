@@ -1,4 +1,4 @@
-package setting
+package settingLoader
 
 // CompressType 表示压缩模式的枚举类型。
 type CompressType int

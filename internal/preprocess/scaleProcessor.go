@@ -1,7 +1,7 @@
 package preprocess
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	"image"
 	"math"
 
@@ -10,13 +10,13 @@ import (
 
 // ScaleProcessor 缩放预处理器, 根据 mode 选择不同的缩放策略.
 type ScaleProcessor struct {
-	mode   setting.ScaleType
+	mode   settingLoader.ScaleType
 	width  int
 	height int
 }
 
 // newScaleProcessor 创建缩放预处理器实例.
-func newScaleProcessor(mode setting.ScaleType, width, height int) *ScaleProcessor {
+func newScaleProcessor(mode settingLoader.ScaleType, width, height int) *ScaleProcessor {
 	return &ScaleProcessor{mode: mode, width: width, height: height}
 }
 
@@ -27,7 +27,7 @@ func (s *ScaleProcessor) Name() string {
 
 // Enabled 判断是否需要执行缩放处理, 仅当 mode 不为 ScaleNone 时启用.
 func (s *ScaleProcessor) Enabled() bool {
-	return s.mode != setting.ScaleNone
+	return s.mode != settingLoader.ScaleNone
 }
 
 // Process 执行缩放处理, 根据 mode 分发到具体的缩放算法.
@@ -42,17 +42,17 @@ func (s *ScaleProcessor) Process(img image.Image) image.Image {
 	}
 
 	switch s.mode {
-	case setting.ScaleNone:
+	case settingLoader.ScaleNone:
 		return img
-	case setting.ScaleStretch:
+	case settingLoader.ScaleStretch:
 		return s.stretch(srcW, srcH, img)
-	case setting.ScaleFitOutside:
+	case settingLoader.ScaleFitOutside:
 		return s.fitOutside(srcW, srcH, img)
-	case setting.ScaleFitInside:
+	case settingLoader.ScaleFitInside:
 		return s.fitInside(srcW, srcH, img)
-	case setting.ScaleFitOutsideCrop:
+	case settingLoader.ScaleFitOutsideCrop:
 		return s.fitOutsideCrop(srcW, srcH, img)
-	case setting.ScaleLockSide:
+	case settingLoader.ScaleLockSide:
 		return s.lockSide(srcW, srcH, img)
 	default:
 		return img

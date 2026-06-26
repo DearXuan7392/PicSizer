@@ -1,7 +1,7 @@
 package codec
 
 import (
-	"PicSizer/internal/core/setting"
+	"PicSizer/internal/core/settingLoader"
 	"errors"
 	"image"
 	"os"
@@ -44,7 +44,7 @@ func init() {
 	RegisterCodec(&jpegCodec{})
 }
 
-func InitSetting(set setting.Setting) {
+func InitSetting(set settingLoader.Setting) {
 	for _, codec := range registry {
 		codec.InitSetting(set)
 	}
