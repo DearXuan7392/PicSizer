@@ -1,6 +1,8 @@
 package main
 
 import (
+	"PicSizer/internal/core/settingLoader"
+	"PicSizer/internal/logger"
 	"PicSizer/internal/ui"
 	"os"
 )
@@ -8,8 +10,9 @@ import (
 func main() {
 	for _, arg := range os.Args[1:] {
 		if arg == "-d" || arg == "--debug" {
-
+			settingLoader.EnableDebug()
 		}
 	}
+	logger.InitLogger()
 	ui.Run()
 }

@@ -4,6 +4,8 @@ import (
 	"PicSizer/internal/core/settingLoader"
 	strs "PicSizer/internal/core/strings"
 	"PicSizer/internal/dialog"
+	"os"
+	"os/exec"
 	"runtime"
 	"strconv"
 	"strings"
@@ -49,6 +51,8 @@ type SettingForm struct {
 	pngPaletteAlgoCombo  *walk.ComboBox
 	pngKeepAlphaCheckBox *walk.CheckBox
 	pngDitheringCheckBox *walk.CheckBox
+
+	debugModeCheck *walk.CheckBox
 
 	maxThreads int
 
@@ -474,6 +478,34 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 								},
 							},
 							declarative.VSpacer{},
+							declarative.Composite{
+								Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
+								Children: []declarative.Widget{
+									declarative.HSpacer{},
+									declarative.Composite{
+										Layout: declarative.HBox{Spacing: 4, MarginsZero: true},
+										Children: []declarative.Widget{
+											declarative.HSpacer{},
+											declarative.CheckBox{
+												AssignTo: &sf.debugModeCheck,
+												Text:     strs.TextDebugMode,
+												Checked:  false,
+											},
+											declarative.LinkLabel{
+												Text:        "<a>(?)</a>",
+												ToolTipText: strs.TipDebugMode,
+												OnLinkActivated: func(link *walk.LinkLabelLink) {
+													var parentHwnd uintptr
+													if sf.Dialog != nil {
+														parentHwnd = uintptr(sf.Dialog.Handle())
+													}
+													dialog.ShowInfoWithTitleAndParent(parentHwnd, strs.TextDebugMode, strs.TipDebugMode)
+												},
+											},
+										},
+									},
+								},
+							},
 						},
 					},
 				},
@@ -517,6 +549,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 	}
 	sf.onCompressModeChange()
 	sf.onOutputTypeChange()
+	sf.updateDebugMode()
 
 	sf.Dialog.Run()
 	return nil
@@ -956,6 +989,39 @@ func sliderValueToQualityLevel(val int) settingLoader.QualityLevel {
 		return settingLoader.QualityLevelBest
 	default:
 		return settingLoader.QualityLevelClear
+	}
+}
+
+// 更新调试按钮信息
+func (sf *SettingForm) updateDebugMode() {
+	if sf.debugModeCheck != nil {
+		sf.debugModeCheck.SetChecked(settingLoader.IsDebug())
+		sf.debugModeCheck.SetEnabled(!settingLoader.IsDebug())
+		sf.debugModeCheck.CheckedChanged().Attach(func() {
+			if sf.debugModeCheck.Checked() {
+				var parentHwnd uintptr
+				if sf.Dialog != nil {
+					parentHwnd = uintptr(sf.Dialog.Handle())
+				}
+
+				confirmed := dialog.ShowConfirmWithParent(parentHwnd, strs.TipDebugMode)
+
+				// 如果启用调试, 则以 --debug 参数重启
+				if confirmed {
+					exePath, err := os.Executable()
+					if err != nil {
+						dialog.ShowErrorWithParent(parentHwnd, strs.ErrCannotFindExecPath)
+						sf.debugModeCheck.SetChecked(false)
+					}
+
+					cmd := exec.Command(exePath, "--debug")
+					cmd.Start()
+					os.Exit(0)
+				} else {
+					sf.debugModeCheck.SetChecked(false)
+				}
+			}
+		})
 	}
 }
 

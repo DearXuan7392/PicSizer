@@ -43,7 +43,11 @@ type Setting struct {
 }
 
 var (
+	// CurrentSetting 当前设置
 	CurrentSetting Setting
+
+	// debug 是否启用调试, 仅在程序启动时由参数设定, 无法自行修改
+	debug bool
 )
 
 // DefaultSetting 表示配置的默认值.
@@ -83,6 +87,16 @@ func GetSetting() Setting {
 // UpdateSetting 用指定配置更新 CurrentSetting.
 func UpdateSetting(s Setting) {
 	CurrentSetting = s
+}
+
+// EnableDebug 启用调试, 且启用后无法关闭
+func EnableDebug() {
+	debug = true
+}
+
+// IsDebug 获取调试状态
+func IsDebug() bool {
+	return debug
 }
 
 // UpdateSettingWithOutputType 仅更新当前配置的输出方式字段.

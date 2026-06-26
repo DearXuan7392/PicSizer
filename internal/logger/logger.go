@@ -1,6 +1,9 @@
-package main
+package logger
 
 import (
+	"PicSizer/internal/core/settingLoader"
+	strs "PicSizer/internal/core/strings"
+	"PicSizer/internal/dialog"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -47,26 +50,31 @@ var (
 )
 
 // InitLogger 初始化全局日志配置 (静态函数/单例初始化)
-func InitLogger(enable bool) error {
-	if enable {
+func InitLogger() {
+	logEnable = settingLoader.IsDebug()
+	if logEnable {
 		logEnable = true
 
 		dir := filepath.Dir(logPath)
 		if err := os.MkdirAll(dir, 0755); err != nil {
-			return err
+			dialog.ShowErrorWithParent(0, strs.ErrCannotCreateLogFile)
+			os.Exit(1)
 		}
 
 		file, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 		if err != nil {
-			return err
+			dialog.ShowErrorWithParent(0, strs.ErrCannotOpenLogFile)
+			os.Exit(1)
 		}
 		logFile = file
 
 		// 启动消费者后台协程
 		go startConsumer()
 	}
+}
 
-	return nil
+func Get() {
+
 }
 
 // CloseLogger 关闭日志，等待队列消费完
