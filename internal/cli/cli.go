@@ -142,7 +142,7 @@ func Run() {
 // applySettings 将解析后的 CLI 参数写入全局配置, 包含参数合法性校验.
 // 校验失败时返回错误, 由 Run 决定是否退出程序.
 func applySettings() error {
-	set := settingLoader.GetSetting()
+	set := settingLoader.GetSettingCopy()
 
 	// 压缩模式
 	switch strings.ToLower(compressType) {
@@ -270,12 +270,12 @@ func applySettings() error {
 	// 高级设置: PNG 抖动算法
 	set.AdvancedPngEnableDithering = pngEnableDithering
 
-	// 使用 Setting 自带的校验方法检查错误
+	// 检查错误
 	if errors := set.CheckErrors(); len(errors) > 0 {
 		return fmt.Errorf("%s", strings.Join(errors, "; "))
 	}
 
-	// 使用 Setting 自带的校验方法检查警告 (非覆盖模式下给出警告, 但不阻止执行)
+	// 检查警告 (非覆盖模式下给出警告, 但不阻止执行)
 	if warnings := set.CheckWarnings(); len(warnings) > 0 {
 		for _, w := range warnings {
 			fmt.Println(strs.CLIWarnPrefix + w)
