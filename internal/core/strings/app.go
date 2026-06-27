@@ -15,4 +15,6 @@ var (
 	AboutDesc    = "一款使用 Go 语言编写的高效图片压缩工具\n" +
 		"支持 JPEG、PNG、WebP 格式\n" +
 		"支持按图像质量或压缩后大小进行压缩"
+	AboutLicense = "本软件基于 Apache-2.0 协议开源"
+	AboutCredits = `<a href="https://github.com/DearXuan7392/PicSizer/blob/v6/CREDITS.md">查看第三方开源协议与致谢</a>`
 )
