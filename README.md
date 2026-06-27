@@ -38,81 +38,25 @@ PicSizer 是一款图片批量压缩软件, 解决了传统压缩软件只能指
 
 ## 效果预览
 
-<style>
-  .image-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    table-layout: fixed;
-  }
-  .image-table td {
-    padding: 15px;
-    border: 1px solid #e0e0e0;
-    vertical-align: top;
-    text-align: center;
-  }
-  .image-container {
-    overflow-x: auto;
-    overflow-y: hidden;
-    white-space: nowrap;
-    height: 220px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .image-container img {
-    max-height: 200px;
-    width: auto;
-    display: block;
-    object-fit: contain;
-  }
-  .main-image-container {
-    height: 220px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .main-image-container img {
-    max-height: 200px;
-    width: auto;
-    object-fit: contain;
-  }
-  .image-caption {
-    margin-top: 10px;
-    font-size: 13px;
-    color: #555;
-    text-align: center;
-    font-family: monospace;
-  }
-</style>
-
-<table class="image-table">
+<table width="100%">
   <tr>
-    <td colspan="3">
-      <div class="main-image-container">
-        <img src="assets/example/flower.png" alt="Flower" />
-      </div>
-      <p class="image-caption">原图 PNG, 3.18 MB</p>
+    <td colspan="3" align="center" valign="top">
+      <img src="assets/example/flower.png" alt="Flower" width="31%" />
+      <p align="center"><sub>原图 PNG, 3.18 MB</sub></p>
     </td>
   </tr>
   <tr>
-    <td style="width: 33%;">
-      <div class="image-container">
-        <img src="assets/example/flower_jpeg_2.jpg" alt="JPEG" />
-      </div>
-      <p class="image-caption">JPEG, 画质选项: 清晰, 430 KB</p>
+    <td width="33.33%" align="center" valign="top">
+      <img src="assets/example/flower_jpeg_2.jpg" alt="JPEG" width="100%" />
+      <p align="center"><sub>JPEG, 画质选项: 清晰, 430 KB</sub></p>
     </td>
-    <td style="width: 33%;">
-      <div class="image-container">
-        <img src="assets/example/flower_png_2_median.png" alt="PNG" />
-      </div>
-      <p class="image-caption">PNG, 画质选项: 清晰, 1.16 MB</p>
+    <td width="33.33%" align="center" valign="top">
+      <img src="assets/example/flower_png_2_median.png" alt="PNG" width="100%" />
+      <p align="center"><sub>PNG, 画质选项: 清晰, 1.16 MB</sub></p>
     </td>
-    <td style="width: 33%;">
-      <div class="image-container">
-        <img src="assets/example/flower_webp_2.webp" alt="WebP" />
-      </div>
-      <p class="image-caption">WebP, 画质选项: 清晰, 522 KB</p>
+    <td width="33.33%" align="center" valign="top">
+      <img src="assets/example/flower_webp_2.webp" alt="WebP" width="100%" />
+      <p align="center"><sub>WebP, 画质选项: 清晰, 522 KB</sub></p>
     </td>
   </tr>
 </table>
