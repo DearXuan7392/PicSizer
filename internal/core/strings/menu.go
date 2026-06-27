@@ -27,7 +27,7 @@ var (
 	CtxOpenOriginal       = "打开原图"
 	CtxShowInExplorer     = "在资源管理器显示原图"
 	CtxOpenCompressed     = "打开压缩后图片"
-	CtxShowCompInExplorer = "在资源管理器显示压缩后"
+	CtxShowCompInExplorer = "在资源管理器显示压缩后图片"
 	CtxViewError          = "查看错误信息"
 	CtxCopyError          = "复制错误信息"
 	CtxErrorDetailTitle   = "错误详情"
