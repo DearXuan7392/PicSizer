@@ -2,6 +2,7 @@ package codec
 
 import (
 	"PicSizer/internal/core/settingLoader"
+	"PicSizer/internal/utils"
 	"bytes"
 	"image"
 
@@ -31,7 +32,23 @@ func (c *webpCodec) IsType(data []byte) bool {
 
 // Decode 将 WebP 数据解码为 image.Image.
 func (c *webpCodec) Decode(data []byte) (image.Image, error) {
-	return webp.Decode(bytes.NewReader(data))
+	logger.Debug("decode webp data")
+	img, err := webp.Decode(bytes.NewReader(data))
+	if err != nil {
+		return nil, err
+	}
+
+	switch img.(type) {
+	case *image.YCbCr:
+		logger.Debug("convert webp to RGBA image")
+		return utils.ConvertToRGBA(img), nil
+	case *image.NYCbCrA, *image.NRGBA:
+		logger.Debug("convert webp to NRGBA image")
+		return utils.ConvertToNRGBA(img), nil
+	default:
+		logger.Warn("unknown image type, convert to RGBA image")
+		return utils.ConvertToRGBA(img), nil
+	}
 }
 
 // EncodeWebP 将 image.Image 编码为 WebP 格式的字节数据.

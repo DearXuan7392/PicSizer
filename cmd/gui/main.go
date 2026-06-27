@@ -2,7 +2,7 @@ package main
 
 import (
 	"PicSizer/internal/core/settingLoader"
-	"PicSizer/internal/logger"
+	"PicSizer/internal/log"
 	"PicSizer/internal/ui"
 	"os"
 )
@@ -13,6 +13,6 @@ func main() {
 			settingLoader.EnableDebug()
 		}
 	}
-	logger.InitLogger()
+	log.InitLogger()
 	ui.Run()
 }

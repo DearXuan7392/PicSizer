@@ -1,5 +1,10 @@
 package settingLoader
 
+import (
+	strs "PicSizer/internal/core/strings"
+	"strings"
+)
+
 // Setting 表示程序的所有配置项.
 // 配置存储在全局变量 CurrentSetting 中, 程序启动时初始化为默认值.
 type Setting struct {
@@ -82,6 +87,50 @@ func InitSetting() {
 // GetSetting 返回当前配置的副本.
 func GetSetting() Setting {
 	return CurrentSetting
+}
+
+// GetSettingCopy 返回当前设置的深拷贝.
+// 对拷贝的修改不会影响实际设置, 适用于需要临时修改配置的场景.
+func GetSettingCopy() Setting {
+	return CurrentSetting
+}
+
+// CheckErrors 检查设置中的错误, 返回错误信息数组.
+// 如果返回值为空, 表示没有错误.
+func (s Setting) CheckErrors() []string {
+	var errors []string
+
+	// 检查缩放方式为等比锁定单边时, 宽和高必须有一项为 0, 另一项不为 0
+	if s.Scale == ScaleLockSide {
+		w0 := s.ScaleWidth == 0
+		h0 := s.ScaleHeight == 0
+		if (w0 && h0) || (!w0 && !h0) {
+			errors = append(errors, strs.ErrHWMustOneZero)
+		}
+	} else if s.Scale != ScaleNone {
+		if s.ScaleWidth <= 0 || s.ScaleHeight <= 0 {
+			errors = append(errors, strs.ErrHWMustBePositive)
+		}
+	}
+
+	return errors
+}
+
+// CheckWarnings 检查设置中的警告, 返回警告信息数组.
+// 如果返回值为空, 表示没有警告.
+func (s Setting) CheckWarnings() []string {
+	var warnings []string
+
+	// 检查文件名模板是否包含 {id} 或 {name}
+	if s.OutputType != OutputCoverOrigin {
+		hasID := strings.Contains(s.OutputFilename, "{id}")
+		hasName := strings.Contains(s.OutputFilename, "{name}")
+		if !hasID && !hasName {
+			warnings = append(warnings, strs.WarnOutputNameIsFixed)
+		}
+	}
+
+	return warnings
 }
 
 // UpdateSetting 用指定配置更新 CurrentSetting.

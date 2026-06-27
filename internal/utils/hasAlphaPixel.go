@@ -5,7 +5,7 @@ import (
 )
 
 // HasAlphaPixel 遍历图像像素, 判断是否存在非 255 的 alpha 值.
-// 入参图像已由上游管道保证为 *image.RGBA 或 *image.NRGBA 类型.
+// 入参图像已由上游管道保证为 *image.RGBA, *image.NRGBA 类型.
 // 返回 true 表示至少存在一个透明像素 (alpha < 255), 透明通道承载有效信息.
 func HasAlphaPixel(img image.Image) bool {
 	if img == nil {

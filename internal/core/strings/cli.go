@@ -34,7 +34,13 @@ var (
 	CLIErrDirModeNeedOutput    = "错误: 输出到目录模式 (-ot dir) 必须指定输出路径 (-o / --output)"
 	CLIErrStructModeNeedOutput = "错误: 保留目录结构模式 (-ot struct) 必须指定输出路径 (-o / --output)"
 	CLIErrReadDir              = "错误: 无法读取目录: %v"
+	CLIErrJpegQuality          = "JPEG 精细化画质必须在 0-100 之间: %d"
+	CLIErrWebpQuality          = "WebP 精细化画质必须在 0-100 之间: %d"
+	CLIErrPngPalette           = "不支持的 PNG 调色盘算法: %s (可选: mediancut / kmeans)"
 
 	// CLI 文件名模板警告
 	CLIWarnFilenameTplMissing = "警告: 文件名模板未包含 {id} 或 {name}, 多张图片可能因重名而被覆盖"
+
+	// CLI 警告前缀
+	CLIWarnPrefix = "警告: "
 )

@@ -56,6 +56,9 @@ type SettingForm struct {
 
 	maxThreads int
 
+	// workingCopy 存储设置的拷贝, 所有修改都作用于此拷贝
+	workingCopy settingLoader.Setting
+
 	onTopMostChanged    func(bool)
 	onOutputTypeChanged func(settingLoader.OutputType)
 }
@@ -77,7 +80,9 @@ func (sf *SettingForm) SetOnOutputTypeChanged(fn func(settingLoader.OutputType))
 
 // Show 显示设置窗口. 窗口包含三个选项卡页面, 关闭后调用方可通过回调获取用户修改的设置.
 func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
-	set := settingLoader.GetSetting()
+	// 获取设置的拷贝, 所有修改都作用于此拷贝
+	sf.workingCopy = settingLoader.GetSettingCopy()
+	set := sf.workingCopy
 	// 获取 CPU 逻辑核心数
 	sf.maxThreads = runtime.NumCPU()
 
@@ -637,214 +642,169 @@ func (sf *SettingForm) onScaleModeChange() {
 // saveSetting 从 UI 控件读取所有值, 进行校验后写入全局配置.
 // 返回 false 表示用户取消保存 (校验失败或用户取消了警告弹窗).
 func (sf *SettingForm) saveSetting() bool {
-	set := settingLoader.GetSetting()
-	oldTopMost := set.TopMost
-	oldOutputType := set.OutputType
+	// 使用 workingCopy 作为基础, 保留旧值用于回调判断
+	oldTopMost := sf.workingCopy.TopMost
+	oldOutputType := sf.workingCopy.OutputType
 	var parentHwnd uintptr
 	if sf.Dialog != nil {
 		parentHwnd = uintptr(sf.Dialog.Handle())
 	}
 
 	// ============================================================
-	// 第一阶段: 从 UI 控件读取所有值到本地变量
+	// 第一阶段: 从 UI 控件读取所有值到 workingCopy
 	// ============================================================
-	var newCompressType settingLoader.CompressType
 	if sf.qualityRadio != nil {
 		if sf.qualityRadio.Checked() {
-			newCompressType = settingLoader.CompressQuality
+			sf.workingCopy.CompressType = settingLoader.CompressQuality
 		} else {
-			newCompressType = settingLoader.CompressFileSize
+			sf.workingCopy.CompressType = settingLoader.CompressFileSize
 		}
 	}
 
-	var newQuality settingLoader.QualityLevel
 	if sf.qualitySlider != nil {
-		newQuality = sliderValueToQualityLevel(sf.qualitySlider.Value())
+		sf.workingCopy.Quality = sliderValueToQualityLevel(sf.qualitySlider.Value())
 	} else {
-		newQuality = settingLoader.QualityLevelClear
+		sf.workingCopy.Quality = settingLoader.QualityLevelClear
 	}
 
-	var newLimitSize int64
 	if sf.limitSizeEdit != nil {
-		newLimitSize = int64(sf.limitSizeEdit.Value())
+		sf.workingCopy.LimitSize = int64(sf.limitSizeEdit.Value())
 	}
-	var newSizeUnit settingLoader.SizeUnit
 	if sf.sizeUnitCombo != nil {
 		switch sf.sizeUnitCombo.CurrentIndex() {
 		case 0:
-			newSizeUnit = settingLoader.UnitKB
+			sf.workingCopy.SizeUnit = settingLoader.UnitKB
 		case 1:
-			newSizeUnit = settingLoader.UnitMB
+			sf.workingCopy.SizeUnit = settingLoader.UnitMB
 		}
 	}
-	var newAcceptExceed bool
 	if sf.acceptExceedCheck != nil {
-		newAcceptExceed = sf.acceptExceedCheck.Checked()
+		sf.workingCopy.AcceptExceed = sf.acceptExceedCheck.Checked()
 	}
 
-	var newOutputType settingLoader.OutputType
 	switch sf.outputTypeCombo.CurrentIndex() {
 	case 0:
-		newOutputType = settingLoader.OutputDirection
+		sf.workingCopy.OutputType = settingLoader.OutputDirection
 	case 1:
-		newOutputType = settingLoader.OutputCoverOrigin
+		sf.workingCopy.OutputType = settingLoader.OutputCoverOrigin
 	case 2:
-		newOutputType = settingLoader.OutputStructure
+		sf.workingCopy.OutputType = settingLoader.OutputStructure
 	}
 
-	var newExtension settingLoader.ExtensionType
 	switch sf.extensionCombo.CurrentIndex() {
 	case 0:
-		newExtension = settingLoader.ExtJPEG
+		sf.workingCopy.Extension = settingLoader.ExtJPEG
 	case 1:
-		newExtension = settingLoader.ExtPNG
+		sf.workingCopy.Extension = settingLoader.ExtPNG
 	case 2:
-		newExtension = settingLoader.ExtWebP
+		sf.workingCopy.Extension = settingLoader.ExtWebP
 	case 3:
-		newExtension = settingLoader.ExtOrigin
+		sf.workingCopy.Extension = settingLoader.ExtOrigin
 	}
 
-	var newOutputFilename string
 	if sf.filenameEdit != nil {
-		newOutputFilename = sf.filenameEdit.Text()
+		sf.workingCopy.OutputFilename = sf.filenameEdit.Text()
 	}
-	var newStartIndex int
 	if sf.startIndexEdit != nil {
-		newStartIndex = int(sf.startIndexEdit.Value())
+		sf.workingCopy.StartIndex = int(sf.startIndexEdit.Value())
 	}
 
-	var newMaxThreads int
 	if sf.maxThreadsEdit != nil {
-		newMaxThreads = int(sf.maxThreadsEdit.Value())
+		sf.workingCopy.MaxThreads = int(sf.maxThreadsEdit.Value())
 	}
-	var newTopMost bool
 	if sf.topMostCheck != nil {
-		newTopMost = sf.topMostCheck.Checked()
+		sf.workingCopy.TopMost = sf.topMostCheck.Checked()
 	}
 
-	var newAlphaHandle settingLoader.AlphaHandleType
 	if sf.alphaCombo != nil {
 		switch sf.alphaCombo.CurrentIndex() {
 		case 0:
-			newAlphaHandle = settingLoader.AlphaKeep
+			sf.workingCopy.AlphaHandle = settingLoader.AlphaKeep
 		case 1:
-			newAlphaHandle = settingLoader.AlphaSmartRemove
+			sf.workingCopy.AlphaHandle = settingLoader.AlphaSmartRemove
 		case 2:
-			newAlphaHandle = settingLoader.AlphaRemove
+			sf.workingCopy.AlphaHandle = settingLoader.AlphaRemove
 		}
 	}
 
-	var newScale settingLoader.ScaleType
 	if sf.scaleCombo != nil {
 		switch sf.scaleCombo.CurrentIndex() {
 		case 0:
-			newScale = settingLoader.ScaleNone
+			sf.workingCopy.Scale = settingLoader.ScaleNone
 		case 1:
-			newScale = settingLoader.ScaleStretch
+			sf.workingCopy.Scale = settingLoader.ScaleStretch
 		case 2:
-			newScale = settingLoader.ScaleFitOutside
+			sf.workingCopy.Scale = settingLoader.ScaleFitOutside
 		case 3:
-			newScale = settingLoader.ScaleFitInside
+			sf.workingCopy.Scale = settingLoader.ScaleFitInside
 		case 4:
-			newScale = settingLoader.ScaleFitOutsideCrop
+			sf.workingCopy.Scale = settingLoader.ScaleFitOutsideCrop
 		case 5:
-			newScale = settingLoader.ScaleLockSide
+			sf.workingCopy.Scale = settingLoader.ScaleLockSide
 		}
 	}
-	var newScaleWidth int
 	if sf.scaleWidth != nil {
-		newScaleWidth = int(sf.scaleWidth.Value())
+		sf.workingCopy.ScaleWidth = int(sf.scaleWidth.Value())
 	}
-	var newScaleHeight int
 	if sf.scaleHeight != nil {
-		newScaleHeight = int(sf.scaleHeight.Value())
+		sf.workingCopy.ScaleHeight = int(sf.scaleHeight.Value())
 	}
 
-	var newJpegQuality int
 	if sf.jpegQualityEdit != nil {
-		newJpegQuality = int(sf.jpegQualityEdit.Value())
+		sf.workingCopy.AdvancedJpegQuality = int(sf.jpegQualityEdit.Value())
 	}
-	var newWebPQuality int
 	if sf.webpQualityEdit != nil {
-		newWebPQuality = int(sf.webpQualityEdit.Value())
+		sf.workingCopy.AdvancedWebPQuality = int(sf.webpQualityEdit.Value())
 	}
 
-	var newPngKeepIndexedAlpha bool
 	if sf.pngKeepAlphaCheckBox != nil {
-		newPngKeepIndexedAlpha = sf.pngKeepAlphaCheckBox.Checked()
+		sf.workingCopy.AdvancedPngKeepIndexedAlpha = sf.pngKeepAlphaCheckBox.Checked()
 	}
 
-	var newPngPaletteAlgo settingLoader.PaletteAlgoType
 	if sf.pngPaletteAlgoCombo != nil {
 		switch sf.pngPaletteAlgoCombo.CurrentIndex() {
 		case 0:
-			newPngPaletteAlgo = settingLoader.PaletteMedianCut
+			sf.workingCopy.AdvancedPngPaletteAlgo = settingLoader.PaletteMedianCut
 		case 1:
-			newPngPaletteAlgo = settingLoader.PaletteKMeans
+			sf.workingCopy.AdvancedPngPaletteAlgo = settingLoader.PaletteKMeans
 		}
 	}
 
-	var newPngEnableDithering bool
 	if sf.pngDitheringCheckBox != nil {
-		newPngEnableDithering = sf.pngDitheringCheckBox.Checked()
+		sf.workingCopy.AdvancedPngEnableDithering = sf.pngDitheringCheckBox.Checked()
 	}
 
 	// ============================================================
 	// 第二阶段: 错误检测
 	// ============================================================
-	if newScale == settingLoader.ScaleLockSide {
-		w0 := newScaleWidth == 0
-		h0 := newScaleHeight == 0
-		if (w0 && h0) || (!w0 && !h0) {
-			dialog.ShowErrorWithParent(parentHwnd, strs.ErrScaleLockSideInvalid)
-			return false
-		}
+	errors := sf.workingCopy.CheckErrors()
+	if len(errors) > 0 {
+		errMsg := strings.Join(errors, "\n")
+		dialog.ShowErrorWithParent(parentHwnd, errMsg)
+		return false
 	}
 
 	// ============================================================
 	// 第三阶段: 警告检测
 	// ============================================================
-	if newOutputType != settingLoader.OutputCoverOrigin {
-		hasID := strings.Contains(newOutputFilename, "{id}")
-		hasName := strings.Contains(newOutputFilename, "{name}")
-		if !hasID && !hasName {
-			if !dialog.ShowConfirmWithParent(parentHwnd, strs.WarnFilenameTplMissing) {
-				return false
-			}
+	warnings := sf.workingCopy.CheckWarnings()
+	if len(warnings) > 0 {
+		warnMsg := strings.Join(warnings, "\n")
+		if !dialog.ShowConfirmWithParent(parentHwnd, warnMsg) {
+			return false
 		}
 	}
 
 	// ============================================================
 	// 第四阶段: 写入 settingLoader 持久化
 	// ============================================================
-	set.CompressType = newCompressType
-	set.Quality = newQuality
-	set.LimitSize = newLimitSize
-	set.SizeUnit = newSizeUnit
-	set.AcceptExceed = newAcceptExceed
-	set.OutputType = newOutputType
-	set.Extension = newExtension
-	set.OutputFilename = newOutputFilename
-	set.StartIndex = newStartIndex
-	set.MaxThreads = newMaxThreads
-	set.TopMost = newTopMost
-	set.AlphaHandle = newAlphaHandle
-	set.Scale = newScale
-	set.ScaleWidth = newScaleWidth
-	set.ScaleHeight = newScaleHeight
-	set.AdvancedJpegQuality = newJpegQuality
-	set.AdvancedWebPQuality = newWebPQuality
-	set.AdvancedPngKeepIndexedAlpha = newPngKeepIndexedAlpha
-	set.AdvancedPngPaletteAlgo = newPngPaletteAlgo
-	set.AdvancedPngEnableDithering = newPngEnableDithering
+	settingLoader.UpdateSetting(sf.workingCopy)
 
-	settingLoader.UpdateSetting(set)
-
-	if set.TopMost != oldTopMost && sf.onTopMostChanged != nil {
-		sf.onTopMostChanged(set.TopMost)
+	if sf.workingCopy.TopMost != oldTopMost && sf.onTopMostChanged != nil {
+		sf.onTopMostChanged(sf.workingCopy.TopMost)
 	}
-	if set.OutputType != oldOutputType && sf.onOutputTypeChanged != nil {
-		sf.onOutputTypeChanged(set.OutputType)
+	if sf.workingCopy.OutputType != oldOutputType && sf.onOutputTypeChanged != nil {
+		sf.onOutputTypeChanged(sf.workingCopy.OutputType)
 	}
 
 	return true

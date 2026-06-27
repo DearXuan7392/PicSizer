@@ -3,6 +3,7 @@ package server
 import (
 	"PicSizer/internal/core/settingLoader"
 	"PicSizer/internal/fileio/codec"
+	"PicSizer/internal/log"
 	"sync"
 
 	"PicSizer/internal/compress"
@@ -33,6 +34,11 @@ type ThreadPool struct {
 	onComplete    func(success, errCount, total int)
 }
 
+var (
+	logger   = log.NewLogger("pool")
+	exitFlag = false
+)
+
 // NewThreadPool 创建一个线程池实例.
 func NewThreadPool(items []*core.PicItem, onProgress ProgressCallback, onItemChanged ItemChangedCallback, onComplete func(success, errCount, total int)) *ThreadPool {
 	return &ThreadPool{
@@ -47,22 +53,25 @@ func NewThreadPool(items []*core.PicItem, onProgress ProgressCallback, onItemCha
 // 根据配置的 MaxThreads 创建对应数量的 worker goroutine.
 // 调用方需在 Start 之后调用 Wait 阻塞等待所有任务完成.
 func (tp *ThreadPool) Start() {
+	logger.Debug("start thread pool")
 	set := settingLoader.GetSetting()
 	codec.InitSetting(set)
 
-	tp.mu.Lock()
 	tp.totalNum = len(tp.items)
 	tp.currentNum = 0
 	tp.errorNum = 0
 	tp.indexOfPic = 0
 	tp.indexOfOut = set.StartIndex
-	core.ExitFlag = false
-	tp.mu.Unlock()
+	exitFlag = false
+
+	logger.Debug("totalNum: %d", tp.totalNum)
 
 	threadCount := set.MaxThreads
 	if threadCount <= 0 {
 		threadCount = 1
 	}
+
+	logger.Debug("threadCount: %d", threadCount)
 
 	for i := 0; i < threadCount; i++ {
 		tp.wg.Add(1)
@@ -96,8 +105,9 @@ func (tp *ThreadPool) popTask() (item *core.PicItem, input string, output string
 	// 1. 检查全局退出标志
 	// 2. 检查队列是否已被清空 (Stop 调用)
 	// 3. 检查是否所有任务都已取完
-	if core.ExitFlag || tp.items == nil || tp.indexOfPic >= len(tp.items) {
+	if exitFlag || tp.items == nil || tp.indexOfPic >= len(tp.items) {
 		tp.mu.Unlock()
+		logger.Debug("task pool is empty or exitFlag is true")
 		return nil, "", ""
 	}
 
@@ -110,6 +120,7 @@ func (tp *ThreadPool) popTask() (item *core.PicItem, input string, output string
 	item = tp.items[itemIndex]
 	input = item.FullPath
 	output = fileio.GetOutputPath(input, outputIndex)
+	logger.Debug("pop task: %s -> %s", input, output)
 	return item, input, output
 }
 
@@ -130,6 +141,10 @@ func (tp *ThreadPool) worker() {
 
 		// 执行压缩
 		result := compress.Compress(input, output)
+
+		if !result.Ok {
+			logger.Error("compress failed: %s", result.Message)
+		}
 
 		// 更新结果
 		tp.updateResult(item, result, output)
@@ -185,7 +200,7 @@ func (tp *ThreadPool) Stop() {
 	tp.mu.Lock()
 	defer tp.mu.Unlock()
 
-	core.ExitFlag = true
+	exitFlag = true
 	// 清空队列
 	tp.items = nil
 }

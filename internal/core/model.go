@@ -57,7 +57,6 @@ type PicItem struct {
 var (
 	OutputDirPath string
 	PublicDirPath string
-	ExitFlag      bool
 )
 
 // FormatFileSize 将字节数格式化为人类可读的字符串, 自动选择 B/KB/MB 单位.

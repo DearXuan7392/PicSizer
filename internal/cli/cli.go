@@ -41,6 +41,13 @@ var (
 	scale        string
 	width        int
 	height       int
+
+	// 高级设置
+	jpegQuality         int
+	webpQuality         int
+	pngPaletteAlgo      string
+	pngKeepIndexedAlpha bool
+	pngEnableDithering  bool
 )
 
 func init() {
@@ -86,6 +93,18 @@ func init() {
 	flag.IntVar(&width, "w", 0, "缩放目标宽度 (像素), 0 表示不限制")
 	flag.IntVar(&height, "height", 0, "缩放目标高度 (像素), 0 表示不限制")
 	flag.IntVar(&height, "hg", 0, "缩放目标高度 (像素), 0 表示不限制")
+
+	// 高级设置
+	flag.IntVar(&jpegQuality, "jpeg-quality", 0, "JPEG 精细化画质 (0-100), 0 表示按全局画质等级处理")
+	flag.IntVar(&jpegQuality, "jq", 0, "JPEG 精细化画质 (0-100), 0 表示按全局画质等级处理")
+	flag.IntVar(&webpQuality, "webp-quality", 0, "WebP 精细化画质 (0-100), 0 表示按全局画质等级处理")
+	flag.IntVar(&webpQuality, "wq", 0, "WebP 精细化画质 (0-100), 0 表示按全局画质等级处理")
+	flag.StringVar(&pngPaletteAlgo, "png-palette", "mediancut", "PNG 调色盘算法: mediancut / kmeans")
+	flag.StringVar(&pngPaletteAlgo, "pp", "mediancut", "PNG 调色盘算法: mediancut / kmeans")
+	flag.BoolVar(&pngKeepIndexedAlpha, "png-keep-alpha", true, "PNG 索引格式压缩时是否预留透明像素")
+	flag.BoolVar(&pngKeepIndexedAlpha, "pka", true, "PNG 索引格式压缩时是否预留透明像素")
+	flag.BoolVar(&pngEnableDithering, "png-dither", true, "PNG 有损量化时是否启用抖动算法")
+	flag.BoolVar(&pngEnableDithering, "pd", true, "PNG 有损量化时是否启用抖动算法")
 }
 
 // Run 执行命令行模式入口.
@@ -223,21 +242,43 @@ func applySettings() error {
 	set.ScaleWidth = width
 	set.ScaleHeight = height
 
-	// 等比锁定单边校验
-	if set.Scale == settingLoader.ScaleLockSide {
-		w0 := set.ScaleWidth == 0
-		h0 := set.ScaleHeight == 0
-		if (w0 && h0) || (!w0 && !h0) {
-			return fmt.Errorf(strs.ErrScaleLockSideInvalid)
-		}
+	// 高级设置: JPEG 精细化画质
+	if jpegQuality < 0 || jpegQuality > 100 {
+		return fmt.Errorf(strs.CLIErrJpegQuality, jpegQuality)
+	}
+	set.AdvancedJpegQuality = jpegQuality
+
+	// 高级设置: WebP 精细化画质
+	if webpQuality < 0 || webpQuality > 100 {
+		return fmt.Errorf(strs.CLIErrWebpQuality, webpQuality)
+	}
+	set.AdvancedWebPQuality = webpQuality
+
+	// 高级设置: PNG 调色盘算法
+	switch strings.ToLower(pngPaletteAlgo) {
+	case "mediancut":
+		set.AdvancedPngPaletteAlgo = settingLoader.PaletteMedianCut
+	case "kmeans":
+		set.AdvancedPngPaletteAlgo = settingLoader.PaletteKMeans
+	default:
+		return fmt.Errorf(strs.CLIErrPngPalette, pngPaletteAlgo)
 	}
 
-	// 文件名模板重名保护 (非覆盖模式下给出警告, 但不阻止执行)
-	if set.OutputType != settingLoader.OutputCoverOrigin {
-		hasID := strings.Contains(set.OutputFilename, "{id}")
-		hasName := strings.Contains(set.OutputFilename, "{name}")
-		if !hasID && !hasName {
-			fmt.Println(strs.CLIWarnFilenameTplMissing)
+	// 高级设置: PNG 索引透明像素预留
+	set.AdvancedPngKeepIndexedAlpha = pngKeepIndexedAlpha
+
+	// 高级设置: PNG 抖动算法
+	set.AdvancedPngEnableDithering = pngEnableDithering
+
+	// 使用 Setting 自带的校验方法检查错误
+	if errors := set.CheckErrors(); len(errors) > 0 {
+		return fmt.Errorf("%s", strings.Join(errors, "; "))
+	}
+
+	// 使用 Setting 自带的校验方法检查警告 (非覆盖模式下给出警告, 但不阻止执行)
+	if warnings := set.CheckWarnings(); len(warnings) > 0 {
+		for _, w := range warnings {
+			fmt.Println(strs.CLIWarnPrefix + w)
 		}
 	}
 

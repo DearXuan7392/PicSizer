@@ -2,6 +2,7 @@ package codec
 
 import (
 	"PicSizer/internal/core/settingLoader"
+	"PicSizer/internal/utils"
 	"bytes"
 	"encoding/binary"
 	"errors"
@@ -43,41 +44,20 @@ func (c *pngCodec) IsType(data []byte) bool {
 // Decode 将 PNG 数据解码为 image.Image.
 // 解码后会对图像类型进行标准化处理, 降为 32 位图像.
 func (c *pngCodec) Decode(data []byte) (image.Image, error) {
+	logger.Debug("decode png data")
 	img, err := png.Decode(bytes.NewReader(data))
 	if err != nil {
 		return nil, err
 	}
-	hasAlphaChannel := c.HasAlphaChannel(data)
-	return normalizePNGImage(img, hasAlphaChannel), nil
-}
 
-// normalizePNGImage 将 PNG 解码后的图像标准化为 32 位图像.
-// 64 位图像 (RGBA64/NRGBA64) 强制降为 32 位；
-// 调色板图像根据是否含透明通道转为 NRGBA 或 RGBA；
-// Gray 格式转为 RGBA.
-func normalizePNGImage(src image.Image, hasAlphaChannel bool) image.Image {
-	if src == nil {
-		return nil
+	if c.HasAlphaChannel(data) {
+		logger.Debug("convert png to NRGBA image")
+		img = utils.ConvertToNRGBA(img)
+	} else {
+		logger.Debug("convert png to RGBA image")
+		img = utils.ConvertToRGBA(img)
 	}
-
-	bounds := src.Bounds()
-
-	if hasAlphaChannel {
-		if _, ok := src.(*image.NRGBA); ok {
-			return src
-		}
-		dst := image.NewNRGBA(bounds)
-		draw.Draw(dst, bounds, src, bounds.Min, draw.Src)
-		return dst
-	}
-
-	if _, ok := src.(*image.RGBA); ok {
-		return src
-	}
-
-	dst := image.NewRGBA(bounds)
-	draw.Draw(dst, bounds, src, bounds.Min, draw.Src)
-	return dst
+	return img, nil
 }
 
 const (

@@ -2,6 +2,7 @@ package codec
 
 import (
 	"PicSizer/internal/core/settingLoader"
+	"PicSizer/internal/utils"
 	"bytes"
 	"image"
 	"image/jpeg"
@@ -27,7 +28,15 @@ func (c *jpegCodec) IsType(data []byte) bool {
 
 // Decode 将 JPEG 数据解码为 image.Image.
 func (c *jpegCodec) Decode(data []byte) (image.Image, error) {
-	return jpeg.Decode(bytes.NewReader(data))
+	logger.Debug("decode jpeg data")
+	img, err := jpeg.Decode(bytes.NewReader(data))
+	if err != nil {
+		return nil, err
+	}
+
+	logger.Debug("convert jpeg to RGBA image")
+	return utils.ConvertToRGBA(img), nil
+
 }
 
 // EncodeJPEG 将 image.Image 编码为 JPEG 格式的字节数据.

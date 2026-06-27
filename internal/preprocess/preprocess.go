@@ -2,6 +2,7 @@ package preprocess
 
 import (
 	"PicSizer/internal/core/settingLoader"
+	"PicSizer/internal/log"
 	"image"
 )
 
@@ -13,6 +14,10 @@ type Preprocessor interface {
 	Enabled() bool
 	Process(img image.Image) image.Image
 }
+
+var (
+	logger = log.NewLogger("preprocess")
+)
 
 // newPreprocessors 根据当前全局配置构造所有预处理器实例.
 // 顺序即为执行顺序, 新增预处理器只需在此函数内追加即可.
@@ -26,8 +31,10 @@ func newPreprocessors(setting settingLoader.Setting) []Preprocessor {
 // Process 是统一预处理入口, 按注册顺序依次执行所有已启用的预处理器.
 // 返回处理后的图像, 任意一步不会因失败中断整体流程.
 func Process(img image.Image) image.Image {
+	logger.Debug("start preprocess image")
 	if img == nil {
-		return img
+		logger.Error("image is nil")
+		return nil
 	}
 	setting := settingLoader.GetSetting()
 	processors := newPreprocessors(setting)

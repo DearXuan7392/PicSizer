@@ -1,4 +1,4 @@
-package logger
+package log
 
 import (
 	"PicSizer/internal/core/settingLoader"
@@ -17,15 +17,15 @@ import (
 type LogLevel string
 
 const (
-	logPath = "./PicSizerLog.log"
-
 	LevelInfo  LogLevel = "INFO"
+	LevelDebug LogLevel = "DEBUG"
 	LevelWarn  LogLevel = "WARN"
 	LevelError LogLevel = "ERROR"
 )
 
 var (
 	logEnable = false
+	logPath   = "./PicSizerLog.log"
 )
 
 // logMessage 队列中传输的日志结构体
@@ -53,7 +53,8 @@ var (
 func InitLogger() {
 	logEnable = settingLoader.IsDebug()
 	if logEnable {
-		logEnable = true
+		timestamp := time.Now().Format("20060102_150405")
+		logPath = fmt.Sprintf("PicSizerLog_%s.log", timestamp)
 
 		dir := filepath.Dir(logPath)
 		if err := os.MkdirAll(dir, 0755); err != nil {
@@ -135,15 +136,28 @@ func (l *AsyncLogger) pushLog(level LogLevel, format string, v ...interface{}) {
 
 // Info 打印 info 级别日志
 func (l *AsyncLogger) Info(format string, v ...interface{}) {
-	l.pushLog(LevelInfo, format, v...)
+	if logEnable {
+		l.pushLog(LevelInfo, format, v...)
+	}
+}
+
+// Debug 打印 debug 级别日志
+func (l *AsyncLogger) Debug(format string, v ...interface{}) {
+	if logEnable {
+		l.pushLog(LevelDebug, format, v...)
+	}
 }
 
 // Warn 打印 warn 级别日志
 func (l *AsyncLogger) Warn(format string, v ...interface{}) {
-	l.pushLog(LevelWarn, format, v...)
+	if logEnable {
+		l.pushLog(LevelWarn, format, v...)
+	}
 }
 
 // Error 打印 error 级别日志
 func (l *AsyncLogger) Error(format string, v ...interface{}) {
-	l.pushLog(LevelError, format, v...)
+	if logEnable {
+		l.pushLog(LevelError, format, v...)
+	}
 }

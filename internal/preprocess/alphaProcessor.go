@@ -33,14 +33,17 @@ func (a *AlphaProcessor) Enabled() bool {
 // 智能移除模式: 仅当透明通道冗余 (无任何非255像素) 时按白色背景合成移除通道.
 // 全部移除模式: 不做检查, 直接按白色背景合成.
 func (a *AlphaProcessor) Process(img image.Image) image.Image {
+	logger.Debug("start preprocess: %s", a.Name())
+
 	if img == nil {
-		return img
+		return nil
 	}
 
 	switch img.(type) {
-	case *image.NRGBA, *image.NRGBA64:
+	case *image.NRGBA, *image.NRGBA64, *image.NYCbCrA:
 		break
 	default:
+		logger.Debug("no alpha channel in image, skip preprocess")
 		return img
 	}
 
@@ -49,12 +52,17 @@ func (a *AlphaProcessor) Process(img image.Image) image.Image {
 	switch a.mode {
 	case settingLoader.AlphaSmartRemove:
 		if utils.HasAlphaPixel(img) {
+			logger.Debug("smart remove: image has alpha pixel, skip preprocess")
 			return img
 		}
+		logger.Debug("smart remove: image has no alpha pixel, composite on white background")
 		return utils.CompositeOnWhite(img, bounds)
 	case settingLoader.AlphaRemove:
+		logger.Debug("remove alpha: composite on white background")
 		return utils.CompositeOnWhite(img, bounds)
 	default:
+		// 理论上不会走到这里
+		logger.Debug("keep alpha: do nothing")
 		return img
 	}
 }

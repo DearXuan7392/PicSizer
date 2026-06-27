@@ -3,6 +3,7 @@ package codec
 import (
 	"PicSizer/internal/core/settingLoader"
 	"errors"
+	"fmt"
 	"image"
 	"os"
 	"sync"
@@ -18,19 +19,16 @@ var (
 // RegisterCodec 注册一个图片编解码器到全局注册表.
 // 编解码器按注册顺序进行类型匹配, 先注册的优先匹配.
 func RegisterCodec(codec ImageCodec) {
-	registryMu.Lock()
-	defer registryMu.Unlock()
+	logger.Debug("register codec: %s", codec.Name())
 	registry = append(registry, codec)
 }
 
 // GetCodec 根据图片数据的文件头特征获取匹配的编解码器.
 // 遍历注册表, 返回第一个能识别该数据格式的编解码器.
 func GetCodec(data []byte) ImageCodec {
-	registryMu.RLock()
-	defer registryMu.RUnlock()
-
 	for _, codec := range registry {
 		if codec.IsType(data) {
+			logger.Debug("get codec: %s", codec.Name())
 			return codec
 		}
 	}
@@ -46,25 +44,27 @@ func init() {
 
 func InitSetting(set settingLoader.Setting) {
 	for _, codec := range registry {
+		logger.Debug("init codec: %s", codec.Name())
 		codec.InitSetting(set)
 	}
 }
 
 // LoadImage 从指定路径加载图片文件, 自动检测格式并解码为 image.Image.
 func LoadImage(imgPath string) (image.Image, error) {
+	logger.Debug("load image: %s", imgPath)
 	data, err := os.ReadFile(imgPath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf(strs.CodecErrReadFileFailed, err.Error())
 	}
 
 	codec := GetCodec(data)
 	if codec == nil {
-		return nil, errors.New(strs.CodecErrUnsupportedFormat)
+		return nil, errors.New(strs.CodecErrUnsupportedCodec)
 	}
 
 	img, err := codec.Decode(data)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf(strs.CodecErrDecodeFailed, err.Error())
 	}
 
 	return img, nil
