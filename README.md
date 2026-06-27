@@ -65,6 +65,8 @@ PicSizer 是一款图片批量压缩软件, 解决了传统压缩软件只能指
 
 [转到 Gitee 下载](https://gitee.com/dearxuan/pic-sizer/releases)
 
+[转到 GitHub 下载](https://github.com/DearXuan7392/PicSizer/releases/)
+
 ## 开始使用
 
 ### 支持的格式
