@@ -214,4 +214,4 @@ PicSizer 是一款图片批量压缩软件, 解决了传统压缩软件只能指
 本项目采用 [Apache-2.0 协议](LICENSE) 开源.
 
 ### 第三方组件声明
-本项目包含第三方开源组件 (包括 Apache-2.0, MIT 和 BSD-3-Clause 协议的库). 有关完整的第三方软件归属、声明和许可协议列表，请参阅 [CREDITS.md](CREDITS.md) 或发布包中的 `THIRD_PARTY_LICENSES` 文件夹。
+本项目包含第三方开源组件 (包括 Apache-2.0, MIT 和 BSD-3-Clause 协议的库). 有关完整的第三方软件归属, 声明和许可协议列表, 请参阅 [CREDITS.md](CREDITS.md).
