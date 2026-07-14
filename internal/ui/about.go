@@ -1,9 +1,7 @@
 package ui
 
 import (
-	"PicSizer/internal/core/strings"
-	"os/exec"
-	"runtime"
+	strs "PicSizer/internal/core/strings"
 
 	"github.com/lxn/walk"
 	"github.com/lxn/walk/declarative"
@@ -17,20 +15,6 @@ type AboutForm struct {
 // NewAboutForm 创建关于窗口实例.
 func NewAboutForm() *AboutForm {
 	return &AboutForm{}
-}
-
-// openURL 在系统默认浏览器中打开指定的 URL
-func openURL(url string) {
-	var cmd *exec.Cmd
-	switch runtime.GOOS {
-	case "windows":
-		cmd = exec.Command("cmd", "/c", "start", url)
-	case "darwin":
-		cmd = exec.Command("open", url)
-	default: // linux, freebsd 等
-		cmd = exec.Command("xdg-open", url)
-	}
-	_ = cmd.Start()
 }
 
 // Show 显示关于窗口, 继承主窗体的 TopMost 属性.
@@ -84,8 +68,6 @@ func (af *AboutForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 						Alignment: declarative.AlignHCenterVCenter,
 						Font:      declarative.Font{PointSize: 11},
 					},
-
-					// ==================== 开源协议声明板块 ====================
 					declarative.VSpacer{Size: 5},
 					declarative.Label{
 						Text:      strs.AboutLicense,
@@ -94,14 +76,13 @@ func (af *AboutForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 						TextColor: walk.RGB(120, 120, 120),
 					},
 					declarative.LinkLabel{
-						Text:      strs.AboutCredits,
+						Text:      `<a href="credits">` + strs.AboutCredits + `</a>`,
 						Alignment: declarative.AlignHCenterVCenter,
-						Font:      declarative.Font{PointSize: 9, Underline: true},
+						Font:      declarative.Font{PointSize: 9},
 						OnLinkActivated: func(link *walk.LinkLabelLink) {
-							openURL(link.URL())
+							af.onShowCredits(owner, appIcon)
 						},
 					},
-					// =============================================================
 				},
 			},
 			declarative.VSpacer{},
@@ -131,4 +112,10 @@ func (af *AboutForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 
 	af.Dialog.Run()
 	return nil
+}
+
+// onShowCredits 点击"查看第三方开源协议与致谢"按钮时, 弹出 CreditsForm 窗口.
+func (af *AboutForm) onShowCredits(_ walk.Form, appIcon *walk.Icon) {
+	creditsForm := NewCreditsForm()
+	_ = creditsForm.Show(af.Dialog, appIcon)
 }

@@ -7,8 +7,9 @@ var (
 
 	TitleMain     = AppName + " - 图片压缩工具"
 	TitleSetting  = "压缩设置"
-	TitleAbout    = "关于 " + AppName
+	TitleAbout    = "关于"
 	TitleProgress = "压缩进度"
+	TitleCredits  = "第三方开源协议"
 
 	AboutTitle   = AppName
 	AboutVersion = "版本: " + AppVersion
@@ -16,5 +17,5 @@ var (
 		"支持 JPEG、PNG、WebP 格式\n" +
 		"支持按图像质量或压缩后大小进行压缩"
 	AboutLicense = "本软件基于 Apache-2.0 协议开源"
-	AboutCredits = `<a href="https://github.com/DearXuan7392/PicSizer/blob/v6/CREDITS.md">查看第三方开源协议与致谢</a>`
+	AboutCredits = "查看第三方开源协议与致谢"
 )
