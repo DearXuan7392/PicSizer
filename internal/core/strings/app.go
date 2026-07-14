@@ -3,12 +3,12 @@ package strs
 // AppName 和 AppVersion 分别表示应用程序的名称和版本号.
 var (
 	AppName    = "PicSizer"
-	AppVersion = "v6.0.0"
+	AppVersion = "v6.0.1"
 
 	TitleMain     = AppName + " - 图片压缩工具"
-	TitleSetting  = "压缩设置"
+	TitleSetting  = "设置"
 	TitleAbout    = "关于"
-	TitleProgress = "压缩进度"
+	TitleProgress = "进度"
 	TitleCredits  = "第三方开源协议"
 
 	AboutTitle   = AppName
