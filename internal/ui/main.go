@@ -8,6 +8,8 @@ import (
 	"PicSizer/internal/fileio"
 	"PicSizer/internal/server"
 	"fmt"
+	"os"
+	"path/filepath"
 	"sync"
 
 	"github.com/lxn/walk"
@@ -34,6 +36,14 @@ type MainForm struct {
 	poolMu        sync.Mutex
 	pool          *server.ThreadPool
 	startupPaths  []string
+
+	// outputPathUserModified 记录用户是否主动修改过输出路径.
+	// 一旦为 true, 不再自动计算输出路径.
+	outputPathUserModified bool
+	// currentCommonDir 存放当前所有图片的公共目录 (未手动修改时使用).
+	currentCommonDir string
+	// suppressPathUpdate 用于抑制 SetText 触发的 TextChanged 事件.
+	suppressPathUpdate bool
 }
 
 // NewMainForm 创建主窗口实例, 注入子窗体回调.
@@ -199,11 +209,14 @@ func (mf *MainForm) Run(appIcon *walk.Icon) error {
 	mf.applyRadioToOutputType(setting.OutputType)
 	mf.onRadioChange()
 
+	mf.initOutputDirEdit()
+
 	mf.MainWindow.Show()
 	mf.applyTopMost(setting.TopMost)
 
 	// 处理通过拖拽到程序图标传入的文件/文件夹路径
 	mf.processStartupPaths()
+	mf.updateOutputPathFromCommonDir()
 
 	mf.MainWindow.Run()
 	return nil
@@ -220,6 +233,7 @@ func (mf *MainForm) onAddFiles() {
 	if len(paths) > 0 {
 		mf.picListView.AddPicturesFromPaths(paths)
 		mf.updateSelectLabel()
+		mf.updateOutputPathFromCommonDir()
 	}
 }
 
@@ -229,6 +243,7 @@ func (mf *MainForm) onAddFolder() {
 	if dir != "" {
 		mf.picListView.AddPicturesFromDirectory(dir)
 		mf.updateSelectLabel()
+		mf.updateOutputPathFromCommonDir()
 	}
 }
 
@@ -248,7 +263,11 @@ func (mf *MainForm) onDropFiles(files []string) {
 			if len(files) == 1 && !mf.coverRadio.Checked() {
 				info, err := fileio.GetFileInfo(files[0])
 				if err == nil && info.IsDir() {
+					mf.suppressPathUpdate = true
 					mf.outputDirEdit.SetText(files[0])
+					mf.suppressPathUpdate = false
+					mf.outputPathUserModified = true
+					mf.updateOutputDirFont()
 					return
 				}
 			}
@@ -271,13 +290,18 @@ func (mf *MainForm) onDropFiles(files []string) {
 		mf.picListView.AddPicturesFromPaths(imageFiles)
 	}
 	mf.updateSelectLabel()
+	mf.updateOutputPathFromCommonDir()
 }
 
 // onBrowseDir 打开浏览文件夹对话框, 设置输出目录路径.
 func (mf *MainForm) onBrowseDir() {
 	dir := ShowBrowseFolderDialog(mf.MainWindow, strs.TextOutputDir)
 	if dir != "" {
+		mf.suppressPathUpdate = true
 		mf.outputDirEdit.SetText(dir)
+		mf.suppressPathUpdate = false
+		mf.outputPathUserModified = true
+		mf.updateOutputDirFont()
 	}
 }
 
@@ -478,6 +502,96 @@ func (mf *MainForm) onSelectReverse() {
 // onExit 退出程序.
 func (mf *MainForm) onExit() {
 	mf.MainWindow.Close()
+}
+
+// initOutputDirEdit 初始化输出路径输入框的事件和样式.
+func (mf *MainForm) initOutputDirEdit() {
+	mf.outputDirEdit.TextChanged().Attach(func() {
+		if mf.suppressPathUpdate {
+			return
+		}
+		mf.outputPathUserModified = true
+		mf.updateOutputDirFont()
+	})
+	mf.updateOutputDirFont()
+}
+
+// updateOutputDirFont 根据是否手动修改更新输出路径输入框的样式.
+// 自动模式: 斜体灰色; 手动模式: 正体黑色.
+func (mf *MainForm) updateOutputDirFont() {
+	if mf.outputDirEdit == nil {
+		return
+	}
+	if mf.outputPathUserModified {
+		f, _ := walk.NewFont("", 9, 0)
+		mf.outputDirEdit.SetFont(f)
+		mf.outputDirEdit.SetTextColor(walk.RGB(0, 0, 0))
+	} else {
+		f, _ := walk.NewFont("", 9, walk.FontItalic)
+		mf.outputDirEdit.SetFont(f)
+		mf.outputDirEdit.SetTextColor(walk.RGB(128, 128, 128))
+	}
+}
+
+// updateOutputPathFromCommonDir 从当前图片列表计算公共路径,
+// 自动生成输出目录并更新输入框 (仅在用户未手动修改时生效).
+func (mf *MainForm) updateOutputPathFromCommonDir() {
+	if mf.outputPathUserModified || mf.picListView == nil {
+		return
+	}
+	items := mf.picListView.GetModel().GetItems()
+	if len(items) == 0 {
+		return
+	}
+	var paths []string
+	for _, item := range items {
+		paths = append(paths, item.FullPath)
+	}
+	prefix, ok := fileio.GetCommonPrefix(paths)
+	if !ok {
+		// 跨盘符, 忽略
+		return
+	}
+	mf.currentCommonDir = prefix
+
+	baseDir := filepath.Join(prefix, "PicSizerOutput")
+	outputDir := findAvailableOutputDir(baseDir)
+
+	mf.suppressPathUpdate = true
+	mf.outputDirEdit.SetText(outputDir)
+	mf.suppressPathUpdate = false
+}
+
+// findAvailableOutputDir 查找可用的输出目录.
+// 先尝试 baseDir, 若已存在且非空则依次尝试 baseDir2, baseDir3...
+func findAvailableOutputDir(baseDir string) string {
+	if !pathExists(baseDir) || isDirEmpty(baseDir) {
+		return baseDir
+	}
+	for i := 2; i <= 100; i++ {
+		d := fmt.Sprintf("%s%d", baseDir, i)
+		if !pathExists(d) || isDirEmpty(d) {
+			return d
+		}
+	}
+	return baseDir
+}
+
+// pathExists 检查路径是否存在.
+func pathExists(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil
+}
+
+// isDirEmpty 检查目录是否为空. 路径不存在时视为空.
+func isDirEmpty(path string) bool {
+	f, err := os.Open(path)
+	if err != nil {
+		return true
+	}
+	defer f.Close()
+	_, err = f.Readdirnames(1)
+	return err != nil
 }
 
 // processStartupPaths 处理通过拖拽文件/文件夹到程序图标传入的路径.
