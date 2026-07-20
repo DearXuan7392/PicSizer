@@ -281,7 +281,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 										Tip:          strs.TipStartIndex,
 										AssignTo:     &sf.startIndexEdit,
 										Value:        float64(set.StartIndex),
-										MinValue:     1,
+										MinValue:     0,
 										MaxValue:     settingLoader.StartIndexMaxValue,
 										Width:        settingControlWidth,
 										ParentHwndFn: sf.parentHwndFn(),
