@@ -33,14 +33,17 @@ type MainForm struct {
 	appIcon       *walk.Icon
 	poolMu        sync.Mutex
 	pool          *server.ThreadPool
+	startupPaths  []string
 }
 
 // NewMainForm 创建主窗口实例, 注入子窗体回调.
-func NewMainForm() *MainForm {
+// startupPaths 为通过拖拽文件/文件夹到程序图标传入的路径, 窗口创建后自动加载.
+func NewMainForm(startupPaths []string) *MainForm {
 	mf := &MainForm{
 		progressForm: NewProgressForm(),
 		settingForm:  NewSettingForm(),
 		aboutForm:    NewAboutForm(),
+		startupPaths: startupPaths,
 	}
 	mf.settingForm.SetOnTopMostChanged(mf.applyTopMost)
 	mf.settingForm.SetOnOutputTypeChanged(mf.onOutputTypeFromSetting)
@@ -198,6 +201,9 @@ func (mf *MainForm) Run(appIcon *walk.Icon) error {
 
 	mf.MainWindow.Show()
 	mf.applyTopMost(setting.TopMost)
+
+	// 处理通过拖拽到程序图标传入的文件/文件夹路径
+	mf.processStartupPaths()
 
 	mf.MainWindow.Run()
 	return nil
@@ -472,6 +478,31 @@ func (mf *MainForm) onSelectReverse() {
 // onExit 退出程序.
 func (mf *MainForm) onExit() {
 	mf.MainWindow.Close()
+}
+
+// processStartupPaths 处理通过拖拽文件/文件夹到程序图标传入的路径.
+// 目录会递归扫描, 图片文件直接添加, 并在处理完成后更新状态栏.
+func (mf *MainForm) processStartupPaths() {
+	if len(mf.startupPaths) == 0 {
+		return
+	}
+
+	var imageFiles []string
+	for _, path := range mf.startupPaths {
+		info, err := fileio.GetFileInfo(path)
+		if err != nil {
+			continue
+		}
+		if info.IsDir() {
+			mf.picListView.AddPicturesFromDirectory(path)
+		} else if fileio.IsImageFile(path) {
+			imageFiles = append(imageFiles, path)
+		}
+	}
+	if len(imageFiles) > 0 {
+		mf.picListView.AddPicturesFromPaths(imageFiles)
+	}
+	mf.updateSelectLabel()
 }
 
 // updateSelectLabel 更新底部状态栏的选中/总数标签.
