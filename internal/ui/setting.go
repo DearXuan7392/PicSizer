@@ -4,6 +4,7 @@ import (
 	"PicSizer/internal/core/settingLoader"
 	strs "PicSizer/internal/core/strings"
 	"PicSizer/internal/dialog"
+	"PicSizer/internal/ui/controls"
 	"os"
 	"os/exec"
 	"runtime"
@@ -28,26 +29,26 @@ type SettingForm struct {
 	fileSizeRadio     *walk.RadioButton
 	qualityLabel      *walk.Label  // 用于显示当前画质等级文本
 	qualitySlider     *walk.Slider // 画质滑块
-	limitSizeEdit     *walk.NumberEdit
+	limitSizeEdit     *controls.NumberEditWidget
 	sizeUnitCombo     *walk.ComboBox
 	acceptExceedCheck *walk.CheckBox
 	outputTypeCombo   *walk.ComboBox
 	extensionCombo    *walk.ComboBox
 	filenameEdit      *walk.LineEdit
-	startIndexEdit    *walk.NumberEdit
-	maxThreadsEdit    *walk.NumberEdit
+	startIndexEdit    *controls.NumberEditWidget
+	maxThreadsEdit    *controls.NumberEditWidget
 	threadSlider      *walk.Slider
 	topMostCheck      *walk.CheckBox
 
 	// 预处理设置控件
 	alphaCombo  *walk.ComboBox
 	scaleCombo  *walk.ComboBox
-	scaleWidth  *walk.NumberEdit
-	scaleHeight *walk.NumberEdit
+	scaleWidth  *controls.NumberEditWidget
+	scaleHeight *controls.NumberEditWidget
 
 	// 高级设置
-	jpegQualityEdit      *walk.NumberEdit
-	webpQualityEdit      *walk.NumberEdit
+	jpegQualityEdit      *controls.NumberEditWidget
+	webpQualityEdit      *controls.NumberEditWidget
 	pngPaletteAlgoCombo  *walk.ComboBox
 	pngKeepAlphaCheckBox *walk.CheckBox
 	pngDitheringCheckBox *walk.CheckBox
@@ -55,6 +56,9 @@ type SettingForm struct {
 	debugModeCheck *walk.CheckBox
 
 	maxThreads int
+
+	// suppressSync 防止线程编辑框与滑块之间的双向同步导致无限递归
+	suppressSync bool
 
 	// workingCopy 存储设置的拷贝, 所有修改都作用于此拷贝
 	workingCopy settingLoader.Setting
@@ -112,7 +116,10 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 								Title:  strs.TextCompressSetting,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
-									sf.makeLabelWithTip(strs.TextCompressMode, strs.TipCompressMode),
+									controls.LabelWithTip{
+										Label: strs.TextCompressMode,
+										Tip:   strs.TipCompressMode,
+									},
 									declarative.Composite{
 										Layout:  declarative.HBox{Spacing: 20, MarginsZero: true},
 										MinSize: declarative.Size{Width: settingControlWidth, Height: 0},
@@ -133,7 +140,10 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 											},
 										},
 									},
-									sf.makeLabelWithTip(strs.TextQuality, strs.TipQuality),
+									controls.LabelWithTip{
+										Label: strs.TextQuality,
+										Tip:   strs.TipQuality,
+									},
 									// 画质滑块组合
 									declarative.Composite{
 										Layout: declarative.HBox{Spacing: 5, MarginsZero: true},
@@ -158,21 +168,23 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 											},
 										},
 									},
-									sf.makeLabelWithTip(strs.TextLimitSize, strs.TipLimitSize),
+									controls.LabelWithTip{
+										Label: strs.TextLimitSize,
+										Tip:   strs.TipLimitSize,
+									},
 									declarative.Composite{
 										Layout: declarative.HBox{Spacing: 5, MarginsZero: true},
 										Children: []declarative.Widget{
 											declarative.HSpacer{},
-											declarative.NumberEdit{
-												AssignTo:      &sf.limitSizeEdit,
-												Value:         float64(set.LimitSize),
-												MinValue:      1,
-												MaxValue:      100000,
-												Decimals:      0,
-												Enabled:       !isQualityMode,
-												StretchFactor: 1,
-												MinSize:       declarative.Size{Width: settingControlWidth - 45, Height: 0},
-												MaxSize:       declarative.Size{Width: settingControlWidth - 45, Height: 0},
+											controls.NumberEdit{
+												AssignTo: &sf.limitSizeEdit,
+												Value:    float64(set.LimitSize),
+												MinValue: 1,
+												MaxValue: settingLoader.LimitSizeMaxValue,
+												Decimals: 0,
+												Enabled:  !isQualityMode,
+												MinSize:  declarative.Size{Width: settingControlWidth - 45, Height: 0},
+												MaxSize:  declarative.Size{Width: settingControlWidth - 45, Height: 0},
 											},
 											declarative.ComboBox{
 												AssignTo: &sf.sizeUnitCombo,
@@ -186,7 +198,13 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 										},
 									},
 									declarative.Label{Text: " "},
-									sf.makeCheckBoxWithTip(&sf.acceptExceedCheck, strs.TextAcceptExceed, set.AcceptExceed, strs.TipAcceptExceed),
+									controls.CheckBoxWithTip{
+										AssignTo: &sf.acceptExceedCheck,
+										Text:     strs.TextAcceptExceed,
+										Checked:  set.AcceptExceed,
+										Tip:      strs.TipAcceptExceed,
+										Width:    settingControlWidth,
+									},
 								},
 							},
 							// 输出设置组
@@ -194,7 +212,10 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 								Title:  strs.TextOutputFormat,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
-									sf.makeLabelWithTip(strs.TextOutputMode, strs.TipOutputType),
+									controls.LabelWithTip{
+										Label: strs.TextOutputMode,
+										Tip:   strs.TipOutputType,
+									},
 									declarative.Composite{
 										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -210,7 +231,10 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 											},
 										},
 									},
-									sf.makeLabelWithTip(strs.TextOutputFormat, strs.TipExtension),
+									controls.LabelWithTip{
+										Label: strs.TextOutputFormat,
+										Tip:   strs.TipExtension,
+									},
 									declarative.Composite{
 										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -225,35 +249,42 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 											},
 										},
 									},
-									sf.makeLabelWithTip(strs.TextFilenameTpl, strs.TipFilenameTpl),
-									declarative.Composite{
-										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
-										Children: []declarative.Widget{
-											declarative.HSpacer{},
-											declarative.LineEdit{
-												AssignTo: &sf.filenameEdit,
-												Text:     set.OutputFilename,
-												MinSize:  declarative.Size{Width: settingControlWidth, Height: 0},
-												MaxSize:  declarative.Size{Width: settingControlWidth, Height: 0},
-											},
-										},
-									},
-									sf.makeLabelWithTip(strs.TextStartIndex, strs.TipStartIndex),
-									declarative.Composite{
-										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
-										Children: []declarative.Widget{
-											declarative.HSpacer{},
-											declarative.NumberEdit{
-												AssignTo: &sf.startIndexEdit,
-												Value:    float64(set.StartIndex),
-												MinValue: 1,
-												MaxValue: 99999,
-												Decimals: 0,
-												MinSize:  declarative.Size{Width: settingControlWidth, Height: 0},
-												MaxSize:  declarative.Size{Width: settingControlWidth, Height: 0},
-											},
-										},
-									},
+									(&controls.LineEditWithTip{
+										Label:        strs.TextFilenameTpl,
+										Tip:          strs.TipFilenameTpl,
+										AssignTo:     &sf.filenameEdit,
+										Text:         set.OutputFilename,
+										Width:        settingControlWidth,
+										ParentHwndFn: sf.parentHwndFn(),
+									}).BuildLabel(),
+									(&controls.LineEditWithTip{
+										Label:        strs.TextFilenameTpl,
+										Tip:          strs.TipFilenameTpl,
+										AssignTo:     &sf.filenameEdit,
+										Text:         set.OutputFilename,
+										Width:        settingControlWidth,
+										ParentHwndFn: sf.parentHwndFn(),
+									}).BuildInput(),
+									(&controls.NumberEditWithTip{
+										Label:        strs.TextStartIndex,
+										Tip:          strs.TipStartIndex,
+										AssignTo:     &sf.startIndexEdit,
+										Value:        float64(set.StartIndex),
+										MinValue:     0,
+										MaxValue:     settingLoader.StartIndexMaxValue,
+										Width:        settingControlWidth,
+										ParentHwndFn: sf.parentHwndFn(),
+									}).BuildLabel(),
+									(&controls.NumberEditWithTip{
+										Label:        strs.TextStartIndex,
+										Tip:          strs.TipStartIndex,
+										AssignTo:     &sf.startIndexEdit,
+										Value:        float64(set.StartIndex),
+										MinValue:     1,
+										MaxValue:     settingLoader.StartIndexMaxValue,
+										Width:        settingControlWidth,
+										ParentHwndFn: sf.parentHwndFn(),
+									}).BuildInput(),
 								},
 							},
 							// 系统设置组
@@ -261,7 +292,10 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 								Title:  strs.TextSystemSetting,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
-									sf.makeLabelWithTip(strs.TextMaxThreads, strs.TipMaxThreads),
+									controls.LabelWithTip{
+										Label: strs.TextMaxThreads,
+										Tip:   strs.TipMaxThreads,
+									},
 									declarative.Composite{
 										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -271,12 +305,13 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 												MinSize: declarative.Size{Width: settingControlWidth, Height: 0},
 												MaxSize: declarative.Size{Width: settingControlWidth, Height: 0},
 												Children: []declarative.Widget{
-													declarative.NumberEdit{
+													controls.NumberEdit{
 														AssignTo:       &sf.maxThreadsEdit,
 														Value:          float64(set.MaxThreads),
 														MinValue:       1,
 														MaxValue:       float64(sf.maxThreads),
 														Decimals:       0,
+														Enabled:        true,
 														OnValueChanged: func() { sf.onThreadEditChange() },
 													},
 													declarative.Slider{
@@ -293,7 +328,13 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 										},
 									},
 									declarative.Label{Text: " "},
-									sf.makeCheckBoxWithTip(&sf.topMostCheck, strs.TextTopMost, set.TopMost, strs.TipTopMost),
+									controls.CheckBoxWithTip{
+										AssignTo: &sf.topMostCheck,
+										Text:     strs.TextTopMost,
+										Checked:  set.TopMost,
+										Tip:      strs.TipTopMost,
+										Width:    settingControlWidth,
+									},
 								},
 							},
 							declarative.VSpacer{},
@@ -309,7 +350,10 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 								Title:  strs.TextScale,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
-									sf.makeLabelWithTip(strs.TextScale, strs.TipScale),
+									controls.LabelWithTip{
+										Label: strs.TextScale,
+										Tip:   strs.TipScale,
+									},
 									declarative.Composite{
 										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -332,40 +376,50 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 											},
 										},
 									},
-									sf.makeLabelWithTip(strs.TextScaleWidth, strs.TipScaleWidth),
-									declarative.Composite{
-										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
-										Children: []declarative.Widget{
-											declarative.HSpacer{},
-											declarative.NumberEdit{
-												AssignTo: &sf.scaleWidth,
-												Value:    float64(set.ScaleWidth),
-												MinValue: 0,
-												MaxValue: 100000000,
-												Decimals: 0,
-												Enabled:  set.Scale != settingLoader.ScaleNone,
-												MinSize:  declarative.Size{Width: settingControlWidth, Height: 0},
-												MaxSize:  declarative.Size{Width: settingControlWidth, Height: 0},
-											},
-										},
-									},
-									sf.makeLabelWithTip(strs.TextScaleHeight, strs.TipScaleHeight),
-									declarative.Composite{
-										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
-										Children: []declarative.Widget{
-											declarative.HSpacer{},
-											declarative.NumberEdit{
-												AssignTo: &sf.scaleHeight,
-												Value:    float64(set.ScaleHeight),
-												MinValue: 0,
-												MaxValue: 100000000,
-												Decimals: 0,
-												Enabled:  set.Scale != settingLoader.ScaleNone,
-												MinSize:  declarative.Size{Width: settingControlWidth, Height: 0},
-												MaxSize:  declarative.Size{Width: settingControlWidth, Height: 0},
-											},
-										},
-									},
+									(&controls.NumberEditWithTip{
+										Label:        strs.TextScaleWidth,
+										Tip:          strs.TipScaleWidth,
+										AssignTo:     &sf.scaleWidth,
+										Value:        float64(set.ScaleWidth),
+										MinValue:     0,
+										MaxValue:     settingLoader.HeightWidthMaxValue,
+										Enabled:      ptrBool(set.Scale != settingLoader.ScaleNone),
+										Width:        settingControlWidth,
+										ParentHwndFn: sf.parentHwndFn(),
+									}).BuildLabel(),
+									(&controls.NumberEditWithTip{
+										Label:        strs.TextScaleWidth,
+										Tip:          strs.TipScaleWidth,
+										AssignTo:     &sf.scaleWidth,
+										Value:        float64(set.ScaleWidth),
+										MinValue:     0,
+										MaxValue:     settingLoader.HeightWidthMaxValue,
+										Enabled:      ptrBool(set.Scale != settingLoader.ScaleNone),
+										Width:        settingControlWidth,
+										ParentHwndFn: sf.parentHwndFn(),
+									}).BuildInput(),
+									(&controls.NumberEditWithTip{
+										Label:        strs.TextScaleHeight,
+										Tip:          strs.TipScaleHeight,
+										AssignTo:     &sf.scaleHeight,
+										Value:        float64(set.ScaleHeight),
+										MinValue:     0,
+										MaxValue:     settingLoader.HeightWidthMaxValue,
+										Enabled:      ptrBool(set.Scale != settingLoader.ScaleNone),
+										Width:        settingControlWidth,
+										ParentHwndFn: sf.parentHwndFn(),
+									}).BuildLabel(),
+									(&controls.NumberEditWithTip{
+										Label:        strs.TextScaleHeight,
+										Tip:          strs.TipScaleHeight,
+										AssignTo:     &sf.scaleHeight,
+										Value:        float64(set.ScaleHeight),
+										MinValue:     0,
+										MaxValue:     settingLoader.HeightWidthMaxValue,
+										Enabled:      ptrBool(set.Scale != settingLoader.ScaleNone),
+										Width:        settingControlWidth,
+										ParentHwndFn: sf.parentHwndFn(),
+									}).BuildInput(),
 								},
 							},
 							// 透明度处理组
@@ -373,7 +427,10 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 								Title:  strs.TextAlphaHandle,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
-									sf.makeLabelWithTip(strs.TextAlphaHandle, strs.TipAlphaHandle),
+									controls.LabelWithTip{
+										Label: strs.TextAlphaHandle,
+										Tip:   strs.TipAlphaHandle,
+									},
 									declarative.Composite{
 										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -407,23 +464,27 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 								Title:  strs.TextAdvJPEGSettings,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
-									sf.makeLabelWithTip(strs.TextAdvFineQuality, strs.TipAdvFineQuality),
-									declarative.Composite{
-										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
-										Children: []declarative.Widget{
-											declarative.HSpacer{},
-											declarative.NumberEdit{
-												AssignTo:    &sf.jpegQualityEdit,
-												Value:       float64(set.AdvancedJpegQuality),
-												MinValue:    0,
-												MaxValue:    100,
-												Decimals:    0,
-												ToolTipText: strs.TipAdvFineQuality,
-												MinSize:     declarative.Size{Width: settingControlWidth, Height: 0},
-												MaxSize:     declarative.Size{Width: settingControlWidth, Height: 0},
-											},
-										},
-									},
+									(&controls.NumberEditWithTip{
+										Label:        strs.TextAdvFineQuality,
+										Tip:          strs.TipAdvFineQuality,
+										AssignTo:     &sf.jpegQualityEdit,
+										Value:        float64(set.AdvancedJpegQuality),
+										MinValue:     0,
+										MaxValue:     100,
+										ToolTipText:  strs.TipAdvFineQuality,
+										Width:        settingControlWidth,
+										ParentHwndFn: sf.parentHwndFn(),
+									}).BuildLabel(),
+									(&controls.NumberEditWithTip{
+										Label:       strs.TextAdvFineQuality,
+										Tip:         strs.TipAdvFineQuality,
+										AssignTo:    &sf.jpegQualityEdit,
+										Value:       float64(set.AdvancedJpegQuality),
+										MinValue:    0,
+										MaxValue:    100,
+										ToolTipText: strs.TipAdvFineQuality,
+										Width:       settingControlWidth, ParentHwndFn: sf.parentHwndFn(),
+									}).BuildInput(),
 								},
 							},
 							// PNG 设置容器
@@ -431,7 +492,10 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 								Title:  strs.TextAdvPNGSettings,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
-									sf.makeLabelWithTip(strs.TextPngPaletteAlgo, strs.TipPngPaletteAlgo),
+									controls.LabelWithTip{
+										Label: strs.TextPngPaletteAlgo,
+										Tip:   strs.TipPngPaletteAlgo,
+									},
 									declarative.Composite{
 										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -450,12 +514,24 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 										Text:    " ",
 										MinSize: declarative.Size{Width: 150, Height: 0},
 									},
-									sf.makeCheckBoxWithTip(&sf.pngKeepAlphaCheckBox, strs.TextPngKeepIndexedAlpha, set.AdvancedPngKeepIndexedAlpha, strs.TipPngKeepIndexedAlpha),
+									controls.CheckBoxWithTip{
+										AssignTo: &sf.pngKeepAlphaCheckBox,
+										Text:     strs.TextPngKeepIndexedAlpha,
+										Checked:  set.AdvancedPngKeepIndexedAlpha,
+										Tip:      strs.TipPngKeepIndexedAlpha,
+										Width:    settingControlWidth,
+									},
 									declarative.Label{
 										Text:    " ",
 										MinSize: declarative.Size{Width: 150, Height: 0},
 									},
-									sf.makeCheckBoxWithTip(&sf.pngDitheringCheckBox, strs.TextPngEnableDithering, set.AdvancedPngEnableDithering, strs.TipPngEnableDithering),
+									controls.CheckBoxWithTip{
+										AssignTo: &sf.pngDitheringCheckBox,
+										Text:     strs.TextPngEnableDithering,
+										Checked:  set.AdvancedPngEnableDithering,
+										Tip:      strs.TipPngEnableDithering,
+										Width:    settingControlWidth,
+									},
 								},
 							},
 							// WebP 设置容器
@@ -463,23 +539,28 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 								Title:  strs.TextAdvWebPSettings,
 								Layout: declarative.Grid{Columns: 2},
 								Children: []declarative.Widget{
-									sf.makeLabelWithTip(strs.TextAdvFineQuality, strs.TipAdvFineQualityWebP),
-									declarative.Composite{
-										Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
-										Children: []declarative.Widget{
-											declarative.HSpacer{},
-											declarative.NumberEdit{
-												AssignTo:    &sf.webpQualityEdit,
-												Value:       float64(set.AdvancedWebPQuality),
-												MinValue:    0,
-												MaxValue:    100,
-												Decimals:    0,
-												ToolTipText: strs.TipAdvFineQualityWebP,
-												MinSize:     declarative.Size{Width: settingControlWidth, Height: 0},
-												MaxSize:     declarative.Size{Width: settingControlWidth, Height: 0},
-											},
-										},
-									},
+									(&controls.NumberEditWithTip{
+										Label:        strs.TextAdvFineQuality,
+										Tip:          strs.TipAdvFineQualityWebP,
+										AssignTo:     &sf.webpQualityEdit,
+										Value:        float64(set.AdvancedWebPQuality),
+										MinValue:     0,
+										MaxValue:     100,
+										ToolTipText:  strs.TipAdvFineQualityWebP,
+										Width:        settingControlWidth,
+										ParentHwndFn: sf.parentHwndFn(),
+									}).BuildLabel(),
+									(&controls.NumberEditWithTip{
+										Label:        strs.TextAdvFineQuality,
+										Tip:          strs.TipAdvFineQualityWebP,
+										AssignTo:     &sf.webpQualityEdit,
+										Value:        float64(set.AdvancedWebPQuality),
+										MinValue:     0,
+										MaxValue:     100,
+										ToolTipText:  strs.TipAdvFineQualityWebP,
+										Width:        settingControlWidth,
+										ParentHwndFn: sf.parentHwndFn(),
+									}).BuildInput(),
 								},
 							},
 							declarative.VSpacer{},
@@ -613,15 +694,25 @@ func (sf *SettingForm) onOutputTypeChange() {
 
 // onThreadEditChange 响应线程数输入框变化, 同步更新滑块位置.
 func (sf *SettingForm) onThreadEditChange() {
+	if sf.suppressSync {
+		return
+	}
 	if sf.maxThreadsEdit != nil && sf.threadSlider != nil {
+		sf.suppressSync = true
 		sf.threadSlider.SetValue(int(sf.maxThreadsEdit.Value()))
+		sf.suppressSync = false
 	}
 }
 
 // onThreadSliderChange 响应线程数滑块变化, 同步更新输入框数值.
 func (sf *SettingForm) onThreadSliderChange() {
+	if sf.suppressSync {
+		return
+	}
 	if sf.threadSlider != nil && sf.maxThreadsEdit != nil {
+		sf.suppressSync = true
 		sf.maxThreadsEdit.SetValue(float64(sf.threadSlider.Value()))
+		sf.suppressSync = false
 	}
 }
 
@@ -985,59 +1076,17 @@ func (sf *SettingForm) updateDebugMode() {
 	}
 }
 
-// makeLabelWithTip 构造"文本标签 + (?) 提示链接"组合控件.
-func (sf *SettingForm) makeLabelWithTip(label, tip string) declarative.Composite {
-	return declarative.Composite{
-		Layout: declarative.HBox{Spacing: 4, MarginsZero: true},
-		Children: []declarative.Widget{
-			declarative.Label{
-				Text: label,
-			},
-			declarative.LinkLabel{
-				Text:        "<a>(?)</a>",
-				ToolTipText: tip,
-				OnLinkActivated: func(link *walk.LinkLabelLink) {
-					var parentHwnd uintptr
-					if sf.Dialog != nil {
-						parentHwnd = uintptr(sf.Dialog.Handle())
-					}
-					dialog.ShowInfoWithTitleAndParent(parentHwnd, label, tip)
-				},
-			},
-		},
+// parentHwndFn 返回一个函数, 用于获取父窗口句柄.
+func (sf *SettingForm) parentHwndFn() func() uintptr {
+	return func() uintptr {
+		if sf.Dialog != nil {
+			return uintptr(sf.Dialog.Handle())
+		}
+		return 0
 	}
 }
 
-// makeCheckBoxWithTip 构造"复选框 + (?) 提示链接"组合控件.
-func (sf *SettingForm) makeCheckBoxWithTip(assignTo **walk.CheckBox, text string, checked bool, tip string) declarative.Composite {
-	return declarative.Composite{
-		Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
-		Children: []declarative.Widget{
-			declarative.HSpacer{},
-			declarative.Composite{
-				Layout:  declarative.HBox{Spacing: 4, MarginsZero: true},
-				MinSize: declarative.Size{Width: settingControlWidth, Height: 0},
-				MaxSize: declarative.Size{Width: settingControlWidth, Height: 0},
-				Children: []declarative.Widget{
-					declarative.CheckBox{
-						AssignTo: assignTo,
-						Text:     text,
-						Checked:  checked,
-					},
-					declarative.LinkLabel{
-						Text:        "<a>(?)</a>",
-						ToolTipText: tip,
-						OnLinkActivated: func(link *walk.LinkLabelLink) {
-							var parentHwnd uintptr
-							if sf.Dialog != nil {
-								parentHwnd = uintptr(sf.Dialog.Handle())
-							}
-							dialog.ShowInfoWithTitleAndParent(parentHwnd, text, tip)
-						},
-					},
-					declarative.HSpacer{},
-				},
-			},
-		},
-	}
+// ptrBool 返回 bool 指针, 用于 controls.NumberEditWithTip.Enabled 字段.
+func ptrBool(b bool) *bool {
+	return &b
 }

@@ -55,6 +55,15 @@ var (
 	debug bool
 )
 
+const (
+	// HeightWidthMaxValue 宽高最大值
+	HeightWidthMaxValue = 100000000
+	// LimitSizeMaxValue 限制文件大小的最大值
+	LimitSizeMaxValue = 100000
+	// StartIndexMaxValue 起始下标最大值
+	StartIndexMaxValue = 100000000
+)
+
 // DefaultSetting 表示配置的默认值.
 var DefaultSetting = Setting{
 	CompressType:                CompressQuality,

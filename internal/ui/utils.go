@@ -67,16 +67,6 @@ func ShowBrowseFolderDialog(owner walk.Form, title string) string {
 	return ""
 }
 
-// BindEnabledToRadioChecked 将一组控件的启用状态绑定到单选按钮的选中状态.
-func BindEnabledToRadioChecked(radio *walk.RadioButton, controls ...walk.Widget) {
-	checked := radio.Checked()
-	for _, ctrl := range controls {
-		if w, ok := ctrl.(interface{ SetEnabled(bool) }); ok {
-			w.SetEnabled(checked)
-		}
-	}
-}
-
 // ApplyTopMostToWindow 通过 Windows API SetWindowPos 设置/取消指定窗口的置顶状态.
 func ApplyTopMostToWindow(w walk.Form, topMost bool) {
 	if w == nil {
