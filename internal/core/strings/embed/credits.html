@@ -2,13 +2,18 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <style>
         :root {
             --base-font-size: 20px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', 'Microsoft YaHei', Tahoma, sans-serif;
             font-size: var(--base-font-size); /* 基准正文大小 */
@@ -17,6 +22,7 @@
             padding: 16px 20px;
             background: #fff;
         }
+
         h1 {
             font-size: calc(var(--base-font-size) * 1.35); /* 主标题, 等比例 1.35 倍 */
             font-weight: 600;
@@ -25,6 +31,7 @@
             border-bottom: 2px solid #e0e0e0;
             padding-bottom: 8px;
         }
+
         h2 {
             font-size: calc(var(--base-font-size) * 1.15); /* 副标题, 等比例 1.15 倍 */
             font-weight: 600;
@@ -32,32 +39,44 @@
             margin-bottom: 10px;
             color: #333;
         }
-        p { margin-bottom: 10px; }
+
+        p {
+            margin-bottom: 10px;
+        }
+
         table {
             border-collapse: collapse;
             width: 100%;
             margin-top: 8px;
             font-size: calc(var(--base-font-size) * 1.00); /* 表格内容, 等比例 1.00 倍 */
         }
+
         th, td {
             border: 1px solid #d0d0d0;
             padding: 7px 10px;
             text-align: left;
             word-break: break-all;
         }
+
         th {
             background-color: #f0f0f0;
             font-weight: 600;
             color: #333;
         }
+
         tr:nth-child(even) td {
             background-color: #fafafa;
         }
+
         a {
             color: #1a73e8;
             text-decoration: underline;
         }
-        a:hover { color: #1558b0; }
+
+        a:hover {
+            color: #1558b0;
+        }
+
         .note {
             font-size: calc(var(--base-font-size) * 0.87); /* 底部提示, 等比例 0.87 倍 */
             color: #666;
@@ -69,27 +88,88 @@
 </head>
 <body>
 <h1>Open Source Notices</h1>
-<p>This application bundles or depends on the following third-party software. In accordance with the licensing terms of these projects, the following list provides attribution and links to their respective source code and licenses.</p>
+<p>This application bundles or depends on the following third-party software. In accordance with the licensing terms of
+    these projects, the following list provides attribution and links to their respective source code and licenses.</p>
 <h2>Third-Party Libraries</h2>
 <table>
     <thead>
-    <tr><th>Package</th><th>License</th><th>Source / License Link</th></tr>
+    <tr>
+        <th>Package</th>
+        <th>License</th>
+        <th>Source / License Link</th>
+    </tr>
     </thead>
     <tbody>
-    <tr><td>github.com/ebitengine/purego</td><td>Apache-2.0</td><td><a href="https://github.com/ebitengine/purego/blob/v0.8.3/LICENSE">License Link</a></td></tr>
-    <tr><td>github.com/ericpauley/go-quantize/quantize</td><td>BSD-3-Clause</td><td><a href="https://github.com/ericpauley/go-quantize/blob/ae555eb2afa4/LICENSE">License Link</a></td></tr>
-    <tr><td>github.com/gen2brain/webp</td><td>MIT</td><td><a href="https://github.com/gen2brain/webp/blob/v0.5.5/LICENSE">License Link</a></td></tr>
-    <tr><td>github.com/lxn/walk</td><td>BSD-3-Clause</td><td><a href="https://github.com/lxn/walk/blob/c389da54e794/LICENSE">License Link</a></td></tr>
-    <tr><td>github.com/lxn/win</td><td>BSD-3-Clause</td><td><a href="https://github.com/lxn/win/blob/a377121e959e/LICENSE">License Link</a></td></tr>
-    <tr><td>github.com/mitchellh/colorstring</td><td>MIT</td><td><a href="https://github.com/mitchellh/colorstring/blob/d06e56a500db/LICENSE">License Link</a></td></tr>
-    <tr><td>github.com/rivo/uniseg</td><td>MIT</td><td><a href="https://github.com/rivo/uniseg/blob/v0.4.7/LICENSE.txt">License Link</a></td></tr>
-    <tr><td>github.com/schollz/progressbar/v3</td><td>MIT</td><td><a href="https://github.com/schollz/progressbar/blob/v3.19.0/LICENSE">License Link</a></td></tr>
-    <tr><td>github.com/soniakeys/quant</td><td>MIT</td><td><a href="https://github.com/soniakeys/quant/blob/v1.0.0/license">License Link</a></td></tr>
-    <tr><td>github.com/tetratelabs/wazero</td><td>Apache-2.0</td><td><a href="https://github.com/tetratelabs/wazero/blob/v1.9.0/LICENSE">License Link</a></td></tr>
-    <tr><td>golang.org/x/image</td><td>BSD-3-Clause</td><td><a href="https://cs.opensource.google/go/x/image/+/v0.43.0:LICENSE">License Link</a></td></tr>
-    <tr><td>golang.org/x/sys/windows</td><td>BSD-3-Clause</td><td><a href="https://cs.opensource.google/go/x/sys/+/v0.46.0:LICENSE">License Link</a></td></tr>
-    <tr><td>golang.org/x/term</td><td>BSD-3-Clause</td><td><a href="https://cs.opensource.google/go/x/term/+/v0.28.0:LICENSE">License Link</a></td></tr>
-    <tr><td>gopkg.in/Knetic/govaluate.v3</td><td>MIT</td><td><a href="https://github.com/Knetic/govaluate/blob/v3.0.0/LICENSE">License Link</a></td></tr>
+    <tr>
+        <td>github.com/ebitengine/purego</td>
+        <td>Apache-2.0</td>
+        <td><a href="https://github.com/ebitengine/purego/blob/v0.8.3/LICENSE">License Link</a></td>
+    </tr>
+    <tr>
+        <td>github.com/ericpauley/go-quantize/quantize</td>
+        <td>BSD-3-Clause</td>
+        <td><a href="https://github.com/ericpauley/go-quantize/blob/ae555eb2afa4/LICENSE">License Link</a></td>
+    </tr>
+    <tr>
+        <td>github.com/gen2brain/webp</td>
+        <td>MIT</td>
+        <td><a href="https://github.com/gen2brain/webp/blob/v0.5.5/LICENSE">License Link</a></td>
+    </tr>
+    <tr>
+        <td>github.com/lxn/walk</td>
+        <td>BSD-3-Clause</td>
+        <td><a href="https://github.com/lxn/walk/blob/c389da54e794/LICENSE">License Link</a></td>
+    </tr>
+    <tr>
+        <td>github.com/lxn/win</td>
+        <td>BSD-3-Clause</td>
+        <td><a href="https://github.com/lxn/win/blob/a377121e959e/LICENSE">License Link</a></td>
+    </tr>
+    <tr>
+        <td>github.com/mitchellh/colorstring</td>
+        <td>MIT</td>
+        <td><a href="https://github.com/mitchellh/colorstring/blob/d06e56a500db/LICENSE">License Link</a></td>
+    </tr>
+    <tr>
+        <td>github.com/rivo/uniseg</td>
+        <td>MIT</td>
+        <td><a href="https://github.com/rivo/uniseg/blob/v0.4.7/LICENSE.txt">License Link</a></td>
+    </tr>
+    <tr>
+        <td>github.com/schollz/progressbar/v3</td>
+        <td>MIT</td>
+        <td><a href="https://github.com/schollz/progressbar/blob/v3.19.0/LICENSE">License Link</a></td>
+    </tr>
+    <tr>
+        <td>github.com/soniakeys/quant</td>
+        <td>MIT</td>
+        <td><a href="https://github.com/soniakeys/quant/blob/v1.0.0/license">License Link</a></td>
+    </tr>
+    <tr>
+        <td>github.com/tetratelabs/wazero</td>
+        <td>Apache-2.0</td>
+        <td><a href="https://github.com/tetratelabs/wazero/blob/v1.9.0/LICENSE">License Link</a></td>
+    </tr>
+    <tr>
+        <td>golang.org/x/image</td>
+        <td>BSD-3-Clause</td>
+        <td><a href="https://cs.opensource.google/go/x/image/+/v0.43.0:LICENSE">License Link</a></td>
+    </tr>
+    <tr>
+        <td>golang.org/x/sys/windows</td>
+        <td>BSD-3-Clause</td>
+        <td><a href="https://cs.opensource.google/go/x/sys/+/v0.46.0:LICENSE">License Link</a></td>
+    </tr>
+    <tr>
+        <td>golang.org/x/term</td>
+        <td>BSD-3-Clause</td>
+        <td><a href="https://cs.opensource.google/go/x/term/+/v0.28.0:LICENSE">License Link</a></td>
+    </tr>
+    <tr>
+        <td>gopkg.in/Knetic/govaluate.v3</td>
+        <td>MIT</td>
+        <td><a href="https://github.com/Knetic/govaluate/blob/v3.0.0/LICENSE">License Link</a></td>
+    </tr>
     </tbody>
 </table>
 <p class="note">Click any license link above to open it in your default browser.</p>

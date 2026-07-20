@@ -91,7 +91,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 	sf.maxThreads = runtime.NumCPU()
 
 	// 判断当前压缩模式, 设置输入框禁用状态
-	isQualityMode := (set.CompressType == settingLoader.CompressQuality)
+	isQualityMode := set.CompressType == settingLoader.CompressQuality
 
 	var err error
 	err = declarative.Dialog{
@@ -107,7 +107,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 			declarative.TabWidget{
 				Pages: []declarative.TabPage{
 					// 第一页: 常规设置
-					declarative.TabPage{
+					{
 						Title:  strs.TextGeneralSetting,
 						Layout: declarative.VBox{Margins: declarative.Margins{Left: 5, Top: 10, Right: 5, Bottom: 5}, Spacing: groupVerticalSpacing},
 						Children: []declarative.Widget{
@@ -341,7 +341,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 						},
 					},
 					// 第二页: 图像预处理
-					declarative.TabPage{
+					{
 						Title:  strs.TextPreprocessSetting,
 						Layout: declarative.VBox{Margins: declarative.Margins{Left: 5, Top: 10, Right: 5, Bottom: 5}, Spacing: groupVerticalSpacing},
 						Children: []declarative.Widget{
@@ -455,7 +455,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 						},
 					},
 					// 第三页: 高级设置
-					declarative.TabPage{
+					{
 						Title:  strs.TextAdvancedSetting,
 						Layout: declarative.VBox{Margins: declarative.Margins{Left: 5, Top: 10, Right: 5, Bottom: 5}, Spacing: groupVerticalSpacing},
 						Children: []declarative.Widget{

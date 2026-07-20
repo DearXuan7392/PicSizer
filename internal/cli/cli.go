@@ -292,7 +292,7 @@ func parseLimit(limitStr string) (int64, settingLoader.SizeUnit, error) {
 	s = strings.ToLower(s)
 
 	numeric := s
-	var parsedUnit settingLoader.SizeUnit = settingLoader.UnitKB
+	var parsedUnit = settingLoader.UnitKB
 
 	if strings.HasSuffix(s, "mb") {
 		parsedUnit = settingLoader.UnitMB

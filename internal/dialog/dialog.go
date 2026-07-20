@@ -21,7 +21,7 @@ const (
 // dialogBaseFlags 弹窗基础标志位
 // 任务模态 + 始终置顶 + 强制获取焦点
 // 确保弹窗显示时强制获得焦点, 必须关闭该弹窗后才能操作其它界面
-const dialogBaseFlags uint = MB_TASKMODAL | MB_TOPMOST | MB_SETFOREGROUND
+const dialogBaseFlags = MB_TASKMODAL | MB_TOPMOST | MB_SETFOREGROUND
 
 // globalParentHwnd 默认弹窗父窗口句柄
 // 仅作为未显式指定父窗口时的回退, 大多数场景下调用方应显式传入

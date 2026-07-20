@@ -70,7 +70,7 @@ func (ne NumberEdit) Create(builder *declarative.Builder) error {
 				return
 			}
 
-			var lastValidText string = le.Text()
+			var lastValidText = le.Text()
 
 			le.KeyPress().Attach(func(key walk.Key) {
 			})
