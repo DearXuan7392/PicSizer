@@ -172,6 +172,8 @@ func GetExtensionString(ext ExtensionType) string {
 		return ".png"
 	case ExtWebP:
 		return ".webp"
+	case ExtBMP:
+		return ".bmp"
 	default:
 		return ""
 	}

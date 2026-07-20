@@ -240,12 +240,13 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 										Children: []declarative.Widget{
 											declarative.HSpacer{},
 											declarative.ComboBox{
-												AssignTo: &sf.extensionCombo,
-												Value:    extensionToString(set.Extension),
-												Editable: false,
-												Model:    []string{strs.TextFormatJPEG, strs.TextFormatPNG, strs.TextFormatWebP, strs.TextFormatOrigin},
-												MinSize:  declarative.Size{Width: settingControlWidth, Height: 0},
-												MaxSize:  declarative.Size{Width: settingControlWidth, Height: 0},
+												AssignTo:              &sf.extensionCombo,
+												Value:                 extensionToString(set.Extension),
+												Editable:              false,
+												Model:                 []string{strs.TextFormatJPEG, strs.TextFormatPNG, strs.TextFormatWebP, strs.TextFormatBMP, strs.TextFormatOrigin},
+												OnCurrentIndexChanged: func() { sf.onExtensionChange() },
+												MinSize:               declarative.Size{Width: settingControlWidth, Height: 0},
+												MaxSize:               declarative.Size{Width: settingControlWidth, Height: 0},
 											},
 										},
 									},
@@ -635,6 +636,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 	}
 	sf.onCompressModeChange()
 	sf.onOutputTypeChange()
+	sf.onExtensionChange()
 	sf.updateDebugMode()
 
 	sf.Dialog.Run()
@@ -642,8 +644,13 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 }
 
 // onCompressModeChange 响应压缩模式切换, 启用或禁用相关控件.
+// BMP 模式下整个压缩设置组被禁用, 该方法不执行任何操作.
 func (sf *SettingForm) onCompressModeChange() {
-	if sf.qualityRadio == nil || sf.fileSizeRadio == nil {
+	if sf.qualityRadio == nil || sf.fileSizeRadio == nil || sf.extensionCombo == nil {
+		return
+	}
+	// BMP 模式下压缩设置组完全禁用, 不响应模式切换
+	if sf.extensionCombo.CurrentIndex() == 3 {
 		return
 	}
 	isQualityMode := sf.qualityRadio.Checked()
@@ -689,6 +696,57 @@ func (sf *SettingForm) onOutputTypeChange() {
 	}
 	if sf.startIndexEdit != nil {
 		sf.startIndexEdit.SetEnabled(enabled)
+	}
+}
+
+// onExtensionChange 响应输出格式切换, BMP 格式时禁用整个压缩设置组.
+func (sf *SettingForm) onExtensionChange() {
+	if sf.extensionCombo == nil {
+		return
+	}
+	isBMP := sf.extensionCombo.CurrentIndex() == 3
+
+	// 禁用或启用整个压缩设置组
+	if isBMP {
+		// 强行切换到按质量压缩模式
+		sf.qualityRadio.SetChecked(true)
+		sf.fileSizeRadio.SetChecked(false)
+		// 画质滑块设为最佳
+		sf.qualitySlider.SetValue(3)
+		sf.qualityLabel.SetText(strs.TextQualityBest)
+
+		// 禁用压缩设置组的所有控件
+		if sf.qualityRadio != nil {
+			sf.qualityRadio.SetEnabled(false)
+		}
+		if sf.fileSizeRadio != nil {
+			sf.fileSizeRadio.SetEnabled(false)
+		}
+		if sf.qualityLabel != nil {
+			sf.qualityLabel.SetEnabled(false)
+		}
+		if sf.qualitySlider != nil {
+			sf.qualitySlider.SetEnabled(false)
+		}
+		if sf.limitSizeEdit != nil {
+			sf.limitSizeEdit.SetEnabled(false)
+		}
+		if sf.sizeUnitCombo != nil {
+			sf.sizeUnitCombo.SetEnabled(false)
+		}
+		if sf.acceptExceedCheck != nil {
+			sf.acceptExceedCheck.SetEnabled(false)
+		}
+	} else {
+		// 恢复压缩设置组控件状态
+		if sf.qualityRadio != nil {
+			sf.qualityRadio.SetEnabled(true)
+		}
+		if sf.fileSizeRadio != nil {
+			sf.fileSizeRadio.SetEnabled(true)
+		}
+		// 由 onCompressModeChange 根据当前模式设置其他控件状态
+		sf.onCompressModeChange()
 	}
 }
 
@@ -790,7 +848,15 @@ func (sf *SettingForm) saveSetting() bool {
 	case 2:
 		sf.workingCopy.Extension = settingLoader.ExtWebP
 	case 3:
+		sf.workingCopy.Extension = settingLoader.ExtBMP
+	case 4:
 		sf.workingCopy.Extension = settingLoader.ExtOrigin
+	}
+
+	// BMP 格式不支持压缩, 强制切换为按质量压缩 + 最高画质
+	if sf.workingCopy.Extension == settingLoader.ExtBMP {
+		sf.workingCopy.CompressType = settingLoader.CompressQuality
+		sf.workingCopy.Quality = settingLoader.QualityLevelBest
 	}
 
 	if sf.filenameEdit != nil {
@@ -924,6 +990,8 @@ func extensionToString(t settingLoader.ExtensionType) string {
 		return strs.TextFormatPNG
 	case settingLoader.ExtWebP:
 		return strs.TextFormatWebP
+	case settingLoader.ExtBMP:
+		return strs.TextFormatBMP
 	case settingLoader.ExtOrigin:
 		return strs.TextFormatOrigin
 	default:

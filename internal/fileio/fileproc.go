@@ -21,7 +21,7 @@ func GetFileNameWithoutExt(path string) string {
 func IsImageFile(path string) bool {
 	ext := GetExtension(path)
 	switch ext {
-	case ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".webp", ".tiff", ".tif":
+	case ".jpg", ".jpeg", ".png", ".bmp", ".webp":
 		return true
 	}
 	return false
@@ -29,7 +29,7 @@ func IsImageFile(path string) bool {
 
 // GetSupportedExtensions 返回支持的文件扩展名过滤器字符串, 用于文件对话框.
 func GetSupportedExtensions() string {
-	return "*.jpg;*.jpeg;*.png;*.bmp;*.gif;*.webp;*.tiff;*.tif"
+	return "*.jpg;*.jpeg;*.png;*.bmp;*.webp"
 }
 
 // CollectImageFiles 递归遍历指定目录, 收集所有支持的图片文件路径.

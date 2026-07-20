@@ -7,5 +7,6 @@ const (
 	ExtJPEG ExtensionType = iota
 	ExtPNG
 	ExtWebP
+	ExtBMP
 	ExtOrigin
 )

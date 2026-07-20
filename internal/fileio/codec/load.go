@@ -36,10 +36,11 @@ func GetCodec(data []byte) ImageCodec {
 }
 
 func init() {
-	// 按优先级注册: WebP 优先 (避免 RIFF 头被误判), 然后 PNG, 最后 JPEG
+	// 按优先级注册: WebP 优先 (避免 RIFF 头被误判), 然后 PNG, 最后 JPEG 和 BMP
 	RegisterCodec(&webpCodec{})
 	RegisterCodec(&pngCodec{})
 	RegisterCodec(&jpegCodec{})
+	RegisterCodec(&bmpCodec{})
 }
 
 func InitSetting(set settingLoader.Setting) {

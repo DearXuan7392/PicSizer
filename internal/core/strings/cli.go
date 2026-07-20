@@ -26,7 +26,7 @@ var (
 	// CLI 参数校验错误
 	CLIErrCompressType         = "不支持的压缩模式: %s (可选: quality / size)"
 	CLIErrOutputType           = "不支持的输出方式: %s (可选: dir / cover / struct)"
-	CLIErrFormat               = "不支持的输出格式: %s (可选: jpeg / jpg / png / webp / origin)"
+	CLIErrFormat               = "不支持的输出格式: %s (可选: jpeg / jpg / png / webp / bmp / origin)"
 	CLIErrAlpha                = "不支持的透明通道处理方式: %s (可选: keep / smart / remove)"
 	CLIErrScale                = "不支持的缩放模式: %s (可选: none / stretch / cover / contain / crop / lock)"
 	CLIErrParseLimit           = "无法解析限制大小: %s"

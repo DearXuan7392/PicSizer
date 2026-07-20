@@ -45,12 +45,23 @@ func Compress(inputPath, outputPath string) *core.PicResult {
 		compressor = NewPNGCompressor(imgData, outputPath)
 	case ".webp":
 		compressor = NewWebPCompressor(imgData, outputPath)
+	case ".bmp":
+		compressor = NewBMPCompressor(imgData, outputPath)
 	default:
 		return core.GetErrorf(strs.ErrFormatNotSupport, ext)
 	}
 
 	set := settingLoader.GetSetting()
 	var result *core.PicResult
+
+	// BMP 格式不支持压缩, 强制使用按质量压缩 + 最高画质
+	if ext == ".bmp" {
+		result = compressor.CompressByQuality(settingLoader.QualityLevelBest)
+		if !result.Ok {
+			logger.Error(result.Message)
+		}
+		return result
+	}
 
 	switch set.CompressType {
 	case settingLoader.CompressQuality:

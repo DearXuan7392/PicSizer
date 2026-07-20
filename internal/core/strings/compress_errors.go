@@ -7,4 +7,5 @@ var (
 	ErrEncodeFailed     = "编码失败: %v"
 	ErrMkdirFailed      = "创建目录失败: %v"
 	ErrWriteFileFailed  = "写入文件失败: %v"
+	ErrBMPNoCompression = "BMP 格式不支持压缩"
 )

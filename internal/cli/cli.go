@@ -77,8 +77,8 @@ func init() {
 	// 输出与命名模板
 	flag.StringVar(&outType, "out-type", "dir", "输出方式: dir / cover / struct")
 	flag.StringVar(&outType, "ot", "dir", "输出方式: dir / cover / struct")
-	flag.StringVar(&format, "format", "jpeg", "输出图像格式: jpeg / jpg / png / webp / origin")
-	flag.StringVar(&format, "f", "jpeg", "输出图像格式: jpeg / jpg / png / webp / origin")
+	flag.StringVar(&format, "format", "jpeg", "输出图像格式: jpeg / jpg / png / webp / bmp / origin")
+	flag.StringVar(&format, "f", "jpeg", "输出图像格式: jpeg / jpg / png / webp / bmp / origin")
 	flag.StringVar(&templateStr, "template", "{id}", "文件名模板 (不含后缀), 支持 {id} / {name}")
 	flag.StringVar(&templateStr, "tpl", "{id}", "文件名模板 (不含后缀), 支持 {id} / {name}")
 	flag.IntVar(&startIdx, "start-idx", 1, "命名模板中 {id} 的起始序号")
@@ -192,10 +192,18 @@ func applySettings() error {
 		set.Extension = settingLoader.ExtPNG
 	case "webp":
 		set.Extension = settingLoader.ExtWebP
+	case "bmp":
+		set.Extension = settingLoader.ExtBMP
 	case "origin":
 		set.Extension = settingLoader.ExtOrigin
 	default:
 		return fmt.Errorf(strs.CLIErrFormat, format)
+	}
+
+	// BMP 格式不支持压缩, 强制切换为按质量压缩 + 最高画质
+	if set.Extension == settingLoader.ExtBMP {
+		set.CompressType = settingLoader.CompressQuality
+		set.Quality = settingLoader.QualityLevelBest
 	}
 
 	// 文件名模板与起始序号
