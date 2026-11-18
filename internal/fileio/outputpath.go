@@ -32,10 +32,7 @@ func GetOutputPath(input string, index int) string {
 		relDir := filepath.Dir(relativePath)
 		fileName := applyFilenameTemplate(set.OutputFilename, input, index)
 		fileName += getOutputExtension(input, set.Extension)
-		finalPath := filepath.Join(core.OutputDirPath, relDir, fileName)
-		dir := filepath.Dir(finalPath)
-		EnsureDir(dir)
-		return finalPath
+		return filepath.Join(core.OutputDirPath, relDir, fileName)
 
 	default:
 		return ""

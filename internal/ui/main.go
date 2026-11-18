@@ -44,6 +44,11 @@ type MainForm struct {
 	currentCommonDir string
 	// suppressPathUpdate 用于抑制 SetText 触发的 TextChanged 事件.
 	suppressPathUpdate bool
+
+	// dupPolicy 记录输出路径重名时的处置策略.
+	dupPolicy dupPolicy
+	// lastDuplicateSignature 记录上次已提示过的重名情况, 避免重复弹窗.
+	lastDuplicateSignature string
 }
 
 // NewMainForm 创建主窗口实例, 注入子窗体回调.
@@ -234,6 +239,7 @@ func (mf *MainForm) onAddFiles() {
 		mf.picListView.AddPicturesFromPaths(paths)
 		mf.updateSelectLabel()
 		mf.updateOutputPathFromCommonDir()
+		mf.refreshDuplicateCheck()
 	}
 }
 
@@ -244,6 +250,7 @@ func (mf *MainForm) onAddFolder() {
 		mf.picListView.AddPicturesFromDirectory(dir)
 		mf.updateSelectLabel()
 		mf.updateOutputPathFromCommonDir()
+		mf.refreshDuplicateCheck()
 	}
 }
 
@@ -291,6 +298,7 @@ func (mf *MainForm) onDropFiles(files []string) {
 	}
 	mf.updateSelectLabel()
 	mf.updateOutputPathFromCommonDir()
+	mf.refreshDuplicateCheck()
 }
 
 // onBrowseDir 打开浏览文件夹对话框, 设置输出目录路径.
@@ -319,6 +327,11 @@ func (mf *MainForm) onRadioChange() {
 	enabled := !mf.coverRadio.Checked()
 	mf.outputDirEdit.SetEnabled(enabled)
 	mf.outputDirBtn.SetEnabled(enabled)
+
+	// 设置窗口打开期间的重名检查推迟到窗口关闭后统一处理, 避免在模态窗口之上再弹窗
+	if mf.settingForm.Dialog == nil || !mf.settingForm.Dialog.Visible() {
+		mf.refreshDuplicateCheck()
+	}
 }
 
 // applyRadioToOutputType 根据 OutputType 同步主窗口的无线电按钮选中状态.
@@ -404,6 +417,9 @@ func (mf *MainForm) onStartCompress() {
 	}
 	mf.picListView.ResetAutoScrollDown()
 
+	// 输出路径在启动前一次性规划完成, 线程池只按下标取用
+	outputPaths := mf.buildOutputPaths(allItems)
+
 	mf.progressForm.SetOnCancel(func() {
 		mf.poolMu.Lock()
 		pool := mf.pool
@@ -424,7 +440,7 @@ func (mf *MainForm) onStartCompress() {
 		return
 	}
 
-	pool := server.NewThreadPool(allItems,
+	pool := server.NewThreadPool(allItems, outputPaths,
 		func(current, errCount, total int) {
 			mf.progressForm.UpdateProgress(current, errCount, total)
 		},
@@ -453,6 +469,7 @@ func (mf *MainForm) onSetting() {
 	mf.settingForm.Show(mf.MainWindow, mf.appIcon)
 	setting := settingLoader.GetSetting()
 	mf.applyTopMost(setting.TopMost)
+	mf.refreshDuplicateCheck()
 }
 
 // onAbout 打开关于窗口.
@@ -617,6 +634,7 @@ func (mf *MainForm) processStartupPaths() {
 		mf.picListView.AddPicturesFromPaths(imageFiles)
 	}
 	mf.updateSelectLabel()
+	mf.refreshDuplicateCheck()
 }
 
 // updateSelectLabel 更新底部状态栏的选中/总数标签.

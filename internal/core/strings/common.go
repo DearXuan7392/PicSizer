@@ -9,4 +9,8 @@ var (
 	TextBrowse  = "浏览"
 	TextStart   = "开始压缩"
 	TextSetting = "设置"
+
+	// 输出路径重名处置
+	TextDupOverwrite = "仍然覆盖"
+	TextDupSuffix    = "自动添加后缀"
 )

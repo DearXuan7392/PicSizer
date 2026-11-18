@@ -25,8 +25,8 @@ type ThreadPool struct {
 	currentNum    int
 	errorNum      int
 	indexOfPic    int
-	indexOfOut    int
 	items         []*core.PicItem
+	outputPaths   []string
 	mu            sync.Mutex
 	wg            sync.WaitGroup
 	onProgress    ProgressCallback
@@ -40,9 +40,11 @@ var (
 )
 
 // NewThreadPool 创建一个线程池实例.
-func NewThreadPool(items []*core.PicItem, onProgress ProgressCallback, onItemChanged ItemChangedCallback, onComplete func(success, errCount, total int)) *ThreadPool {
+// outputPaths 与 items 一一对应, 为每个项目预先规划的输出路径.
+func NewThreadPool(items []*core.PicItem, outputPaths []string, onProgress ProgressCallback, onItemChanged ItemChangedCallback, onComplete func(success, errCount, total int)) *ThreadPool {
 	return &ThreadPool{
 		items:         items,
+		outputPaths:   outputPaths,
 		onProgress:    onProgress,
 		onItemChanged: onItemChanged,
 		onComplete:    onComplete,
@@ -61,7 +63,6 @@ func (tp *ThreadPool) Start() {
 	tp.currentNum = 0
 	tp.errorNum = 0
 	tp.indexOfPic = 0
-	tp.indexOfOut = set.StartIndex
 	exitFlag = false
 
 	logger.Debug("totalNum: %d", tp.totalNum)
@@ -99,7 +100,7 @@ func (tp *ThreadPool) Wait() {
 
 // popTask 从任务队列中取出下一个待处理的项目.
 // 若队列为空、已处理完或触发了退出标志, 返回 nil.
-func (tp *ThreadPool) popTask() (item *core.PicItem, input string, output string) {
+func (tp *ThreadPool) popTask() (item *core.PicItem, output string) {
 	tp.mu.Lock()
 
 	// 1. 检查全局退出标志
@@ -107,26 +108,23 @@ func (tp *ThreadPool) popTask() (item *core.PicItem, input string, output string
 	if exitFlag || tp.indexOfPic >= len(tp.items) {
 		tp.mu.Unlock()
 		logger.Debug("task pool is empty or exitFlag is true")
-		return nil, "", ""
+		return nil, ""
 	}
 
-	outputIndex := tp.indexOfOut
 	item = tp.items[tp.indexOfPic]
+	output = tp.outputPaths[tp.indexOfPic]
 	tp.indexOfPic++
-	tp.indexOfOut++
 	tp.mu.Unlock()
 
-	input = item.FullPath
-	output = fileio.GetOutputPath(input, outputIndex)
-	logger.Debug("pop task: %s -> %s", input, output)
-	return item, input, output
+	logger.Debug("pop task: %s -> %s", item.FullPath, output)
+	return item, output
 }
 
 // worker 工作线程的循环体, 持续从队列取出任务并执行压缩.
 func (tp *ThreadPool) worker() {
 	for {
 		// 从队列中取出任务
-		item, input, output := tp.popTask()
+		item, output := tp.popTask()
 		if item == nil {
 			// 队列为空或收到停止信号, 线程退出
 			return
@@ -138,7 +136,7 @@ func (tp *ThreadPool) worker() {
 		tp.notifyItemChanged(item)
 
 		// 执行压缩
-		result := compress.Compress(input, output)
+		result := compress.Compress(item.FullPath, output)
 
 		if !result.Ok {
 			logger.Error("compress failed: %s", result.Message)

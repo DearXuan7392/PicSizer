@@ -416,9 +416,10 @@ func compressDirectory(inputDir, outputDir string) {
 		}
 	}
 
-	// 构造待压缩项目列表
+	// 构造待压缩项目列表, 并按与项目一致的顺序预先规划输出路径
 	var items []*core.PicItem
-	for _, f := range files {
+	outputPaths := make([]string, 0, len(files))
+	for i, f := range files {
 		info, _ := fileio.GetFileInfo(f)
 		items = append(items, &core.PicItem{
 			FullPath: f,
@@ -426,6 +427,7 @@ func compressDirectory(inputDir, outputDir string) {
 			OrigSize: info.Size(),
 			State:    settingLoader.StateWaiting,
 		})
+		outputPaths = append(outputPaths, fileio.GetOutputPath(f, set.StartIndex+i))
 	}
 
 	// 创建进度条
@@ -445,7 +447,7 @@ func compressDirectory(inputDir, outputDir string) {
 	}
 
 	// 创建线程池, CLI 模式使用 progressbar 驱动进度
-	pool := server.NewThreadPool(items,
+	pool := server.NewThreadPool(items, outputPaths,
 		func(current, errCount, total int) {
 			if bar == nil {
 				return
