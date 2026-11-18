@@ -62,11 +62,6 @@ func (c *NumberEditWithTip) BuildInput() declarative.Composite {
 		target = &localEdit
 	}
 
-	enabled := true
-	if c.Enabled != nil {
-		enabled = *c.Enabled
-	}
-
 	return declarative.Composite{
 		Layout: declarative.HBox{SpacingZero: true, MarginsZero: true},
 		Children: []declarative.Widget{
@@ -77,7 +72,7 @@ func (c *NumberEditWithTip) BuildInput() declarative.Composite {
 				MinValue:    c.MinValue,
 				MaxValue:    c.MaxValue,
 				Decimals:    c.Decimals,
-				Enabled:     enabled,
+				Enabled:     c.Enabled,
 				ToolTipText: c.ToolTipText,
 				MinSize:     declarative.Size{Width: width, Height: 0},
 				MaxSize:     declarative.Size{Width: width, Height: 0},

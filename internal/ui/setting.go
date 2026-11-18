@@ -182,7 +182,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 												MinValue: 1,
 												MaxValue: settingLoader.LimitSizeMaxValue,
 												Decimals: 0,
-												Enabled:  !isQualityMode,
+												Enabled:  ptrBool(!isQualityMode),
 												MinSize:  declarative.Size{Width: settingControlWidth - 45, Height: 0},
 												MaxSize:  declarative.Size{Width: settingControlWidth - 45, Height: 0},
 											},
@@ -312,7 +312,6 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 														MinValue:       1,
 														MaxValue:       float64(sf.maxThreads),
 														Decimals:       0,
-														Enabled:        true,
 														OnValueChanged: func() { sf.onThreadEditChange() },
 													},
 													declarative.Slider{
