@@ -18,6 +18,7 @@ func NewPNGCompressor(img image.Image, outputPath string) Compressor {
 		baseCompressor: baseCompressor{
 			img:        img,
 			maxQuality: 4,
+			sizeUpper:  3, // 等级 4 为无损编码, 不参与按大小压缩的搜索
 		},
 		outputPath: outputPath,
 	}

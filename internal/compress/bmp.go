@@ -25,6 +25,7 @@ func NewBMPCompressor(img image.Image, outputPath string) Compressor {
 		baseCompressor: baseCompressor{
 			img:        img,
 			maxQuality: 100,
+			sizeUpper:  100,
 		},
 		outputPath: outputPath,
 	}

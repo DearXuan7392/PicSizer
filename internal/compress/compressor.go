@@ -88,8 +88,12 @@ func Compress(inputPath, outputPath string) *core.PicResult {
 }
 
 type baseCompressor struct {
-	img        image.Image
+	img image.Image
+	// maxQuality 编码器支持的画质上限, 用于校验按质量压缩的入参.
 	maxQuality int
+	// sizeUpper 按大小压缩时二分查找的画质上限, 可低于 maxQuality
+	// (例如 PNG 的最优一级为无损编码, 不参与按大小压缩的搜索).
+	sizeUpper int
 }
 
 // compressByQuality 是各格式压缩器共享的质量压缩通用实现.
@@ -119,60 +123,77 @@ func (c *baseCompressor) compressByQuality(quality int, encode func(int) ([]byte
 }
 
 // compressByFileSize 是各格式压缩器共享的二分查找大小压缩通用实现.
-// 通过二分查找在 1 到 maxQuality 之间寻找不超过 limitBytes 的最高质量.
+// 在 [1, sizeUpper] 区间内查找编码体积不超过 limitBytes 的最大画质, 上下限均可取到.
 func (c *baseCompressor) compressByFileSize(limitBytes int64, encode func(int) ([]byte, error), outputPath string) *core.PicResult {
-	logger.Debug("compress by file size, limit: %d", limitBytes)
-	left, right := 1, c.maxQuality
+	logger.Debug("compress by file size, limit: %d, upper: %d", limitBytes, c.sizeUpper)
 
 	sizeCache := make(map[int]int64)
+	var bestData []byte
 
-	for left < right-1 {
-		mid := (left + right) / 2
+	// measure 返回指定画质的编码体积, 首次计算时同时返回编码结果, 命中缓存时返回 nil.
+	measure := func(quality int) (int64, []byte, error) {
+		if size, ok := sizeCache[quality]; ok {
+			return size, nil, nil
+		}
+		data, err := encode(quality)
+		if err != nil {
+			return 0, nil, err
+		}
+		size := int64(len(data))
+		sizeCache[quality] = size
+		logger.Debug("quality: %d, size: %d", quality, size)
+		return size, data, nil
+	}
 
-		size, ok := sizeCache[mid]
-		if !ok {
-			data, err := encode(mid)
-			if err != nil {
-				return core.GetErrorf(strs.ErrEncodeFailed, err)
-			}
-			size = int64(len(data))
-			sizeCache[mid] = size
-			logger.Debug("quality: %d, size: %d", mid, size)
+	lo, hi := 1, c.sizeUpper
+	for lo < hi {
+		mid := (lo + hi + 1) / 2
+
+		size, data, err := measure(mid)
+		if err != nil {
+			return core.GetErrorf(strs.ErrEncodeFailed, err)
 		}
 
 		if size <= limitBytes {
-			left = mid
+			lo = mid
+			if data != nil {
+				bestData = data
+			}
 		} else {
-			right = mid
+			hi = mid - 1
 		}
 	}
 
-	if _, ok := sizeCache[left]; !ok {
-		data, err := encode(left)
+	// lo 可能从未被搜索到 (区间直接收敛到下限), 此时需要补测一次
+	size, ok := sizeCache[lo]
+	if !ok {
+		measured, data, err := measure(lo)
 		if err != nil {
 			return core.GetErrorf(strs.ErrEncodeFailed, err)
 		}
-		sizeCache[left] = int64(len(data))
+		size, bestData = measured, data
 	}
 
-	if sizeCache[left] <= limitBytes || settingLoader.GetSetting().AcceptExceed {
-		data, err := encode(left)
+	if size > limitBytes && !settingLoader.GetSetting().AcceptExceed {
+		return core.GetOutOfLimit()
+	}
+
+	if bestData == nil {
+		data, err := encode(lo)
 		if err != nil {
 			return core.GetErrorf(strs.ErrEncodeFailed, err)
 		}
-
-		dir := filepath.Dir(outputPath)
-		if err := fileio.EnsureDir(dir); err != nil {
-			return core.GetErrorf(strs.ErrMkdirFailed, err)
-		}
-
-		err = os.WriteFile(outputPath, data, 0644)
-		if err != nil {
-			return core.GetErrorf(strs.ErrWriteFileFailed, err)
-		}
-
-		return core.GetOk()
+		bestData = data
 	}
 
-	return core.GetOutOfLimit()
+	dir := filepath.Dir(outputPath)
+	if err := fileio.EnsureDir(dir); err != nil {
+		return core.GetErrorf(strs.ErrMkdirFailed, err)
+	}
+
+	if err := os.WriteFile(outputPath, bestData, 0644); err != nil {
+		return core.GetErrorf(strs.ErrWriteFileFailed, err)
+	}
+
+	return core.GetOk()
 }
