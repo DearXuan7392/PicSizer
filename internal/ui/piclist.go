@@ -58,6 +58,8 @@ func (m *PicItemModel) Value(row, col int) interface{} {
 		return ""
 	case 3:
 		return itemStateToString(item.State)
+	case 4:
+		return item.OutputPath
 	}
 	return ""
 }
@@ -307,10 +309,11 @@ func (p *PicListView) PicListViewWidget() declarative.TableView {
 		AlternatingRowBG: true,
 		MultiSelection:   true,
 		Columns: []declarative.TableViewColumn{
-			{Title: strs.ColFilename, Width: 200},
+			{Title: strs.ColFilename, Width: 190},
 			{Title: strs.ColOrigSize, Width: 80},
 			{Title: strs.ColNewSize, Width: 80},
 			{Title: strs.ColStatus, Width: 80},
+			{Title: strs.ColOutputPath, Width: 300},
 		},
 		StyleCell:                p.model.StyleCell,
 		OnKeyDown:                p.onKeyDown,

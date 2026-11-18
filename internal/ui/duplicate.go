@@ -25,61 +25,30 @@ const (
 // maxDuplicatePreview 为提示框中最多列出的重名路径条数.
 const maxDuplicatePreview = 5
 
-// plannedOutputPaths 按线程池取用任务的顺序, 预先计算当前列表的输出路径.
-func (mf *MainForm) plannedOutputPaths() []string {
-	return mf.buildOutputPaths(mf.picListView.GetModel().GetItems())
-}
-
-// buildOutputPaths 为待压缩项目规划输出路径, 并按当前策略处理重名.
-func (mf *MainForm) buildOutputPaths(items []*core.PicItem) []string {
+// planOutputPaths 在压缩启动前一次性规划全部输出路径.
+// 批量内的路径重名只在此刻检测: 存在重名时弹出提示框由用户选择处置策略.
+// 返回 false 表示用户放弃本次压缩, 调用方应保持列表状态不变.
+func (mf *MainForm) planOutputPaths(items []*core.PicItem) ([]string, bool) {
 	set := settingLoader.GetSetting()
 
-	paths := make([]string, 0, len(items))
+	paths := make([]string, len(items))
 	for i, item := range items {
-		paths = append(paths, fileio.GetOutputPath(item.FullPath, set.StartIndex+i))
+		paths[i] = fileio.GetOutputPath(item.FullPath, set.StartIndex+i)
 	}
 
-	if mf.dupPolicy == dupPolicySuffix {
+	duplicates := fileio.FindDuplicates(paths)
+	if len(duplicates) == 0 {
+		return paths, true
+	}
+
+	policy, decided := showDuplicateDialog(mf.MainWindow, duplicates, mf.appIcon)
+	if !decided {
+		return nil, false
+	}
+	if policy == dupPolicySuffix {
 		paths = fileio.MakeUniquePaths(paths)
 	}
-	return paths
-}
-
-// refreshDuplicateCheck 在图片列表或命名规则变化后检查输出路径重名, 必要时提示用户.
-// 同一组重名只提示一次, 以免添加图片时反复弹窗.
-func (mf *MainForm) refreshDuplicateCheck() {
-	if mf.picListView == nil || mf.MainWindow == nil {
-		return
-	}
-	if mf.picListView.GetModel().ItemCount() == 0 {
-		mf.lastDuplicateSignature = ""
-		return
-	}
-
-	duplicates := fileio.FindDuplicates(mf.plannedOutputPaths())
-	if len(duplicates) == 0 {
-		mf.lastDuplicateSignature = ""
-		return
-	}
-
-	signature := duplicateSignature(duplicates)
-	if signature == mf.lastDuplicateSignature {
-		return
-	}
-	mf.lastDuplicateSignature = signature
-
-	if policy, decided := showDuplicateDialog(mf.MainWindow, duplicates, mf.appIcon); decided {
-		mf.dupPolicy = policy
-	}
-}
-
-// duplicateSignature 生成用于判断重名情况是否已提示过的标识.
-func duplicateSignature(duplicates []fileio.DuplicatePath) string {
-	var b strings.Builder
-	for _, d := range duplicates {
-		fmt.Fprintf(&b, "%s|%d;", strings.ToLower(d.Path), d.Count)
-	}
-	return b.String()
+	return paths, true
 }
 
 // duplicateMessage 生成提示框正文, 超出的条目以摘要形式给出.
