@@ -128,7 +128,7 @@ func EncodePNG(img image.Image, qualityLevel int) ([]byte, error) {
 		}
 	default:
 		// 永远不可能达到这里
-		return nil, nil
+		return nil, errors.New(strs.CodecErrInvalidPNGQuality)
 	}
 
 	palettedImg := image.NewPaletted(bounds, palette)

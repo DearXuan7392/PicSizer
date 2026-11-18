@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"errors"
 	"fmt"
 	"sync"
 
@@ -65,7 +66,7 @@ func (pf *ProgressForm) Show(owner walk.Form, total int, appIcon *walk.Icon) err
 	pf.mu.Lock()
 	if pf.visible {
 		pf.mu.Unlock()
-		return fmt.Errorf(strs.ProgressAlreadyVisible)
+		return errors.New(strs.ProgressAlreadyVisible)
 	}
 	pf.visible = true
 	pf.owner = owner

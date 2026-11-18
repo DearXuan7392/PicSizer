@@ -30,7 +30,7 @@ var (
 func Compress(inputPath, outputPath string) *core.PicResult {
 	imgData, err := codec.LoadImage(inputPath)
 	if err != nil {
-		return core.GetErrorf(err.Error())
+		return core.GetError(err.Error())
 	}
 
 	imgData = preprocess.Process(imgData)
@@ -58,7 +58,7 @@ func Compress(inputPath, outputPath string) *core.PicResult {
 	if ext == ".bmp" {
 		result = compressor.CompressByQuality(settingLoader.QualityLevelBest)
 		if !result.Ok {
-			logger.Error(result.Message)
+			logger.Error("%s", result.Message)
 		}
 		return result
 	}
@@ -82,7 +82,7 @@ func Compress(inputPath, outputPath string) *core.PicResult {
 	}
 
 	if !result.Ok {
-		logger.Error(result.Message)
+		logger.Error("%s", result.Message)
 	}
 	return result
 }
