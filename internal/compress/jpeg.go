@@ -30,9 +30,12 @@ func NewJPEGCompressor(img image.Image, outputPath string) Compressor {
 }
 
 // CompressByQuality 按指定的画质等级压缩 JPEG 图像.
-// 若配置中设置了 JPEG 精细化画质 (JpegQuality 非0), 则优先使用该精细画质值.
+// 若配置中设置了 JPEG 精细化画质 (非 0), 则以其覆盖画质等级对应的画质值.
 func (c *jpegCompressor) CompressByQuality(quality settingLoader.QualityLevel) *core.PicResult {
 	qualityValue := settingLoader.QualityLevelValue(quality)
+	if advanced := settingLoader.GetSetting().AdvancedJpegQuality; advanced != 0 {
+		qualityValue = advanced
+	}
 	encode := func(q int) ([]byte, error) {
 		return codec.EncodeJPEG(c.img, q)
 	}

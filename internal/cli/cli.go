@@ -16,6 +16,7 @@ import (
 	"PicSizer/internal/core"
 	strs "PicSizer/internal/core/strings"
 	"PicSizer/internal/fileio"
+	"PicSizer/internal/fileio/codec"
 	"PicSizer/internal/server"
 
 	"github.com/schollz/progressbar/v3"
@@ -125,6 +126,8 @@ func Run() {
 		fmt.Printf("错误: %v\n", err)
 		os.Exit(1)
 	}
+
+	codec.InitSetting(settingLoader.GetSetting())
 
 	info, err := fileio.GetFileInfo(inputPath)
 	if err != nil {

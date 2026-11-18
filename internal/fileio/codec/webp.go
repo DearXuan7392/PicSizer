@@ -11,13 +11,7 @@ import (
 
 type webpCodec struct{}
 
-var (
-	advancedWebpQuality = 0
-)
-
-func (c *webpCodec) InitSetting(set settingLoader.Setting) {
-	advancedWebpQuality = set.AdvancedWebPQuality
-}
+func (c *webpCodec) InitSetting(_ settingLoader.Setting) {}
 
 // Name 返回编解码器名称.
 func (c *webpCodec) Name() string { return "webp" }
@@ -54,9 +48,6 @@ func (c *webpCodec) Decode(data []byte) (image.Image, error) {
 // EncodeWebP 将 image.Image 编码为 WebP 格式的字节数据.
 // quality 参数范围 0-100；quality >= 100 时启用无损模式.
 func EncodeWebP(img image.Image, quality int) ([]byte, error) {
-	if advancedWebpQuality != 0 {
-		quality = advancedWebpQuality
-	}
 	var buf bytes.Buffer
 	err := webp.Encode(&buf, img, webp.Options{
 		Lossless: quality >= 100,

@@ -10,13 +10,7 @@ import (
 
 type jpegCodec struct{}
 
-var (
-	advancedJpegQuality = 0
-)
-
-func (c *jpegCodec) InitSetting(set settingLoader.Setting) {
-	advancedJpegQuality = set.AdvancedJpegQuality
-}
+func (c *jpegCodec) InitSetting(_ settingLoader.Setting) {}
 
 // Name 返回编解码器名称.
 func (c *jpegCodec) Name() string { return "jpeg" }
@@ -42,9 +36,6 @@ func (c *jpegCodec) Decode(data []byte) (image.Image, error) {
 // EncodeJPEG 将 image.Image 编码为 JPEG 格式的字节数据.
 // quality 参数范围 1-100, 值越高画质越好.
 func EncodeJPEG(img image.Image, quality int) ([]byte, error) {
-	if advancedJpegQuality != 0 {
-		quality = advancedJpegQuality
-	}
 	var buf bytes.Buffer
 	err := jpeg.Encode(&buf, img, &jpeg.Options{Quality: quality})
 	if err != nil {
