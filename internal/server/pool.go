@@ -103,21 +103,19 @@ func (tp *ThreadPool) popTask() (item *core.PicItem, input string, output string
 	tp.mu.Lock()
 
 	// 1. 检查全局退出标志
-	// 2. 检查队列是否已被清空 (Stop 调用)
-	// 3. 检查是否所有任务都已取完
-	if exitFlag || tp.items == nil || tp.indexOfPic >= len(tp.items) {
+	// 2. 检查是否所有任务都已取完 (Stop 清空队列后 len 为 0, 同样在此返回)
+	if exitFlag || tp.indexOfPic >= len(tp.items) {
 		tp.mu.Unlock()
 		logger.Debug("task pool is empty or exitFlag is true")
 		return nil, "", ""
 	}
 
-	itemIndex := tp.indexOfPic
 	outputIndex := tp.indexOfOut
-	tp.mu.Unlock()
+	item = tp.items[tp.indexOfPic]
 	tp.indexOfPic++
 	tp.indexOfOut++
+	tp.mu.Unlock()
 
-	item = tp.items[itemIndex]
 	input = item.FullPath
 	output = fileio.GetOutputPath(input, outputIndex)
 	logger.Debug("pop task: %s -> %s", input, output)
