@@ -68,7 +68,7 @@ PicSizer 支持在 Windows 控制台 (CMD / PowerShell) 下通过命令行参数
 将单张 JPEG 图片按"清晰"画质进行压缩, 并输出到指定文件夹: 
 
 ```bash
-PicSizer.exe -c -i "C:\Photos\demo.jpg" -o "D:\Output" -ot dir -ct quality -q clear
+PicSizer-cli.exe -c -i "C:\Photos\demo.jpg" -o "D:\Output" -ot dir -ct quality -q clear
 
 ```
 
@@ -77,7 +77,7 @@ PicSizer.exe -c -i "C:\Photos\demo.jpg" -o "D:\Output" -ot dir -ct quality -q cl
 递归遍历 `C:\raw_images` 目录, 将所有图片压缩到不超过 `500 KB` (采用二分法查找最优质量), 转换为 `WebP` 格式, 并**完全保留原本的子目录层级结构**导出到 `D:\target`: 
 
 ```bash
-PicSizer.exe -c -i "C:\raw_images" -o "D:\target" -ot struct -ct size -l 500 -u kb -f webp
+PicSizer-cli.exe -c -i "C:\raw_images" -o "D:\target" -ot struct -ct size -l 500 -u kb -f webp
 
 ```
 
@@ -86,7 +86,7 @@ PicSizer.exe -c -i "C:\raw_images" -o "D:\target" -ot struct -ct size -l 500 -u 
 使用 8 线程高并发处理, 读取一张 PNG 图片, 智能检查若无透明像素则抽离通道, 强制拉伸调整尺寸为 `800x600`, 按质量 `85` 压缩并**直接替换覆盖源文件**: 
 
 ```bash
-PicSizer.exe -c -i "D:\avatar.png" -ot cover -ct quality -q 85 -t 8 -a smart -s stretch -w 800 -hg 600
+PicSizer-cli.exe -c -i "D:\avatar.png" -ot cover -ct quality -q 85 -t 8 -a smart -s stretch -w 800 -hg 600
 
 ```
 
@@ -95,7 +95,7 @@ PicSizer.exe -c -i "D:\avatar.png" -ot cover -ct quality -q 85 -t 8 -a smart -s 
 将文件夹内的图片等比缩放至高度为 `1080` 像素 (宽度会自动按比例计算锁定, 输入 `0`), 转为 `JPEG` 统一导出, 文件名重命名为 `wallpaper_001.jpg`、`wallpaper_002.jpg` 递增: 
 
 ```bash
-PicSizer.exe -c -i "C:\Wallpapers" -o "C:\Dist" -ot dir -f jpeg -s lock -w 0 -hg 1080 -tpl "wallpaper_{id}" -si 1
+PicSizer-cli.exe -c -i "C:\Wallpapers" -o "C:\Dist" -ot dir -f jpeg -s lock -w 0 -hg 1080 -tpl "wallpaper_{id}" -si 1
 
 ```
 
