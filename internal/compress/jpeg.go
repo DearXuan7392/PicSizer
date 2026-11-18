@@ -35,6 +35,8 @@ func NewJPEGCompressor(img image.Image, outputPath string) Compressor {
 func (c *jpegCompressor) CompressByQuality(quality settingLoader.QualityLevel) *core.PicResult {
 	qualityValue := settingLoader.QualityLevelValue(quality)
 	if advanced := settingLoader.GetSetting().AdvancedJpegQuality; advanced != 0 {
+		logger.Debug("jpeg quality overridden, level: %s, from: %d, to: %d",
+			settingLoader.QualityLevelName(quality), qualityValue, advanced)
 		qualityValue = advanced
 	}
 	encode := func(q int) ([]byte, error) {

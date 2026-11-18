@@ -1,10 +1,13 @@
 package fileio
 
 import (
+	"PicSizer/internal/log"
 	"os"
 	"path/filepath"
 	"strings"
 )
+
+var logger = log.NewLogger("fileio")
 
 // GetExtension 获取文件的后缀名 (含点号, 小写字母).
 func GetExtension(path string) string {
@@ -44,7 +47,12 @@ func CollectImageFiles(dir string) ([]string, error) {
 		}
 		return nil
 	})
-	return files, err
+	if err != nil {
+		logger.Warn("collect image files aborted, dir: %s, err: %v", dir, err)
+		return nil, err
+	}
+	logger.Debug("collect image files done, dir: %s, count: %d", dir, len(files))
+	return files, nil
 }
 
 // GetPublicDirectory 获取多个文件路径的公共父目录.

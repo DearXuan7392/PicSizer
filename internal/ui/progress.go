@@ -74,6 +74,8 @@ func (pf *ProgressForm) Show(owner walk.Form, total int, appIcon *walk.Icon) err
 	pf.stopping = false
 	pf.mu.Unlock()
 
+	logger.Debug("progress form show, total: %d", total)
+
 	if owner != nil {
 		owner.SetEnabled(false)
 	}
@@ -110,6 +112,7 @@ func (pf *ProgressForm) Show(owner walk.Form, total int, appIcon *walk.Icon) err
 	}.Create(owner)
 
 	if err != nil {
+		logger.Error("create progress form failed, err: %v", err)
 		pf.mu.Lock()
 		pf.visible = false
 		pf.owner = nil
@@ -179,6 +182,7 @@ func (pf *ProgressForm) Close() {
 		pf.mu.Unlock()
 
 		pf.Dialog.Close(0)
+		logger.Debug("progress form closed")
 		if owner != nil {
 			owner.SetEnabled(true)
 		}
@@ -198,6 +202,8 @@ func (pf *ProgressForm) handleCancel() {
 	pf.stopping = true
 	cb := pf.onCancel
 	pf.mu.Unlock()
+
+	logger.Info("cancel requested, waiting for running tasks to finish")
 
 	if pf.Dialog != nil {
 		pf.Dialog.Synchronize(func() {

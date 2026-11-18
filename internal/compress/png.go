@@ -30,7 +30,9 @@ func (c *pngCompressor) CompressByQuality(quality settingLoader.QualityLevel) *c
 	encode := func(q int) ([]byte, error) {
 		return codec.EncodePNG(c.img, q)
 	}
-	return c.compressByQuality(qualityToInt(quality), encode, c.outputPath)
+	level := qualityToInt(quality)
+	logger.Debug("png quality mapped, level: %s, value: %d", settingLoader.QualityLevelName(quality), level)
+	return c.compressByQuality(level, encode, c.outputPath)
 }
 
 // CompressByFileSize 按指定的文件大小限制压缩 PNG 图像.

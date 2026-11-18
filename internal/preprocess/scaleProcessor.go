@@ -32,7 +32,7 @@ func (s *ScaleProcessor) Enabled() bool {
 
 // Process 执行缩放处理, 根据 mode 分发到具体的缩放算法.
 func (s *ScaleProcessor) Process(img image.Image) image.Image {
-	logger.Debug("start preprocess: %s", s.Name())
+	logger.Debug("scale processor start, mode: %s, target: %dx%d", settingLoader.ScaleName(s.mode), s.width, s.height)
 
 	if img == nil {
 		return img
@@ -40,12 +40,12 @@ func (s *ScaleProcessor) Process(img image.Image) image.Image {
 
 	if s.mode == settingLoader.ScaleLockSide {
 		if s.width <= 0 && s.height <= 0 {
-			logger.Error("scale lock side: width and height are both 0, do nothing")
+			logger.Error("scale processor skip, mode: lock-side, width and height are both 0")
 			return img
 		}
 	} else {
 		if s.width <= 0 || s.height <= 0 {
-			logger.Error("width or height is 0, do nothing")
+			logger.Error("scale processor skip, width or height is 0, target: %dx%d", s.width, s.height)
 			return img
 		}
 	}
@@ -68,7 +68,7 @@ func (s *ScaleProcessor) Process(img image.Image) image.Image {
 
 // stretch 强制拉伸, 无视宽高比直接缩放到指定尺寸.
 func (s *ScaleProcessor) stretch(img image.Image) image.Image {
-	logger.Debug("scale stretch: stretch image to %dx%d", s.width, s.height)
+	logger.Debug("scale stretch, target: %dx%d", s.width, s.height)
 	return resize(img, s.width, s.height)
 }
 
@@ -78,7 +78,7 @@ func (s *ScaleProcessor) fitOutside(img image.Image) image.Image {
 	ratio := math.Max(float64(s.width)/float64(srcW), float64(s.height)/float64(srcH))
 	newW := int(math.Round(float64(srcW) * ratio))
 	newH := int(math.Round(float64(srcH) * ratio))
-	logger.Debug("scale fit outside: fit image to %dx%d", newW, newH)
+	logger.Debug("scale fit outside, source: %dx%d, scaled: %dx%d", srcW, srcH, newW, newH)
 	return resize(img, newW, newH)
 }
 
@@ -88,7 +88,7 @@ func (s *ScaleProcessor) fitInside(img image.Image) image.Image {
 	ratio := math.Min(float64(s.width)/float64(srcW), float64(s.height)/float64(srcH))
 	newW := int(math.Round(float64(srcW) * ratio))
 	newH := int(math.Round(float64(srcH) * ratio))
-	logger.Debug("scale fit inside: fit image to %dx%d", newW, newH)
+	logger.Debug("scale fit inside, source: %dx%d, scaled: %dx%d", srcW, srcH, newW, newH)
 	return resize(img, newW, newH)
 }
 
@@ -109,10 +109,10 @@ func (s *ScaleProcessor) fitOutsideCrop(img image.Image) image.Image {
 	cropRect := image.Rect(offX, offY, offX+s.width, offY+s.height)
 
 	if !cropRect.In(image.Rect(0, 0, scaledW, scaledH)) {
-		logger.Warn("crop rect (%d, %d, %d, %d) outside of scaled image with width %d, height %d", offX, offY, offX+s.width, offY+s.height, scaledW, scaledH)
+		logger.Warn("crop skipped, rect: (%d, %d, %d, %d), scaled size: %dx%d", offX, offY, offX+s.width, offY+s.height, scaledW, scaledH)
 		return scaled
 	}
-	logger.Debug("scale fit outside crop: crop image to %dx%d", s.width, s.height)
+	logger.Debug("scale fit outside crop, crop to: %dx%d, scaled: %dx%d", s.width, s.height, scaledW, scaledH)
 	return crop(scaled, cropRect)
 }
 
@@ -122,15 +122,15 @@ func (s *ScaleProcessor) lockSide(img image.Image) image.Image {
 	if s.width == 0 && s.height > 0 {
 		ratio := float64(s.height) / float64(srcH)
 		newW := int(math.Round(float64(srcW) * ratio))
-		logger.Debug("scale lock side: fit image to %dx%d", newW, s.height)
+		logger.Debug("scale lock side, source: %dx%d, scaled: %dx%d", srcW, srcH, newW, s.height)
 		return resize(img, newW, s.height)
 	} else if s.height == 0 && s.width > 0 {
 		ratio := float64(s.width) / float64(srcW)
 		newH := int(math.Round(float64(srcH) * ratio))
-		logger.Debug("scale lock side: fit image to %dx%d", s.width, newH)
+		logger.Debug("scale lock side, source: %dx%d, scaled: %dx%d", srcW, srcH, s.width, newH)
 		return resize(img, s.width, newH)
 	} else {
-		logger.Warn("scale lock side: width and height are both 0, do nothing")
+		logger.Warn("scale lock side skipped, width and height are both 0")
 		return img
 	}
 }
@@ -138,7 +138,7 @@ func (s *ScaleProcessor) lockSide(img image.Image) image.Image {
 // resize 使用 CatmullRom 算法进行高质量缩放, 输出 *image.NRGBA.
 func resize(src image.Image, dstW, dstH int) image.Image {
 	if src.Bounds().Dx() == dstW && src.Bounds().Dy() == dstH {
-		logger.Debug("resize failed: src image size is same as dst size, do nothing")
+		logger.Debug("resize skipped, source size equals target: %dx%d", dstW, dstH)
 		return src
 	}
 
@@ -151,12 +151,12 @@ func resize(src image.Image, dstW, dstH int) image.Image {
 	case *image.NRGBA:
 		dst = image.NewNRGBA(dstRect)
 	default:
-		logger.Warn("resize failed: unknown image type, do nothing")
+		logger.Warn("resize skipped, unsupported source type: %T", src)
 		return src
 	}
 
 	xdraw.CatmullRom.Scale(dst, dstRect, src, src.Bounds(), xdraw.Over, nil)
-	logger.Debug("resize success, dst size: %dx%d", dstW, dstH)
+	logger.Debug("resize done, target: %dx%d", dstW, dstH)
 	return dst
 }
 
@@ -170,10 +170,10 @@ func crop(src image.Image, rect image.Rectangle) image.Image {
 	case *image.NRGBA:
 		out = image.NewNRGBA(image.Rect(0, 0, w, h))
 	default:
-		logger.Warn("crop warn: unknown image type, use NRGBA instead")
+		logger.Warn("crop fallback to NRGBA, unsupported source type: %T", src)
 		out = image.NewNRGBA(image.Rect(0, 0, w, h))
 	}
 	xdraw.Draw(out, out.Bounds(), src, rect.Min, xdraw.Src)
-	logger.Debug("crop success, dst size: %dx%d", w, h)
+	logger.Debug("crop done, target: %dx%d", w, h)
 	return out
 }

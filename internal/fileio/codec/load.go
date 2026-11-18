@@ -19,7 +19,7 @@ var (
 // RegisterCodec 注册一个图片编解码器到全局注册表.
 // 编解码器按注册顺序进行类型匹配, 先注册的优先匹配.
 func RegisterCodec(codec ImageCodec) {
-	logger.Debug("register codec: %s", codec.Name())
+	logger.Debug("register codec, codec: %s", codec.Name())
 	registry = append(registry, codec)
 }
 
@@ -28,7 +28,7 @@ func RegisterCodec(codec ImageCodec) {
 func GetCodec(data []byte) ImageCodec {
 	for _, codec := range registry {
 		if codec.IsType(data) {
-			logger.Debug("get codec: %s", codec.Name())
+			logger.Debug("codec matched, codec: %s, data size: %d", codec.Name(), len(data))
 			return codec
 		}
 	}
@@ -44,29 +44,35 @@ func init() {
 }
 
 func InitSetting(set settingLoader.Setting) {
+	logger.Debug("init codec settings, png palette: %s, png keep indexed alpha: %t, png dithering: %t",
+		settingLoader.PaletteAlgoName(set.AdvancedPngPaletteAlgo), set.AdvancedPngKeepIndexedAlpha, set.AdvancedPngEnableDithering)
 	for _, codec := range registry {
-		logger.Debug("init codec: %s", codec.Name())
 		codec.InitSetting(set)
 	}
 }
 
 // LoadImage 从指定路径加载图片文件, 自动检测格式并解码为 image.Image.
 func LoadImage(imgPath string) (image.Image, error) {
-	logger.Debug("load image: %s", imgPath)
+	logger.Debug("load image, path: %s", imgPath)
 	data, err := os.ReadFile(imgPath)
 	if err != nil {
+		logger.Error("read image file failed, path: %s, err: %v", imgPath, err)
 		return nil, fmt.Errorf(strs.CodecErrReadFileFailed, err.Error())
 	}
+	logger.Debug("read image file, path: %s, size: %d", imgPath, len(data))
 
 	codec := GetCodec(data)
 	if codec == nil {
+		logger.Error("no codec matched, path: %s, size: %d", imgPath, len(data))
 		return nil, errors.New(strs.CodecErrUnsupportedCodec)
 	}
 
 	img, err := codec.Decode(data)
 	if err != nil {
+		logger.Error("decode image failed, codec: %s, path: %s, err: %v", codec.Name(), imgPath, err)
 		return nil, fmt.Errorf(strs.CodecErrDecodeFailed, err.Error())
 	}
 
+	logger.Debug("decode image done, codec: %s, type: %T, bounds: %v", codec.Name(), img, img.Bounds())
 	return img, nil
 }

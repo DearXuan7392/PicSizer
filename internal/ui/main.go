@@ -230,26 +230,36 @@ func (mf *MainForm) applyTopMost(topMost bool) {
 // onAddFiles 打开文件选择对话框, 将选中的图片添加到列表中.
 func (mf *MainForm) onAddFiles() {
 	paths := ShowOpenImageDialog(mf.MainWindow)
-	if len(paths) > 0 {
-		mf.picListView.AddPicturesFromPaths(paths)
-		mf.updateSelectLabel()
-		mf.updateOutputPathFromCommonDir()
+	if len(paths) == 0 {
+		logger.Debug("add files cancelled by user")
+		return
 	}
+	logger.Info("add files, selected: %d", len(paths))
+	mf.picListView.AddPicturesFromPaths(paths)
+	mf.updateSelectLabel()
+	mf.updateOutputPathFromCommonDir()
+	logger.Debug("add files done, total: %d", mf.picListView.GetModel().ItemCount())
 }
 
 // onAddFolder 打开文件夹选择对话框, 将文件夹中的所有图片添加到列表中.
 func (mf *MainForm) onAddFolder() {
 	dir := ShowBrowseFolderDialog(mf.MainWindow, strs.TextAddFolder)
-	if dir != "" {
-		mf.picListView.AddPicturesFromDirectory(dir)
-		mf.updateSelectLabel()
-		mf.updateOutputPathFromCommonDir()
+	if dir == "" {
+		logger.Debug("add folder cancelled by user")
+		return
 	}
+	logger.Info("add folder, dir: %s", dir)
+	mf.picListView.AddPicturesFromDirectory(dir)
+	mf.updateSelectLabel()
+	mf.updateOutputPathFromCommonDir()
+	logger.Debug("add folder done, total: %d", mf.picListView.GetModel().ItemCount())
 }
 
 // onDropFiles 处理拖放到主窗口的文件.
 // 拖放到输出目录输入框区域时, 若为单个目录则设置为输出路径；否则作为图片添加到列表.
 func (mf *MainForm) onDropFiles(files []string) {
+	logger.Info("drop files, count: %d", len(files))
+
 	var cursorPos win.POINT
 	win.GetCursorPos(&cursorPos)
 
@@ -268,6 +278,7 @@ func (mf *MainForm) onDropFiles(files []string) {
 					mf.suppressPathUpdate = false
 					mf.outputPathUserModified = true
 					mf.updateOutputDirFont()
+					logger.Info("set output dir by drop, dir: %s", files[0])
 					return
 				}
 			}
@@ -291,18 +302,22 @@ func (mf *MainForm) onDropFiles(files []string) {
 	}
 	mf.updateSelectLabel()
 	mf.updateOutputPathFromCommonDir()
+	logger.Debug("drop files done, total: %d", mf.picListView.GetModel().ItemCount())
 }
 
 // onBrowseDir 打开浏览文件夹对话框, 设置输出目录路径.
 func (mf *MainForm) onBrowseDir() {
 	dir := ShowBrowseFolderDialog(mf.MainWindow, strs.TextOutputDir)
-	if dir != "" {
-		mf.suppressPathUpdate = true
-		mf.outputDirEdit.SetText(dir)
-		mf.suppressPathUpdate = false
-		mf.outputPathUserModified = true
-		mf.updateOutputDirFont()
+	if dir == "" {
+		logger.Debug("browse output dir cancelled by user")
+		return
 	}
+	logger.Info("browse output dir, dir: %s", dir)
+	mf.suppressPathUpdate = true
+	mf.outputDirEdit.SetText(dir)
+	mf.suppressPathUpdate = false
+	mf.outputPathUserModified = true
+	mf.updateOutputDirFont()
 }
 
 // onRadioChange 响应输出方式单选按钮切换, 同步更新设置并切换输出目录控件的启用状态.
@@ -319,6 +334,8 @@ func (mf *MainForm) onRadioChange() {
 	enabled := !mf.coverRadio.Checked()
 	mf.outputDirEdit.SetEnabled(enabled)
 	mf.outputDirBtn.SetEnabled(enabled)
+
+	logger.Debug("output type changed, type: %s", settingLoader.OutputTypeName(settingLoader.GetSetting().OutputType))
 }
 
 // applyRadioToOutputType 根据 OutputType 同步主窗口的无线电按钮选中状态.
@@ -348,9 +365,12 @@ func (mf *MainForm) onOutputTypeFromSetting(ot settingLoader.OutputType) {
 // onStartCompress 启动压缩流程.
 // 执行校验、重置状态、创建线程池等步骤, 在独立 goroutine 中异步执行压缩.
 func (mf *MainForm) onStartCompress() {
+	logger.Info("start compress, items: %d", mf.picListView.GetModel().ItemCount())
+
 	mf.poolMu.Lock()
 	if mf.pool != nil || mf.progressForm.IsVisible() {
 		mf.poolMu.Unlock()
+		logger.Warn("start compress rejected, task already running")
 		dialog.ShowWarning(strs.WarnCompressRunning)
 		return
 	}
@@ -358,13 +378,16 @@ func (mf *MainForm) onStartCompress() {
 
 	allItems := mf.picListView.GetModel().GetItems()
 	if len(allItems) == 0 {
+		logger.Warn("start compress rejected, list is empty")
 		dialog.ShowWarning(strs.ErrNoPictures)
 		return
 	}
 
 	alreadyDone := mf.picListView.GetModel().CountByState(settingLoader.StateSuccess)
 	if alreadyDone > 0 {
-		if !dialog.ShowConfirm(fmt.Sprintf(strs.WarnOverwriteDoneFmt, alreadyDone)) {
+		confirmed := dialog.ShowConfirm(fmt.Sprintf(strs.WarnOverwriteDoneFmt, alreadyDone))
+		logger.Info("confirm overwrite finished items, count: %d, accepted: %t", alreadyDone, confirmed)
+		if !confirmed {
 			return
 		}
 	}
@@ -372,18 +395,22 @@ func (mf *MainForm) onStartCompress() {
 	if !mf.coverRadio.Checked() {
 		core.OutputDirPath = mf.outputDirEdit.Text()
 		if core.OutputDirPath == "" {
+			logger.Warn("start compress rejected, output dir is empty")
 			dialog.ShowWarning(strs.ErrOutputDirInvalid)
 			return
 		}
 	}
 
 	if mf.coverRadio.Checked() {
+		logger.Info("output mode, type: cover origin")
 	} else if mf.dirRadio.Checked() {
 		core.OutputDirPath = mf.outputDirEdit.Text()
 		if core.OutputDirPath == "" {
+			logger.Warn("start compress rejected, output dir is empty")
 			dialog.ShowWarning(strs.ErrOutputDirInvalid)
 			return
 		}
+		logger.Info("output mode, type: direction, dir: %s", core.OutputDirPath)
 	} else {
 		var paths []string
 		for _, item := range allItems {
@@ -391,16 +418,19 @@ func (mf *MainForm) onStartCompress() {
 		}
 		prefix, ok := fileio.GetCommonPrefix(paths)
 		if !ok {
+			logger.Warn("start compress rejected, no common prefix among input files")
 			dialog.ShowWarning(strs.ErrNoCommonPrefix)
 			return
 		}
 		core.PublicDirPath = prefix
+		logger.Info("output mode, type: structure, public dir: %s, dir: %s", prefix, core.OutputDirPath)
 	}
 
 	// 输出路径在启动前一次性规划完成, 线程池只按下标取用.
 	// 批量内的重名检测同样推迟到此刻, 用户取消则放弃本次压缩.
 	outputPaths, planned := mf.planOutputPaths(allItems)
 	if !planned {
+		logger.Warn("start compress aborted, output path planning cancelled")
 		return
 	}
 
@@ -428,9 +458,12 @@ func (mf *MainForm) onStartCompress() {
 	})
 
 	if err := mf.progressForm.Show(mf.MainWindow, len(allItems), mf.appIcon); err != nil {
+		logger.Error("show progress form failed, err: %v", err)
 		dialog.ShowError(err.Error())
 		return
 	}
+
+	logSettings(settingLoader.GetSetting())
 
 	pool := server.NewThreadPool(allItems, outputPaths,
 		func(current, errCount, total int) {
@@ -440,6 +473,7 @@ func (mf *MainForm) onStartCompress() {
 			mf.picListView.GetModel().PublishRowChangedByItem(item)
 		},
 		func(success, errCount, total int) {
+			logger.Info("compress finished, success: %d, failed: %d, total: %d", success, errCount, total)
 			mf.picListView.StopAutoScrollDown()
 			mf.progressForm.Close()
 			dialog.ShowCompressResult(total, success)
@@ -458,38 +492,52 @@ func (mf *MainForm) onStartCompress() {
 
 // onSetting 打开设置窗口, 关闭后重新应用置顶状态.
 func (mf *MainForm) onSetting() {
+	logger.Info("open setting dialog")
 	mf.settingForm.Show(mf.MainWindow, mf.appIcon)
 	setting := settingLoader.GetSetting()
 	mf.applyTopMost(setting.TopMost)
+	logger.Debug("setting dialog closed, top most: %t", setting.TopMost)
 }
 
 // onAbout 打开关于窗口.
 func (mf *MainForm) onAbout() {
+	logger.Debug("open about dialog")
 	mf.aboutForm.Show(mf.MainWindow, mf.appIcon)
 }
 
 // onRemoveSelected 移除列表中当前选中的项目.
 func (mf *MainForm) onRemoveSelected() {
-	mf.picListView.GetModel().RemoveSelected(mf.picListView.TableView)
+	model := mf.picListView.GetModel()
+	count := len(mf.picListView.TableView.SelectedIndexes())
+	model.RemoveSelected(mf.picListView.TableView)
 	mf.updateSelectLabel()
+	logger.Info("remove selected, count: %d, remain: %d", count, model.ItemCount())
 }
 
 // onRemoveDone 移除列表中所有已成功完成的项目.
 func (mf *MainForm) onRemoveDone() {
-	mf.picListView.GetModel().RemoveByState(settingLoader.StateSuccess)
+	model := mf.picListView.GetModel()
+	removed := model.CountByState(settingLoader.StateSuccess)
+	model.RemoveByState(settingLoader.StateSuccess)
 	mf.updateSelectLabel()
+	logger.Info("remove finished, count: %d, remain: %d", removed, model.ItemCount())
 }
 
 // onRemoveError 移除列表中所有错误和超出限制的项目.
 func (mf *MainForm) onRemoveError() {
-	mf.picListView.GetModel().RemoveByState(settingLoader.StateError)
-	mf.picListView.GetModel().RemoveByState(settingLoader.StateOutOfLimit)
+	model := mf.picListView.GetModel()
+	removed := model.CountByState(settingLoader.StateError) + model.CountByState(settingLoader.StateOutOfLimit)
+	model.RemoveByState(settingLoader.StateError)
+	model.RemoveByState(settingLoader.StateOutOfLimit)
 	mf.updateSelectLabel()
+	logger.Info("remove failed, count: %d, remain: %d", removed, model.ItemCount())
 }
 
 // onRemoveAll 清空列表中的所有项目 (需用户确认).
 func (mf *MainForm) onRemoveAll() {
-	if dialog.ShowConfirm(strs.MsgClearList) {
+	confirmed := dialog.ShowConfirm(strs.MsgClearList)
+	logger.Info("clear list, confirmed: %t, count: %d", confirmed, mf.picListView.GetModel().ItemCount())
+	if confirmed {
 		mf.picListView.GetModel().Clear()
 		mf.updateSelectLabel()
 	}
@@ -499,16 +547,19 @@ func (mf *MainForm) onRemoveAll() {
 func (mf *MainForm) onSelectAll() {
 	mf.picListView.GetModel().SelectAll(mf.picListView.TableView)
 	mf.updateSelectLabel()
+	logger.Debug("select all, count: %d", mf.picListView.GetModel().ItemCount())
 }
 
 // onSelectReverse 反选列表中的项目.
 func (mf *MainForm) onSelectReverse() {
 	mf.picListView.GetModel().SelectReverse(mf.picListView.TableView)
 	mf.updateSelectLabel()
+	logger.Debug("select reverse, selected: %d", len(mf.picListView.TableView.SelectedIndexes()))
 }
 
 // onExit 退出程序.
 func (mf *MainForm) onExit() {
+	logger.Info("exit requested by user")
 	mf.MainWindow.Close()
 }
 
@@ -608,6 +659,7 @@ func (mf *MainForm) processStartupPaths() {
 	if len(mf.startupPaths) == 0 {
 		return
 	}
+	logger.Info("process startup paths, count: %d", len(mf.startupPaths))
 
 	var imageFiles []string
 	for _, path := range mf.startupPaths {
@@ -625,6 +677,7 @@ func (mf *MainForm) processStartupPaths() {
 		mf.picListView.AddPicturesFromPaths(imageFiles)
 	}
 	mf.updateSelectLabel()
+	logger.Debug("process startup paths done, total: %d", mf.picListView.GetModel().ItemCount())
 }
 
 // updateSelectLabel 更新底部状态栏的选中/总数标签.
@@ -637,4 +690,31 @@ func (mf *MainForm) updateSelectLabel() {
 		total := mf.picListView.GetModel().ItemCount()
 		mf.selectLabel.SetText(fmt.Sprintf("%d/%d", selected, total))
 	}
+}
+
+// logSettings 输出当前设置的英文摘要, 便于调试时还原压缩参数.
+func logSettings(set settingLoader.Setting) {
+	logger.Info("settings, compress: %s, quality: %s, limit: %d %s, accept exceed: %t, output: %s, extension: %s, template: %q, start index: %d, threads: %d",
+		settingLoader.CompressTypeName(set.CompressType),
+		settingLoader.QualityLevelName(set.Quality),
+		set.LimitSize,
+		settingLoader.SizeUnitName(set.SizeUnit),
+		set.AcceptExceed,
+		settingLoader.OutputTypeName(set.OutputType),
+		settingLoader.ExtensionName(set.Extension),
+		set.OutputFilename,
+		set.StartIndex,
+		set.MaxThreads,
+	)
+	logger.Info("preprocess and advanced, alpha: %s, scale: %s, scale size: %dx%d, jpeg quality: %d, webp quality: %d, png palette: %s, png keep alpha: %t, png dithering: %t",
+		settingLoader.AlphaHandleName(set.AlphaHandle),
+		settingLoader.ScaleName(set.Scale),
+		set.ScaleWidth,
+		set.ScaleHeight,
+		set.AdvancedJpegQuality,
+		set.AdvancedWebPQuality,
+		settingLoader.PaletteAlgoName(set.AdvancedPngPaletteAlgo),
+		set.AdvancedPngKeepIndexedAlpha,
+		set.AdvancedPngEnableDithering,
+	)
 }

@@ -22,13 +22,14 @@ func (c *jpegCodec) IsType(data []byte) bool {
 
 // Decode 将 JPEG 数据解码为 image.Image.
 func (c *jpegCodec) Decode(data []byte) (image.Image, error) {
-	logger.Debug("decode jpeg data")
+	logger.Debug("decode data, format: jpeg, size: %d", len(data))
 	img, err := jpeg.Decode(bytes.NewReader(data))
 	if err != nil {
+		logger.Error("decode jpeg failed, size: %d, err: %v", len(data), err)
 		return nil, err
 	}
 
-	logger.Debug("convert jpeg to RGBA image")
+	logger.Debug("convert image, format: jpeg, target: RGBA")
 	return utils.ConvertToRGBA(img), nil
 
 }

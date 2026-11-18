@@ -44,17 +44,18 @@ func (c *pngCodec) IsType(data []byte) bool {
 // Decode 将 PNG 数据解码为 image.Image.
 // 解码后会对图像类型进行标准化处理, 降为 32 位图像.
 func (c *pngCodec) Decode(data []byte) (image.Image, error) {
-	logger.Debug("decode png data")
+	logger.Debug("decode data, format: png, size: %d", len(data))
 	img, err := png.Decode(bytes.NewReader(data))
 	if err != nil {
+		logger.Error("decode png failed, size: %d, err: %v", len(data), err)
 		return nil, err
 	}
 
 	if c.HasAlphaChannel(data) {
-		logger.Debug("convert png to NRGBA image")
+		logger.Debug("convert image, format: png, target: NRGBA, alpha channel: true")
 		img = utils.ConvertToNRGBA(img)
 	} else {
-		logger.Debug("convert png to RGBA image")
+		logger.Debug("convert image, format: png, target: RGBA, alpha channel: false")
 		img = utils.ConvertToRGBA(img)
 	}
 	return img, nil
@@ -68,6 +69,9 @@ const (
 )
 
 func EncodePNG(img image.Image, qualityLevel int) ([]byte, error) {
+	logger.Debug("encode png, quality level: %d, palette: %s, keep indexed alpha: %t, dithering: %t",
+		qualityLevel, settingLoader.PaletteAlgoName(advancedPngPaletteAlgo), advancedPngKeepIndexedAlpha, advancedPngEnableDithering)
+
 	var buf bytes.Buffer
 	bounds := img.Bounds()
 

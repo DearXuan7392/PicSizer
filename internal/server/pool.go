@@ -55,7 +55,6 @@ func NewThreadPool(items []*core.PicItem, outputPaths []string, onProgress Progr
 // 根据配置的 MaxThreads 创建对应数量的 worker goroutine.
 // 调用方需在 Start 之后调用 Wait 阻塞等待所有任务完成.
 func (tp *ThreadPool) Start() {
-	logger.Debug("start thread pool")
 	set := settingLoader.GetSetting()
 	codec.InitSetting(set)
 
@@ -65,14 +64,11 @@ func (tp *ThreadPool) Start() {
 	tp.indexOfPic = 0
 	exitFlag = false
 
-	logger.Debug("totalNum: %d", tp.totalNum)
-
 	threadCount := set.MaxThreads
 	if threadCount <= 0 {
 		threadCount = 1
 	}
-
-	logger.Debug("threadCount: %d", threadCount)
+	logger.Info("thread pool start, total: %d, threads: %d", tp.totalNum, threadCount)
 
 	for i := 0; i < threadCount; i++ {
 		tp.wg.Add(1)
@@ -93,6 +89,8 @@ func (tp *ThreadPool) Wait() {
 	cb := tp.onComplete
 	tp.mu.Unlock()
 
+	logger.Info("thread pool done, success: %d, failed: %d, total: %d", success, errCount, total)
+
 	if cb != nil {
 		cb(success, errCount, total)
 	}
@@ -107,7 +105,7 @@ func (tp *ThreadPool) popTask() (item *core.PicItem, output string) {
 	// 2. 检查是否所有任务都已取完 (Stop 清空队列后 len 为 0, 同样在此返回)
 	if exitFlag || tp.indexOfPic >= len(tp.items) {
 		tp.mu.Unlock()
-		logger.Debug("task pool is empty or exitFlag is true")
+		logger.Debug("no task left, index: %d, exit flag: %t", tp.indexOfPic, exitFlag)
 		return nil, ""
 	}
 
@@ -116,7 +114,7 @@ func (tp *ThreadPool) popTask() (item *core.PicItem, output string) {
 	tp.indexOfPic++
 	tp.mu.Unlock()
 
-	logger.Debug("pop task: %s -> %s", item.FullPath, output)
+	logger.Debug("pop task, index: %d, input: %s, output: %s", tp.indexOfPic-1, item.FullPath, output)
 	return item, output
 }
 
@@ -137,10 +135,6 @@ func (tp *ThreadPool) worker() {
 
 		// 执行压缩
 		result := compress.Compress(item.FullPath, output)
-
-		if !result.Ok {
-			logger.Error("compress failed: %s", result.Message)
-		}
 
 		// 更新结果
 		tp.updateResult(item, result, output)
@@ -179,6 +173,10 @@ func (tp *ThreadPool) updateResult(item *core.PicItem, result *core.PicResult, o
 		tp.errorNum++
 	}
 
+	logger.Debug("update result, input: %s, state: %s, new size: %d, success: %d, failed: %d, total: %d",
+		item.FullPath, settingLoader.PicItemStateName(item.State), item.NewSize,
+		tp.currentNum, tp.errorNum, tp.totalNum)
+
 	// 进度回调
 	if tp.onProgress != nil {
 		tp.onProgress(tp.currentNum, tp.errorNum, tp.totalNum)
@@ -195,6 +193,8 @@ func (tp *ThreadPool) updateResult(item *core.PicItem, result *core.PicResult, o
 func (tp *ThreadPool) Stop() {
 	tp.mu.Lock()
 	defer tp.mu.Unlock()
+
+	logger.Info("thread pool stop requested, remaining: %d", len(tp.items)-tp.indexOfPic)
 
 	exitFlag = true
 	// 清空队列

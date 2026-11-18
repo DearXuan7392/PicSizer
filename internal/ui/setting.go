@@ -4,6 +4,7 @@ import (
 	"PicSizer/internal/core/settingLoader"
 	strs "PicSizer/internal/core/strings"
 	"PicSizer/internal/dialog"
+	"PicSizer/internal/log"
 	"PicSizer/internal/ui/controls"
 	"os"
 	"os/exec"
@@ -87,6 +88,8 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 	// 获取设置的拷贝, 所有修改都作用于此拷贝
 	sf.workingCopy = settingLoader.GetSettingCopy()
 	set := sf.workingCopy
+	logger.Info("setting dialog opened")
+	logSettings(set)
 	// 获取 CPU 逻辑核心数
 	sf.maxThreads = runtime.NumCPU()
 
@@ -653,6 +656,7 @@ func (sf *SettingForm) onCompressModeChange() {
 		return
 	}
 	isQualityMode := sf.qualityRadio.Checked()
+	logger.Debug("compress mode changed, quality mode: %t", isQualityMode)
 	if sf.qualityLabel != nil {
 		sf.qualityLabel.SetEnabled(isQualityMode)
 	}
@@ -704,6 +708,7 @@ func (sf *SettingForm) onExtensionChange() {
 		return
 	}
 	isBMP := sf.extensionCombo.CurrentIndex() == 3
+	logger.Debug("extension changed, bmp: %t", isBMP)
 
 	// 禁用或启用整个压缩设置组
 	if isBMP {
@@ -790,6 +795,8 @@ func (sf *SettingForm) onScaleModeChange() {
 // saveSetting 从 UI 控件读取所有值, 进行校验后写入全局配置.
 // 返回 false 表示用户取消保存 (校验失败或用户取消了警告弹窗).
 func (sf *SettingForm) saveSetting() bool {
+	logger.Info("save settings requested")
+
 	// 使用 workingCopy 作为基础, 保留旧值用于回调判断
 	oldTopMost := sf.workingCopy.TopMost
 	oldOutputType := sf.workingCopy.OutputType
@@ -935,6 +942,7 @@ func (sf *SettingForm) saveSetting() bool {
 	// ============================================================
 	errors := sf.workingCopy.CheckErrors()
 	if len(errors) > 0 {
+		logger.Warn("save settings rejected, errors: %d, detail: %v", len(errors), errors)
 		errMsg := strings.Join(errors, "\n")
 		dialog.ShowErrorWithParent(parentHwnd, errMsg)
 		return false
@@ -946,7 +954,9 @@ func (sf *SettingForm) saveSetting() bool {
 	warnings := sf.workingCopy.CheckWarnings()
 	if len(warnings) > 0 {
 		warnMsg := strings.Join(warnings, "\n")
-		if !dialog.ShowConfirmWithParent(parentHwnd, warnMsg) {
+		confirmed := dialog.ShowConfirmWithParent(parentHwnd, warnMsg)
+		logger.Info("save settings warning, count: %d, accepted: %t", len(warnings), confirmed)
+		if !confirmed {
 			return false
 		}
 	}
@@ -955,6 +965,8 @@ func (sf *SettingForm) saveSetting() bool {
 	// 第四阶段: 写入 settingLoader 持久化
 	// ============================================================
 	settingLoader.UpdateSetting(sf.workingCopy)
+	logger.Info("settings applied")
+	logSettings(sf.workingCopy)
 
 	if sf.workingCopy.TopMost != oldTopMost && sf.onTopMostChanged != nil {
 		sf.onTopMostChanged(sf.workingCopy.TopMost)
@@ -1128,12 +1140,15 @@ func (sf *SettingForm) updateDebugMode() {
 				if confirmed {
 					exePath, err := os.Executable()
 					if err != nil {
+						logger.Error("get executable path failed, err: %v", err)
 						dialog.ShowErrorWithParent(parentHwnd, strs.ErrCannotFindExecPath)
 						sf.debugModeCheck.SetChecked(false)
 					}
 
+					logger.Info("restart program in debug mode, exe: %s", exePath)
 					cmd := exec.Command(exePath, "--debug")
 					cmd.Start()
+					log.Close()
 					os.Exit(0)
 				} else {
 					sf.debugModeCheck.SetChecked(false)

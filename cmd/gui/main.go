@@ -18,5 +18,12 @@ func main() {
 		}
 	}
 	log.InitLogger()
+
+	logger := log.NewLogger("main")
+	logger.Info("process start, debug: %t, args: %v", settingLoader.IsDebug(), os.Args)
+
 	ui.Run(paths)
+
+	logger.Info("process exit")
+	log.Close()
 }

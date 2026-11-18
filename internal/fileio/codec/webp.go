@@ -26,21 +26,22 @@ func (c *webpCodec) IsType(data []byte) bool {
 
 // Decode 将 WebP 数据解码为 image.Image.
 func (c *webpCodec) Decode(data []byte) (image.Image, error) {
-	logger.Debug("decode webp data")
+	logger.Debug("decode data, format: webp, size: %d", len(data))
 	img, err := webp.Decode(bytes.NewReader(data))
 	if err != nil {
+		logger.Error("decode webp failed, size: %d, err: %v", len(data), err)
 		return nil, err
 	}
 
 	switch img.(type) {
 	case *image.YCbCr:
-		logger.Debug("convert webp to RGBA image")
+		logger.Debug("convert image, format: webp, target: RGBA")
 		return utils.ConvertToRGBA(img), nil
 	case *image.NYCbCrA, *image.NRGBA:
-		logger.Debug("convert webp to NRGBA image")
+		logger.Debug("convert image, format: webp, target: NRGBA")
 		return utils.ConvertToNRGBA(img), nil
 	default:
-		logger.Warn("unknown image type, convert to RGBA image")
+		logger.Warn("convert image, format: webp, unknown source type: %T, target: RGBA", img)
 		return utils.ConvertToRGBA(img), nil
 	}
 }

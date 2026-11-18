@@ -364,15 +364,20 @@ func (p *PicListView) AddPicturesFromPaths(paths []string) {
 	}
 
 	var items []*core.PicItem
+	skipped := 0
 	for _, path := range paths {
 		if existingPaths[path] {
+			skipped++
 			continue
 		}
 		if !fileio.IsImageFile(path) {
+			skipped++
 			continue
 		}
 		info, err := fileio.GetFileInfo(path)
 		if err != nil {
+			logger.Warn("skip picture, stat failed, path: %s, err: %v", path, err)
+			skipped++
 			continue
 		}
 		items = append(items, &core.PicItem{
@@ -386,14 +391,17 @@ func (p *PicListView) AddPicturesFromPaths(paths []string) {
 	if len(items) > 0 {
 		p.model.AddItems(items)
 	}
+	logger.Debug("add pictures, requested: %d, added: %d, skipped: %d", len(paths), len(items), skipped)
 }
 
 // AddPicturesFromDirectory 从目录递归添加所有图片文件到列表.
 func (p *PicListView) AddPicturesFromDirectory(dir string) {
 	files, err := fileio.CollectImageFiles(dir)
 	if err != nil {
+		logger.Error("add pictures from directory failed, dir: %s, err: %v", dir, err)
 		return
 	}
+	logger.Debug("add pictures from directory, dir: %s, count: %d", dir, len(files))
 	p.AddPicturesFromPaths(files)
 }
 
@@ -428,7 +436,9 @@ func (p *PicListView) onKeyDown(key walk.Key) {
 		p.model.SelectAll(p.TableView)
 	case walk.KeyDelete:
 		// Delete 键快速删除选中的项目
+		removed := len(p.TableView.SelectedIndexes())
 		p.model.RemoveSelected(p.TableView)
+		logger.Info("delete selected by keyboard, count: %d, remain: %d", removed, p.model.ItemCount())
 		// 删除后通过 onSelChanged 回调刷新底部"已选/总数"标签
 		if p.onSelChanged != nil {
 			p.onSelChanged()

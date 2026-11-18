@@ -23,13 +23,14 @@ func (c *bmpCodec) IsType(data []byte) bool {
 
 // Decode 将 BMP 数据解码为 image.Image.
 func (c *bmpCodec) Decode(data []byte) (image.Image, error) {
-	logger.Debug("decode bmp data")
+	logger.Debug("decode data, format: bmp, size: %d", len(data))
 	img, err := bmp.Decode(bytes.NewReader(data))
 	if err != nil {
+		logger.Error("decode bmp failed, size: %d, err: %v", len(data), err)
 		return nil, err
 	}
 
-	logger.Debug("convert bmp to RGBA image")
+	logger.Debug("convert image, format: bmp, target: RGBA")
 	return utils.ConvertToRGBA(img), nil
 }
 

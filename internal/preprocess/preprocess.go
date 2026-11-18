@@ -31,18 +31,22 @@ func newPreprocessors(setting settingLoader.Setting) []Preprocessor {
 // Process 是统一预处理入口, 按注册顺序依次执行所有已启用的预处理器.
 // 返回处理后的图像, 任意一步不会因失败中断整体流程.
 func Process(img image.Image) image.Image {
-	logger.Debug("start preprocess image")
 	if img == nil {
-		logger.Error("image is nil")
+		logger.Error("preprocess skipped, image is nil")
 		return nil
 	}
 	setting := settingLoader.GetSetting()
+	logger.Debug("preprocess start, bounds: %v, type: %T", img.Bounds(), img)
+
 	processors := newPreprocessors(setting)
 	for _, p := range processors {
 		if p == nil || !p.Enabled() {
 			continue
 		}
+		logger.Debug("preprocess step, name: %s", p.Name())
 		img = p.Process(img)
 	}
+
+	logger.Debug("preprocess done, bounds: %v, type: %T", img.Bounds(), img)
 	return img
 }

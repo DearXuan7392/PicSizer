@@ -30,6 +30,8 @@ const maxDuplicatePreview = 5
 // 返回 false 表示用户放弃本次压缩, 调用方应保持列表状态不变.
 func (mf *MainForm) planOutputPaths(items []*core.PicItem) ([]string, bool) {
 	set := settingLoader.GetSetting()
+	logger.Debug("plan output paths, count: %d, output type: %s, template: %q, start index: %d",
+		len(items), settingLoader.OutputTypeName(set.OutputType), set.OutputFilename, set.StartIndex)
 
 	paths := make([]string, len(items))
 	for i, item := range items {
@@ -38,17 +40,33 @@ func (mf *MainForm) planOutputPaths(items []*core.PicItem) ([]string, bool) {
 
 	duplicates := fileio.FindDuplicates(paths)
 	if len(duplicates) == 0 {
+		logger.Debug("plan output paths done, duplicates: 0")
 		return paths, true
+	}
+
+	logger.Warn("duplicate output paths detected, groups: %d", len(duplicates))
+	for _, d := range duplicates {
+		logger.Warn("duplicate output path, path: %s, count: %d", d.Path, d.Count)
 	}
 
 	policy, decided := showDuplicateDialog(mf.MainWindow, duplicates, mf.appIcon)
 	if !decided {
+		logger.Warn("duplicate policy not decided, ask user to abort compress")
 		return nil, false
 	}
+	logger.Info("duplicate policy selected, policy: %s", dupPolicyName(policy))
 	if policy == dupPolicySuffix {
 		paths = fileio.MakeUniquePaths(paths)
 	}
 	return paths, true
+}
+
+// dupPolicyName 返回重名处置策略的英文名称, 用于日志.
+func dupPolicyName(p dupPolicy) string {
+	if p == dupPolicySuffix {
+		return "suffix"
+	}
+	return "overwrite"
 }
 
 // duplicateMessage 生成提示框正文, 超出的条目以摘要形式给出.

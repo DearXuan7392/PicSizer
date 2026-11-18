@@ -48,6 +48,9 @@ func MakeUniquePaths(paths []string) []string {
 
 	for i, p := range paths {
 		unique[i] = uniquePath(p, used)
+		if unique[i] != p {
+			logger.Debug("assign unique output path, from: %s, to: %s", p, unique[i])
+		}
 		used[pathKey(unique[i])] = true
 	}
 	return unique
