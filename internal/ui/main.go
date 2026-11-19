@@ -17,7 +17,7 @@ import (
 	"github.com/lxn/win"
 )
 
-// MainForm 表示程序的主窗口, 包含图片列表、输出选项和压缩控制等核心交互区域.
+// MainForm 主窗口: 图片列表、输出方式与压缩控制.
 type MainForm struct {
 	*walk.MainWindow
 	picListView   *PicListView
@@ -40,9 +40,9 @@ type MainForm struct {
 	// outputPathUserModified 记录用户是否主动修改过输出路径.
 	// 一旦为 true, 不再自动计算输出路径.
 	outputPathUserModified bool
-	// currentCommonDir 存放当前所有图片的公共目录 (未手动修改时使用).
+	// currentCommonDir 当前所有图片的公共父目录 (未手动修改输出路径时使用).
 	currentCommonDir string
-	// suppressPathUpdate 用于抑制 SetText 触发的 TextChanged 事件.
+	// suppressPathUpdate 程序主动 SetText 时抑制 TextChanged 触发.
 	suppressPathUpdate bool
 }
 
@@ -60,7 +60,7 @@ func NewMainForm(startupPaths []string) *MainForm {
 	return mf
 }
 
-// Run 创建并运行主窗口, 完成后进入 Windows 消息循环.
+// Run 创建并运行主窗口.
 func (mf *MainForm) Run(appIcon *walk.Icon) error {
 	mf.appIcon = appIcon
 	mf.picListView = NewPicListView(appIcon)
@@ -214,7 +214,6 @@ func (mf *MainForm) Run(appIcon *walk.Icon) error {
 	mf.MainWindow.Show()
 	mf.applyTopMost(setting.TopMost)
 
-	// 处理通过拖拽到程序图标传入的文件/文件夹路径
 	mf.processStartupPaths()
 	mf.updateOutputPathFromCommonDir()
 
@@ -222,12 +221,10 @@ func (mf *MainForm) Run(appIcon *walk.Icon) error {
 	return nil
 }
 
-// applyTopMost 通过 Windows API 设置或取消主窗口的置顶状态.
 func (mf *MainForm) applyTopMost(topMost bool) {
 	ApplyTopMostToWindow(mf.MainWindow, topMost)
 }
 
-// onAddFiles 打开文件选择对话框, 将选中的图片添加到列表中.
 func (mf *MainForm) onAddFiles() {
 	paths := ShowOpenImageDialog(mf.MainWindow)
 	if len(paths) == 0 {
@@ -241,7 +238,6 @@ func (mf *MainForm) onAddFiles() {
 	logger.Debug("add files done, total: %d", mf.picListView.GetModel().ItemCount())
 }
 
-// onAddFolder 打开文件夹选择对话框, 将文件夹中的所有图片添加到列表中.
 func (mf *MainForm) onAddFolder() {
 	dir := ShowBrowseFolderDialog(mf.MainWindow, strs.TextAddFolder)
 	if dir == "" {
@@ -255,8 +251,8 @@ func (mf *MainForm) onAddFolder() {
 	logger.Debug("add folder done, total: %d", mf.picListView.GetModel().ItemCount())
 }
 
-// onDropFiles 处理拖放到主窗口的文件.
-// 拖放到输出目录输入框区域时, 若为单个目录则设置为输出路径；否则作为图片添加到列表.
+// onDropFiles 处理拖放文件.
+// 落在输出目录输入框上且为单个目录时设为输出路径; 否则作为图片加入列表.
 func (mf *MainForm) onDropFiles(files []string) {
 	logger.Info("drop files, count: %d", len(files))
 
@@ -305,7 +301,6 @@ func (mf *MainForm) onDropFiles(files []string) {
 	logger.Debug("drop files done, total: %d", mf.picListView.GetModel().ItemCount())
 }
 
-// onBrowseDir 打开浏览文件夹对话框, 设置输出目录路径.
 func (mf *MainForm) onBrowseDir() {
 	dir := ShowBrowseFolderDialog(mf.MainWindow, strs.TextOutputDir)
 	if dir == "" {
@@ -320,7 +315,6 @@ func (mf *MainForm) onBrowseDir() {
 	mf.updateOutputDirFont()
 }
 
-// onRadioChange 响应输出方式单选按钮切换, 同步更新设置并切换输出目录控件的启用状态.
 func (mf *MainForm) onRadioChange() {
 	if mf.coverRadio != nil && mf.dirRadio != nil && mf.structRadio != nil {
 		if mf.coverRadio.Checked() {
@@ -338,7 +332,6 @@ func (mf *MainForm) onRadioChange() {
 	logger.Debug("output type changed, type: %s", settingLoader.OutputTypeName(settingLoader.GetSetting().OutputType))
 }
 
-// applyRadioToOutputType 根据 OutputType 同步主窗口的无线电按钮选中状态.
 func (mf *MainForm) applyRadioToOutputType(ot settingLoader.OutputType) {
 	if mf.coverRadio == nil || mf.dirRadio == nil || mf.structRadio == nil {
 		return
@@ -356,7 +349,6 @@ func (mf *MainForm) applyRadioToOutputType(ot settingLoader.OutputType) {
 	}
 }
 
-// onOutputTypeFromSetting 接收设置窗口的输出方式变更通知, 同步主窗口的单选按钮状态.
 func (mf *MainForm) onOutputTypeFromSetting(ot settingLoader.OutputType) {
 	mf.applyRadioToOutputType(ot)
 	mf.onRadioChange()
@@ -490,7 +482,6 @@ func (mf *MainForm) onStartCompress() {
 	}()
 }
 
-// onSetting 打开设置窗口, 关闭后重新应用置顶状态.
 func (mf *MainForm) onSetting() {
 	logger.Info("open setting dialog")
 	mf.settingForm.Show(mf.MainWindow, mf.appIcon)
@@ -499,13 +490,11 @@ func (mf *MainForm) onSetting() {
 	logger.Debug("setting dialog closed, top most: %t", setting.TopMost)
 }
 
-// onAbout 打开关于窗口.
 func (mf *MainForm) onAbout() {
 	logger.Debug("open about dialog")
 	mf.aboutForm.Show(mf.MainWindow, mf.appIcon)
 }
 
-// onRemoveSelected 移除列表中当前选中的项目.
 func (mf *MainForm) onRemoveSelected() {
 	model := mf.picListView.GetModel()
 	count := len(mf.picListView.TableView.SelectedIndexes())
@@ -514,7 +503,6 @@ func (mf *MainForm) onRemoveSelected() {
 	logger.Info("remove selected, count: %d, remain: %d", count, model.ItemCount())
 }
 
-// onRemoveDone 移除列表中所有已成功完成的项目.
 func (mf *MainForm) onRemoveDone() {
 	model := mf.picListView.GetModel()
 	removed := model.CountByState(settingLoader.StateSuccess)
@@ -523,7 +511,6 @@ func (mf *MainForm) onRemoveDone() {
 	logger.Info("remove finished, count: %d, remain: %d", removed, model.ItemCount())
 }
 
-// onRemoveError 移除列表中所有错误和超出限制的项目.
 func (mf *MainForm) onRemoveError() {
 	model := mf.picListView.GetModel()
 	removed := model.CountByState(settingLoader.StateError) + model.CountByState(settingLoader.StateOutOfLimit)
@@ -533,7 +520,6 @@ func (mf *MainForm) onRemoveError() {
 	logger.Info("remove failed, count: %d, remain: %d", removed, model.ItemCount())
 }
 
-// onRemoveAll 清空列表中的所有项目 (需用户确认).
 func (mf *MainForm) onRemoveAll() {
 	confirmed := dialog.ShowConfirm(strs.MsgClearList)
 	logger.Info("clear list, confirmed: %t, count: %d", confirmed, mf.picListView.GetModel().ItemCount())
@@ -543,27 +529,23 @@ func (mf *MainForm) onRemoveAll() {
 	}
 }
 
-// onSelectAll 全选列表中的所有项目.
 func (mf *MainForm) onSelectAll() {
 	mf.picListView.GetModel().SelectAll(mf.picListView.TableView)
 	mf.updateSelectLabel()
 	logger.Debug("select all, count: %d", mf.picListView.GetModel().ItemCount())
 }
 
-// onSelectReverse 反选列表中的项目.
 func (mf *MainForm) onSelectReverse() {
 	mf.picListView.GetModel().SelectReverse(mf.picListView.TableView)
 	mf.updateSelectLabel()
 	logger.Debug("select reverse, selected: %d", len(mf.picListView.TableView.SelectedIndexes()))
 }
 
-// onExit 退出程序.
 func (mf *MainForm) onExit() {
 	logger.Info("exit requested by user")
 	mf.MainWindow.Close()
 }
 
-// initOutputDirEdit 初始化输出路径输入框的事件和样式.
 func (mf *MainForm) initOutputDirEdit() {
 	mf.outputDirEdit.TextChanged().Attach(func() {
 		if mf.suppressPathUpdate {
@@ -575,8 +557,7 @@ func (mf *MainForm) initOutputDirEdit() {
 	mf.updateOutputDirFont()
 }
 
-// updateOutputDirFont 根据是否手动修改更新输出路径输入框的样式.
-// 自动模式: 斜体灰色; 手动模式: 正体黑色.
+// updateOutputDirFont 输出路径的字体样式: 自动生成时斜体灰色, 手动修改后正体黑色.
 func (mf *MainForm) updateOutputDirFont() {
 	if mf.outputDirEdit == nil {
 		return
@@ -592,8 +573,8 @@ func (mf *MainForm) updateOutputDirFont() {
 	}
 }
 
-// updateOutputPathFromCommonDir 从当前图片列表计算公共路径,
-// 自动生成输出目录并更新输入框 (仅在用户未手动修改时生效).
+// updateOutputPathFromCommonDir 根据当前列表的公共父目录自动生成输出目录.
+// 仅在用户未手动修改输出路径时生效.
 func (mf *MainForm) updateOutputPathFromCommonDir() {
 	if mf.outputPathUserModified || mf.picListView == nil {
 		return
@@ -608,7 +589,6 @@ func (mf *MainForm) updateOutputPathFromCommonDir() {
 	}
 	prefix, ok := fileio.GetCommonPrefix(paths)
 	if !ok {
-		// 跨盘符, 忽略
 		return
 	}
 	mf.currentCommonDir = prefix
@@ -621,8 +601,7 @@ func (mf *MainForm) updateOutputPathFromCommonDir() {
 	mf.suppressPathUpdate = false
 }
 
-// findAvailableOutputDir 查找可用的输出目录.
-// 先尝试 baseDir, 若已存在且非空则依次尝试 baseDir2, baseDir3...
+// findAvailableOutputDir 优先使用 baseDir, 若已存在且非空则依次尝试 baseDir2, baseDir3...
 func findAvailableOutputDir(baseDir string) string {
 	if !pathExists(baseDir) || isDirEmpty(baseDir) {
 		return baseDir
@@ -636,13 +615,12 @@ func findAvailableOutputDir(baseDir string) string {
 	return baseDir
 }
 
-// pathExists 检查路径是否存在.
 func pathExists(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil
 }
 
-// isDirEmpty 检查目录是否为空. 路径不存在时视为空.
+// isDirEmpty 目录为空时返回 true, 目录不存在时也视为空.
 func isDirEmpty(path string) bool {
 	f, err := os.Open(path)
 	if err != nil {
@@ -653,8 +631,6 @@ func isDirEmpty(path string) bool {
 	return err != nil
 }
 
-// processStartupPaths 处理通过拖拽文件/文件夹到程序图标传入的路径.
-// 目录会递归扫描, 图片文件直接添加, 并在处理完成后更新状态栏.
 func (mf *MainForm) processStartupPaths() {
 	if len(mf.startupPaths) == 0 {
 		return
@@ -680,7 +656,6 @@ func (mf *MainForm) processStartupPaths() {
 	logger.Debug("process startup paths done, total: %d", mf.picListView.GetModel().ItemCount())
 }
 
-// updateSelectLabel 更新底部状态栏的选中/总数标签.
 func (mf *MainForm) updateSelectLabel() {
 	if mf.selectLabel != nil {
 		selected := 0

@@ -20,15 +20,13 @@ type dragSelectState struct {
 	lastRow    int
 }
 
-// PicItemModel 实现 walk.TableModelBase, 作为图片列表的数据模型.
-// 管理 PicItem 列表, 提供行、列数据访问和状态控制能力.
+// PicItemModel 图片列表的数据模型, 实现 walk.TableModelBase.
 type PicItemModel struct {
 	walk.TableModelBase
 	items        []*core.PicItem
 	onRowChanged func(row int)
 }
 
-// NewPicItemModel 创建 PicItemModel 实例.
 func NewPicItemModel() *PicItemModel {
 	return &PicItemModel{}
 }
@@ -38,12 +36,10 @@ func (m *PicItemModel) SetOnRowChanged(cb func(row int)) {
 	m.onRowChanged = cb
 }
 
-// RowCount 返回列表中的项目总数.
 func (m *PicItemModel) RowCount() int {
 	return len(m.items)
 }
 
-// Value 返回指定行列的单元格显示值.
 func (m *PicItemModel) Value(row, col int) interface{} {
 	item := m.items[row]
 	switch col {
@@ -64,13 +60,7 @@ func (m *PicItemModel) Value(row, col int) interface{} {
 	return ""
 }
 
-// StyleCell 按状态为单元格设置文本颜色 (walk 框架通过 StyleCell 字段识别)
-//
-// 颜色规则:
-//   - 压缩中: 橙色 (255, 140, 0)
-//   - 压缩成功: 绿色 (34, 139, 34)
-//   - 压缩失败 (超出限制或错误): 红色 (200, 0, 0)
-//   - 其它: 默认样式
+// StyleCell 按状态为单元格着色: 压缩中橙色, 成功绿色, 失败红色 (超出限制或错误).
 func (m *PicItemModel) StyleCell(style *walk.CellStyle) {
 	if style == nil {
 		return
@@ -82,18 +72,16 @@ func (m *PicItemModel) StyleCell(style *walk.CellStyle) {
 	item := m.items[row]
 	switch item.State {
 	case settingLoader.StateCompressing:
-		// 橙色, 表示正在压缩
 		style.TextColor = walk.RGB(255, 140, 0)
 	case settingLoader.StateSuccess:
-		// 绿色, 表示压缩成功
 		style.TextColor = walk.RGB(34, 139, 34)
 	case settingLoader.StateOutOfLimit, settingLoader.StateError:
-		// 红色, 表示压缩失败
 		style.TextColor = walk.RGB(200, 0, 0)
 	}
 }
 
-// PublishRowChangedByItem 根据 PicItem 指针定位行, 精确通知 UI 该行数据已变更.
+// PublishRowChangedByItem 按 PicItem 指针定位行并通知 UI 刷新.
+// 压缩期间行的索引可能变化, 因此用指针而非索引定位.
 func (m *PicItemModel) PublishRowChangedByItem(item *core.PicItem) {
 	if item == nil {
 		return
@@ -109,19 +97,17 @@ func (m *PicItemModel) PublishRowChangedByItem(item *core.PicItem) {
 	}
 }
 
-// AddItems 批量添加图片项目到列表.
 func (m *PicItemModel) AddItems(items []*core.PicItem) {
 	m.items = append(m.items, items...)
 	m.PublishRowsReset()
 }
 
-// AddItem 添加单个图片项目到列表.
 func (m *PicItemModel) AddItem(item *core.PicItem) {
 	m.items = append(m.items, item)
 	m.PublishRowsReset()
 }
 
-// RemoveSelected 移除当前选中的项目.
+// RemoveSelected 倒序删除, 避免删除时索引位移.
 func (m *PicItemModel) RemoveSelected(tv *walk.TableView) {
 	indices := tv.SelectedIndexes()
 	sort.Sort(sort.Reverse(sort.IntSlice(indices)))
@@ -133,7 +119,6 @@ func (m *PicItemModel) RemoveSelected(tv *walk.TableView) {
 	m.PublishRowsReset()
 }
 
-// RemoveByState 移除列表中指定状态的所有项目.
 func (m *PicItemModel) RemoveByState(state settingLoader.PicItemState) {
 	var kept []*core.PicItem
 	for _, item := range m.items {
@@ -145,18 +130,15 @@ func (m *PicItemModel) RemoveByState(state settingLoader.PicItemState) {
 	m.PublishRowsReset()
 }
 
-// Clear 清空列表中的所有项目.
 func (m *PicItemModel) Clear() {
 	m.items = nil
 	m.PublishRowsReset()
 }
 
-// GetItems 返回列表中的所有项目.
 func (m *PicItemModel) GetItems() []*core.PicItem {
 	return m.items
 }
 
-// GetSelectedItems 返回当前选中的项目列表.
 func (m *PicItemModel) GetSelectedItems(tv *walk.TableView) []*core.PicItem {
 	indices := tv.SelectedIndexes()
 	var selected []*core.PicItem
@@ -168,7 +150,6 @@ func (m *PicItemModel) GetSelectedItems(tv *walk.TableView) []*core.PicItem {
 	return selected
 }
 
-// SelectAll 选中列表中的所有项目.
 func (m *PicItemModel) SelectAll(tv *walk.TableView) {
 	var indexes []int
 	for i := 0; i < len(m.items); i++ {
@@ -177,7 +158,6 @@ func (m *PicItemModel) SelectAll(tv *walk.TableView) {
 	tv.SetSelectedIndexes(indexes)
 }
 
-// SelectReverse 反选列表中的项目.
 func (m *PicItemModel) SelectReverse(tv *walk.TableView) {
 	selected := make(map[int]bool)
 	for _, idx := range tv.SelectedIndexes() {
@@ -192,7 +172,6 @@ func (m *PicItemModel) SelectReverse(tv *walk.TableView) {
 	tv.SetSelectedIndexes(indexes)
 }
 
-// ItemCount 返回列表中的项目总数.
 func (m *PicItemModel) ItemCount() int {
 	return len(m.items)
 }
@@ -210,7 +189,6 @@ func (m *PicItemModel) ResetAllToWaiting() {
 	}
 }
 
-// CountByState 统计列表中指定状态的项目数量.
 func (m *PicItemModel) CountByState(state settingLoader.PicItemState) int {
 	count := 0
 	for _, item := range m.items {
@@ -238,7 +216,7 @@ func itemStateToString(state settingLoader.PicItemState) string {
 	}
 }
 
-// PicListView 封装列表视图控件, 提供图片添加、状态管理和自动滚动等功能.
+// PicListView 封装列表视图控件: 图片添加、右键菜单、自动滚动与状态着色.
 type PicListView struct {
 	*walk.TableView
 	model              *PicItemModel
@@ -257,7 +235,6 @@ type PicListView struct {
 	actionViewError    *walk.Action
 }
 
-// NewPicListView 创建 PicListView 实例.
 func NewPicListView(appIcon *walk.Icon) *PicListView {
 	model := NewPicItemModel()
 	p := &PicListView{
@@ -270,13 +247,12 @@ func NewPicListView(appIcon *walk.Icon) *PicListView {
 	return p
 }
 
-// ResetAutoScrollDown 启用自动下滚跟随, 重置最大已滚动行号为 -1.
+// ResetAutoScrollDown 重新启用自动下滚跟随 (新一轮压缩前调用).
 func (p *PicListView) ResetAutoScrollDown() {
 	p.maxAutoScrolledRow = -1
 	p.autoScrollDown = true
 }
 
-// StopAutoScrollDown 关闭自动下滚跟随.
 func (p *PicListView) StopAutoScrollDown() {
 	p.autoScrollDown = false
 }
@@ -301,7 +277,6 @@ func (p *PicListView) onModelRowChanged(row int) {
 	})
 }
 
-// PicListViewWidget 返回列表视图的声明式控件定义.
 func (p *PicListView) PicListViewWidget() declarative.TableView {
 	return declarative.TableView{
 		AssignTo:         &p.TableView,
@@ -351,12 +326,11 @@ func (p *PicListView) PicListViewWidget() declarative.TableView {
 	}
 }
 
-// GetModel 返回内部的数据模型.
 func (p *PicListView) GetModel() *PicItemModel {
 	return p.model
 }
 
-// AddPicturesFromPaths 从文件路径列表添加图片 (自动去重).
+// AddPicturesFromPaths 添加图片, 已存在或不支持的路径自动跳过 (去重).
 func (p *PicListView) AddPicturesFromPaths(paths []string) {
 	existingPaths := make(map[string]bool)
 	for _, item := range p.model.items {
@@ -394,7 +368,7 @@ func (p *PicListView) AddPicturesFromPaths(paths []string) {
 	logger.Debug("add pictures, requested: %d, added: %d, skipped: %d", len(paths), len(items), skipped)
 }
 
-// AddPicturesFromDirectory 从目录递归添加所有图片文件到列表.
+// AddPicturesFromDirectory 递归添加目录下所有图片.
 func (p *PicListView) AddPicturesFromDirectory(dir string) {
 	files, err := fileio.CollectImageFiles(dir)
 	if err != nil {
@@ -405,7 +379,7 @@ func (p *PicListView) AddPicturesFromDirectory(dir string) {
 	p.AddPicturesFromPaths(files)
 }
 
-// onMouseDown 处理鼠标按下事件, 右键时尝试选中鼠标所在位置的项目.
+// onMouseDown 右键按下时选中鼠标所在行, 点击空白区域清空选中.
 func (p *PicListView) onMouseDown(x, y int, button walk.MouseButton) {
 	if p.TableView == nil {
 		return
@@ -414,18 +388,15 @@ func (p *PicListView) onMouseDown(x, y int, button walk.MouseButton) {
 		return
 	}
 
-	// 获取鼠标位置对应的行索引
 	row := p.TableView.IndexAt(x, y)
 	if row >= 0 && row < p.model.ItemCount() {
-		// 选中该行 (单选)
 		p.TableView.SetSelectedIndexes([]int{row})
 	} else {
-		// 点击空白区域, 清空选中
 		p.TableView.SetSelectedIndexes(nil)
 	}
 }
 
-// onKeyDown 处理键盘事件, 支持 Ctrl+A 全选和 Delete 删除.
+// onKeyDown 处理 Ctrl+A 全选与 Delete 删除.
 func (p *PicListView) onKeyDown(key walk.Key) {
 	if p.TableView == nil {
 		return
@@ -439,11 +410,10 @@ func (p *PicListView) onKeyDown(key walk.Key) {
 		removed := len(p.TableView.SelectedIndexes())
 		p.model.RemoveSelected(p.TableView)
 		logger.Info("delete selected by keyboard, count: %d, remain: %d", removed, p.model.ItemCount())
-		// 删除后通过 onSelChanged 回调刷新底部"已选/总数"标签
+		// RemoveSelected 不触发选择变化事件, 手动刷新标签与菜单
 		if p.onSelChanged != nil {
 			p.onSelChanged()
 		}
-		// 删除后更新右键菜单状态
 		p.updateContextMenuState()
 	}
 }
@@ -463,7 +433,6 @@ func (p *PicListView) updateContextMenuState() {
 	}
 	selected := p.model.GetSelectedItems(p.TableView)
 
-	// 未选中任何项目时, 所有菜单项禁用
 	hasSelection := len(selected) > 0
 	hasCompressed := false
 	hasError := false
@@ -517,7 +486,6 @@ func shellOpen(operation, file string) {
 
 // shellOpenFolderAndSelect 在资源管理器中打开文件夹并选中指定文件.
 func shellOpenFolderAndSelect(filePath string) {
-	// 使用 explorer /select 命令
 	verbPtr, _ := syscall.UTF16PtrFromString("open")
 	filePtr, _ := syscall.UTF16PtrFromString("explorer")
 	argsPtr, _ := syscall.UTF16PtrFromString("/select,\"" + filePath + "\"")
@@ -573,7 +541,7 @@ func getParentForm(w walk.Widget) walk.Form {
 		if f, ok := c.(walk.Form); ok {
 			return f
 		}
-		// 尝试将 Container 转为 Widget 继续向上遍历
+	// walk 的 Container 不实现 Widget 接口, 需断言后继续向上遍历
 		if w2, ok := c.(walk.Widget); ok {
 			w = w2
 		} else {
@@ -595,7 +563,6 @@ func (p *PicListView) onViewError() {
 		return
 	}
 
-	// 创建自定义错误详情对话框
 	var dlg *walk.Dialog
 	var textEdit *walk.TextEdit
 	var btnCopy *walk.PushButton
@@ -651,7 +618,6 @@ func (p *PicListView) onViewError() {
 		return
 	}
 
-	// 居中显示
 	CenterWindowToOwner(dlg, parentForm)
 	ApplyInheritedTopMost(dlg)
 	dlg.Show()

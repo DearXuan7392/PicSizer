@@ -1,6 +1,5 @@
 package strs
 
-// AppName 和 AppVersion 分别表示应用程序的名称和版本号.
 var (
 	AppName    = "PicSizer"
 	AppVersion = "v6.2.0"

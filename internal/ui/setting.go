@@ -16,7 +16,7 @@ import (
 	"github.com/lxn/walk/declarative"
 )
 
-// settingControlWidth 设置窗口中输入框 / 下拉框的统一固定宽度 (单位: 像素)
+// settingControlWidth 设置窗口中输入框 / 下拉框的统一固定宽度 (像素)
 const settingControlWidth = 200
 
 const groupVerticalSpacing = 8
@@ -28,8 +28,8 @@ type SettingForm struct {
 	// 常规设置控件
 	qualityRadio      *walk.RadioButton
 	fileSizeRadio     *walk.RadioButton
-	qualityLabel      *walk.Label  // 用于显示当前画质等级文本
-	qualitySlider     *walk.Slider // 画质滑块
+	qualityLabel      *walk.Label  // 显示当前画质等级文本
+	qualitySlider     *walk.Slider
 	limitSizeEdit     *controls.NumberEditWidget
 	sizeUnitCombo     *walk.ComboBox
 	acceptExceedCheck *walk.CheckBox
@@ -68,32 +68,26 @@ type SettingForm struct {
 	onOutputTypeChanged func(settingLoader.OutputType)
 }
 
-// NewSettingForm 创建设置窗口实例.
 func NewSettingForm() *SettingForm {
 	return &SettingForm{}
 }
 
-// SetOnTopMostChanged 设置置顶变更回调, 由主窗口在创建后注入.
 func (sf *SettingForm) SetOnTopMostChanged(fn func(bool)) {
 	sf.onTopMostChanged = fn
 }
 
-// SetOnOutputTypeChanged 设置输出方式变更回调, 由主窗口在创建后注入.
 func (sf *SettingForm) SetOnOutputTypeChanged(fn func(settingLoader.OutputType)) {
 	sf.onOutputTypeChanged = fn
 }
 
-// Show 显示设置窗口. 窗口包含三个选项卡页面, 关闭后调用方可通过回调获取用户修改的设置.
+// Show 显示设置窗口, 修改作用于配置副本, 确认后经回调通知主窗口.
 func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
-	// 获取设置的拷贝, 所有修改都作用于此拷贝
 	sf.workingCopy = settingLoader.GetSettingCopy()
 	set := sf.workingCopy
 	logger.Info("setting dialog opened")
 	logSettings(set)
-	// 获取 CPU 逻辑核心数
 	sf.maxThreads = runtime.NumCPU()
 
-	// 判断当前压缩模式, 设置输入框禁用状态
 	isQualityMode := set.CompressType == settingLoader.CompressQuality
 
 	var err error
@@ -147,7 +141,7 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 										Label: strs.TextQuality,
 										Tip:   strs.TipQuality,
 									},
-									// 画质滑块组合
+									// 画质滑块与等级标签组合
 									declarative.Composite{
 										Layout: declarative.HBox{Spacing: 5, MarginsZero: true},
 										Children: []declarative.Widget{
@@ -645,13 +639,12 @@ func (sf *SettingForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 	return nil
 }
 
-// onCompressModeChange 响应压缩模式切换, 启用或禁用相关控件.
-// BMP 模式下整个压缩设置组被禁用, 该方法不执行任何操作.
+// onCompressModeChange 压缩模式切换时启用/禁用相关控件.
+// BMP 模式下整个压缩设置组被禁用, 不响应切换.
 func (sf *SettingForm) onCompressModeChange() {
 	if sf.qualityRadio == nil || sf.fileSizeRadio == nil || sf.extensionCombo == nil {
 		return
 	}
-	// BMP 模式下压缩设置组完全禁用, 不响应模式切换
 	if sf.extensionCombo.CurrentIndex() == 3 {
 		return
 	}
@@ -674,7 +667,6 @@ func (sf *SettingForm) onCompressModeChange() {
 	}
 }
 
-// onQualitySliderChange 响应画质滑块值变化, 更新画质等级标签文字.
 func (sf *SettingForm) onQualitySliderChange() {
 	if sf.qualitySlider == nil || sf.qualityLabel == nil {
 		return
@@ -684,7 +676,6 @@ func (sf *SettingForm) onQualitySliderChange() {
 	sf.qualityLabel.SetText(qualityLevelToString(level))
 }
 
-// onOutputTypeChange 响应输出方式切换, 启用或禁用输出格式相关控件.
 func (sf *SettingForm) onOutputTypeChange() {
 	if sf.outputTypeCombo == nil {
 		return
@@ -702,7 +693,8 @@ func (sf *SettingForm) onOutputTypeChange() {
 	}
 }
 
-// onExtensionChange 响应输出格式切换, BMP 格式时禁用整个压缩设置组.
+// onExtensionChange 输出格式切换到 BMP 时禁用整个压缩设置组
+// (BMP 不支持压缩, 固定按质量 + 最佳画质).
 func (sf *SettingForm) onExtensionChange() {
 	if sf.extensionCombo == nil {
 		return
@@ -712,10 +704,8 @@ func (sf *SettingForm) onExtensionChange() {
 
 	// 禁用或启用整个压缩设置组
 	if isBMP {
-		// 强行切换到按质量压缩模式
 		sf.qualityRadio.SetChecked(true)
 		sf.fileSizeRadio.SetChecked(false)
-		// 画质滑块设为最佳
 		sf.qualitySlider.SetValue(3)
 		sf.qualityLabel.SetText(strs.TextQualityBest)
 
@@ -742,19 +732,17 @@ func (sf *SettingForm) onExtensionChange() {
 			sf.acceptExceedCheck.SetEnabled(false)
 		}
 	} else {
-		// 恢复压缩设置组控件状态
 		if sf.qualityRadio != nil {
 			sf.qualityRadio.SetEnabled(true)
 		}
 		if sf.fileSizeRadio != nil {
 			sf.fileSizeRadio.SetEnabled(true)
 		}
-		// 由 onCompressModeChange 根据当前模式设置其他控件状态
+		// 其余控件状态由 onCompressModeChange 按当前模式统一设置
 		sf.onCompressModeChange()
 	}
 }
 
-// onThreadEditChange 响应线程数输入框变化, 同步更新滑块位置.
 func (sf *SettingForm) onThreadEditChange() {
 	if sf.suppressSync {
 		return
@@ -766,7 +754,6 @@ func (sf *SettingForm) onThreadEditChange() {
 	}
 }
 
-// onThreadSliderChange 响应线程数滑块变化, 同步更新输入框数值.
 func (sf *SettingForm) onThreadSliderChange() {
 	if sf.suppressSync {
 		return
@@ -778,7 +765,6 @@ func (sf *SettingForm) onThreadSliderChange() {
 	}
 }
 
-// onScaleModeChange 响应缩放方式切换, 启用或禁用缩放宽高输入框.
 func (sf *SettingForm) onScaleModeChange() {
 	if sf.scaleCombo == nil {
 		return
@@ -792,8 +778,8 @@ func (sf *SettingForm) onScaleModeChange() {
 	}
 }
 
-// saveSetting 从 UI 控件读取所有值, 进行校验后写入全局配置.
-// 返回 false 表示用户取消保存 (校验失败或用户取消了警告弹窗).
+// saveSetting 从控件读取全部值, 校验通过后写入全局配置.
+// 返回 false 表示校验失败或用户在警告弹窗中选择取消.
 func (sf *SettingForm) saveSetting() bool {
 	logger.Info("save settings requested")
 
@@ -978,7 +964,7 @@ func (sf *SettingForm) saveSetting() bool {
 	return true
 }
 
-// 辅助函数: 输出类型转字符串
+// outputTypeToString 枚举转显示文本, 未知值回退为输出到单独文件夹.
 func outputTypeToString(t settingLoader.OutputType) string {
 	switch t {
 	case settingLoader.OutputCoverOrigin:
@@ -992,7 +978,7 @@ func outputTypeToString(t settingLoader.OutputType) string {
 	}
 }
 
-// 辅助函数: 扩展名类型转字符串
+// extensionToString 枚举转显示文本, 未知值回退为 JPEG.
 func extensionToString(t settingLoader.ExtensionType) string {
 	switch t {
 	case settingLoader.ExtJPEG:
@@ -1010,7 +996,7 @@ func extensionToString(t settingLoader.ExtensionType) string {
 	}
 }
 
-// 辅助函数: 透明通道处理方式转字符串
+// alphaHandleToString 枚举转显示文本, 未知值回退为保留.
 func alphaHandleToString(t settingLoader.AlphaHandleType) string {
 	switch t {
 	case settingLoader.AlphaKeep:
@@ -1024,7 +1010,7 @@ func alphaHandleToString(t settingLoader.AlphaHandleType) string {
 	}
 }
 
-// 辅助函数: 缩放方式转字符串
+// scaleToString 枚举转显示文本, 未知值回退为无操作.
 func scaleToString(t settingLoader.ScaleType) string {
 	switch t {
 	case settingLoader.ScaleNone:
@@ -1044,7 +1030,7 @@ func scaleToString(t settingLoader.ScaleType) string {
 	}
 }
 
-// 辅助函数: 调色盘生成算法转字符串
+// paletteAlgoToString 枚举转显示文本, 未知值回退为中位切分.
 func paletteAlgoToString(t settingLoader.PaletteAlgoType) string {
 	switch t {
 	case settingLoader.PaletteMedianCut:
@@ -1056,13 +1042,12 @@ func paletteAlgoToString(t settingLoader.PaletteAlgoType) string {
 	}
 }
 
-// 辅助函数: 字符串转整数
 func atoi(s string) int {
 	v, _ := strconv.Atoi(s)
 	return v
 }
 
-// 辅助函数: 文件大小单位转字符串
+// sizeUnitToString 枚举转显示文本, 未知值回退为 KB.
 func sizeUnitToString(unit settingLoader.SizeUnit) string {
 	switch unit {
 	case settingLoader.UnitKB:
@@ -1074,7 +1059,7 @@ func sizeUnitToString(unit settingLoader.SizeUnit) string {
 	}
 }
 
-// 辅助函数: 画质等级转字符串
+// qualityLevelToString 枚举转显示文本, 未知值回退为清晰.
 func qualityLevelToString(level settingLoader.QualityLevel) string {
 	switch level {
 	case settingLoader.QualityLevelBest:
@@ -1090,7 +1075,6 @@ func qualityLevelToString(level settingLoader.QualityLevel) string {
 	}
 }
 
-// 辅助函数: 将 core.QualityLevel 转换为滑块刻度值 (0-3)
 func qualityLevelToSliderValue(level settingLoader.QualityLevel) int {
 	switch level {
 	case settingLoader.QualityLevelPoor:
@@ -1106,7 +1090,6 @@ func qualityLevelToSliderValue(level settingLoader.QualityLevel) int {
 	}
 }
 
-// 辅助函数: 将滑块刻度值 (0-3) 转换为 core.QualityLevel
 func sliderValueToQualityLevel(val int) settingLoader.QualityLevel {
 	switch val {
 	case 0:
@@ -1122,7 +1105,7 @@ func sliderValueToQualityLevel(val int) settingLoader.QualityLevel {
 	}
 }
 
-// 更新调试按钮信息
+// updateDebugMode 调试开关仅在重启时生效: 确认后以 --debug 参数拉起新进程.
 func (sf *SettingForm) updateDebugMode() {
 	if sf.debugModeCheck != nil {
 		sf.debugModeCheck.SetChecked(settingLoader.IsDebug())
@@ -1136,7 +1119,6 @@ func (sf *SettingForm) updateDebugMode() {
 
 				confirmed := dialog.ShowConfirmWithParent(parentHwnd, strs.TipDebugMode)
 
-				// 如果启用调试, 则以 --debug 参数重启
 				if confirmed {
 					exePath, err := os.Executable()
 					if err != nil {
@@ -1158,7 +1140,6 @@ func (sf *SettingForm) updateDebugMode() {
 	}
 }
 
-// parentHwndFn 返回一个函数, 用于获取父窗口句柄.
 func (sf *SettingForm) parentHwndFn() func() uintptr {
 	return func() uintptr {
 		if sf.Dialog != nil {
@@ -1168,7 +1149,7 @@ func (sf *SettingForm) parentHwndFn() func() uintptr {
 	}
 }
 
-// ptrBool 返回 bool 指针, 用于 controls.NumberEditWithTip.Enabled 字段.
+// ptrBool 取 bool 指针, 供需要 *bool 的控件字段 (如 NumberEdit.Enabled) 使用.
 func ptrBool(b bool) *bool {
 	return &b
 }

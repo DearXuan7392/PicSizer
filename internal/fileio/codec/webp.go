@@ -13,10 +13,9 @@ type webpCodec struct{}
 
 func (c *webpCodec) InitSetting(_ settingLoader.Setting) {}
 
-// Name 返回编解码器名称.
 func (c *webpCodec) Name() string { return "webp" }
 
-// IsType 通过 RIFF...WEBP 文件头判断数据是否为 WebP 格式.
+// IsType 通过 RIFF....WEBP 文件头识别.
 func (c *webpCodec) IsType(data []byte) bool {
 	if len(data) < 12 {
 		return false
@@ -24,7 +23,7 @@ func (c *webpCodec) IsType(data []byte) bool {
 	return bytes.Equal(data[0:4], []byte("RIFF")) && bytes.Equal(data[8:12], []byte("WEBP"))
 }
 
-// Decode 将 WebP 数据解码为 image.Image.
+// Decode 解码后统一转换为 RGBA/NRGBA: 后续管道 (预处理/白底合成/类型判断) 只处理这两种类型.
 func (c *webpCodec) Decode(data []byte) (image.Image, error) {
 	logger.Debug("decode data, format: webp, size: %d", len(data))
 	img, err := webp.Decode(bytes.NewReader(data))
@@ -46,8 +45,7 @@ func (c *webpCodec) Decode(data []byte) (image.Image, error) {
 	}
 }
 
-// EncodeWebP 将 image.Image 编码为 WebP 格式的字节数据.
-// quality 参数范围 0-100；quality >= 100 时启用无损模式.
+// EncodeWebP 编码为 WebP, quality 0-100 (0 为最低可用画质), >= 100 时启用无损模式.
 func EncodeWebP(img image.Image, quality int) ([]byte, error) {
 	var buf bytes.Buffer
 	err := webp.Encode(&buf, img, webp.Options{

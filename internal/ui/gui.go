@@ -11,8 +11,8 @@ var (
 	logger = log.NewLogger("gui")
 )
 
-// Run 启动图形界面模式, 创建主窗口并进入事件循环.
-// startupPaths 为通过拖拽文件到程序图标传入的路径, 会在窗口创建后自动加载.
+// Run 启动 GUI 主窗口并进入事件循环.
+// startupPaths 为拖拽到程序图标传入的路径, 会在窗口创建后自动加载.
 func Run(startupPaths []string) {
 	logger.Info("gui start, debug: %t, startup paths: %d", settingLoader.IsDebug(), len(startupPaths))
 

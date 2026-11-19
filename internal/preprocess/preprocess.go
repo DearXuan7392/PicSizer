@@ -6,9 +6,7 @@ import (
 	"image"
 )
 
-// Preprocessor 定义预处理器接口.
-// 不同的预处理策略 (透明度处理、缩放等) 均可实现该接口,
-// 入口 Process 会按注册顺序依次执行所有已启用的处理器.
+// Preprocessor 预处理器接口. 入口 Process 按注册顺序依次执行已启用的处理器.
 type Preprocessor interface {
 	Name() string
 	Enabled() bool
@@ -19,8 +17,8 @@ var (
 	logger = log.NewLogger("preprocess")
 )
 
-// newPreprocessors 根据当前全局配置构造所有预处理器实例.
-// 顺序即为执行顺序, 新增预处理器只需在此函数内追加即可.
+// newPreprocessors 构造当前配置下的所有预处理器.
+// 切片顺序即执行顺序, 新增预处理器只需在此追加.
 func newPreprocessors(setting settingLoader.Setting) []Preprocessor {
 	return []Preprocessor{
 		newAlphaProcessor(setting.AlphaHandle),
@@ -28,8 +26,7 @@ func newPreprocessors(setting settingLoader.Setting) []Preprocessor {
 	}
 }
 
-// Process 是统一预处理入口, 按注册顺序依次执行所有已启用的预处理器.
-// 返回处理后的图像, 任意一步不会因失败中断整体流程.
+// Process 统一预处理入口, 各处理器失败时自行降级, 不会中断整体流程.
 func Process(img image.Image) image.Image {
 	if img == nil {
 		logger.Error("preprocess skipped, image is nil")

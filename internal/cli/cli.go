@@ -108,8 +108,7 @@ func init() {
 	flag.BoolVar(&pngEnableDithering, "pd", true, "PNG 有损量化时是否启用抖动算法")
 }
 
-// Run 执行命令行模式入口.
-// 解析命令行参数、校验输入路径、将参数映射到 Setting 后执行单文件或批量压缩.
+// Run 命令行入口: 解析参数、校验输入、映射到 Setting 后执行单文件或目录压缩.
 func Run() {
 	flag.Parse()
 
@@ -142,12 +141,10 @@ func Run() {
 	}
 }
 
-// applySettings 将解析后的 CLI 参数写入全局配置, 包含参数合法性校验.
-// 校验失败时返回错误, 由 Run 决定是否退出程序.
+// applySettings 将 CLI 参数写入全局配置, 参数非法时返回错误.
 func applySettings() error {
 	set := settingLoader.GetSettingCopy()
 
-	// 压缩模式
 	switch strings.ToLower(compressType) {
 	case "quality":
 		set.CompressType = settingLoader.CompressQuality
@@ -157,14 +154,13 @@ func applySettings() error {
 		return fmt.Errorf(strs.CLIErrCompressType, compressType)
 	}
 
-	// 画质等级
 	qualityLevel, err := settingLoader.ParseQualityLevel(quality)
 	if err != nil {
 		return err
 	}
 	set.Quality = qualityLevel
 
-	// 限制大小 (仅在按大小压缩时生效, 但仍会解析以便报错友好)
+	// 限制大小仅在按大小压缩时生效, 但解析不限定时机, 便于立即暴露非法输入
 	if set.CompressType == settingLoader.CompressFileSize {
 		limit, unit, err := parseLimit(limitStr)
 		if err != nil {
@@ -187,7 +183,6 @@ func applySettings() error {
 		return fmt.Errorf(strs.CLIErrOutputType, outType)
 	}
 
-	// 输出格式
 	switch strings.ToLower(format) {
 	case "jpeg", "jpg":
 		set.Extension = settingLoader.ExtJPEG
@@ -203,23 +198,20 @@ func applySettings() error {
 		return fmt.Errorf(strs.CLIErrFormat, format)
 	}
 
-	// BMP 格式不支持压缩, 强制切换为按质量压缩 + 最高画质
+	// BMP 不支持压缩, 强制切换为按质量压缩 + 最高画质
 	if set.Extension == settingLoader.ExtBMP {
 		set.CompressType = settingLoader.CompressQuality
 		set.Quality = settingLoader.QualityLevelBest
 	}
 
-	// 文件名模板与起始序号
 	set.OutputFilename = templateStr
 	set.StartIndex = startIdx
 
-	// 线程数
 	if threads < 1 {
 		threads = 1
 	}
 	set.MaxThreads = threads
 
-	// 透明通道处理
 	switch strings.ToLower(alpha) {
 	case "keep":
 		set.AlphaHandle = settingLoader.AlphaKeep
@@ -231,7 +223,6 @@ func applySettings() error {
 		return fmt.Errorf(strs.CLIErrAlpha, alpha)
 	}
 
-	// 缩放模式
 	switch strings.ToLower(scale) {
 	case "none":
 		set.Scale = settingLoader.ScaleNone
@@ -249,11 +240,9 @@ func applySettings() error {
 		return fmt.Errorf(strs.CLIErrScale, scale)
 	}
 
-	// 缩放目标尺寸
 	set.ScaleWidth = width
 	set.ScaleHeight = height
 
-	// 高级设置: JPEG 精细化画质
 	if jpegQuality < 0 || jpegQuality > 100 {
 		return fmt.Errorf(strs.CLIErrJpegQuality, jpegQuality)
 	}
@@ -265,7 +254,6 @@ func applySettings() error {
 	}
 	set.AdvancedWebPQuality = webpQuality
 
-	// 高级设置: PNG 调色盘算法
 	switch strings.ToLower(pngPaletteAlgo) {
 	case "mediancut":
 		set.AdvancedPngPaletteAlgo = settingLoader.PaletteMedianCut
@@ -275,18 +263,14 @@ func applySettings() error {
 		return fmt.Errorf(strs.CLIErrPngPalette, pngPaletteAlgo)
 	}
 
-	// 高级设置: PNG 索引透明像素预留
 	set.AdvancedPngKeepIndexedAlpha = pngKeepIndexedAlpha
-
-	// 高级设置: PNG 抖动算法
 	set.AdvancedPngEnableDithering = pngEnableDithering
 
-	// 检查错误
 	if errors := set.CheckErrors(); len(errors) > 0 {
 		return fmt.Errorf("%s", strings.Join(errors, "; "))
 	}
 
-	// 检查警告 (非覆盖模式下给出警告, 但不阻止执行)
+	// 警告仅提示, 不阻止执行
 	if warnings := set.CheckWarnings(); len(warnings) > 0 {
 		for _, w := range warnings {
 			fmt.Println(strs.CLIWarnPrefix + w)
@@ -297,7 +281,7 @@ func applySettings() error {
 	return nil
 }
 
-// parseLimit 解析限制大小字符串, 支持 "200kb"、"2mb" 或纯数字 (默认 KB) 格式.
+// parseLimit 解析限制大小字符串, 接受 "200kb"、"2mb" 或纯数字 (默认 KB).
 func parseLimit(limitStr string) (int64, settingLoader.SizeUnit, error) {
 	s := strings.TrimSpace(limitStr)
 	s = strings.ToLower(s)
@@ -324,8 +308,7 @@ func parseLimit(limitStr string) (int64, settingLoader.SizeUnit, error) {
 	return value, parsedUnit, nil
 }
 
-// compressFile 压缩单个文件, 根据输出方式构造输出路径后调用 compress.Compress.
-// 压缩完成后在控制台输出结果信息.
+// compressFile 压缩单个文件并打印结果.
 func compressFile(input, output string) {
 	finalOutput := buildSingleOutputPath(input, output)
 
@@ -349,8 +332,8 @@ func compressFile(input, output string) {
 	}
 }
 
-// buildSingleOutputPath 根据输出方式为单文件构造最终输出路径.
-// cover 模式覆盖源文件并修改扩展名；dir 和 struct 模式使用模板生成文件名.
+// buildSingleOutputPath 为单文件构造输出路径.
+// cover 模式覆盖源文件并改后缀, dir 和 struct 模式使用模板生成文件名.
 func buildSingleOutputPath(input, output string) string {
 	set := settingLoader.GetSetting()
 
@@ -383,8 +366,7 @@ func buildSingleOutputPath(input, output string) string {
 	return ""
 }
 
-// compressDirectory 批量压缩目录中的所有图片文件.
-// 使用线程池并发压缩, 通过 progressbar 在控制台显示进度, 压缩结束后打印汇总结果.
+// compressDirectory 并发压缩目录下所有图片, progressbar 显示进度, 结束后打印汇总.
 func compressDirectory(inputDir, outputDir string) {
 	files, err := fileio.CollectImageFiles(inputDir)
 	if err != nil {
@@ -430,7 +412,6 @@ func compressDirectory(inputDir, outputDir string) {
 		outputPaths = append(outputPaths, fileio.GetOutputPath(f, set.StartIndex+i))
 	}
 
-	// 创建进度条
 	var bar *progressbar.ProgressBar
 	startTime := time.Now()
 	if showProgress {
@@ -446,21 +427,19 @@ func compressDirectory(inputDir, outputDir string) {
 		)
 	}
 
-	// 创建线程池, CLI 模式使用 progressbar 驱动进度
+	// 创建线程池, CLI 以 progressbar 驱动进度
 	pool := server.NewThreadPool(items, outputPaths,
 		func(current, errCount, total int) {
 			if bar == nil {
 				return
 			}
-			// 已完成数 = 成功数 + 失败数
+			// 已完成数 = 成功数 + 失败数, 钳制到 total 避免进度条越界
 			done := current + errCount
-			// 防止回调早于 bar 创建或已 Clear 后再被调用
 			if done > total {
 				done = total
 			}
 			_ = bar.Set64(int64(done))
 
-			// 动态更新描述, 同步展示剩余数量与时间预估
 			elapsed := time.Since(startTime)
 			remaining := total - done
 			avgPerItem := time.Duration(0)
@@ -478,7 +457,6 @@ func compressDirectory(inputDir, outputDir string) {
 			if bar != nil {
 				_ = bar.Finish()
 			}
-			// 压缩完成后在控制台打印汇总结果
 			fmt.Println()
 			fmt.Println(strs.CLIResultHeader)
 			fmt.Printf(strs.CLIResultTotal+"\n", total)
@@ -500,7 +478,7 @@ func compressDirectory(inputDir, outputDir string) {
 	}
 }
 
-// formatDuration 将时间间隔格式化为 hh:mm:ss 或 mm:ss 字符串.
+// formatDuration 将时间间隔格式化为 hh:mm:ss 或 mm:ss.
 func formatDuration(d time.Duration) string {
 	if d < 0 {
 		d = 0
@@ -515,7 +493,7 @@ func formatDuration(d time.Duration) string {
 	return fmt.Sprintf("%02d:%02d", m, s)
 }
 
-// getErrorCount 从线程池获取当前错误数量, 用于判断是否以非零状态码退出.
+// getErrorCount 用于判断是否以非零状态码退出.
 func getErrorCount(pool *server.ThreadPool) int {
 	_, errCount, _ := pool.GetStats()
 	return errCount

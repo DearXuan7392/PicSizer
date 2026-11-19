@@ -16,15 +16,13 @@ var (
 	registryMu sync.RWMutex
 )
 
-// RegisterCodec 注册一个图片编解码器到全局注册表.
-// 编解码器按注册顺序进行类型匹配, 先注册的优先匹配.
+// RegisterCodec 将编解码器注册到全局注册表, 按注册顺序匹配类型.
 func RegisterCodec(codec ImageCodec) {
 	logger.Debug("register codec, codec: %s", codec.Name())
 	registry = append(registry, codec)
 }
 
-// GetCodec 根据图片数据的文件头特征获取匹配的编解码器.
-// 遍历注册表, 返回第一个能识别该数据格式的编解码器.
+// GetCodec 按文件头内容嗅探返回第一个能识别数据的编解码器, 与扩展名无关.
 func GetCodec(data []byte) ImageCodec {
 	for _, codec := range registry {
 		if codec.IsType(data) {
@@ -51,7 +49,6 @@ func InitSetting(set settingLoader.Setting) {
 	}
 }
 
-// LoadImage 从指定路径加载图片文件, 自动检测格式并解码为 image.Image.
 func LoadImage(imgPath string) (image.Image, error) {
 	logger.Debug("load image, path: %s", imgPath)
 	data, err := os.ReadFile(imgPath)

@@ -12,14 +12,12 @@ type AboutForm struct {
 	*walk.Dialog
 }
 
-// NewAboutForm 创建关于窗口实例.
 func NewAboutForm() *AboutForm {
 	return &AboutForm{}
 }
 
 // Show 显示关于窗口, 继承主窗体的 TopMost 属性.
 func (af *AboutForm) Show(owner walk.Form, appIcon *walk.Icon) error {
-	// 略微增加了窗体高度（从 280 调至 330），确保能放下开源声明并保持美观
 	err := declarative.Dialog{
 		AssignTo:  &af.Dialog,
 		Title:     strs.TitleAbout,
@@ -114,7 +112,7 @@ func (af *AboutForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 	return nil
 }
 
-// onShowCredits 点击"查看第三方开源协议与致谢"按钮时, 弹出 CreditsForm 窗口.
+// onShowCredits 点击"查看第三方开源协议与致谢"链接时弹出 CreditsForm.
 func (af *AboutForm) onShowCredits(_ walk.Form, appIcon *walk.Icon) {
 	creditsForm := NewCreditsForm()
 	_ = creditsForm.Show(af.Dialog, appIcon)

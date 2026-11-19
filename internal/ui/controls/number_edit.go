@@ -10,12 +10,12 @@ import (
 	"github.com/lxn/walk/declarative"
 )
 
-// NumberEditWidget 由 NumberEdit 创建的运行时控件包装, 兼容 walk.NumberEdit 的调用方式.
+// NumberEditWidget NumberEdit 创建后的运行时控件包装, 模拟 walk.NumberEdit 的调用方式.
 type NumberEditWidget struct {
 	*walk.LineEdit
 }
 
-// Value 返回当前文本解析为 float64 的数值.
+// Value 将当前文本解析为 float64, 解析失败或为空时返回 0.
 func (n *NumberEditWidget) Value() float64 {
 	if n == nil || n.LineEdit == nil {
 		return 0
@@ -31,7 +31,6 @@ func (n *NumberEditWidget) Value() float64 {
 	return val
 }
 
-// SetValue 设置文本为指定整数值.
 func (n *NumberEditWidget) SetValue(v float64) {
 	if n == nil || n.LineEdit == nil {
 		return
@@ -39,21 +38,21 @@ func (n *NumberEditWidget) SetValue(v float64) {
 	n.SetText(fmt.Sprintf("%d", int64(v)))
 }
 
-// NumberEdit 用 LineEdit 模拟的声明式控件，仅支持非负整数输入
+// NumberEdit 用 LineEdit 模拟的数字输入控件 (walk 缺 NumberEdit), 仅接受非负整数.
 type NumberEdit struct {
 	AssignTo       **NumberEditWidget
 	Value          float64
 	MinValue       float64
 	MaxValue       float64
-	Decimals       int // 保留接口兼容，内部不处理小数
+	Decimals       int // 仅保留字段兼容, 内部不处理小数
 	Enabled        *bool
 	ToolTipText    string
 	MinSize        declarative.Size
 	MaxSize        declarative.Size
-	OnValueChanged walk.EventHandler // 支持数值变更回调
+	OnValueChanged walk.EventHandler
 }
 
-// Create 实现了 declarative.Widget 接口
+// Create 实现 declarative.Widget 接口.
 func (ne NumberEdit) Create(builder *declarative.Builder) error {
 	initialText := fmt.Sprintf("%d", int64(ne.Value))
 
@@ -80,7 +79,6 @@ func (ne NumberEdit) Create(builder *declarative.Builder) error {
 
 	ne.bindEvents(le)
 
-	// 将创建的 LineEdit 包装为 NumberEditWidget 并赋值给 AssignTo
 	if ne.AssignTo != nil {
 		*ne.AssignTo = &NumberEditWidget{LineEdit: le}
 	}
@@ -88,7 +86,7 @@ func (ne NumberEdit) Create(builder *declarative.Builder) error {
 	return nil
 }
 
-// bindEvents 在控件创建完成后挂载输入约束与焦点事件, 保证每个事件只挂载一次.
+// bindEvents 在控件创建完成后挂载输入约束与焦点事件, 每个控件仅挂载一次.
 func (ne NumberEdit) bindEvents(le *walk.LineEdit) {
 	lastValidText := le.Text()
 
@@ -124,23 +122,19 @@ func (ne NumberEdit) bindEvents(le *walk.LineEdit) {
 			return
 		}
 
-		// 处理前导 0
+		// 剥离前导 0
 		cleanText := text
 		if len(cleanText) > 1 && strings.HasPrefix(cleanText, "0") {
-			// 移除所有前导 0
 			cleanText = strings.TrimLeft(cleanText, "0")
 			if cleanText == "" {
 				cleanText = "0"
 			}
 		}
 
-		// 如果文本发生了前导 0 清理
+		// 剥离后文本变短, 重设后同步修正光标位置防跳动
 		if cleanText != text {
 			start, _ := le.TextSelection()
-			// 重新设置清理后的文本
 			le.SetText(cleanText)
-
-			// 重新计算光标位置：去除多余 0 后，修正光标防跳跃
 			newPos := start - (len(text) - len(cleanText))
 			if newPos < 0 {
 				newPos = 0
@@ -152,12 +146,12 @@ func (ne NumberEdit) bindEvents(le *walk.LineEdit) {
 			text = cleanText
 		}
 
-		// 校验 MaxValue 范围：超出最大值时直接替换为 MaxValue
+		// 超过 MaxValue 时直接替换为 MaxValue
 		if val, err := strconv.ParseInt(text, 10, 64); err == nil {
 			if ne.MaxValue > 0 && val > int64(ne.MaxValue) {
 				maxStr := fmt.Sprintf("%d", int64(ne.MaxValue))
 				le.SetText(maxStr)
-				le.SetTextSelection(len(maxStr), len(maxStr)) // 光标移动到末尾
+				le.SetTextSelection(len(maxStr), len(maxStr))
 				lastValidText = maxStr
 				if ne.OnValueChanged != nil {
 					ne.OnValueChanged()
@@ -168,13 +162,12 @@ func (ne NumberEdit) bindEvents(le *walk.LineEdit) {
 
 		lastValidText = text
 
-		// 只要文本发生有效改变，触发 OnValueChanged 回调
 		if ne.OnValueChanged != nil {
 			ne.OnValueChanged()
 		}
 	})
 
-	// 监听焦点变动：获焦全选；失焦时如果为空或小于 MinValue，直接修正为 MinValue
+	// 获焦全选; 失焦时若为空或小于 MinValue 则修正为 MinValue
 	le.FocusedChanged().Attach(func() {
 		if le.Focused() {
 			time.AfterFunc(50*time.Millisecond, func() {
@@ -189,7 +182,7 @@ func (ne NumberEdit) bindEvents(le *walk.LineEdit) {
 		val, err := strconv.ParseInt(text, 10, 64)
 		minVal := int64(ne.MinValue)
 
-		// 当文本为空、无法解析或数值小于 MinValue 时，修正为 MinValue
+		// 当文本为空、无法解析或数值小于 MinValue 时, 修正为 MinValue
 		if err != nil || text == "" || val < minVal {
 			corrected := fmt.Sprintf("%d", minVal)
 			le.SetText(corrected)

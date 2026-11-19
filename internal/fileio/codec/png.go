@@ -17,7 +17,6 @@ import (
 	"github.com/soniakeys/quant/mean"
 )
 
-// pngCodec PNG 格式编解码器.
 type pngCodec struct{}
 
 var (
@@ -32,17 +31,16 @@ func (c *pngCodec) InitSetting(set settingLoader.Setting) {
 	advancedPngEnableDithering = set.AdvancedPngEnableDithering
 }
 
-// Name 返回编解码器名称.
 func (c *pngCodec) Name() string { return "png" }
 
-// IsType 通过 PNG 文件头签名 (8 字节) 判断数据是否为 PNG 格式.
+// IsType 通过 PNG 的 8 字节文件头签名识别.
 func (c *pngCodec) IsType(data []byte) bool {
 	pngSignature := []byte{0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A}
 	return len(data) >= 8 && bytes.Equal(data[:8], pngSignature)
 }
 
-// Decode 将 PNG 数据解码为 image.Image.
-// 解码后会对图像类型进行标准化处理, 降为 32 位图像.
+// Decode 解码后标准化为 8 位 RGBA 或 NRGBA (依据是否有透明通道),
+// 16 位 / 灰度 / 索引等类型会被展开, 简化后续处理.
 func (c *pngCodec) Decode(data []byte) (image.Image, error) {
 	logger.Debug("decode data, format: png, size: %d", len(data))
 	img, err := png.Decode(bytes.NewReader(data))
@@ -68,6 +66,7 @@ const (
 	QualityQuantize64  = 1 // 等级 1: go-quantize 中位切分 64 色 (体积最小)
 )
 
+// EncodePNG 将图像编码为 PNG, 等级 1-3 为调色板量化压缩, 等级 4 为无损编码.
 func EncodePNG(img image.Image, qualityLevel int) ([]byte, error) {
 	logger.Debug("encode png, quality level: %d, palette: %s, keep indexed alpha: %t, dithering: %t",
 		qualityLevel, settingLoader.PaletteAlgoName(advancedPngPaletteAlgo), advancedPngKeepIndexedAlpha, advancedPngEnableDithering)
@@ -75,12 +74,11 @@ func EncodePNG(img image.Image, qualityLevel int) ([]byte, error) {
 	var buf bytes.Buffer
 	bounds := img.Bounds()
 
-	// 初始化默认的 PNG 编码器
 	encoder := &png.Encoder{
 		CompressionLevel: png.BestCompression,
 	}
 
-	// ------------------ 等级 4: Go 原生纯无损压缩 ------------------
+	// 等级 4: Go 标准库无损压缩
 	if qualityLevel == QualityLossless {
 		err := encoder.Encode(&buf, img)
 		if err != nil {
@@ -89,7 +87,7 @@ func EncodePNG(img image.Image, qualityLevel int) ([]byte, error) {
 		return buf.Bytes(), nil
 	}
 
-	// ------------------ 等级 1-3: go-quantize 有损量化压缩 ------------------
+	// 等级 1-3: 调色板量化压缩
 	var maxColors int
 	switch qualityLevel {
 	case QualityQuantize256:
@@ -104,10 +102,8 @@ func EncodePNG(img image.Image, qualityLevel int) ([]byte, error) {
 
 	var palette color.Palette
 
-	// 保护高对比度图像
 	switch advancedPngPaletteAlgo {
 	case settingLoader.PaletteMedianCut:
-		// 原始 go-quantize 中位切割算法
 		quantizer := quantize.MedianCutQuantizer{
 			Aggregation:    quantize.Mean,
 			AddTransparent: advancedPngKeepIndexedAlpha,
@@ -115,6 +111,7 @@ func EncodePNG(img image.Image, qualityLevel int) ([]byte, error) {
 		p := make([]color.Color, 0, maxColors)
 		palette = quantizer.Quantize(p, img)
 	case settingLoader.PaletteKMeans:
+		// kmeans 库无透明色预留能力, 手动从目标色数中扣除并附加透明色
 		targetColors := maxColors
 		if advancedPngKeepIndexedAlpha {
 			targetColors--
@@ -126,7 +123,6 @@ func EncodePNG(img image.Image, qualityLevel int) ([]byte, error) {
 		q := mean.Quantizer(targetColors)
 		palette = q.Quantize(make(color.Palette, 0, maxColors), img)
 
-		// 透明通道支持
 		if advancedPngKeepIndexedAlpha {
 			palette = append(palette, color.RGBA{0, 0, 0, 0})
 		}
@@ -138,10 +134,8 @@ func EncodePNG(img image.Image, qualityLevel int) ([]byte, error) {
 	palettedImg := image.NewPaletted(bounds, palette)
 
 	if advancedPngEnableDithering {
-		// 启用抖动
 		draw.FloydSteinberg.Draw(palettedImg, bounds, img, image.Point{})
 	} else {
-		// 关闭抖动
 		draw.Draw(palettedImg, bounds, img, image.Point{}, draw.Src)
 	}
 
@@ -153,8 +147,8 @@ func EncodePNG(img image.Image, qualityLevel int) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-// HasAlphaChannel 通过解析 PNG 文件头判断原图是否物理携带 Alpha 通道.
-// 对于调色板图像, 通过检查 tRNS chunk 判断是否包含透明信息.
+// HasAlphaChannel 解析 PNG 文件头判断原图是否物理携带 Alpha 通道.
+// 调色板图像无通道信息, 以 tRNS 块判断是否含透明.
 func (c *pngCodec) HasAlphaChannel(data []byte) bool {
 	conf, err := png.DecodeConfig(bytes.NewReader(data))
 	if err != nil {
@@ -171,7 +165,7 @@ func (c *pngCodec) HasAlphaChannel(data []byte) bool {
 	}
 }
 
-// hasTRNSChunk 遍历 PNG 数据块, 查找 tRNS 块来判断调色板图像是否包含透明信息.
+// hasTRNSChunk 遍历 PNG 数据块查找 tRNS 块.
 func hasTRNSChunk(data []byte) bool {
 	if len(data) < 8 || !bytes.Equal(data[:8], []byte{137, 80, 78, 71, 13, 10, 26, 10}) {
 		return false

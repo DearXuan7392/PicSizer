@@ -10,8 +10,7 @@ var (
 	logger = log.NewLogger("codec")
 )
 
-// ImageCodec 定义图片编解码器接口.
-// 每种图片格式需实现该接口以提供类型判断和解码能力.
+// ImageCodec 各图片格式的编解码器接口, 实现类通过 init() 注册到 load.go 的注册表.
 type ImageCodec interface {
 	Name() string
 	IsType(data []byte) bool

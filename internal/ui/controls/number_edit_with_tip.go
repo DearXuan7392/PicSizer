@@ -22,7 +22,7 @@ type NumberEditWithTip struct {
 	ParentHwndFn func() uintptr
 }
 
-// BuildLabel 构造 Grid 左列: 文本标签 + 提示链接.
+// BuildLabel 构造 Grid 左列: 文本标签 + (?) 提示链接.
 func (c *NumberEditWithTip) BuildLabel() declarative.Composite {
 	label := c.Label
 	tip := c.Tip

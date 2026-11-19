@@ -15,8 +15,7 @@ import (
 	"PicSizer/internal/preprocess"
 )
 
-// Compressor 定义统一的压缩器接口.
-// 各图片格式 (JPEG/PNG/WebP) 需实现该接口.
+// Compressor 各输出格式需实现的压缩器接口.
 type Compressor interface {
 	CompressByQuality(quality settingLoader.QualityLevel) *core.PicResult
 	CompressByFileSize(limitBytes int64) *core.PicResult
@@ -26,8 +25,8 @@ var (
 	logger = log.NewLogger("compress")
 )
 
-// Compress 是统一压缩入口, 根据输入路径和输出路径执行完整压缩流程.
-// 流程包括: 加载图片 -> 预处理 -> 选择压缩器 -> 执行压缩.
+// Compress 统一压缩入口, 按输出扩展名选择压缩器.
+// 流程: 加载图片 -> 预处理 -> 执行压缩.
 func Compress(inputPath, outputPath string) *core.PicResult {
 	start := time.Now()
 	logger.Debug("compress start, input: %s, output: %s", inputPath, outputPath)
@@ -93,7 +92,6 @@ func Compress(inputPath, outputPath string) *core.PicResult {
 	return finishCompress(start, inputPath, outputPath, result)
 }
 
-// finishCompress 统一记录单张图片的最终结果与耗时.
 func finishCompress(start time.Time, inputPath, outputPath string, result *core.PicResult) *core.PicResult {
 	if !result.Ok {
 		logger.Error("compress failed, input: %s, output: %s, result: %s, message: %s, elapsed: %v",
@@ -104,7 +102,6 @@ func finishCompress(start time.Time, inputPath, outputPath string, result *core.
 	return result
 }
 
-// resultName 返回压缩结果的英文名称, 用于日志.
 func resultName(r core.CompressResultEnum) string {
 	switch r {
 	case core.ResultOk:
@@ -121,12 +118,12 @@ type baseCompressor struct {
 	// maxQuality 编码器支持的画质上限, 用于校验按质量压缩的入参.
 	maxQuality int
 	// sizeUpper 按大小压缩时二分查找的画质上限, 可低于 maxQuality
-	// (例如 PNG 的最优一级为无损编码, 不参与按大小压缩的搜索).
+	// (例如 PNG 的最高等级为无损编码, 不参与按大小压缩的搜索).
 	sizeUpper int
 }
 
-// compressByQuality 是各格式压缩器共享的质量压缩通用实现.
-// encode 参数由具体格式压缩器提供, 用于执行实际的编码操作.
+// compressByQuality 各格式压缩器共享的质量压缩实现.
+// encode 参数由具体格式压缩器提供, 执行实际编码.
 func (c *baseCompressor) compressByQuality(quality int, encode func(int) ([]byte, error), outputPath string) *core.PicResult {
 	logger.Debug("encode by quality, quality: %d, max quality: %d, output: %s", quality, c.maxQuality, outputPath)
 	if quality < 1 || quality > c.maxQuality {
@@ -144,15 +141,15 @@ func (c *baseCompressor) compressByQuality(quality int, encode func(int) ([]byte
 	return writeOutput(outputPath, data)
 }
 
-// compressByFileSize 是各格式压缩器共享的二分查找大小压缩通用实现.
-// 在 [1, sizeUpper] 区间内查找编码体积不超过 limitBytes 的最大画质, 上下限均可取到.
+// compressByFileSize 各格式压缩器共享的按大小压缩实现.
+// 在 [1, sizeUpper] 闭区间内二分查找编码体积不超过 limitBytes 的最高画质.
 func (c *baseCompressor) compressByFileSize(limitBytes int64, encode func(int) ([]byte, error), outputPath string) *core.PicResult {
 	logger.Debug("binary search start, limit: %d, lo: 1, hi: %d, output: %s", limitBytes, c.sizeUpper, outputPath)
 
 	sizeCache := make(map[int]int64)
 	var bestData []byte
 
-	// measure 返回指定画质的编码体积, 首次计算时同时返回编码结果, 命中缓存时返回 nil.
+	// measure 返回指定画质的编码体积. 未命中缓存时同时返回编码结果, 命中时返回 nil.
 	measure := func(quality int) (int64, []byte, error) {
 		if size, ok := sizeCache[quality]; ok {
 			logger.Debug("size cache hit, quality: %d, size: %d", quality, size)
@@ -189,7 +186,7 @@ func (c *baseCompressor) compressByFileSize(limitBytes int64, encode func(int) (
 		logger.Debug("binary search step, lo: %d, hi: %d, mid: %d, size: %d, fit: %t", lo, hi, mid, size, size <= limitBytes)
 	}
 
-	// lo 可能从未被搜索到 (区间直接收敛到下限), 此时需要补测一次
+	// 循环结束后 lo 可能从未被测量过 (区间直接收敛到下限), 补测一次.
 	size, ok := sizeCache[lo]
 	if !ok {
 		logger.Debug("binary search result not measured, measure lo: %d", lo)
@@ -219,7 +216,6 @@ func (c *baseCompressor) compressByFileSize(limitBytes int64, encode func(int) (
 	return writeOutput(outputPath, bestData)
 }
 
-// writeOutput 创建输出目录并写入编码结果.
 func writeOutput(outputPath string, data []byte) *core.PicResult {
 	dir := filepath.Dir(outputPath)
 	if err := fileio.EnsureDir(dir); err != nil {

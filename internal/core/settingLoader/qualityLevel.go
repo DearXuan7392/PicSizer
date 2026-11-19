@@ -35,8 +35,7 @@ func QualityLevelValue(level QualityLevel) int {
 	return qualityLevelValues[idx]
 }
 
-// ParseQualityLevel 根据字符串解析对应的画质等级.
-// 支持 "best"/"clear"/"normal"/"poor".
+// ParseQualityLevel 解析画质等级字符串, 同时接受英文 (如 "best") 与中文 (如 "最佳").
 func ParseQualityLevel(s string) (QualityLevel, error) {
 	switch strings.ToLower(strings.TrimSpace(s)) {
 	case "best", "最佳":

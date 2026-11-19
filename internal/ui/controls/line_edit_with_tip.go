@@ -17,7 +17,7 @@ type LineEditWithTip struct {
 	ParentHwndFn func() uintptr
 }
 
-// BuildLabel 构造 Grid 左列: 文本标签 + 提示链接.
+// BuildLabel 构造 Grid 左列: 文本标签 + (?) 提示链接.
 func (c *LineEditWithTip) BuildLabel() declarative.Composite {
 	label := c.Label
 	tip := c.Tip
@@ -69,6 +69,7 @@ func (c *LineEditWithTip) BuildInput() declarative.Composite {
 				MinSize:  declarative.Size{Width: width, Height: 0},
 				MaxSize:  declarative.Size{Width: width, Height: 0},
 				OnBoundsChanged: func() {
+					// 借 OnBoundsChanged 等待 AssignTo 完成赋值后挂载全选事件, 仅挂载一次
 					if !attached && target != nil && *target != nil {
 						attached = true
 						edit := *target

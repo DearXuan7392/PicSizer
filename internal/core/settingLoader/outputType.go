@@ -1,10 +1,9 @@
 package settingLoader
 
-// OutputType 表示输出方式的枚举类型。
 type OutputType int
 
 const (
 	OutputCoverOrigin OutputType = iota // 覆盖源文件
-	OutputStructure                     // 输出到文件夹并保留结构
-	OutputDirection                     // 输出到统一文件夹
+	OutputStructure                     // 输出到目标目录并保留相对目录结构
+	OutputDirection                     // 全部输出到统一目录
 )

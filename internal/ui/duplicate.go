@@ -86,8 +86,8 @@ func duplicateMessage(duplicates []fileio.DuplicatePath) string {
 	return b.String()
 }
 
-// showDuplicateDialog 显示重名提示框, 返回用户选择的策略.
-// decided 为 false 表示用户关闭了窗口, 调用方应保持原有策略.
+// showDuplicateDialog 显示重名处理提示框.
+// decided 为 false 表示用户取消 (关闭窗口或点击取消), 调用方应放弃本次压缩.
 func showDuplicateDialog(parent walk.Form, duplicates []fileio.DuplicatePath, appIcon *walk.Icon) (policy dupPolicy, decided bool) {
 	var dlg *walk.Dialog
 

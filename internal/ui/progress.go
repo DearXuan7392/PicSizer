@@ -28,33 +28,29 @@ type ProgressForm struct {
 	onClosed func()    // 窗体已关闭回调 (用于业务清理, 如释放 pool 引用)
 }
 
-// NewProgressForm 创建进度窗口实例.
 func NewProgressForm() *ProgressForm {
 	return &ProgressForm{}
 }
 
-// SetOnCancel 设置取消回调, 当用户点击取消按钮或关闭窗口时触发.
 func (pf *ProgressForm) SetOnCancel(fn func()) {
 	pf.mu.Lock()
 	pf.onCancel = fn
 	pf.mu.Unlock()
 }
 
-// SetOnClosed 设置关闭完成回调, 当进度窗口彻底关闭后触发.
 func (pf *ProgressForm) SetOnClosed(fn func()) {
 	pf.mu.Lock()
 	pf.onClosed = fn
 	pf.mu.Unlock()
 }
 
-// IsVisible 返回当前是否处于显示状态, 用于判断压缩任务是否正在进行.
+// IsVisible 返回窗口是否显示中, 用于判断压缩任务是否正在进行.
 func (pf *ProgressForm) IsVisible() bool {
 	pf.mu.Lock()
 	defer pf.mu.Unlock()
 	return pf.visible
 }
 
-// IsStopping 返回是否已进入"等待结束"状态.
 func (pf *ProgressForm) IsStopping() bool {
 	pf.mu.Lock()
 	defer pf.mu.Unlock()
@@ -123,14 +119,12 @@ func (pf *ProgressForm) Show(owner walk.Form, total int, appIcon *walk.Icon) err
 		return err
 	}
 
-	// 注册窗体关闭事件 (用户点击叉叉或系统关闭按钮时触发)
-	//
-	// 行为规则:
-	//  1. 若窗体已经处于关闭流程中 (pf.visible == false), 说明是业务层主动调用 Close()
-	//     (例如 pool.onComplete), 不应再做任何拦截.
-	//  2. 若已处于"等待结束"状态, 拦截关闭 (canceled = true), 防止用户提前关闭窗口.
-	//  3. 否则视为用户在压缩进行中点了关闭按钮, 调用 handleCancel 进入等待结束状态,
-	//     并设置 canceled = true 让 walk 不立即关闭窗体, 等子任务完成后再统一关闭.
+	// 注册窗体关闭事件 (用户点击叉叉或系统关闭按钮时触发).
+	// 借 visible 标志区分内部主动 Close() 与用户关闭:
+	//  1. visible == false: 内部业务触发的关闭, 不拦截.
+	//  2. 已处于等待结束状态: 拦截, 防止用户提前关闭窗口.
+	//  3. 压缩进行中用户点了关闭: 转入等待结束状态并阻止本次关闭,
+	//     待子任务完成后由业务层统一关闭.
 	pf.Dialog.Closing().Attach(func(canceled *bool, reason walk.CloseReason) {
 		pf.mu.Lock()
 		alreadyClosing := !pf.visible
@@ -138,15 +132,12 @@ func (pf *ProgressForm) Show(owner walk.Form, total int, appIcon *walk.Icon) err
 		pf.mu.Unlock()
 
 		if alreadyClosing {
-			// 内部 Close() 触发的关闭, 不干预
 			return
 		}
 		if stopping {
-			// 已在等待结束, 禁止关闭
 			*canceled = true
 			return
 		}
-		// 进入等待结束状态, 并阻止 walk 直接关闭窗体
 		pf.handleCancel()
 		*canceled = true
 	})
@@ -159,7 +150,7 @@ func (pf *ProgressForm) Show(owner walk.Form, total int, appIcon *walk.Icon) err
 	return nil
 }
 
-// UpdateProgress 更新进度显示. 可被任意线程调用, 内部通过 Synchronize 切换到 UI 线程.
+// UpdateProgress 可被任意线程调用, 内部经 Synchronize 切换到 UI 线程.
 func (pf *ProgressForm) UpdateProgress(current, errCount, total int) {
 	if pf.progressBar != nil && pf.Dialog != nil {
 		pf.Dialog.Synchronize(func() {
@@ -192,7 +183,7 @@ func (pf *ProgressForm) Close() {
 	}
 }
 
-// handleCancel 处理取消操作, 进入"等待当前任务结束"状态.
+// handleCancel 进入"等待当前任务结束"状态.
 func (pf *ProgressForm) handleCancel() {
 	pf.mu.Lock()
 	if pf.stopping {

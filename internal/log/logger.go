@@ -63,7 +63,6 @@ const (
 	writeBufSize = 64 * 1024
 )
 
-// record 队列中传输的一条日志.
 type record struct {
 	ts     time.Time
 	level  Level
@@ -140,7 +139,6 @@ func Close() {
 	})
 }
 
-// NewLogger 为指定模块注册日志入口.
 func NewLogger(module string) *Logger {
 	return &Logger{module: module}
 }

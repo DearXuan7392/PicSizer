@@ -18,7 +18,6 @@ type CreditsForm struct {
 	webView *walk.WebView
 }
 
-// NewCreditsForm 创建第三方开源协议声明窗口实例.
 func NewCreditsForm() *CreditsForm {
 	return &CreditsForm{}
 }
@@ -72,7 +71,7 @@ func (cf *CreditsForm) Show(owner walk.Form, appIcon *walk.Icon) error {
 		return err
 	}
 
-	// 将 HTML 内容写入临时文件, 然后通过 file:// URL 加载到 WebView 中
+	// WebView 只支持在线 URL, 先把 HTML 写入临时文件再以 file:// URL 加载
 	tmpFile, err := os.CreateTemp("", "picsizer_credits_*.html")
 	if err != nil {
 		return err
